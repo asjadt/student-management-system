@@ -55,11 +55,18 @@ class Student extends Model
 
     public function getCourseStartDateAttribute($value)
     {
-        return (new Carbon($value))->format('d-m-Y');
+        if($value) {
+            return (new Carbon($value))->format('d-m-Y');
+        }
+        return "";
+
     }
     public function getLetterIssueDateAttribute($value)
     {
-        return (new Carbon($value))->format('d-m-Y');
+        if($value) {
+            return (new Carbon($value))->format('d-m-Y');
+        }
+        return "";
     }
 
 
@@ -76,14 +83,6 @@ class Student extends Model
 
 
 
-    public function getApplicationDateAttribute($value)
-    {
-        return (new Carbon($value))->format('d-m-Y');
-    }
-    public function getInterviewDateAttribute($value)
-    {
-        return (new Carbon($value))->format('d-m-Y');
-    }
 
 
 

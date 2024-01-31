@@ -884,6 +884,7 @@ Route::delete('/v1.0/job-listings/{ids}', [JobListingController::class, "deleteJ
 Route::post('/v1.0/students/multiple-file-upload', [StudentController::class, "createStudentFileMultiple"]);
 Route::post('/v1.0/students', [StudentController::class, "createStudent"]);
 Route::put('/v1.0/students', [StudentController::class, "updateStudent"]);
+Route::get('/v1.0/students/validate/school-id/{school_id}', [StudentController::class, "validateStudentId"]);
 Route::get('/v1.0/students', [StudentController::class, "getStudents"]);
 Route::get('/v1.0/students/{id}', [StudentController::class, "getStudentById"]);
 Route::delete('/v1.0/students/{ids}', [StudentController::class, "deleteStudentsByIds"]);

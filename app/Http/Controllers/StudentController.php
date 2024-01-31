@@ -349,6 +349,83 @@ class StudentController extends Controller
         }
     }
 
+ /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/students/validate/school-id/{school_id}",
+     *      operationId="validateStudentId",
+     *      tags={"students"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *              @OA\Parameter(
+     *         name="user_id",
+     *         in="path",
+     *         description="user_id",
+     *         required=true,
+     *  example="1"
+     *      ),
+
+     *      summary="This method is to validate student id",
+     *      description="This method is to validate student id",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+    public function validateStudentId($school_id, Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+            $user_id_exists =  Student::where(
+                [
+                    'school_id' => $school_id,
+                    "business_id" => $request->user()->business_id
+                ]
+            )->exists();
+
+
+
+            return response()->json(["user_id_exists" => $user_id_exists], 200);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
+
 
     /**
      *
