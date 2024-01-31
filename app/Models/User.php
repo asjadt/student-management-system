@@ -35,7 +35,7 @@ class User extends Authenticatable
         'gender',
         'is_in_employee',
         'designation_id',
-        'employment_status_id',
+        'student_status_id',
         'joining_date',
         'salary_per_annum',
         'weekly_contractual_hours',
@@ -143,8 +143,8 @@ class User extends Authenticatable
         return $this->belongsTo(Designation::class, 'designation_id', 'id');
     }
 
-    public function employment_status() {
-        return $this->belongsTo(EmploymentStatus::class, 'employment_status_id', 'id');
+    public function student_status() {
+        return $this->belongsTo(StudentStatus::class, 'student_status_id', 'id');
     }
 
     public function work_shifts() {

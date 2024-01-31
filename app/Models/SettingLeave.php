@@ -27,16 +27,16 @@ class SettingLeave extends Model
     public function special_roles() {
         return $this->belongsToMany(Role::class, 'setting_leave_special_roles', 'setting_leave_id', 'role_id');
     }
-    public function paid_leave_employment_statuses() {
-        return $this->belongsToMany(EmploymentStatus::class, 'paid_leave_employment_statuses', 'setting_leave_id', 'employment_status_id');
+    public function paid_leave_student_statuses() {
+        return $this->belongsToMany(StudentStatus::class, 'paid_leave_student_statuses', 'setting_leave_id', 'student_status_id');
     }
-    public function unpaid_leave_employment_statuses() {
-        return $this->belongsToMany(EmploymentStatus::class, 'unpaid_leave_employment_statuses', 'setting_leave_id', 'employment_status_id');
+    public function unpaid_leave_student_statuses() {
+        return $this->belongsToMany(StudentStatus::class, 'unpaid_leave_student_statuses', 'setting_leave_id', 'student_status_id');
     }
 
 
 
-    
+
     public function getCreatedAtAttribute($value)
     {
         return (new Carbon($value))->format('d-m-Y');

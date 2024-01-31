@@ -98,10 +98,10 @@ return [
                 // "recruitment_process_delete",
 
 
-                "employment_status_create",
-                "employment_status_update",
-                "employment_status_view",
-                // "employment_status_delete",
+                "student_status_create",
+                "student_status_update",
+                "student_status_view",
+                // "student_statuslete",
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
@@ -194,11 +194,11 @@ return [
                 "business_times_update",
                 "business_times_view",
 
-                "employment_status_create",
-                "employment_status_update",
-                // "employment_status_activate",
-                "employment_status_view",
-                // "employment_status_delete",
+                "student_status_create",
+                "student_status_update",
+                // "student_status_activate",
+                "student_status_view",
+                // "student_status_delete",
 
 
 
@@ -378,11 +378,11 @@ return [
 
 
 
-                "employment_status_create",
-                "employment_status_update",
-                "employment_status_activate",
-                "employment_status_view",
-                "employment_status_delete",
+                "student_status_create",
+                "student_status_update",
+                "student_status_activate",
+                "student_status_view",
+                "student_status_delete",
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
@@ -581,11 +581,11 @@ return [
                 "recruitment_process_view",
                 "recruitment_process_delete",
 
-                "employment_status_create",
-                "employment_status_update",
-                "employment_status_activate",
-                "employment_status_view",
-                "employment_status_delete",
+                "student_status_create",
+                "student_status_update",
+                "student_status_activate",
+                "student_status_view",
+                "student_status_delete",
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
@@ -615,10 +615,7 @@ return [
             ],
         ],
 
-        [
-            "role" => "business_student",
-            "permissions" => [],
-        ],
+
 
 
 
@@ -627,8 +624,7 @@ return [
         "superadmin",
         'reseller',
         "business_admin",
-        "business_staff",
-        "business_student"
+        "business_staff"
     ],
     "permissions" => [
 
@@ -839,11 +835,11 @@ return [
 
 
 
-        "employment_status_create",
-        "employment_status_update",
-        "employment_status_activate",
-        "employment_status_view",
-        "employment_status_delete",
+        "student_status_create",
+        "student_status_update",
+        "student_status_activate",
+        "student_status_view",
+        "student_status_delete",
 
         "setting_leave_type_create",
         "setting_leave_type_update",
@@ -1085,11 +1081,11 @@ return [
         "recruitment_process_view" => "",
         "recruitment_process_delete" => "",
 
-        "employment_status_create" => "Can create employment status",
-        "employment_status_update" => "Can update employment status",
-        "employment_status_activate" => "",
-        "employment_status_view" => "Can view employment status",
-        "employment_status_delete" => "Can delete employment status",
+        "student_status_create" => "Can create employment status",
+        "student_status_update" => "Can update employment status",
+        "student_status_activate" => "",
+        "student_status_view" => "Can view employment status",
+        "student_status_delete" => "Can delete employment status",
 
         "setting_leave_type_create" => "Can create setting leave type",
         "setting_leave_type_update" => "Can update setting leave type",
@@ -1361,11 +1357,11 @@ return [
 
 
 
-        "employment_status_create" => "create",
-        "employment_status_update" => "update",
-        "employment_status_activate" => "activate",
-        "employment_status_view" => "view",
-        "employment_status_delete" => "delete",
+        "student_status_create" => "create",
+        "student_status_update" => "update",
+        "student_status_activate" => "activate",
+        "student_status_view" => "view",
+        "student_status_delete" => "delete",
 
         "setting_leave_type_create" => "create",
         "setting_leave_type_update" => "update",
@@ -1885,13 +1881,13 @@ return [
 
 
         [
-            "header" => "employment_status",
+            "header" => "student_status",
             "permissions" => [
-                "employment_status_create",
-                "employment_status_update",
-                "employment_status_activate",
-                "employment_status_view",
-                "employment_status_delete",
+                "student_status_create",
+                "student_status_update",
+                "student_status_activate",
+                "student_status_view",
+                "student_status_delete",
 
 
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDisabledEmploymentStatusesTable extends Migration
+class CreateDisabledStudentStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateDisabledEmploymentStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('disabled_employment_statuses', function (Blueprint $table) {
+        Schema::create('disabled_student_statuses', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger("employment_status_id");
-            $table->foreign('employment_status_id')->references('id')->on('employment_statuses')->onDelete('cascade');
+            $table->unsignedBigInteger("student_status_id");
+            $table->foreign('student_status_id')->references('id')->on('student_statuses')->onDelete('cascade');
 
             $table->unsignedBigInteger("business_id")->nullable();
             $table->foreign('business_id')->references('id')->on('users')->onDelete('cascade');
@@ -43,6 +43,6 @@ class CreateDisabledEmploymentStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('disabled_employment_statuses');
+        Schema::dropIfExists('disabled_student_statuses');
     }
 }

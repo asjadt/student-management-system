@@ -6,7 +6,7 @@ use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\ActivityLog;
 use App\Models\Designation;
-use App\Models\EmploymentStatus;
+
 use App\Models\ErrorLog;
 use App\Models\JobPlatform;
 use App\Models\JobType;
@@ -23,6 +23,7 @@ use App\Models\SettingLeave;
 use App\Models\SettingLeaveType;
 use App\Models\SettingPayrun;
 use App\Models\SocialSite;
+use App\Models\StudentStatus;
 use App\Models\WorkLocation;
 use App\Models\WorkShift;
 
@@ -141,8 +142,7 @@ return "swagger generated";
              "is_default" => 1,
              "is_default_for_business" => (in_array($role ,["business_admin",
              "business_admin",
-             "business_staff",
-             "business_student",
+             "business_staff"
 
              ])?1:0)
 
@@ -463,37 +463,13 @@ return "swagger generated";
 
 
 
-        $default_employment_statuses = [
-            [
-                'name' => "Full-Time",
-                'color' => "#22c55e",
-                'description' => "Employee works the standard number of hours for a full-time position.",
-            ],
-            [
-                'name' => "Part-Time",
-                'color' => "#3b82f6",
-                'description' => "Employee works fewer hours than a full-time position.",
-            ],
-            [
-                'name' => "Contractor",
-                'color' => "#f97316",
-                'description' => "Employee is hired on a contractual basis for a specific project or duration.",
-            ],
-            [
-                'name' => "Temporary",
-                'color' => "#06b6d4",
-                'description' => "Employee is hired for a temporary period, often to cover a specific absence or workload.",
-            ],
-            [
-                'name' => "Intern",
-                'color' => "#a855f7",
-                'description' => "Employee is engaged in a temporary position for gaining practical work experience.",
-            ],
+        $default_student_statuses = [
+
         ];
 
         // Iterate through the array and create records
-        foreach ($default_employment_statuses as $data) {
-            EmploymentStatus::create([
+        foreach ($default_student_statuses as $data) {
+            StudentStatus::create([
                 'name' => $data['name'],
                 'color' => $data["color"],
                 'description' => $data['description'],
@@ -748,8 +724,7 @@ return "swagger generated";
              "is_default" => 1,
              "is_default_for_business" => (in_array($role ,[
             "business_admin",
-             "business_staff",
-             "business_student",
+             "business_staff"
 
              ])?1:0)
 

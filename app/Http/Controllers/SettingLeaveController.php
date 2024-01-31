@@ -35,8 +35,8 @@ class SettingLeaveController extends Controller
      *     @OA\Property(property="allow_bypass", type="boolean", format="boolean", example="1"),
      *     @OA\Property(property="special_users", type="string", format="array", example={1,2,3}),
      *     @OA\Property(property="special_roles", type="string", format="array", example={1,2,3}),
-     **    @OA\Property(property="paid_leave_employment_statuses", type="string", format="array", example={1,2,3}),
-     *     @OA\Property(property="unpaid_leave_employment_statuses", type="string", format="array", example={1,2,3})
+     **    @OA\Property(property="paid_leave_student_statuses", type="string", format="array", example={1,2,3}),
+     *     @OA\Property(property="unpaid_leave_student_statuses", type="string", format="array", example={1,2,3})
      *
      *
      *         ),
@@ -122,8 +122,8 @@ class SettingLeaveController extends Controller
 
                 $setting_leave->special_users()->sync($request_data['special_users'],[]);
                 $setting_leave->special_roles()->sync($request_data['special_roles'],[]);
-                $setting_leave->paid_leave_employment_statuses()->sync($request_data['paid_leave_employment_statuses'],[]);
-                $setting_leave->unpaid_leave_employment_statuses()->sync($request_data['unpaid_leave_employment_statuses'],[]);
+                $setting_leave->paid_leave_student_statuses()->sync($request_data['paid_leave_student_statuses'],[]);
+                $setting_leave->unpaid_leave_student_statuses()->sync($request_data['unpaid_leave_student_statuses'],[]);
 
 
                 return response($setting_leave, 201);
@@ -234,7 +234,7 @@ class SettingLeaveController extends Controller
 
 
 
-            $setting_leave = SettingLeave::with("special_users","special_roles","paid_leave_employment_statuses","unpaid_leave_employment_statuses")
+            $setting_leave = SettingLeave::with("special_users","special_roles","paid_leave_student_statuses","unpaid_leave_student_statuses")
 
             ->when(empty($request->user()->business_id), function ($query) use ($request) {
                 if (auth()->user()->hasRole('superadmin')) {

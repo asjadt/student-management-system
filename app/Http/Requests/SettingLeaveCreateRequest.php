@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Department;
-use App\Models\EmploymentStatus;
+use App\Models\StudentStatus;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
@@ -92,9 +92,9 @@ class SettingLeaveCreateRequest extends BaseFormRequest
                     }
                 },
             ],
-            'paid_leave_employment_statuses' => 'present|array',
+            'paid_leave_student_statuses' => 'present|array',
 
-            'paid_leave_employment_statuses.*' => [
+            'paid_leave_student_statuses.*' => [
                 'numeric',
                 function ($attribute, $value, $fail) {
 
@@ -103,55 +103,55 @@ class SettingLeaveCreateRequest extends BaseFormRequest
                         $created_by = auth()->user()->business->created_by;
                     }
 
-                    $exists = EmploymentStatus::where("employment_statuses.id",$value)
+                    $exists = StudentStatus::where("student_statuses.id",$value)
                     ->when(empty(auth()->user()->business_id), function ($query) use ( $created_by, $value) {
                         if (auth()->user()->hasRole('superadmin')) {
-                            return $query->where('employment_statuses.business_id', NULL)
-                                ->where('employment_statuses.is_default', 1)
-                                ->where('employment_statuses.is_active', 1);
+                            return $query->where('student_statuses.business_id', NULL)
+                                ->where('student_statuses.is_default', 1)
+                                ->where('student_statuses.is_active', 1);
 
                         } else {
-                            return $query->where('employment_statuses.business_id', NULL)
-                                ->where('employment_statuses.is_default', 1)
-                                ->where('employment_statuses.is_active', 1)
+                            return $query->where('student_statuses.business_id', NULL)
+                                ->where('student_statuses.is_default', 1)
+                                ->where('student_statuses.is_active', 1)
                                 ->whereDoesntHave("disabled", function($q) {
-                                    $q->whereIn("disabled_employment_statuses.created_by", [auth()->user()->id]);
+                                    $q->whereIn("disabled_student_statuses.created_by", [auth()->user()->id]);
                                 })
 
                                 ->orWhere(function ($query) use($value)  {
-                                    $query->where("employment_statuses.id",$value)->where('employment_statuses.business_id', NULL)
-                                        ->where('employment_statuses.is_default', 0)
-                                        ->where('employment_statuses.created_by', auth()->user()->id)
-                                        ->where('employment_statuses.is_active', 1);
+                                    $query->where("student_statuses.id",$value)->where('student_statuses.business_id', NULL)
+                                        ->where('student_statuses.is_default', 0)
+                                        ->where('student_statuses.created_by', auth()->user()->id)
+                                        ->where('student_statuses.is_active', 1);
 
 
                                 });
                         }
                     })
                         ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by, $value) {
-                            return $query->where('employment_statuses.business_id', NULL)
-                                ->where('employment_statuses.is_default', 1)
-                                ->where('employment_statuses.is_active', 1)
+                            return $query->where('student_statuses.business_id', NULL)
+                                ->where('student_statuses.is_default', 1)
+                                ->where('student_statuses.is_active', 1)
                                 ->whereDoesntHave("disabled", function($q) use($created_by) {
-                                    $q->whereIn("disabled_employment_statuses.created_by", [$created_by]);
+                                    $q->whereIn("disabled_student_statuses.created_by", [$created_by]);
                                 })
                                 ->whereDoesntHave("disabled", function($q)  {
-                                    $q->whereIn("disabled_employment_statuses.business_id",[auth()->user()->business_id]);
+                                    $q->whereIn("disabled_student_statuses.business_id",[auth()->user()->business_id]);
                                 })
 
                                 ->orWhere(function ($query) use( $created_by, $value){
-                                    $query->where("employment_statuses.id",$value)->where('employment_statuses.business_id', NULL)
-                                        ->where('employment_statuses.is_default', 0)
-                                        ->where('employment_statuses.created_by', $created_by)
-                                        ->where('employment_statuses.is_active', 1)
+                                    $query->where("student_statuses.id",$value)->where('student_statuses.business_id', NULL)
+                                        ->where('student_statuses.is_default', 0)
+                                        ->where('student_statuses.created_by', $created_by)
+                                        ->where('student_statuses_active', 1)
                                         ->whereDoesntHave("disabled", function($q) {
-                                            $q->whereIn("disabled_employment_statuses.business_id",[auth()->user()->business_id]);
+                                            $q->whereIn("disabled_student_statuses.business_id",[auth()->user()->business_id]);
                                         });
                                 })
                                 ->orWhere(function ($query) use($value)  {
-                                    $query->where("employment_statuses.id",$value)->where('employment_statuses.business_id', auth()->user()->business_id)
-                                        ->where('employment_statuses.is_default', 0)
-                                        ->where('employment_statuses.is_active', 1);
+                                    $query->where("student_statuses.id",$value)->where('student_statuses.business_id', auth()->user()->business_id)
+                                        ->where('student_statuses.is_default', 0)
+                                        ->where('student_statuses.is_active', 1);
 
                                 });
                         })
@@ -163,8 +163,8 @@ class SettingLeaveCreateRequest extends BaseFormRequest
 
                 },
             ],
-            'unpaid_leave_employment_statuses' => 'present|array',
-            'unpaid_leave_employment_statuses.*' => [
+            'unpaid_leave_student_statuses' => 'present|array',
+            'unpaid_leave_student_statuses.*' => [
                 'numeric',
                 function ($attribute, $value, $fail) {
 
@@ -173,55 +173,55 @@ class SettingLeaveCreateRequest extends BaseFormRequest
                         $created_by = auth()->user()->business->created_by;
                     }
 
-                    $exists = EmploymentStatus::where("employment_statuses.id",$value)
+                    $exists = StudentStatus::where("student_statuses.id",$value)
                     ->when(empty(auth()->user()->business_id), function ($query) use ( $created_by, $value) {
                         if (auth()->user()->hasRole('superadmin')) {
-                            return $query->where('employment_statuses.business_id', NULL)
-                                ->where('employment_statuses.is_default', 1)
-                                ->where('employment_statuses.is_active', 1);
+                            return $query->where('student_statuses.business_id', NULL)
+                                ->where('student_statuses_default', 1)
+                                ->where('student_statuses.is_active', 1);
 
                         } else {
-                            return $query->where('employment_statuses.business_id', NULL)
-                                ->where('employment_statuses.is_default', 1)
-                                ->where('employment_statuses.is_active', 1)
+                            return $query->where('student_statuses.business_id', NULL)
+                                ->where('student_statuses.is_default', 1)
+                                ->where('student_statuses.is_active', 1)
                                 ->whereDoesntHave("disabled", function($q) {
-                                    $q->whereIn("disabled_employment_statuses.created_by", [auth()->user()->id]);
+                                    $q->whereIn("disabled_student_statuses.created_by", [auth()->user()->id]);
                                 })
 
                                 ->orWhere(function ($query) use($value)  {
-                                    $query->where("employment_statuses.id",$value)->where('employment_statuses.business_id', NULL)
-                                        ->where('employment_statuses.is_default', 0)
-                                        ->where('employment_statuses.created_by', auth()->user()->id)
-                                        ->where('employment_statuses.is_active', 1);
+                                    $query->where("student_statuses.id",$value)->where('student_statuses.business_id', NULL)
+                                        ->where('student_statuses.is_default', 0)
+                                        ->where('student_statuses.created_by', auth()->user()->id)
+                                        ->where('student_statuses.is_active', 1);
 
 
                                 });
                         }
                     })
                         ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by, $value) {
-                            return $query->where('employment_statuses.business_id', NULL)
-                                ->where('employment_statuses.is_default', 1)
-                                ->where('employment_statuses.is_active', 1)
+                            return $query->where('student_statuses.business_id', NULL)
+                                ->where('student_statuses.is_default', 1)
+                                ->where('student_statuses.is_active', 1)
                                 ->whereDoesntHave("disabled", function($q) use($created_by) {
-                                    $q->whereIn("disabled_employment_statuses.created_by", [$created_by]);
+                                    $q->whereIn("disabled_student_statuses.created_by", [$created_by]);
                                 })
                                 ->whereDoesntHave("disabled", function($q)  {
-                                    $q->whereIn("disabled_employment_statuses.business_id",[auth()->user()->business_id]);
+                                    $q->whereIn("disabled_student_statuses.business_id",[auth()->user()->business_id]);
                                 })
 
                                 ->orWhere(function ($query) use( $created_by, $value){
-                                    $query->where("employment_statuses.id",$value)->where('employment_statuses.business_id', NULL)
-                                        ->where('employment_statuses.is_default', 0)
-                                        ->where('employment_statuses.created_by', $created_by)
-                                        ->where('employment_statuses.is_active', 1)
+                                    $query->where("student_statuses.id",$value)->where('student_statuses.business_id', NULL)
+                                        ->where('student_statuses.is_default', 0)
+                                        ->where('student_statuses.created_by', $created_by)
+                                        ->where('student_statuses.is_active', 1)
                                         ->whereDoesntHave("disabled", function($q) {
-                                            $q->whereIn("disabled_employment_statuses.business_id",[auth()->user()->business_id]);
+                                            $q->whereIn("disabled_student_statuses.business_id",[auth()->user()->business_id]);
                                         });
                                 })
                                 ->orWhere(function ($query) use($value)  {
-                                    $query->where("employment_statuses.id",$value)->where('employment_statuses.business_id', auth()->user()->business_id)
-                                        ->where('employment_statuses.is_default', 0)
-                                        ->where('employment_statuses.is_active', 1);
+                                    $query->where("student_statuses.id",$value)->where('student_statuses.business_id', auth()->user()->business_id)
+                                        ->where('student_statuses.is_default', 0)
+                                        ->where('student_statuses.is_active', 1);
 
                                 });
                         })

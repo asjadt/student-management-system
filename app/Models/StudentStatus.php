@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmploymentStatus extends Model
+class StudentStatus extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -21,7 +21,7 @@ class EmploymentStatus extends Model
 
     public function disabled()
     {
-        return $this->hasMany(DisabledEmploymentStatus::class, 'employment_status_id', 'id');
+        return $this->hasMany(DisabledStudentStatus::class, 'student_status_id');
     }
 
 

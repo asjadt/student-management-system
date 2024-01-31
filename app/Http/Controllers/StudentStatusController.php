@@ -2,36 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EmploymentStatusCreateRequest;
-use App\Http\Requests\EmploymentStatusUpdateRequest;
+use App\Http\Requests\StudentStatusCreateRequest;
+use App\Http\Requests\StudentStatusUpdateRequest;
 use App\Http\Requests\GetIdRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
-use App\Models\DisabledEmploymentStatus;
-use App\Models\EmploymentStatus;
-use App\Models\SettingPaidLeaveEmploymentStatus;
-use App\Models\SettingUnpaidLeaveEmploymentStatus;
+use App\Models\DisabledStudentStatus;
+use App\Models\StudentStatus;
+use App\Models\SettingPaidLeaveStudentStatus;
+use App\Models\SettingUnpaidLeaveStudentStatus;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class EmploymentStatusController extends Controller
+class StudentStatusController extends Controller
 {
     use ErrorUtil, UserActivityUtil, BusinessUtil;
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/employment-statuses",
-     *      operationId="createEmploymentStatus",
-     *      tags={"employee.employment_statuses"},
+     *      path="/v1.0/student-statuses",
+     *      operationId="createStudentStatus",
+     *      tags={"student.student_statuses"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to store employment status",
-     *      description="This method is to store employment status",
+     *      summary="This method is to store student status",
+     *      description="This method is to store student status",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -78,12 +78,12 @@ class EmploymentStatusController extends Controller
      *     )
      */
 
-    public function createEmploymentStatus(EmploymentStatusCreateRequest $request)
+    public function createStudentStatus(StudentStatusCreateRequest $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
             return DB::transaction(function () use ($request) {
-                if (!$request->user()->hasPermissionTo('employment_status_create')) {
+                if (!$request->user()->hasPermissionTo('student_status_create')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -106,12 +106,12 @@ class EmploymentStatusController extends Controller
 
 
 
-                $employment_status =  EmploymentStatus::create($request_data);
+                $student_status =  StudentStatus::create($request_data);
 
 
 
 
-                return response($employment_status, 201);
+                return response($student_status, 201);
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -122,14 +122,14 @@ class EmploymentStatusController extends Controller
     /**
      *
      * @OA\Put(
-     *      path="/v1.0/employment-statuses",
-     *      operationId="updateEmploymentStatus",
-     *      tags={"employee.employment_statuses"},
+     *      path="/v1.0/student-statuses",
+     *      operationId="updateStudentStatus",
+     *      tags={"student.student_statuses"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to update employment status ",
-     *      description="This method is to update employment status",
+     *      summary="This method is to update student status ",
+     *      description="This method is to update student status",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -177,13 +177,13 @@ class EmploymentStatusController extends Controller
      *     )
      */
 
-    public function updateEmploymentStatus(EmploymentStatusUpdateRequest $request)
+    public function updateStudentStatus(StudentStatusUpdateRequest $request)
     {
 
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
             return DB::transaction(function () use ($request) {
-                if (!$request->user()->hasPermissionTo('employment_status_update')) {
+                if (!$request->user()->hasPermissionTo('student_status_update')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -193,12 +193,12 @@ class EmploymentStatusController extends Controller
 
 
 
-                $employment_status_query_params = [
+                $student_status_query_params = [
                     "id" => $request_data["id"],
                 ];
 
 
-                $employment_status  =  tap(EmploymentStatus::where($employment_status_query_params))->update(
+                $student_status  =  tap(StudentStatus::where($student_status_query_params))->update(
                     collect($request_data)->only([
                         'name',
                         'color',
@@ -211,13 +211,13 @@ class EmploymentStatusController extends Controller
                     // ->with("somthing")
 
                     ->first();
-                if (!$employment_status) {
+                if (!$student_status) {
                     return response()->json([
                         "message" => "something went wrong."
                     ], 500);
                 }
 
-                return response($employment_status, 201);
+                return response($student_status, 201);
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -228,14 +228,14 @@ class EmploymentStatusController extends Controller
   /**
      *
      * @OA\Put(
-     *      path="/v1.0/employment-statuses/toggle-active",
-     *      operationId="toggleActiveEmploymentStatus",
-     *      tags={"employee.employment_statuses"},
+     *      path="/v1.0/student-statuses/toggle-active",
+     *      operationId="toggleActiveStudentStatus",
+     *      tags={"student.student_statuses"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to toggle employment status",
-     *      description="This method is to toggle employment status",
+     *      summary="This method is to toggle student status",
+     *      description="This method is to toggle student status",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -279,23 +279,23 @@ class EmploymentStatusController extends Controller
      *     )
      */
 
-     public function toggleActiveEmploymentStatus(GetIdRequest $request)
+     public function toggleActiveStudentStatus(GetIdRequest $request)
      {
 
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             if (!$request->user()->hasPermissionTo('employment_status_activate')) {
+             if (!$request->user()->hasPermissionTo('student_status_activate')) {
                  return response()->json([
                      "message" => "You can not perform this action"
                  ], 401);
              }
              $request_data = $request->validated();
 
-             $employment_status =  EmploymentStatus::where([
+             $student_status =  StudentStatus::where([
                  "id" => $request_data["id"],
              ])
                  ->first();
-             if (!$employment_status) {
+             if (!$student_status) {
                 $this->storeError(
                     "no data found"
                     ,
@@ -312,7 +312,7 @@ class EmploymentStatusController extends Controller
              if (empty(auth()->user()->business_id)) {
 
                  if (auth()->user()->hasRole('superadmin')) {
-                     if (($employment_status->business_id != NULL || $employment_status->is_default != 1)) {
+                     if (($student_status->business_id != NULL || $student_status->is_default != 1)) {
                         $this->storeError(
                             "You do not have permission to update this due to role restrictions.",
                             403,
@@ -320,13 +320,13 @@ class EmploymentStatusController extends Controller
                             "front end error"
                            );
                          return response()->json([
-                             "message" => "You do not have permission to update this employment status due to role restrictions."
+                             "message" => "You do not have permission to update this student status due to role restrictions."
                          ], 403);
                      } else {
                          $should_update = 1;
                      }
                  } else {
-                     if ($employment_status->business_id != NULL) {
+                     if ($student_status->business_id != NULL) {
                         $this->storeError(
                             "You do not have permission to update this due to role restrictions.",
                             403,
@@ -334,11 +334,11 @@ class EmploymentStatusController extends Controller
                             "front end error"
                            );
                          return response()->json([
-                             "message" => "You do not have permission to update this employment status due to role restrictions."
+                             "message" => "You do not have permission to update this student status due to role restrictions."
                          ], 403);
-                     } else if ($employment_status->is_default == 0) {
+                     } else if ($student_status->is_default == 0) {
 
-                         if($employment_status->created_by != auth()->user()->id) {
+                         if($student_status->created_by != auth()->user()->id) {
                             $this->storeError(
                                 "You do not have permission to update this due to role restrictions.",
                                 403,
@@ -346,7 +346,7 @@ class EmploymentStatusController extends Controller
                                 "front end error"
                                );
                              return response()->json([
-                                 "message" => "You do not have permission to update this employment status due to role restrictions."
+                                 "message" => "You do not have permission to update this student status due to role restrictions."
                              ], 403);
                          }
                          else {
@@ -362,8 +362,8 @@ class EmploymentStatusController extends Controller
                      }
                  }
              } else {
-                 if ($employment_status->business_id != NULL) {
-                     if (($employment_status->business_id != auth()->user()->business_id)) {
+                 if ($student_status->business_id != NULL) {
+                     if (($student_status->business_id != auth()->user()->business_id)) {
                         $this->storeError(
                             "You do not have permission to update this due to role restrictions.",
                             403,
@@ -371,14 +371,14 @@ class EmploymentStatusController extends Controller
                             "front end error"
                            );
                          return response()->json([
-                             "message" => "You do not have permission to update this employment status due to role restrictions."
+                             "message" => "You do not have permission to update this student status due to role restrictions."
                          ], 403);
                      } else {
                          $should_update = 1;
                      }
                  } else {
-                     if ($employment_status->is_default == 0) {
-                         if ($employment_status->created_by != auth()->user()->created_by) {
+                     if ($student_status->is_default == 0) {
+                         if ($student_status->created_by != auth()->user()->created_by) {
                             $this->storeError(
                                 "You do not have permission to update this due to role restrictions.",
                                 403,
@@ -386,7 +386,7 @@ class EmploymentStatusController extends Controller
                                 "front end error"
                                );
                              return response()->json([
-                                 "message" => "You do not have permission to update this employment status due to role restrictions."
+                                 "message" => "You do not have permission to update this student status due to role restrictions."
                              ], 403);
                          } else {
                              $should_disable = 1;
@@ -400,31 +400,31 @@ class EmploymentStatusController extends Controller
              }
 
              if ($should_update) {
-                 $employment_status->update([
-                     'is_active' => !$employment_status->is_active
+                 $student_status->update([
+                     'is_active' => !$student_status->is_active
                  ]);
              }
 
              if($should_disable) {
 
-                 $disabled_employment_status =    DisabledEmploymentStatus::where([
-                     'employment_status_id' => $employment_status->id,
+                 $disabled_student_status =    DisabledStudentStatus::where([
+                     'student_status_id' => $student_status->id,
                      'business_id' => auth()->user()->business_id,
                      'created_by' => auth()->user()->id,
                  ])->first();
-                 if(!$disabled_employment_status) {
-                    DisabledEmploymentStatus::create([
-                         'employment_status_id' => $employment_status->id,
+                 if(!$disabled_student_status) {
+                    DisabledStudentStatus::create([
+                         'student_status_id' => $student_status->id,
                          'business_id' => auth()->user()->business_id,
                          'created_by' => auth()->user()->id,
                      ]);
                  } else {
-                     $disabled_employment_status->delete();
+                     $disabled_student_status->delete();
                  }
              }
 
 
-             return response()->json(['message' => 'employment status status updated successfully'], 200);
+             return response()->json(['message' => 'student status status updated successfully'], 200);
          } catch (Exception $e) {
              error_log($e->getMessage());
              return $this->sendError($e, 500, $request);
@@ -433,9 +433,9 @@ class EmploymentStatusController extends Controller
     /**
      *
      * @OA\Get(
-     *      path="/v1.0/employment-statuses",
-     *      operationId="getEmploymentStatuses",
-     *      tags={"employee.employment_statuses"},
+     *      path="/v1.0/student-statuses",
+     *      operationId="getStudentStatuses",
+     *      tags={"student.student_statuses"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -484,8 +484,8 @@ class EmploymentStatusController extends Controller
      * example="ASC"
      * ),
 
-     *      summary="This method is to get employment statuses  ",
-     *      description="This method is to get employment statuses ",
+     *      summary="This method is to get student statuses  ",
+     *      description="This method is to get student statuses ",
      *
 
      *      @OA\Response(
@@ -522,11 +522,11 @@ class EmploymentStatusController extends Controller
      *     )
      */
 
-    public function getEmploymentStatuses(Request $request)
+    public function getStudentStatuses(Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if (!$request->user()->hasPermissionTo('employment_status_view')) {
+            if (!$request->user()->hasPermissionTo('student_status_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
@@ -538,34 +538,34 @@ class EmploymentStatusController extends Controller
             }
 
 
-            $employment_statuses = EmploymentStatus::when(empty($request->user()->business_id), function ($query) use ($request, $created_by) {
+            $student_statuses = StudentStatus::when(empty($request->user()->business_id), function ($query) use ($request, $created_by) {
                 if (auth()->user()->hasRole('superadmin')) {
-                    return $query->where('employment_statuses.business_id', NULL)
-                        ->where('employment_statuses.is_default', 1)
+                    return $query->where('student_statuses.business_id', NULL)
+                        ->where('student_statuses.is_default', 1)
                         ->when(isset($request->is_active), function ($query) use ($request) {
-                            return $query->where('employment_statuses.is_active', intval($request->is_active));
+                            return $query->where('student_statuses.is_active', intval($request->is_active));
                         });
                 } else {
                     return $query
 
                     ->where(function($query) use($request) {
-                        $query->where('employment_statuses.business_id', NULL)
-                        ->where('employment_statuses.is_default', 1)
-                        ->where('employment_statuses.is_active', 1)
+                        $query->where('student_statuses.business_id', NULL)
+                        ->where('student_statuses.is_default', 1)
+                        ->where('student_statuses.is_active', 1)
                         ->when(isset($request->is_active), function ($query) use ($request) {
                             if(intval($request->is_active)) {
                                 return $query->whereDoesntHave("disabled", function($q) {
-                                    $q->whereIn("disabled_employment_statuses.created_by", [auth()->user()->id]);
+                                    $q->whereIn("disabled_student_statuses.created_by", [auth()->user()->id]);
                                 });
                             }
 
                         })
                         ->orWhere(function ($query) use ($request) {
-                            $query->where('employment_statuses.business_id', NULL)
-                                ->where('employment_statuses.is_default', 0)
-                                ->where('employment_statuses.created_by', auth()->user()->id)
+                            $query->where('student_statuses.business_id', NULL)
+                                ->where('student_statuses.is_default', 0)
+                                ->where('student_statuses.created_by', auth()->user()->id)
                                 ->when(isset($request->is_active), function ($query) use ($request) {
-                                    return $query->where('employment_statuses.is_active', intval($request->is_active));
+                                    return $query->where('student_statuses.is_active', intval($request->is_active));
                                 });
                         });
 
@@ -577,16 +577,16 @@ class EmploymentStatusController extends Controller
                     ->where(function($query) use($request, $created_by) {
 
 
-                        $query->where('employment_statuses.business_id', NULL)
-                        ->where('employment_statuses.is_default', 1)
-                        ->where('employment_statuses.is_active', 1)
+                        $query->where('student_statuses.business_id', NULL)
+                        ->where('student_statuses.is_default', 1)
+                        ->where('student_statuses.is_active', 1)
                         ->whereDoesntHave("disabled", function($q) use($created_by) {
-                            $q->whereIn("disabled_employment_statuses.created_by", [$created_by]);
+                            $q->whereIn("disabled_student_statuses.created_by", [$created_by]);
                         })
                         ->when(isset($request->is_active), function ($query) use ($request, $created_by)  {
                             if(intval($request->is_active)) {
                                 return $query->whereDoesntHave("disabled", function($q) use($created_by) {
-                                    $q->whereIn("disabled_employment_statuses.business_id",[auth()->user()->business_id]);
+                                    $q->whereIn("disabled_student_statuses.business_id",[auth()->user()->business_id]);
                                 });
                             }
 
@@ -594,15 +594,15 @@ class EmploymentStatusController extends Controller
 
 
                         ->orWhere(function ($query) use($request, $created_by){
-                            $query->where('employment_statuses.business_id', NULL)
-                                ->where('employment_statuses.is_default', 0)
-                                ->where('employment_statuses.created_by', $created_by)
-                                ->where('employment_statuses.is_active', 1)
+                            $query->where('student_statuses.business_id', NULL)
+                                ->where('student_statuses.is_default', 0)
+                                ->where('student_statuses.created_by', $created_by)
+                                ->where('student_statuses.is_active', 1)
 
                                 ->when(isset($request->is_active), function ($query) use ($request) {
                                     if(intval($request->is_active)) {
                                         return $query->whereDoesntHave("disabled", function($q) {
-                                            $q->whereIn("disabled_employment_statuses.business_id",[auth()->user()->business_id]);
+                                            $q->whereIn("disabled_student_statuses.business_id",[auth()->user()->business_id]);
                                         });
                                     }
 
@@ -612,10 +612,10 @@ class EmploymentStatusController extends Controller
                                 ;
                         })
                         ->orWhere(function ($query) use($request) {
-                            $query->where('employment_statuses.business_id', auth()->user()->business_id)
-                                ->where('employment_statuses.is_default', 0)
+                            $query->where('student_statuses.business_id', auth()->user()->business_id)
+                                ->where('student_statuses.is_default', 0)
                                 ->when(isset($request->is_active), function ($query) use ($request) {
-                                    return $query->where('employment_statuses.is_active', intval($request->is_active));
+                                    return $query->where('student_statuses.is_active', intval($request->is_active));
                                 });;
                         });
                     });
@@ -625,23 +625,23 @@ class EmploymentStatusController extends Controller
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
                         $term = $request->search_key;
-                        $query->where("employment_statuses.name", "like", "%" . $term . "%")
-                            ->orWhere("employment_statuses.description", "like", "%" . $term . "%");
+                        $query->where("student_statuses.name", "like", "%" . $term . "%")
+                            ->orWhere("student_statuses.description", "like", "%" . $term . "%");
                     });
                 })
                 //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
                 //        return $query->where('product_category_id', $request->product_category_id);
                 //    })
                 ->when(!empty($request->start_date), function ($query) use ($request) {
-                    return $query->where('employment_statuses.created_at', ">=", $request->start_date);
+                    return $query->where('student_statuses.created_at', ">=", $request->start_date);
                 })
                 ->when(!empty($request->end_date), function ($query) use ($request) {
-                    return $query->where('employment_statuses.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                    return $query->where('student_statuses.created_at', "<=", ($request->end_date . ' 23:59:59'));
                 })
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("employment_statuses.id", $request->order_by);
+                    return $query->orderBy("student_statuses.id", $request->order_by);
                 }, function ($query) {
-                    return $query->orderBy("employment_statuses.id", "DESC");
+                    return $query->orderBy("student_statuses.id", "DESC");
                 })
                 ->when(!empty($request->per_page), function ($query) use ($request) {
                     return $query->paginate($request->per_page);
@@ -651,7 +651,7 @@ class EmploymentStatusController extends Controller
 
 
 
-            return response()->json($employment_statuses, 200);
+            return response()->json($student_statuses, 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -661,9 +661,9 @@ class EmploymentStatusController extends Controller
     /**
      *
      * @OA\Get(
-     *      path="/v1.0/employment-statuses/{id}",
-     *      operationId="getEmploymentStatusById",
-     *      tags={"employee.employment_statuses"},
+     *      path="/v1.0/student-statuses/{id}",
+     *      operationId="getStudentStatusById",
+     *      tags={"student.student_statuses"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -674,8 +674,8 @@ class EmploymentStatusController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-     *      summary="This method is to get employment status by id",
-     *      description="This method is to get employment status by id",
+     *      summary="This method is to get student status by id",
+     *      description="This method is to get student status by id",
      *
 
      *      @OA\Response(
@@ -713,22 +713,22 @@ class EmploymentStatusController extends Controller
      */
 
 
-    public function getEmploymentStatusById($id, Request $request)
+    public function getStudentStatusById($id, Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if (!$request->user()->hasPermissionTo('employment_status_view')) {
+            if (!$request->user()->hasPermissionTo('student_status_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
 
-            $employment_status =  EmploymentStatus::where([
+            $student_status =  StudentStatus::where([
                 "id" => $id,
 
             ])
                 ->first();
-                if (!$employment_status) {
+                if (!$student_status) {
                     $this->storeError(
                         "no data found"
                         ,
@@ -744,7 +744,7 @@ class EmploymentStatusController extends Controller
                 if (empty(auth()->user()->business_id)) {
 
                     if (auth()->user()->hasRole('superadmin')) {
-                        if (($employment_status->business_id != NULL || $employment_status->is_default != 1)) {
+                        if (($student_status->business_id != NULL || $student_status->is_default != 1)) {
                             $this->storeError(
                                 "You do not have permission to update this due to role restrictions.",
                                 403,
@@ -752,11 +752,11 @@ class EmploymentStatusController extends Controller
                                 "front end error"
                                );
                             return response()->json([
-                                "message" => "You do not have permission to update this employment status due to role restrictions."
+                                "message" => "You do not have permission to update this student status due to role restrictions."
                             ], 403);
                         }
                     } else {
-                        if ($employment_status->business_id != NULL) {
+                        if ($student_status->business_id != NULL) {
                             $this->storeError(
                                 "You do not have permission to update this due to role restrictions.",
                                 403,
@@ -764,9 +764,9 @@ class EmploymentStatusController extends Controller
                                 "front end error"
                                );
                             return response()->json([
-                                "message" => "You do not have permission to update this employment status due to role restrictions."
+                                "message" => "You do not have permission to update this student status due to role restrictions."
                             ], 403);
-                        } else if ($employment_status->is_default == 0 && $employment_status->created_by != auth()->user()->id) {
+                        } else if ($student_status->is_default == 0 && $student_status->created_by != auth()->user()->id) {
                             $this->storeError(
                                 "You do not have permission to update this due to role restrictions.",
                                 403,
@@ -774,14 +774,14 @@ class EmploymentStatusController extends Controller
                                 "front end error"
                                );
                                 return response()->json([
-                                    "message" => "You do not have permission to update this employment status due to role restrictions."
+                                    "message" => "You do not have permission to update this student status due to role restrictions."
                                 ], 403);
 
                         }
                     }
                 } else {
-                    if ($employment_status->business_id != NULL) {
-                        if (($employment_status->business_id != auth()->user()->business_id)) {
+                    if ($student_status->business_id != NULL) {
+                        if (($student_status->business_id != auth()->user()->business_id)) {
                             $this->storeError(
                                 "You do not have permission to update this due to role restrictions.",
                                 403,
@@ -789,12 +789,12 @@ class EmploymentStatusController extends Controller
                                 "front end error"
                                );
                             return response()->json([
-                                "message" => "You do not have permission to update this employment status due to role restrictions."
+                                "message" => "You do not have permission to update this student status due to role restrictions."
                             ], 403);
                         }
                     } else {
-                        if ($employment_status->is_default == 0) {
-                            if ($employment_status->created_by != auth()->user()->created_by) {
+                        if ($student_status->is_default == 0) {
+                            if ($student_status->created_by != auth()->user()->created_by) {
                                 $this->storeError(
                                     "You do not have permission to update this due to role restrictions.",
                                     403,
@@ -802,7 +802,7 @@ class EmploymentStatusController extends Controller
                                     "front end error"
                                    );
                                 return response()->json([
-                                    "message" => "You do not have permission to update this employment status due to role restrictions."
+                                    "message" => "You do not have permission to update this student status due to role restrictions."
                                 ], 403);
                             }
                         }
@@ -810,7 +810,7 @@ class EmploymentStatusController extends Controller
                 }
 
 
-            return response()->json($employment_status, 200);
+            return response()->json($student_status, 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -821,9 +821,9 @@ class EmploymentStatusController extends Controller
     /**
      *
      *     @OA\Delete(
-     *      path="/v1.0/employment-statuses/{ids}",
-     *      operationId="deleteEmploymentStatusesByIds",
-     *      tags={"employee.employment_statuses"},
+     *      path="/v1.0/student-statuses/{ids}",
+     *      operationId="deleteStudentStatusesByIds",
+     *      tags={"student.student_statuses"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -834,8 +834,8 @@ class EmploymentStatusController extends Controller
      *         required=true,
      *  example="1,2,3"
      *      ),
-     *      summary="This method is to delete employment statuses by ids",
-     *      description="This method is to delete employment statuses by ids",
+     *      summary="This method is to delete student statuses by ids",
+     *      description="This method is to delete student statuses by ids",
      *
 
      *      @OA\Response(
@@ -872,32 +872,32 @@ class EmploymentStatusController extends Controller
      *     )
      */
 
-    public function deleteEmploymentStatusesByIds(Request $request, $ids)
+    public function deleteStudentStatusesByIds(Request $request, $ids)
     {
 
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if (!$request->user()->hasPermissionTo('employment_status_delete')) {
+            if (!$request->user()->hasPermissionTo('student_status_delete')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
 
             $idsArray = explode(',', $ids);
-            $existingIds = EmploymentStatus::whereIn('id', $idsArray)
+            $existingIds = StudentStatus::whereIn('id', $idsArray)
             ->when(empty($request->user()->business_id), function ($query) use ($request) {
                 if ($request->user()->hasRole("superadmin")) {
-                    return $query->where('employment_statuses.business_id', NULL)
-                        ->where('employment_statuses.is_default', 1);
+                    return $query->where('student_statuses.business_id', NULL)
+                        ->where('student_statuses.is_default', 1);
                 } else {
-                    return $query->where('employment_statuses.business_id', NULL)
-                        ->where('employment_statuses.is_default', 0)
-                        ->where('employment_statuses.created_by', $request->user()->id);
+                    return $query->where('student_statuses.business_id', NULL)
+                        ->where('student_statuses.is_default', 0)
+                        ->where('student_statuses.created_by', $request->user()->id);
                 }
             })
             ->when(!empty($request->user()->business_id), function ($query) use ($request) {
-                return $query->where('employment_statuses.business_id', $request->user()->business_id)
-                    ->where('employment_statuses.is_default', 0);
+                return $query->where('student_statuses.business_id', $request->user()->business_id)
+                    ->where('student_statuses.is_default', 0);
             })
                 ->select('id')
                 ->get()
@@ -918,57 +918,57 @@ class EmploymentStatusController extends Controller
                 ], 404);
             }
 
-            $user_exists =  User::whereIn("employment_status_id",$existingIds)->exists();
+            $user_exists =  User::whereIn("student_status_id",$existingIds)->exists();
             if($user_exists) {
-                $conflictingUsers = User::whereIn("employment_status_id", $existingIds)->get(['id', 'first_Name',
+                $conflictingUsers = User::whereIn("student_status_id", $existingIds)->get(['id', 'first_Name',
                 'last_Name',]);
                 $this->storeError(
-                    "Some users are associated with the specified employment statuses"
+                    "Some users are associated with the specified student statuses"
                     ,
                     409,
                     "front end error",
                     "front end error"
                    );
                 return response()->json([
-                    "message" => "Some users are associated with the specified employment statuses",
+                    "message" => "Some users are associated with the specified student statuses",
                     "conflicting_users" => $conflictingUsers
                 ], 409);
 
             }
 
-            $paid_employment_status_exists =  SettingPaidLeaveEmploymentStatus::whereIn("employment_status_id",$existingIds)->exists();
-            if($paid_employment_status_exists) {
-                $conflictingPaidEmploymentStatus = SettingPaidLeaveEmploymentStatus::whereIn("employment_status_id", $existingIds)->get(['id']);
+            $paid_student_status_exists =  SettingPaidLeaveStudentStatus::whereIn("student_status_id",$existingIds)->exists();
+            if($paid_student_status_exists) {
+                $conflictingPaidStudentStatus = SettingPaidLeaveStudentStatus::whereIn("student_status_id", $existingIds)->get(['id']);
                 $this->storeError(
-                    "Some leave settings are associated with the specified employment statuses"
+                    "Some leave settings are associated with the specified student statuses"
                     ,
                     409,
                     "front end error",
                     "front end error"
                    );
                 return response()->json([
-                    "message" => "Some leave settings are associated with the specified employment statuses",
-                    "conflicting_paid_employment_status" => $conflictingPaidEmploymentStatus
+                    "message" => "Some leave settings are associated with the specified student statuses",
+                    "conflicting_paid_student_status" => $conflictingPaidStudentStatus
                 ], 409);
 
             }
-            $unpaid_employment_status_exists =  SettingUnpaidLeaveEmploymentStatus::whereIn("employment_status_id",$existingIds)->exists();
-            if($unpaid_employment_status_exists) {
-                $conflictingUnpaidEmploymentStatus = SettingPaidLeaveEmploymentStatus::whereIn("employment_status_id", $existingIds)->get(['id']);
+            $unpaid_student_status_exists =  SettingUnpaidLeaveStudentStatus::whereIn("student_status_id",$existingIds)->exists();
+            if($unpaid_student_status_exists) {
+                $conflictingUnpaidStudentStatus = SettingPaidLeaveStudentStatus::whereIn("student_status_id", $existingIds)->get(['id']);
                 $this->storeError(
-                    "Some leave settings are associated with the specified employment statuses"
+                    "Some leave settings are associated with the specified student statuses"
                     ,
                     409,
                     "front end error",
                     "front end error"
                    );
                 return response()->json([
-                    "message" => "Some leave settings are associated with the specified employment statuses",
-                    "conflicting_unpaid_employment_status" => $conflictingUnpaidEmploymentStatus
+                    "message" => "Some leave settings are associated with the specified student statuses",
+                    "conflicting_unpaid_student_status" => $conflictingUnpaidStudentStatus
                 ], 409);
 
             }
-            EmploymentStatus::destroy($existingIds);
+            StudentStatus::destroy($existingIds);
 
 
             return response()->json(["message" => "data deleted sussfully","deleted_ids" => $existingIds], 200);

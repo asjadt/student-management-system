@@ -535,7 +535,7 @@ class UserManagementController extends Controller
      *              @OA\Property(property="gender", type="string", format="string",example="male"),
      *                @OA\Property(property="is_in_employee", type="boolean", format="boolean",example="1"),
      *               @OA\Property(property="designation_id", type="number", format="number",example="1"),
-     *              @OA\Property(property="employment_status_id", type="number", format="number",example="1"),
+     *              @OA\Property(property="student_status_id", type="number", format="number",example="1"),
      *               @OA\Property(property="salary_per_annum", type="string", format="string",example="10"),
      *  *  *               @OA\Property(property="weekly_contractual_hours", type="string", format="string",example="10"),
      * *  *  *               @OA\Property(property="minimum_working_days_per_week", type="string", format="string",example="5"),
@@ -868,7 +868,7 @@ class UserManagementController extends Controller
      *                @OA\Property(property="gender", type="string", format="string",example="male"),
      *                @OA\Property(property="is_in_employee", type="boolean", format="boolean",example="1"),
      *               @OA\Property(property="designation_id", type="number", format="number",example="1"),
-     *              @OA\Property(property="employment_status_id", type="number", format="number",example="1"),
+     *              @OA\Property(property="student_status_id", type="number", format="number",example="1"),
      *               @OA\Property(property="salary_per_annum", type="string", format="string",example="10"),
      *           @OA\Property(property="weekly_contractual_hours", type="string", format="string",example="10"),
      *     *           @OA\Property(property="minimum_working_days_per_week", type="string", format="string",example="10"),
@@ -993,7 +993,7 @@ class UserManagementController extends Controller
                     'gender',
                     'is_in_employee',
                     'designation_id',
-                    'employment_status_id',
+                    'student_status_id',
                     'joining_date',
 
                     'emergency_contact_details',
@@ -1182,7 +1182,7 @@ class UserManagementController extends Controller
      *                @OA\Property(property="gender", type="string", format="string",example="male"),
      *                @OA\Property(property="is_in_employee", type="boolean", format="boolean",example="1"),
      *               @OA\Property(property="designation_id", type="number", format="number",example="1"),
-     *              @OA\Property(property="employment_status_id", type="number", format="number",example="1"),
+     *              @OA\Property(property="student_status_id", type="number", format="number",example="1"),
      *               @OA\Property(property="salary_per_annum", type="string", format="string",example="10"),
      *           @OA\Property(property="weekly_contractual_hours", type="string", format="string",example="10"),
      *      *           @OA\Property(property="minimum_working_days_per_week", type="string", format="string",example="5"),
@@ -1348,7 +1348,7 @@ class UserManagementController extends Controller
                         'gender',
                         'is_in_employee',
                         'designation_id',
-                        'employment_status_id',
+                        'student_status_id',
                         'joining_date',
                         'salary_per_annum',
 
@@ -3044,9 +3044,9 @@ class UserManagementController extends Controller
      * ),
      *
      *  *      *     @OA\Parameter(
-     * name="employment_status_id",
+     * name="student_status_id",
      * in="query",
-     * description="employment_status_id",
+     * description="student_status_id",
      * required=true,
      * example="1"
      * ),
@@ -3385,8 +3385,8 @@ class UserManagementController extends Controller
                 ->when(isset($request->is_in_employee), function ($query) use ($request) {
                     return $query->where('is_in_employee', intval($request->is_in_employee));
                 })
-                ->when(!empty($request->employment_status_id), function ($query) use ($request) {
-                    return $query->where('employment_status_id', ($request->employment_status_id));
+                ->when(!empty($request->student_status_id), function ($query) use ($request) {
+                    return $query->where('student_status_id', ($request->student_status_id));
                 })
                 ->when(!empty($request->immigration_status), function ($query) use ($request) {
                     return $query->where('immigration_status', ($request->immigration_status));
@@ -4103,7 +4103,7 @@ class UserManagementController extends Controller
                     "roles",
                     "departments",
                     "designation",
-                    "employment_status",
+                    "student_status",
                     "business",
                     "work_location"
 
@@ -4229,7 +4229,7 @@ class UserManagementController extends Controller
                     },
                     "roles",
                     "departments",
-                    "employment_status",
+                    "student_status",
                     "sponsorship_details",
                     "passport_details",
                     "visa_details",

@@ -133,19 +133,19 @@ class StudentController extends Controller
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-*     @OA\Property(property="name", type="string", format="string", example="John Doe"),
- *     @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
- *     @OA\Property(property="phone", type="string", format="string", example="123-456-7890"),
- *     @OA\Property(property="experience_years", type="integer", format="int", example=3),
- *     @OA\Property(property="education_level", type="string", format="string", example="Bachelor's Degree"),
- *  *  *     @OA\Property(property="job_platform", type="string", format="string", example="facebook"),
- *     @OA\Property(property="cover_letter", type="string", format="string", example="Cover letter content..."),
- *     @OA\Property(property="application_date", type="string", format="date", example="2023-11-01"),
- *     @OA\Property(property="interview_date", type="string", format="date", example="2023-11-10"),
- *     @OA\Property(property="feedback", type="string", format="string", example="Positive feedback..."),
- *     @OA\Property(property="status", type="string", format="string", example="review"),
- *     @OA\Property(property="job_listing_id", type="integer", format="int", example=1),
- *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"})
+*     @OA\Property(property="first_name", type="string", format="string", example="John"),
+ *     @OA\Property(property="middle_name", type="string", format="string", example=""),
+ *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
+ *     @OA\Property(property="nationality", type="string", format="string", example="Country"),
+ *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
+ *     @OA\Property(property="school_id", type="string", format="string", example="School123"),
+ *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
+ *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
+ *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
+ *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
+ *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"})
+ *
+ *
  *
  *
  *
@@ -220,106 +220,6 @@ class StudentController extends Controller
     }
 
 
-    /**
-     *
-     * @OA\Post(
-     *      path="/v1.0/client/students",
-     *      operationId="createStudentClient",
-     *      tags={"students"},
-     *       security={
-     *           {"bearerAuth": {}}
-     *       },
-     *      summary="This method is to store student",
-     *      description="This method is to store student",
-     *
-     *  @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-*     @OA\Property(property="name", type="string", format="string", example="John Doe"),
- *     @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
- *     @OA\Property(property="phone", type="string", format="string", example="123-456-7890"),
- *     @OA\Property(property="experience_years", type="integer", format="int", example=3),
- *     @OA\Property(property="education_level", type="string", format="string", example="Bachelor's Degree"),
- *  *  *     @OA\Property(property="job_platform", type="string", format="string", example="facebook"),
- *     @OA\Property(property="cover_letter", type="string", format="string", example="Cover letter content..."),
- *     @OA\Property(property="application_date", type="string", format="date", example="2023-11-01"),
- *     @OA\Property(property="interview_date", type="string", format="date", example="2023-11-10"),
- *     @OA\Property(property="feedback", type="string", format="string", example="Positive feedback..."),
- *     @OA\Property(property="status", type="string", format="string", example="review"),
- *     @OA\Property(property="job_listing_id", type="integer", format="int", example=1),
- *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"})
- *
- *
- *
-     *
-     *         ),
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *       @OA\JsonContent(),
-     *       ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     * @OA\JsonContent(),
-     *      ),
-     *        @OA\Response(
-     *          response=422,
-     *          description="Unprocesseble Content",
-     *    @OA\JsonContent(),
-     *      ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden",
-     *   @OA\JsonContent()
-     * ),
-     *  * @OA\Response(
-     *      response=400,
-     *      description="Bad Request",
-     *   *@OA\JsonContent()
-     *   ),
-     * @OA\Response(
-     *      response=404,
-     *      description="not found",
-     *   *@OA\JsonContent()
-     *   )
-     *      )
-     *     )
-     */
-
-     public function createStudentClient(StudentCreateRequest $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-             return DB::transaction(function () use ($request) {
-                 if (!$request->user()->hasPermissionTo('student_create')) {
-                     return response()->json([
-                         "message" => "You can not perform this action"
-                     ], 401);
-                 }
-
-                 $request_data = $request->validated();
-
-
-
-
-
-                 $request_data["business_id"] = $request->user()->business_id;
-                 $request_data["is_active"] = true;
-                 $request_data["created_by"] = $request->user()->id;
-
-                 $student =  Student::create($request_data);
-
-
-
-                 return response($student, 201);
-             });
-         } catch (Exception $e) {
-             error_log($e->getMessage());
-             return $this->sendError($e, 500, $request);
-         }
-     }
 
     /**
      *
@@ -337,19 +237,16 @@ class StudentController extends Controller
      *         required=true,
      *         @OA\JsonContent(
 *      @OA\Property(property="id", type="number", format="number", example="Updated Christmas"),
-*     @OA\Property(property="name", type="string", format="string", example="John Doe"),
- *     @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
- *     @OA\Property(property="phone", type="string", format="string", example="123-456-7890"),
- *     @OA\Property(property="experience_years", type="integer", format="int", example=3),
- *     @OA\Property(property="education_level", type="string", format="string", example="Bachelor's Degree"),
- *  *     @OA\Property(property="job_platform", type="string", format="string", example="facebook"),
- *
- *     @OA\Property(property="cover_letter", type="string", format="string", example="Cover letter content..."),
- *     @OA\Property(property="application_date", type="string", format="date", example="2023-11-01"),
- *     @OA\Property(property="interview_date", type="string", format="date", example="2023-11-10"),
- *     @OA\Property(property="feedback", type="string", format="string", example="Positive feedback..."),
- *     @OA\Property(property="status", type="string", format="string", example="review"),
- *     @OA\Property(property="job_listing_id", type="integer", format="int", example=1),
+*     @OA\Property(property="first_name", type="string", format="string", example="John"),
+ *     @OA\Property(property="middle_name", type="string", format="string", example=""),
+ *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
+ *     @OA\Property(property="nationality", type="string", format="string", example="Country"),
+ *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
+ *     @OA\Property(property="school_id", type="string", format="string", example="School123"),
+ *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
+ *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
+ *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
+ *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
  *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"})
 
      *
@@ -420,18 +317,16 @@ class StudentController extends Controller
 
                 $student  =  tap(Student::where($student_query_params))->update(
                     collect($request_data)->only([
-                        'name',
-                        'email',
-                        'phone',
-                        'experience_years',
-                        'education_level',
-                        "job_platform",
-                        'cover_letter',
-                        'application_date',
-                        'interview_date',
-                        'feedback',
-                        'status',
-                        'job_listing_id',
+                        'first_name',
+                        'middle_name',
+                        'last_name',
+                        'nationality',
+                        'passport_number',
+                        'school_id',
+                        'date_of_birth',
+                        'course_start_date',
+                        'letter_issue_date',
+                        'student_status_id',
                         'attachments',
 
                         // "is_active",

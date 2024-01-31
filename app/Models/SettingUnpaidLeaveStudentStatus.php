@@ -6,15 +6,13 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DisabledEmploymentStatus extends Model
+class SettingUnpaidLeaveStudentStatus extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'employment_status_id',
-        'business_id',
-        'created_by',
-        // Add other fillable columns if needed
+        'setting_leave_id', 'student_status_id'
     ];
+    protected $table = "paid_leave_student_statuses";
     public function getCreatedAtAttribute($value)
     {
         return (new Carbon($value))->format('d-m-Y');
@@ -23,5 +21,4 @@ class DisabledEmploymentStatus extends Model
     {
         return (new Carbon($value))->format('d-m-Y');
     }
-
 }

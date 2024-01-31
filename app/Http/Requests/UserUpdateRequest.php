@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Department;
 use App\Models\Designation;
-use App\Models\EmploymentStatus;
+
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;

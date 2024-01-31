@@ -15,7 +15,7 @@ use App\Http\Controllers\BusinessTimesController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
-use App\Http\Controllers\EmploymentStatusController;
+
 use App\Http\Controllers\HistoryDetailsController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\JobListingController;
@@ -38,6 +38,7 @@ use App\Http\Controllers\SettingLeaveController;
 use App\Http\Controllers\SettingLeaveTypeController;
 use App\Http\Controllers\SettingPayrollController;
 use App\Http\Controllers\SocialSiteController;
+use App\Http\Controllers\StudentStatusController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserAddressHistoryController;
 use App\Http\Controllers\UserAssetController;
@@ -682,18 +683,18 @@ Route::delete('/v1.0/recruitment-processes/{ids}', [RecruitmentProcessController
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// employment status management section
+// student status management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-Route::post('/v1.0/employment-statuses', [EmploymentStatusController::class, "createEmploymentStatus"]);
-Route::put('/v1.0/employment-statuses', [EmploymentStatusController::class, "updateEmploymentStatus"]);
-Route::put('/v1.0/employment-statuses/toggle-active', [EmploymentStatusController::class, "toggleActiveEmploymentStatus"]);
-Route::get('/v1.0/employment-statuses', [EmploymentStatusController::class, "getEmploymentStatuses"]);
-Route::get('/v1.0/employment-statuses/{id}', [EmploymentStatusController::class, "getEmploymentStatusById"]);
-Route::delete('/v1.0/employment-statuses/{ids}', [EmploymentStatusController::class, "deleteEmploymentStatusesByIds"]);
+Route::post('/v1.0/student-statuses', [StudentStatusController::class, "createStudentStatus"]);
+Route::put('/v1.0/student-statuses', [StudentStatusController::class, "updateStudentStatus"]);
+Route::put('/v1.0/student-statuses/toggle-active', [StudentStatusController::class, "toggleActiveStudentStatus"]);
+Route::get('/v1.0/student-statuses', [StudentStatusController::class, "getStudentStatuses"]);
+Route::get('/v1.0/student-statuses/{id}', [StudentStatusController::class, "getStudentStatusById"]);
+Route::delete('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "deleteStudentStatusesByIds"]);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// end employment status  management section
+// end student status  management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -1042,7 +1043,7 @@ Route::get('/v1.0/business-user-dashboard', [DashboardManagementController::clas
 
 
 Route::get('/v1.0/client/job-listings', [JobListingController::class, "getJobListingsClient"]);
-Route::post('/v1.0/client/candidates', [CandidateController::class, "createCandidateClient"]);
+
 
 
 
