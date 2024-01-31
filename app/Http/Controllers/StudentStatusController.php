@@ -121,8 +121,8 @@ class StudentStatusController extends Controller
 
     /**
      *
-     * @OA\Put(
-     *      path="/v1.0/student-statuses",
+     * @OA\Post(
+     *      path="/v1.0/student-statuses-update",
      *      operationId="updateStudentStatus",
      *      tags={"student.student_statuses"},
      *       security={
@@ -227,7 +227,7 @@ class StudentStatusController extends Controller
 
   /**
      *
-     * @OA\Put(
+     * @OA\Post(
      *      path="/v1.0/student-statuses/toggle-active",
      *      operationId="toggleActiveStudentStatus",
      *      tags={"student.student_statuses"},
@@ -820,7 +820,7 @@ class StudentStatusController extends Controller
 
     /**
      *
-     *     @OA\Delete(
+     *     @OA\Post(
      *      path="/v1.0/student-statuses/{ids}",
      *      operationId="deleteStudentStatusesByIds",
      *      tags={"student.student_statuses"},
@@ -871,6 +871,7 @@ class StudentStatusController extends Controller
      *      )
      *     )
      */
+    
 
     public function deleteStudentStatusesByIds(Request $request, $ids)
     {

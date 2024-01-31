@@ -200,9 +200,6 @@ class StudentController extends Controller
                 $request_data = $request->validated();
 
 
-
-
-
                 $request_data["business_id"] = $request->user()->business_id;
                 $request_data["is_active"] = true;
                 $request_data["created_by"] = $request->user()->id;
