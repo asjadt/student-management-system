@@ -370,7 +370,13 @@ class StudentController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
+     *    *      * *  @OA\Parameter(
+     * name="student_status_id",
+     * in="query",
+     * description="student_status_id",
+     * required=true,
+     * example="1"
+     * ),
 
      *      * *  @OA\Parameter(
      * name="start_date",
@@ -450,9 +456,9 @@ class StudentController extends Controller
             }
             $business_id =  $request->user()->business_id;
             $students = Student::
+            with("student_status")
 
-
-            where(
+            ->where(
                 [
                     "students.business_id" => $business_id
                 ]
@@ -474,7 +480,9 @@ class StudentController extends Controller
                 ->when(!empty($request->end_date), function ($query) use ($request) {
                     return $query->where('students.created_at', "<=", ($request->end_date . ' 23:59:59'));
                 })
-
+                ->when(!empty($request->student_status_id), function ($query) use ($request) {
+                    return $query->where('students.student_status_id',$request->student_status_id);
+                })
 
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
                     return $query->orderBy("students.id", $request->order_by);
@@ -561,8 +569,8 @@ class StudentController extends Controller
                 ], 401);
             }
             $business_id =  $request->user()->business_id;
-            $student =  Student::
-            where([
+            $student =  Student:: with("student_status")
+            ->where([
                 "id" => $id,
                 "business_id" => $business_id
             ])
