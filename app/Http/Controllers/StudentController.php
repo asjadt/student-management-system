@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CandidateCreateRequest;
-use App\Http\Requests\CandidateUpdateRequest;
+use App\Http\Requests\StudentCreateRequest;
+use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\MultipleFileUploadRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
-use App\Models\Candidate;
+use App\Models\Student;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CandidateController extends Controller
+class StudentController extends Controller
 {
     use ErrorUtil, UserActivityUtil, BusinessUtil;
 
     /**
         *
      * @OA\Post(
-     *      path="/v1.0/candidates/multiple-file-upload",
-     *      operationId="createCandidateFileMultiple",
-     *      tags={"candidates"},
+     *      path="/v1.0/students/multiple-file-upload",
+     *      operationId="createStudentFileMultiple",
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
 
-     *      summary="This method is to store multiple candidate files",
-     *      description="This method is to store multiple candidate files",
+     *      summary="This method is to store multiple student files",
+     *      description="This method is to store multiple student files",
      *
    *  @OA\RequestBody(
         *   * @OA\MediaType(
@@ -85,14 +85,14 @@ class CandidateController extends Controller
      *     )
      */
 
-     public function createCandidateFileMultiple(MultipleFileUploadRequest $request)
+     public function createStudentFileMultiple(MultipleFileUploadRequest $request)
      {
          try{
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
 
              $insertableData = $request->validated();
 
-             $location =  config("setup-config.candidate_files_location");
+             $location =  config("setup-config.student_files_location");
 
              $files = [];
              if(!empty($insertableData["files"])) {
@@ -121,14 +121,14 @@ class CandidateController extends Controller
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/candidates",
-     *      operationId="createCandidate",
-     *      tags={"candidates"},
+     *      path="/v1.0/students",
+     *      operationId="createStudent",
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to store candidate",
-     *      description="This method is to store candidate",
+     *      summary="This method is to store student",
+     *      description="This method is to store student",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -186,12 +186,12 @@ class CandidateController extends Controller
      *     )
      */
 
-    public function createCandidate(CandidateCreateRequest $request)
+    public function createStudent(StudentCreateRequest $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
             return DB::transaction(function () use ($request) {
-                if (!$request->user()->hasPermissionTo('candidate_create')) {
+                if (!$request->user()->hasPermissionTo('student_create')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -207,11 +207,11 @@ class CandidateController extends Controller
                 $request_data["is_active"] = true;
                 $request_data["created_by"] = $request->user()->id;
 
-                $candidate =  Candidate::create($request_data);
+                $student =  Student::create($request_data);
 
 
 
-                return response($candidate, 201);
+                return response($student, 201);
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -223,14 +223,14 @@ class CandidateController extends Controller
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/client/candidates",
-     *      operationId="createCandidateClient",
-     *      tags={"candidates"},
+     *      path="/v1.0/client/students",
+     *      operationId="createStudentClient",
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to store candidate",
-     *      description="This method is to store candidate",
+     *      summary="This method is to store student",
+     *      description="This method is to store student",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -288,12 +288,12 @@ class CandidateController extends Controller
      *     )
      */
 
-     public function createCandidateClient(CandidateCreateRequest $request)
+     public function createStudentClient(StudentCreateRequest $request)
      {
          try {
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
              return DB::transaction(function () use ($request) {
-                 if (!$request->user()->hasPermissionTo('candidate_create')) {
+                 if (!$request->user()->hasPermissionTo('student_create')) {
                      return response()->json([
                          "message" => "You can not perform this action"
                      ], 401);
@@ -309,11 +309,11 @@ class CandidateController extends Controller
                  $request_data["is_active"] = true;
                  $request_data["created_by"] = $request->user()->id;
 
-                 $candidate =  Candidate::create($request_data);
+                 $student =  Student::create($request_data);
 
 
 
-                 return response($candidate, 201);
+                 return response($student, 201);
              });
          } catch (Exception $e) {
              error_log($e->getMessage());
@@ -324,14 +324,14 @@ class CandidateController extends Controller
     /**
      *
      * @OA\Put(
-     *      path="/v1.0/candidates",
-     *      operationId="updateCandidate",
-     *      tags={"candidates"},
+     *      path="/v1.0/students",
+     *      operationId="updateStudent",
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to update candidate ",
-     *      description="This method is to update candidate",
+     *      summary="This method is to update student ",
+     *      description="This method is to update student",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -389,13 +389,13 @@ class CandidateController extends Controller
      *     )
      */
 
-    public function updateCandidate(CandidateUpdateRequest $request)
+    public function updateStudent(StudentUpdateRequest $request)
     {
 
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
             return DB::transaction(function () use ($request) {
-                if (!$request->user()->hasPermissionTo('candidate_update')) {
+                if (!$request->user()->hasPermissionTo('student_update')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -406,19 +406,19 @@ class CandidateController extends Controller
 
 
 
-                $candidate_query_params = [
+                $student_query_params = [
                     "id" => $request_data["id"],
                     "business_id" => $business_id
                 ];
-                // $candidate_prev = Candidate::where($candidate_query_params)
+                // $student_prev = Student::where($student_query_params)
                 //     ->first();
-                // if (!$candidate_prev) {
+                // if (!$student_prev) {
                 //     return response()->json([
-                //         "message" => "no candidate found"
+                //         "message" => "no student found"
                 //     ], 404);
                 // }
 
-                $candidate  =  tap(Candidate::where($candidate_query_params))->update(
+                $student  =  tap(Student::where($student_query_params))->update(
                     collect($request_data)->only([
                         'name',
                         'email',
@@ -443,13 +443,13 @@ class CandidateController extends Controller
                     // ->with("somthing")
 
                     ->first();
-                if (!$candidate) {
+                if (!$student) {
                     return response()->json([
                         "message" => "something went wrong."
                     ], 500);
                 }
 
-                return response($candidate, 201);
+                return response($student, 201);
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -461,9 +461,9 @@ class CandidateController extends Controller
     /**
      *
      * @OA\Get(
-     *      path="/v1.0/candidates",
-     *      operationId="getCandidates",
-     *      tags={"candidates"},
+     *      path="/v1.0/students",
+     *      operationId="getStudents",
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -512,8 +512,8 @@ class CandidateController extends Controller
      * example="ASC"
      * ),
 
-     *      summary="This method is to get candidates  ",
-     *      description="This method is to get candidates ",
+     *      summary="This method is to get students  ",
+     *      description="This method is to get students ",
      *
 
      *      @OA\Response(
@@ -550,49 +550,49 @@ class CandidateController extends Controller
      *     )
      */
 
-    public function getCandidates(Request $request)
+    public function getStudents(Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if (!$request->user()->hasPermissionTo('candidate_view')) {
+            if (!$request->user()->hasPermissionTo('student_update')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
             $business_id =  $request->user()->business_id;
-            $candidates = Candidate::
+            $students = Student::
             with("job_listing")
 
             ->where(
                 [
-                    "candidates.business_id" => $business_id
+                    "students.business_id" => $business_id
                 ]
             )
 
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
                         $term = $request->search_key;
-                        // $query->where("candidates.name", "like", "%" . $term . "%")
-                        //     ->orWhere("candidates.description", "like", "%" . $term . "%");
+                        // $query->where("students.name", "like", "%" . $term . "%")
+                        //     ->orWhere("students.description", "like", "%" . $term . "%");
                     });
                 })
                 //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
                 //        return $query->where('product_category_id', $request->product_category_id);
                 //    })
                 ->when(!empty($request->start_date), function ($query) use ($request) {
-                    return $query->where('candidates.created_at', ">=", $request->start_date);
+                    return $query->where('students.created_at', ">=", $request->start_date);
                 })
                 ->when(!empty($request->end_date), function ($query) use ($request) {
-                    return $query->where('candidates.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                    return $query->where('students.created_at', "<=", ($request->end_date . ' 23:59:59'));
                 })
                 ->when(!empty($request->job_listing_id), function ($query) use ($request) {
-                    return $query->where('candidates.job_listing_id',$request->job_listing_id);
+                    return $query->where('students.job_listing_id',$request->job_listing_id);
                 })
 
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("candidates.id", $request->order_by);
+                    return $query->orderBy("students.id", $request->order_by);
                 }, function ($query) {
-                    return $query->orderBy("candidates.id", "DESC");
+                    return $query->orderBy("students.id", "DESC");
                 })
                 ->when(!empty($request->per_page), function ($query) use ($request) {
                     return $query->paginate($request->per_page);
@@ -602,7 +602,7 @@ class CandidateController extends Controller
 
 
 
-            return response()->json($candidates, 200);
+            return response()->json($students, 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -612,9 +612,9 @@ class CandidateController extends Controller
     /**
      *
      * @OA\Get(
-     *      path="/v1.0/candidates/{id}",
-     *      operationId="getCandidateById",
-     *      tags={"candidates"},
+     *      path="/v1.0/students/{id}",
+     *      operationId="getStudentById",
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -625,8 +625,8 @@ class CandidateController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-     *      summary="This method is to get candidate by id",
-     *      description="This method is to get candidate by id",
+     *      summary="This method is to get student by id",
+     *      description="This method is to get student by id",
      *
 
      *      @OA\Response(
@@ -664,23 +664,23 @@ class CandidateController extends Controller
      */
 
 
-    public function getCandidateById($id, Request $request)
+    public function getStudentById($id, Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if (!$request->user()->hasPermissionTo('candidate_view')) {
+            if (!$request->user()->hasPermissionTo('student_update')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
             $business_id =  $request->user()->business_id;
-            $candidate =  Candidate:: with("job_listing")
+            $student =  Student:: with("job_listing")
             ->where([
                 "id" => $id,
                 "business_id" => $business_id
             ])
                 ->first();
-            if (!$candidate) {
+            if (!$student) {
                 $this->storeError(
                     "no data found"
                     ,
@@ -693,7 +693,7 @@ class CandidateController extends Controller
                 ], 404);
             }
 
-            return response()->json($candidate, 200);
+            return response()->json($student, 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -705,9 +705,9 @@ class CandidateController extends Controller
     /**
      *
      *     @OA\Delete(
-     *      path="/v1.0/candidates/{ids}",
-     *      operationId="deleteCandidatesByIds",
-     *      tags={"candidates"},
+     *      path="/v1.0/students/{ids}",
+     *      operationId="deleteStudentsByIds",
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -718,8 +718,8 @@ class CandidateController extends Controller
      *         required=true,
      *  example="1,2,3"
      *      ),
-     *      summary="This method is to delete candidate by id",
-     *      description="This method is to delete candidate by id",
+     *      summary="This method is to delete student by id",
+     *      description="This method is to delete student by id",
      *
 
      *      @OA\Response(
@@ -756,19 +756,19 @@ class CandidateController extends Controller
      *     )
      */
 
-    public function deleteCandidatesByIds(Request $request, $ids)
+    public function deleteStudentsByIds(Request $request, $ids)
     {
 
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if (!$request->user()->hasPermissionTo('candidate_delete')) {
+            if (!$request->user()->hasPermissionTo('student_delete')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
             $business_id =  $request->user()->business_id;
             $idsArray = explode(',', $ids);
-            $existingIds = Candidate::where([
+            $existingIds = Student::where([
                 "business_id" => $business_id
             ])
                 ->whereIn('id', $idsArray)
@@ -790,7 +790,7 @@ class CandidateController extends Controller
                     "message" => "Some or all of the specified data do not exist."
                 ], 404);
             }
-            Candidate::destroy($existingIds);
+            Student::destroy($existingIds);
 
 
             return response()->json(["message" => "data deleted sussfully","deleted_ids" => $existingIds], 200);

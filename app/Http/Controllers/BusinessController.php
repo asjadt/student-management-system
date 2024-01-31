@@ -339,7 +339,7 @@ if(!$user) {
     throw new Exception(json_encode($error),422);
 }
 
-if(!$user->hasRole('business_owner')) {
+if(!$user->hasRole('business_admin')) {
     $error =  [
         "message" => "The given data was invalid.",
         "errors" => ["owner_id"=>["The user is not a businesses Owner"]]
@@ -663,7 +663,7 @@ if(!$user->hasRole('business_owner')) {
 
     $user =  User::create($request_data['user']);
 
-    $user->assignRole('business_owner');
+    $user->assignRole('business_admin');
    // end user info ##############
 
 
@@ -744,7 +744,7 @@ if(!$user->hasRole('business_owner')) {
 
 
 
-        
+
     // }
 
         return response([
@@ -957,7 +957,7 @@ if(!$user->hasRole('business_owner')) {
 
         }
 
-        // $user->syncRoles(["business_owner"]);
+        // $user->syncRoles(["business_admin"]);
 
 
 
@@ -1823,7 +1823,7 @@ if(!$user->hasRole('business_owner')) {
 
         try{
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if(!$request->user()->hasRole('business_owner')){
+            if(!$request->user()->hasRole('business_admin')){
                 return response()->json([
                    "message" => "You can not perform this action"
                 ],401);

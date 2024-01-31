@@ -2453,7 +2453,7 @@ CREATE TABLE `bookings` (
   `job_start_date` date DEFAULT NULL,
   `job_start_time` time DEFAULT NULL,
   `job_end_time` time DEFAULT NULL,
-  `status` enum('pending','confirmed','rejected_by_client','rejected_by_business_owner','converted_to_job') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','confirmed','rejected_by_client','rejected_by_business_admin','converted_to_job') COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -27176,24 +27176,24 @@ CREATE TABLE `notification_templates` (
 --
 
 INSERT INTO `notification_templates` (`id`, `name`, `type`, `template`, `link`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'bid_created_by_business_owner', '\"A business named [business_name] posted a bid. its owner is\"', '\"\\/[business_id]\\/[bid_id]\"', 1, NULL, NULL),
-(2, NULL, 'bid_updated_by_business_owner', '\"A business named [business_name] updated their bid. its owner is\"', '\"\\/[business_id]\\/[bid_id]\"', 1, NULL, NULL),
+(1, NULL, 'bid_created_by_business_admin', '\"A business named [business_name] posted a bid. its owner is\"', '\"\\/[business_id]\\/[bid_id]\"', 1, NULL, NULL),
+(2, NULL, 'bid_updated_by_business_admin', '\"A business named [business_name] updated their bid. its owner is\"', '\"\\/[business_id]\\/[bid_id]\"', 1, NULL, NULL),
 (3, NULL, 'bid_accepted_by_client', '\"A client named [customer_name] accepted your bid.\"', '\"\\/[customer_id]\\/[pre_booking_id]\"', 1, NULL, NULL),
 (4, NULL, 'bid_rejected_by_client', '\"A client named [customer_name] rejected your bid.\"', '\"\\/[customer_id]\\/[pre_booking_id]\"', 1, NULL, NULL),
-(5, NULL, 'booking_updated_by_business_owner', '\"hello [customer_name]! your booking is updated by the business named[business_owner_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(6, NULL, 'booking_status_changed_by_business_owner', '\"hello [customer_name]! your booking status updated by the business named[business_owner_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(7, NULL, 'booking_confirmed_by_business_owner', '\"hello [customer_name]! your booking confirmed by the business named[business_owner_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(8, NULL, 'booking_deleted_by_business_owner', '\"hello [customer_name]! your booking deleted by the business named[business_owner_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(9, NULL, 'booking_rejected_by_business_owner', '\"hello [customer_name]! your booking rejected by the business named[business_owner_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(10, NULL, 'booking_created_by_client', '\"hello [business_owner_name]!  booking created by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(11, NULL, 'booking_updated_by_client', '\"hello [business_owner_name]!  booking updated by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(12, NULL, 'booking_deleted_by_client', '\"hello [business_owner_name]!  booking deleted by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(13, NULL, 'booking_accepted_by_client', '\"hello [business_owner_name]!  booking accepted by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(14, NULL, 'booking_rejected_by_client', '\"hello [business_owner_name]!  booking rejected by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(15, NULL, 'job_created_by_business_owner', '\"hello [customer_name]!  job created  by [business_owner_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(16, NULL, 'job_updated_by_business_owner', '\"hello [customer_name]!  job updated  by [business_owner_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(17, NULL, 'job_status_changed_by_business_owner', '\"hello [customer_name]!  job status changed  by [business_owner_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
-(18, NULL, 'job_deleted_by_business_owner', '\"hello [customer_name]!  job deleted changed  by [business_owner_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL);
+(5, NULL, 'booking_updated_by_business_admin', '\"hello [customer_name]! your booking is updated by the business named[business_admin_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(6, NULL, 'booking_status_changed_by_business_admin', '\"hello [customer_name]! your booking status updated by the business named[business_admin_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(7, NULL, 'booking_confirmed_by_business_admin', '\"hello [customer_name]! your booking confirmed by the business named[business_admin_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(8, NULL, 'booking_deleted_by_business_admin', '\"hello [customer_name]! your booking deleted by the business named[business_admin_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(9, NULL, 'booking_rejected_by_business_admin', '\"hello [customer_name]! your booking rejected by the business named[business_admin_name],[business_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(10, NULL, 'booking_created_by_client', '\"hello [business_admin_name]!  booking created by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(11, NULL, 'booking_updated_by_client', '\"hello [business_admin_name]!  booking updated by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(12, NULL, 'booking_deleted_by_client', '\"hello [business_admin_name]!  booking deleted by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(13, NULL, 'booking_accepted_by_client', '\"hello [business_admin_name]!  booking accepted by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(14, NULL, 'booking_rejected_by_client', '\"hello [business_admin_name]!  booking rejected by [customer_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(15, NULL, 'job_created_by_business_admin', '\"hello [customer_name]!  job created  by [business_admin_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(16, NULL, 'job_updated_by_business_admin', '\"hello [customer_name]!  job updated  by [business_admin_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(17, NULL, 'job_status_changed_by_business_admin', '\"hello [customer_name]!  job status changed  by [business_admin_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL),
+(18, NULL, 'job_deleted_by_business_admin', '\"hello [customer_name]!  job deleted changed  by [business_admin_name] \"', '\"\\/[customer_id]\\/[booking_id]\"', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -27927,7 +27927,7 @@ CREATE TABLE `roles` (
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
 (1, 'superadmin', 'api', '2023-04-19 06:12:14', '2023-04-19 06:12:14'),
 (2, 'data_collector', 'api', '2023-04-19 06:12:14', '2023-04-19 06:12:14'),
-(3, 'business_owner', 'api', '2023-04-19 06:12:14', '2023-04-19 06:12:14'),
+(3, 'business_admin', 'api', '2023-04-19 06:12:14', '2023-04-19 06:12:14'),
 (4, 'shop_owner', 'api', '2023-04-19 06:12:14', '2023-04-19 06:12:14'),
 (5, 'customer', 'api', '2023-04-19 06:12:14', '2023-04-19 06:12:14');
 

@@ -296,7 +296,7 @@ class UserNoteController extends Controller
          try {
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
              return DB::transaction(function () use ($request) {
-                 if (!$request->user()->hasPermissionTo('business_owner')) {
+                 if (!$request->user()->hasPermissionTo('business_admin')) {
                      return response()->json([
                          "message" => "You can not perform this action"
                      ], 401);

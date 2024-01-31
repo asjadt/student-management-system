@@ -211,7 +211,7 @@ class LeaveController extends Controller
                 $request_data["business_id"] = $request->user()->business_id;
                 $request_data["is_active"] = true;
                 $request_data["created_by"] = $request->user()->id;
-                $request_data["status"] = (auth()->user()->hasRole("business_owner")?"approved" :"pending_approval");
+                $request_data["status"] = (auth()->user()->hasRole("business_admin")?"approved" :"pending_approval");
 
 
 
@@ -321,7 +321,7 @@ foreach ($assigned_departments as $assigned_department) {
                         $query->where('leave_records.date',($request_data["date"]));
                     })->first();
 
-                    // if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave)  || auth()->user()->hasRole("business_owner") ) {
+                    // if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave)  || auth()->user()->hasRole("business_admin") ) {
 
                         if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave)  ) {
 
@@ -406,7 +406,7 @@ foreach ($assigned_departments as $assigned_department) {
                         })->first();
 
 
-                    //    if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave) || auth()->user()->hasRole("business_owner") ) {
+                    //    if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave) || auth()->user()->hasRole("business_admin") ) {
 
                         if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave)) {
 
@@ -474,7 +474,7 @@ foreach ($assigned_departments as $assigned_department) {
                     })->first();
 
 
-                    // if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave) || auth()->user()->hasRole("business_owner") ) {
+                    // if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave) || auth()->user()->hasRole("business_admin") ) {
 
 
                         if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave) ) {
@@ -581,7 +581,7 @@ foreach ($assigned_departments as $assigned_department) {
                     })->first();
 
 
-                    // if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave) || auth()->user()->hasRole("business_owner")) {
+                    // if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave) || auth()->user()->hasRole("business_admin")) {
 
                         if ((!$work_shift_details->is_weekend && (!$holiday || !$holiday->is_active) && !$previous_leave) ) {
 

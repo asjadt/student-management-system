@@ -70,9 +70,19 @@ return "swagger generated";
     public function setUp(Request $request)
     {
         $this->storeActivity($request, "DUMMY activity","DUMMY description");
+
         // @@@@@@@@@@@@@@@@@@@
         // clear everything
         // @@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+
+
 
         Artisan::call('optimize:clear');
         Artisan::call('migrate:fresh');
@@ -129,10 +139,12 @@ return "swagger generated";
             ->exists()){
              Role::create(['guard_name' => 'api', 'name' => $role,"is_system_default"=> 1, "business_id" => NULL,
              "is_default" => 1,
-             "is_default_for_business" => (in_array($role ,["business_owner",
+             "is_default_for_business" => (in_array($role ,["business_admin",
              "business_admin",
-             "business_manager",
-             "business_employee"])?1:0)
+             "business_staff",
+             "business_student",
+
+             ])?1:0)
 
 
             ]);
@@ -734,10 +746,12 @@ return "swagger generated";
             ->exists()){
              Role::create(['guard_name' => 'api', 'name' => $role,"is_system_default"=> 1, "business_id" => NULL,
              "is_default" => 1,
-             "is_default_for_business" => (in_array($role ,["business_owner",
-             "business_admin",
-             "business_manager",
-             "business_employee"])?1:0)
+             "is_default_for_business" => (in_array($role ,[
+            "business_admin",
+             "business_staff",
+             "business_student",
+
+             ])?1:0)
 
 
             ]);

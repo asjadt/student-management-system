@@ -157,7 +157,7 @@ class NotificationController extends Controller
 
 
             //         $notifications->items()[$i]["title"] =  str_replace(
-            //             "[business_owner_name]",
+            //             "[business_admin_name]",
 
             //             ($notifications->items()[$i]->business->owner->first_Name . " " . $notifications->items()[$i]->business->owner->last_Name),
 
@@ -168,7 +168,7 @@ class NotificationController extends Controller
             //         );
 
             //         $notifications->items()[$i]["description"] =  str_replace(
-            //             "[business_owner_name]",
+            //             "[business_admin_name]",
 
             //             ($notifications->items()[$i]->business->owner->first_Name . " " . $notifications->items()[$i]->business->owner->last_Name),
 
@@ -308,7 +308,7 @@ class NotificationController extends Controller
 
                 if (!empty($notifications->items()[$i]->business_id)) {
                     $notifications->items()[$i]["template_string"] =  str_replace(
-                        "[business_owner_name]",
+                        "[business_admin_name]",
 
                         ($notifications->items()[$i]->business->owner->first_Name . " " . $notifications->items()[$i]->business->owner->last_Name),
 

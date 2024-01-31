@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class JobListing extends Model
 {
     use HasFactory;
-    protected $appends = ['total_candidates'];
+    protected $appends = ['total_students'];
 
     protected $fillable = [
         'title',
@@ -29,9 +29,9 @@ class JobListing extends Model
 
     ];
 
-    public function candidates()
+    public function students()
     {
-        return $this->hasMany(Candidate::class, "job_listing_id",'id');
+        return $this->hasMany(Student::class, "job_listing_id",'id');
     }
 
     // Define relationships with other tables
@@ -58,8 +58,8 @@ class JobListing extends Model
         return $this->belongsTo(Department::class, "department_id" , 'id');
     }
 
-    public function getTotalCandidatesAttribute($value) {
-           return $this->candidates()->count();
+    public function getTotalStudentsAttribute($value) {
+           return $this->students()->count();
     }
 
 

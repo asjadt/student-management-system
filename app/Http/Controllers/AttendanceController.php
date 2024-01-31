@@ -118,7 +118,7 @@ class AttendanceController extends Controller
                 $request_data["is_active"] = true;
                 $request_data["created_by"] = $request->user()->id;
 
-                $request_data["status"] = (auth()->user()->hasRole("business_owner") ? "approved" : "pending_approval");
+                $request_data["status"] = (auth()->user()->hasRole("business_admin") ? "approved" : "pending_approval");
 
 
 
@@ -168,7 +168,7 @@ class AttendanceController extends Controller
                     "day" => $day_number
                 ])
                     ->first();
-                if (!$work_shift_details && !auth()->user()->hasRole("business_owner")) {
+                if (!$work_shift_details && !auth()->user()->hasRole("business_admin")) {
                     $this->storeError(
                         ("No work shift details found  day" . $day_number),
                         400,
@@ -180,7 +180,7 @@ class AttendanceController extends Controller
                     ];
                     throw new Exception(json_encode($error), 400);
                 }
-                if ($work_shift_details->is_weekend && !auth()->user()->hasRole("business_owner")) {
+                if ($work_shift_details->is_weekend && !auth()->user()->hasRole("business_admin")) {
                     $this->storeError(
                         ("there is a weekend on date " . $request_data["in_date"]),
                         400,
@@ -224,7 +224,7 @@ class AttendanceController extends Controller
                     ->first();
 
                 if ($holiday) {
-                    if ($holiday->is_active && !auth()->user()->hasRole("business_owner")) {
+                    if ($holiday->is_active && !auth()->user()->hasRole("business_admin")) {
                         $this->storeError(
                             ("there is a holiday on date" . $request_data["in_date"]),
                             400,
@@ -482,7 +482,7 @@ class AttendanceController extends Controller
                     ])
                         ->first();
 
-                    if (!$work_shift_details && !auth()->user()->hasRole("business_owner")) {
+                    if (!$work_shift_details && !auth()->user()->hasRole("business_admin")) {
 
                         $this->storeError(
                             ("No work shift details found  day" . $day_number),
@@ -498,7 +498,7 @@ class AttendanceController extends Controller
 
 
 
-                    if ($work_shift_details->is_weekend && !auth()->user()->hasRole("business_owner")) {
+                    if ($work_shift_details->is_weekend && !auth()->user()->hasRole("business_admin")) {
                         $this->storeError(
                             ("there is a weekend on date" . $item["in_date"]),
                             400,
@@ -544,7 +544,7 @@ class AttendanceController extends Controller
                         ->first();
 
                     if ($holiday) {
-                        if ($holiday->is_active && !auth()->user()->hasRole("business_owner")) {
+                        if ($holiday->is_active && !auth()->user()->hasRole("business_admin")) {
                             $this->storeError(
                                 ("there is a holiday on date" . $item["in_date"]),
                                 400,
@@ -564,7 +564,7 @@ class AttendanceController extends Controller
                     $work_hours_delta = 0;
                     $total_paid_hours = 0;
                     $regular_work_hours = 0;
-                    $status = (auth()->user()->hasRole("business_owner") ? "approved" : "pending_approval");
+                    $status = (auth()->user()->hasRole("business_admin") ? "approved" : "pending_approval");
 
                     if (!isset($setting_attendance->auto_approval)) {
                         if ($setting_attendance->auto_approval) {
@@ -838,7 +838,7 @@ class AttendanceController extends Controller
                     "day" => $day_number
                 ])
                     ->first();
-                if (!$work_shift_details && !auth()->user()->hasRole("business_owner")) {
+                if (!$work_shift_details && !auth()->user()->hasRole("business_admin")) {
                     $this->storeError(
                         ("No work shift details found  day" . $day_number),
                         400,
@@ -850,7 +850,7 @@ class AttendanceController extends Controller
                     ];
                     throw new Exception(json_encode($error), 400);
                 }
-                if ($work_shift_details->is_weekend && !auth()->user()->hasRole("business_owner")) {
+                if ($work_shift_details->is_weekend && !auth()->user()->hasRole("business_admin")) {
                     $this->storeError(
                         ("there is a weekend on date" . $request_data["in_date"]),
                         400,
@@ -895,7 +895,7 @@ class AttendanceController extends Controller
                     ->first();
 
                 if ($holiday) {
-                    if ($holiday->is_active && !auth()->user()->hasRole("business_owner")) {
+                    if ($holiday->is_active && !auth()->user()->hasRole("business_admin")) {
                         $this->storeError(
                             ("there is a holiday on date" . $request_data["in_date"]),
                             400,

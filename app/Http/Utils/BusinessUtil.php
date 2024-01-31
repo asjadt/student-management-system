@@ -175,7 +175,7 @@ trait BusinessUtil
                 ];
             }
 
-            if (!$user->hasRole(("business_owner" . "#" . auth()->user()->business_id)) && !$user->hasRole(("business_admin" . "#" . auth()->user()->business_id)) &&  !$user->hasRole(("business_employee" . "#" . auth()->user()->business_id))) {
+            if (!$user->hasRole(("business_admin" . "#" . auth()->user()->business_id)) && !$user->hasRole(("business_admin" . "#" . auth()->user()->business_id)) &&  !$user->hasRole(("business_employee" . "#" . auth()->user()->business_id))) {
                 return [
                     "ok" => false,
                     "status" => 403,
@@ -579,12 +579,12 @@ trait BusinessUtil
 
             $setting_leave  = SettingLeave::create($insertableData);
 
-            $business_owner_role_id = Role::where([
-                "name" => ("business_owner#" . $business_id)
+            $business_admin_role_id = Role::where([
+                "name" => ("business_admin#" . $business_id)
             ])
                 ->pluck("id");
 
-            $setting_leave->special_roles()->sync($business_owner_role_id, []);
+            $setting_leave->special_roles()->sync($business_admin_role_id, []);
 
 
             $default_paid_leave_employment_statuses = $defaultSettingLeave->paid_leave_employment_statuses()->pluck("employment_status_id");
@@ -646,11 +646,11 @@ trait BusinessUtil
 
 
 
-            $business_owner_role_id = Role::where([
-                "name" => ("business_owner#" . $business_id)
+            $business_admin_role_id = Role::where([
+                "name" => ("business_admin#" . $business_id)
             ])
                 ->pluck("id");
-            $setting_attendance->special_roles()->sync($business_owner_role_id, []);
+            $setting_attendance->special_roles()->sync($business_admin_role_id, []);
         }
 
         // end load setting attendance
@@ -696,11 +696,11 @@ trait BusinessUtil
 
 
 
-            //   $business_owner_role_id = Role::where([
-            //       "name" => ("business_owner#" . $business_id)
+            //   $business_admin_role_id = Role::where([
+            //       "name" => ("business_admin#" . $business_id)
             //   ])
             //   ->pluck("id");
-            //   $setting_attendance->special_roles()->sync($business_owner_role_id, []);
+            //   $setting_attendance->special_roles()->sync($business_admin_role_id, []);
         }
     }
 

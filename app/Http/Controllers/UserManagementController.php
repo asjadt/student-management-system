@@ -1047,7 +1047,7 @@ class UserManagementController extends Controller
      *            required={"id","first_Name","last_Name","email","password","password_confirmation","phone","address_line_1","address_line_2","country","city","postcode","role"},
      *           @OA\Property(property="id", type="string", format="number",example="1"),
      *
-     *  *  * *  @OA\Property(property="roles", type="string", format="array",example={"business_owner#1","business_admin#1"})
+     *  *  * *  @OA\Property(property="roles", type="string", format="array",example={"business_admin#1","business_admin#1"})
 
      *
      *         ),
@@ -3343,7 +3343,7 @@ class UserManagementController extends Controller
                                     return $query
                                         ->whereNotNull("business_id")
                                         ->whereHas("roles", function ($query) {
-                                            return $query->where("roles.name", "business_owner");
+                                            return $query->where("roles.name", "business_admin");
                                         });
                                 });
                         });
@@ -3726,7 +3726,7 @@ class UserManagementController extends Controller
                                     return $query
                                         ->whereNotNull("business_id")
                                         ->whereHas("roles", function ($query) {
-                                            return $query->where("roles.name", "business_owner");
+                                            return $query->where("roles.name", "business_admin");
                                         });
                                 });
                         });
