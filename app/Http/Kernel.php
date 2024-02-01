@@ -15,8 +15,8 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
-
-        \App\Http\Middleware\DateFormatterMiddleware::class,
+        \App\Http\Middleware\FormatDatesInResponse::class,
+        \App\Http\Middleware\FormatDatesInRequest::class,
         \App\Http\Middleware\TrustProxies::class,
         \Fruitcake\Cors\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,

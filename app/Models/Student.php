@@ -53,40 +53,40 @@ class Student extends Model
 
 
 
-    public function getDate_Of_BirthAttribute($value)
-    {
-        if($value) {
-            return (new Carbon($value))->format('d-m-Y');
-        }
-        return "";
+    // public function getDate_Of_BirthAttribute($value)
+    // {
+    //     if($value) {
+    //         return (new Carbon($value))->format('d-m-Y');
+    //     }
+    //     return "";
 
-    }
+    // }
 
-    public function getCourseStartDateAttribute($value)
-    {
-        if($value) {
-            return (new Carbon($value))->format('d-m-Y');
-        }
-        return "";
+    // public function getCourseStartDateAttribute($value)
+    // {
+    //     if($value) {
+    //         return (new Carbon($value))->format('d-m-Y');
+    //     }
+    //     return "";
 
-    }
-    public function getLetterIssueDateAttribute($value)
-    {
-        if($value) {
-            return (new Carbon($value))->format('d-m-Y');
-        }
-        return "";
-    }
+    // }
+    // public function getLetterIssueDateAttribute($value)
+    // {
+    //     if($value) {
+    //         return (new Carbon($value))->format('d-m-Y');
+    //     }
+    //     return "";
+    // }
 
 
-    public function getCreatedAtAttribute($value)
-    {
-        return (new Carbon($value))->format('d-m-Y');
-    }
-    public function getUpdatedAtAttribute($value)
-    {
-        return (new Carbon($value))->format('d-m-Y');
-    }
+    // public function getCreatedAtAttribute($value)
+    // {
+    //     return (new Carbon($value))->format('d-m-Y');
+    // }
+    // public function getUpdatedAtAttribute($value)
+    // {
+    //     return (new Carbon($value))->format('d-m-Y');
+    // }
 
 
 

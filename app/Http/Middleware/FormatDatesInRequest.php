@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 
-class DateFormatterMiddleware
+class FormatDatesInRequest
 {
     /**
      * Handle an incoming request.
@@ -24,8 +24,17 @@ class DateFormatterMiddleware
             if (is_array($value)) {
                 // Recursive call for nested arrays
                 $data[$key] = $this->formatDates($value);
-            } elseif ($this->isDateFormat($value)) {
-                $data[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+            }
+
+            elseif ($this->isDateFormat($value)) {
+
+                if ($this->isDateFormat($value, 'd-m-Y')) {
+                    $array[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+                } elseif ($this->isDateFormat($value, 'Y-m-d')) {
+                    // If already in 'Y-m-d' format, no need to convert
+                    $array[$key] = $value;
+                }
+
             }
         }
 
@@ -45,7 +54,13 @@ class DateFormatterMiddleware
             if (is_array($value)) {
                 $array[$key] = $this->formatDates($value);
             } elseif ($this->isDateFormat($value)) {
-                $array[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+
+                if ($this->isDateFormat($value, 'd-m-Y')) {
+                    $array[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+                } elseif ($this->isDateFormat($value, 'Y-m-d')) {
+                    // If already in 'Y-m-d' format, no need to convert
+                    $array[$key] = $value;
+                }
             }
         }
 
