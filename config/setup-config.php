@@ -427,7 +427,7 @@ return [
                 "student_create",
                 "student_update",
                 "student_view",
-                "student_delete",
+                // "student_delete",
 
                 // "user_create",
                 // "user_update",
@@ -585,7 +585,7 @@ return [
                 "student_status_update",
                 "student_status_activate",
                 "student_status_view",
-                "student_status_delete",
+                // "student_status_delete",
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
