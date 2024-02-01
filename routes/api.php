@@ -886,6 +886,10 @@ Route::post('/v1.0/students', [StudentController::class, "createStudent"]);
 Route::put('/v1.0/students', [StudentController::class, "updateStudent"]);
 Route::get('/v1.0/students/validate/school-id/{school_id}', [StudentController::class, "validateStudentId"]);
 Route::get('/v1.0/students', [StudentController::class, "getStudents"]);
+
+
+
+
 Route::get('/v1.0/students/{id}', [StudentController::class, "getStudentById"]);
 Route::delete('/v1.0/students/{ids}', [StudentController::class, "deleteStudentsByIds"]);
 
@@ -1047,6 +1051,7 @@ Route::get('/v1.0/client/job-listings', [JobListingController::class, "getJobLis
 Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentByIdClient"]);
 Route::get('/v1.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClient"]);
 
+Route::get('/v1.0//client/students', [StudentController::class, "getStudentsClient"]);
 
 
 

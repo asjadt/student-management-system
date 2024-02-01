@@ -360,9 +360,9 @@ class StudentController extends Controller
      *       },
 
      *              @OA\Parameter(
-     *         name="user_id",
+     *         name="school_id",
      *         in="path",
-     *         description="user_id",
+     *         description="school_id",
      *         required=true,
      *  example="1"
      *      ),
@@ -409,7 +409,7 @@ class StudentController extends Controller
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            $user_id_exists =  Student::where(
+            $school_id_exists =  Student::where(
                 [
                     'school_id' => $school_id,
                     "business_id" => $request->user()->business_id
@@ -418,7 +418,7 @@ class StudentController extends Controller
 
 
 
-            return response()->json(["user_id_exists" => $user_id_exists], 200);
+            return response()->json(["school_id_exists" => $school_id_exists], 200);
         } catch (Exception $e) {
             error_log($e->getMessage());
             return $this->sendError($e, 500, $request);
@@ -605,6 +605,200 @@ class StudentController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
+     /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/client/students",
+     *      operationId="getStudentsClient",
+     *      tags={"students"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *
+     *         @OA\Parameter(
+     *         name="business_id",
+     *         in="query",
+     *         description="business_id",
+     *         required=true,
+     *         example="2"
+     *          ),
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=true,
+     *  example="6"
+     *      ),
+     *    *      * *  @OA\Parameter(
+     * name="student_status_id",
+     * in="query",
+     * description="student_status_id",
+     * required=true,
+     * example="1"
+     * ),
+     * *   * *  @OA\Parameter(
+     * name="school_id",
+     * in="query",
+     * description="school_id",
+     * required=true,
+     * example="412cbhg"
+     * ),
+     *   * *  @OA\Parameter(
+     * name="date_of_birth",
+     * in="query",
+     * description="date_of_birth",
+     * required=true,
+     * example="ASC"
+     * ),
+
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+
+
+     *      summary="This method is to get students  ",
+     *      description="This method is to get students ",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function getStudentsClient(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            //  if (!$request->user()->hasPermissionTo('student_update')) {
+            //      return response()->json([
+            //          "message" => "You can not perform this action"
+            //      ], 401);
+            //  }
+             $business_id =  $request->business_id;
+             if(!$business_id) {
+                $error = [ "message" => "The given data was invalid.",
+                "errors" => ["business_id"=>["The business id field is required."]]
+                ];
+                    throw new Exception(json_encode($error),422);
+             }
+
+
+             $students = Student::
+             with("student_status")
+
+             ->where(
+                 [
+                     "students.business_id" => $business_id
+                 ]
+             )
+
+                 ->when(!empty($request->search_key), function ($query) use ($request) {
+                     return $query->where(function ($query) use ($request) {
+                         $term = $request->search_key;
+
+
+                         $query->where("students.first_name", "like", "%" . $term . "%")
+                             ->orWhere("students.middle_name", "like", "%" . $term . "%")
+                             ->orWhere("students.last_name", "like", "%" . $term . "%")
+                             ->orWhere("students.nationality", "like", "%" . $term . "%")
+                             ->orWhere("students.passport_number", "like", "%" . $term . "%")
+                             ->orWhere("students.school_id", "like", "%" . $term . "%")
+                             ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
+                     });
+                 })
+                 //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
+                 //        return $query->where('product_category_id', $request->product_category_id);
+                 //    })
+                 ->when(!empty($request->start_date), function ($query) use ($request) {
+                     return $query->where('students.created_at', ">=", $request->start_date);
+                 })
+                 ->when(!empty($request->end_date), function ($query) use ($request) {
+                     return $query->where('students.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                 })
+                 ->when(!empty($request->student_status_id), function ($query) use ($request) {
+                     return $query->where('students.student_status_id',$request->student_status_id);
+                 })
+                 ->when(!empty($request->date_of_birth), function ($query) use ($request) {
+                     return $query->where('students.date_of_birth',$request->date_of_birth);
+                 })
+                 ->when(!empty($request->school_id), function ($query) use ($request) {
+                     return $query->where('students.school_id',$request->school_id);
+                 })
+
+                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
+                     return $query->orderBy("students.id", $request->order_by);
+                 }, function ($query) {
+                     return $query->orderBy("students.id", "DESC");
+                 })
+                 ->when(!empty($request->per_page), function ($query) use ($request) {
+                     return $query->paginate($request->per_page);
+                 }, function ($query) {
+                     return $query->get();
+                 });;
+
+
+
+             return response()->json($students, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
 
     /**
      *
