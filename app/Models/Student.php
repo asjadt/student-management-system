@@ -53,6 +53,15 @@ class Student extends Model
 
 
 
+    public function getDate_Of_BirthAttribute($value)
+    {
+        if($value) {
+            return (new Carbon($value))->format('d-m-Y');
+        }
+        return "";
+
+    }
+
     public function getCourseStartDateAttribute($value)
     {
         if($value) {
