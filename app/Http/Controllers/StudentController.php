@@ -451,6 +451,20 @@ class StudentController extends Controller
      * required=true,
      * example="1"
      * ),
+     * *   * *  @OA\Parameter(
+     * name="school_id",
+     * in="query",
+     * description="school_id",
+     * required=true,
+     * example="412cbhg"
+     * ),
+     *   * *  @OA\Parameter(
+     * name="date_of_birth",
+     * in="query",
+     * description="date_of_birth",
+     * required=true,
+     * example="ASC"
+     * ),
 
      *      * *  @OA\Parameter(
      * name="start_date",
@@ -480,6 +494,7 @@ class StudentController extends Controller
      * required=true,
      * example="ASC"
      * ),
+
 
      *      summary="This method is to get students  ",
      *      description="This method is to get students ",
@@ -541,8 +556,15 @@ class StudentController extends Controller
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
                         $term = $request->search_key;
-                        // $query->where("students.name", "like", "%" . $term . "%")
-                        //     ->orWhere("students.description", "like", "%" . $term . "%");
+
+
+                        $query->where("students.first_name", "like", "%" . $term . "%")
+                            ->orWhere("students.middle_name", "like", "%" . $term . "%")
+                            ->orWhere("students.last_name", "like", "%" . $term . "%")
+                            ->orWhere("students.nationality", "like", "%" . $term . "%")
+                            ->orWhere("students.passport_number", "like", "%" . $term . "%")
+                            ->orWhere("students.school_id", "like", "%" . $term . "%")
+                            ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
                     });
                 })
                 //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
@@ -556,6 +578,12 @@ class StudentController extends Controller
                 })
                 ->when(!empty($request->student_status_id), function ($query) use ($request) {
                     return $query->where('students.student_status_id',$request->student_status_id);
+                })
+                ->when(!empty($request->date_of_birth), function ($query) use ($request) {
+                    return $query->where('students.date_of_birth',$request->date_of_birth);
+                })
+                ->when(!empty($request->school_id), function ($query) use ($request) {
+                    return $query->where('students.school_id',$request->school_id);
                 })
 
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
@@ -669,6 +697,90 @@ class StudentController extends Controller
         }
     }
 
+  /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/client/students/{id}",
+     *      operationId="getStudentByIdClient",
+     *      tags={"students"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *              @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="id",
+     *         required=true,
+     *  example="6"
+     *      ),
+     *      summary="This method is to get student by id",
+     *      description="This method is to get student by id",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+
+     public function getStudentByIdClient($id, Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+
+             $student =  Student:: with("student_status")
+             ->where([
+                 "id" => $id
+             ])
+                 ->first();
+             if (!$student) {
+                 $this->storeError(
+                     "no data found"
+                     ,
+                     404,
+                     "front end error",
+                     "front end error"
+                    );
+                 return response()->json([
+                     "message" => "no data found"
+                 ], 404);
+             }
+
+             return response()->json($student, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
 
 
     /**

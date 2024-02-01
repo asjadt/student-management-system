@@ -657,6 +657,161 @@ class StudentStatusController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+ /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/client/student-statuses",
+     *      operationId="getStudentStatusesClient",
+     *      tags={"student.student_statuses"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     *              @OA\Parameter(
+     *         name="business_id",
+     *         in="query",
+     *         description="business_id",
+     *         required=true,
+     *  example="2"
+     *      ),
+
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=true,
+     *  example="6"
+     *      ),
+
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
+     * *      * *  @OA\Parameter(
+     * name="is_active",
+     * in="query",
+     * description="is_active",
+     * required=true,
+     * example="1"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+
+     *      summary="This method is to get student statuses  ",
+     *      description="This method is to get student statuses ",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function getStudentStatusesClient(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+
+
+
+
+             $business_id =  $request->business_id;
+             if(!$business_id) {
+                $error = [ "message" => "The given data was invalid.",
+                "errors" => ["business_id"=>["The business id field is required."]]
+                ];
+                    throw new Exception(json_encode($error),422);
+             }
+
+
+             $student_statuses = StudentStatus::
+             where('student_statuses.business_id', $business_id)
+             ->where('student_statuses.is_active', 1)
+                 ->when(!empty($request->search_key), function ($query) use ($request) {
+                     return $query->where(function ($query) use ($request) {
+                         $term = $request->search_key;
+                         $query->where("student_statuses.name", "like", "%" . $term . "%")
+                             ->orWhere("student_statuses.description", "like", "%" . $term . "%");
+                     });
+                 })
+                 //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
+                 //        return $query->where('product_category_id', $request->product_category_id);
+                 //    })
+                 ->when(!empty($request->start_date), function ($query) use ($request) {
+                     return $query->where('student_statuses.created_at', ">=", $request->start_date);
+                 })
+                 ->when(!empty($request->end_date), function ($query) use ($request) {
+                     return $query->where('student_statuses.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                 })
+                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
+                     return $query->orderBy("student_statuses.id", $request->order_by);
+                 }, function ($query) {
+                     return $query->orderBy("student_statuses.id", "DESC");
+                 })
+                 ->when(!empty($request->per_page), function ($query) use ($request) {
+                     return $query->paginate($request->per_page);
+                 }, function ($query) {
+                     return $query->get();
+                 });;
+
+
+
+             return response()->json($student_statuses, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
 
     /**
      *
@@ -871,7 +1026,7 @@ class StudentStatusController extends Controller
      *      )
      *     )
      */
-    
+
 
     public function deleteStudentStatusesByIds(Request $request, $ids)
     {

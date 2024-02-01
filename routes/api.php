@@ -1044,8 +1044,8 @@ Route::get('/v1.0/business-user-dashboard', [DashboardManagementController::clas
 
 
 Route::get('/v1.0/client/job-listings', [JobListingController::class, "getJobListingsClient"]);
-
-
+Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentByIdClient"]);
+Route::get('/v1.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClient"]);
 
 
 

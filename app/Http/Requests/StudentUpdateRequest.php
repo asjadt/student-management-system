@@ -120,7 +120,7 @@ class StudentUpdateRequest extends BaseFormRequest
 
                 },
             ],
-            'attachments' => 'present|array',
+            'attachments' => 'nullable|array',
             'attachments.*' => 'string',
         ];
     }
