@@ -478,7 +478,10 @@ class UserManagementController extends Controller
             }
 
 
+
             $user =  User::create($request_data);
+            $user->email_verified_at = today();
+            $user->save();
 
             if($department) {
                 $user->departments()->sync($department->id, []);
@@ -721,6 +724,9 @@ class UserManagementController extends Controller
 
 
                 $user =  User::create($request_data);
+                $user->email_verified_at = today();
+                $user->save();
+
                 $user->departments()->sync($request_data['departments'], []);
                 $user->assignRole($request_data['role']);
 

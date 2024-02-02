@@ -2,50 +2,51 @@
 
 namespace App\Http\Middleware;
 
-
+use Carbon\Carbon;
 use Closure;
 
-
-class FormatDatesInResponse
+class FormatDatesInRequest
 {
- public function handle($request, Closure $next)
+    public function handle($request, Closure $next)
     {
-        $response = $next($request);
+        $data = $request->all();
 
-        if ($response->headers->get('content-type') === 'application/json') {
-            $content = $response->getContent();
-            $convertedContent = $this->convertDatesInJson($content);
-            $response->setContent($convertedContent);
-        }
-
-        return $response;
-    }
-
-    private function convertDatesInJson($json)
-    {
-        $data = json_decode($json, true);
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            array_walk_recursive($data, function (&$value, $key) {
-                if (is_string($value) && $this->isDateFormat($value)) {
-                    $value = date('d-m-Y', strtotime($value));
+        // Format dates in the request data
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                // Recursive call for nested arrays
+                $data[$key] = $this->formatDates($value);
+            } elseif ($this->isDateFormat($value)) {
+                if ($this->isDateFormat($value, 'd-m-Y')) {
+                    // Fix here: use $data instead of $array
+                    $data[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
                 }
-            });
-
-            return json_encode($data);
+            }
         }
 
-        return $json;
+        $request->merge($data);
+
+        return $next($request);
     }
 
     private function isDateFormat($value)
     {
-        $date = date_create_from_format('Y-m-d', $value);
-        return $date !== false && $date->format('Y-m-d') === $value;
+        return is_string($value) && preg_match('/^\d{2}-\d{2}-\d{4}$/', $value);
     }
 
+    private function formatDates($array)
+    {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $array[$key] = $this->formatDates($value);
+            } elseif ($this->isDateFormat($value)) {
+                if ($this->isDateFormat($value, 'd-m-Y')) {
+                    // Fix here: use $array instead of $data
+                    $array[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+                }
+            }
+        }
 
-
-
-
+        return $array;
+    }
 }

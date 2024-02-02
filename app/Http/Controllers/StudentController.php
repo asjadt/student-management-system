@@ -204,7 +204,9 @@ class StudentController extends Controller
                 $request_data["is_active"] = true;
                 $request_data["created_by"] = $request->user()->id;
 
+
                 $student =  Student::create($request_data);
+
 
 
 
