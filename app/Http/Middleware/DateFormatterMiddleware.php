@@ -4,9 +4,17 @@ namespace App\Http\Middleware;
 
 use Carbon\Carbon;
 use Closure;
+use Illuminate\Http\Request;
 
-class FormatDatesInRequest
+class DateFormatterMiddleware
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
     public function handle($request, Closure $next)
     {
         $data = $request->all();
@@ -17,10 +25,7 @@ class FormatDatesInRequest
                 // Recursive call for nested arrays
                 $data[$key] = $this->formatDates($value);
             } elseif ($this->isDateFormat($value)) {
-                if ($this->isDateFormat($value, 'd-m-Y')) {
-                    // Fix here: use $data instead of $array
-                    $data[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
-                }
+                $data[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
             }
         }
 
@@ -40,10 +45,7 @@ class FormatDatesInRequest
             if (is_array($value)) {
                 $array[$key] = $this->formatDates($value);
             } elseif ($this->isDateFormat($value)) {
-                if ($this->isDateFormat($value, 'd-m-Y')) {
-                    // Fix here: use $array instead of $data
-                    $array[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
-                }
+                $array[$key] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
             }
         }
 
