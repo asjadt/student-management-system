@@ -1069,6 +1069,7 @@ Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentB
 Route::get('/v1.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClient"]);
 Route::get('/v1.0/client/students', [StudentController::class, "getStudentsClient"]);
 
+Route::get('/v1.0/client/course-titles', [CourseTitleController::class, "getCourseTitlesClient"]);
 
 
 
