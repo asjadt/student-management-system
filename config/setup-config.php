@@ -27,10 +27,10 @@ return [
                 "user_view",
                 "user_delete",
 
-                // "role_create",
-                // "role_update",
-                // "role_view",
-                // "role_delete",
+                "role_create",
+                "role_update",
+                "role_view",
+                "role_delete",
 
                 "business_create",
                 "business_update",

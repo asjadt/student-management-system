@@ -1134,7 +1134,7 @@ if(!$check_work_shift_details["ok"]) {
                 ], 404);
             }
 
-            $user_exists =  UserWorkShift::whereIn("user_id", $existingIds)->exists();
+            $user_exists =  UserWorkShift::whereIn("work_shift", $existingIds)->exists();
             if ($user_exists) {
                 $conflictingUsers = User::whereIn("designation_id", $existingIds)->get([
                     'id', 'first_Name',
