@@ -33,6 +33,9 @@ class CreateUsersTable extends Migration
 
             $table->unsignedBigInteger('student_status_id')->nullable();
             $table->foreign('student_status_id')->references('id')->on('student_statuses')->onDelete('restrict');
+            $table->unsignedBigInteger('course_title_id')->nullable();
+            $table->foreign('course_title_id')->references('id')->on('student_statuses')->onDelete('restrict');
+
 
             $table->date('joining_date')->nullable()->default(today());
             $table->double('salary_per_annum')->nullable()->default(0);

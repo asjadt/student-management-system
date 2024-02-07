@@ -12,6 +12,7 @@ use App\Http\Controllers\BusinessBackgroundImageController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\BusinessTierController;
 use App\Http\Controllers\BusinessTimesController;
+use App\Http\Controllers\CourseTitleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
@@ -697,6 +698,20 @@ Route::post('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "de
 // end student status  management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// course title management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/course-titles', [CourseTitleController::class, "createCourseTitle"]);
+Route::post('/v1.0/course-titles-update', [CourseTitleController::class, "updateCourseTitle"]);
+Route::post('/v1.0/course-titles/toggle-active', [CourseTitleController::class, "toggleActiveCourseTitle"]);
+Route::get('/v1.0/course-titles', [CourseTitleController::class, "getCourseTitles"]);
+Route::get('/v1.0/course-titles/{id}', [CourseTitleController::class, "getCourseTitleById"]);
+Route::post('/v1.0/course-titles/{ids}', [CourseTitleController::class, "deleteCourseTitlesByIds"]);
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end course title  management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 

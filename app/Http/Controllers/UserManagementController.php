@@ -549,6 +549,7 @@ class UserManagementController extends Controller
      *                @OA\Property(property="is_in_employee", type="boolean", format="boolean",example="1"),
      *               @OA\Property(property="designation_id", type="number", format="number",example="1"),
      *              @OA\Property(property="student_status_id", type="number", format="number",example="1"),
+     *  *              @OA\Property(property="course_title_id", type="number", format="number",example="1"),
      *               @OA\Property(property="salary_per_annum", type="string", format="string",example="10"),
      *  *  *               @OA\Property(property="weekly_contractual_hours", type="string", format="string",example="10"),
      * *  *  *               @OA\Property(property="minimum_working_days_per_week", type="string", format="string",example="5"),
@@ -885,6 +886,7 @@ class UserManagementController extends Controller
      *                @OA\Property(property="is_in_employee", type="boolean", format="boolean",example="1"),
      *               @OA\Property(property="designation_id", type="number", format="number",example="1"),
      *              @OA\Property(property="student_status_id", type="number", format="number",example="1"),
+     *  *  *              @OA\Property(property="course_title_id", type="number", format="number",example="1"),
      *               @OA\Property(property="salary_per_annum", type="string", format="string",example="10"),
      *           @OA\Property(property="weekly_contractual_hours", type="string", format="string",example="10"),
      *     *           @OA\Property(property="minimum_working_days_per_week", type="string", format="string",example="10"),
@@ -1010,6 +1012,7 @@ class UserManagementController extends Controller
                     'is_in_employee',
                     'designation_id',
                     'student_status_id',
+                    "course_title_id",
                     'joining_date',
 
                     'emergency_contact_details',
@@ -1199,6 +1202,7 @@ class UserManagementController extends Controller
      *                @OA\Property(property="is_in_employee", type="boolean", format="boolean",example="1"),
      *               @OA\Property(property="designation_id", type="number", format="number",example="1"),
      *              @OA\Property(property="student_status_id", type="number", format="number",example="1"),
+     *  *  *  *              @OA\Property(property="course_title_id", type="number", format="number",example="1"),
      *               @OA\Property(property="salary_per_annum", type="string", format="string",example="10"),
      *           @OA\Property(property="weekly_contractual_hours", type="string", format="string",example="10"),
      *      *           @OA\Property(property="minimum_working_days_per_week", type="string", format="string",example="5"),
@@ -1365,6 +1369,7 @@ class UserManagementController extends Controller
                         'is_in_employee',
                         'designation_id',
                         'student_status_id',
+                        "course_title_id",
                         'joining_date',
                         'salary_per_annum',
 
@@ -3027,7 +3032,13 @@ class UserManagementController extends Controller
      * example="1"
      * ),
 
-     *
+     *  *  *      *     @OA\Parameter(
+     * name="course_title_id",
+     * in="query",
+     * description="course_title_id",
+     * required=true,
+     * example="1"
+     * ),
 
      *
      *      *   * *  @OA\Parameter(

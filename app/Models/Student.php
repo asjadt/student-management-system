@@ -21,6 +21,7 @@ class Student extends Model
         'course_start_date',
         'letter_issue_date',
         'student_status_id',
+        "course_title_id",
         'attachments',
         'is_active',
         'business_id',

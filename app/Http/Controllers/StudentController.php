@@ -143,6 +143,7 @@ class StudentController extends Controller
  *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
  *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
+ *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
  *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"})
  *
  *
@@ -246,6 +247,7 @@ class StudentController extends Controller
  *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
  *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
+ *  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
  *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"})
 
      *
@@ -326,6 +328,7 @@ class StudentController extends Controller
                         'course_start_date',
                         'letter_issue_date',
                         'student_status_id',
+                        'course_title_id',
                         'attachments',
 
                         // "is_active",
@@ -450,6 +453,13 @@ class StudentController extends Controller
      * name="student_status_id",
      * in="query",
      * description="student_status_id",
+     * required=true,
+     * example="1"
+     * ),
+     *  *    *      * *  @OA\Parameter(
+     * name="course_title_id",
+     * in="query",
+     * description="course_title_id",
      * required=true,
      * example="1"
      * ),
@@ -581,6 +591,9 @@ class StudentController extends Controller
                 ->when(!empty($request->student_status_id), function ($query) use ($request) {
                     return $query->where('students.student_status_id',$request->student_status_id);
                 })
+                ->when(!empty($request->course_title_id), function ($query) use ($request) {
+                    return $query->where('students.course_title_id',$request->course_title_id);
+                })
                 ->when(!empty($request->date_of_birth), function ($query) use ($request) {
                     return $query->where('students.date_of_birth',$request->date_of_birth);
                 })
@@ -607,8 +620,7 @@ class StudentController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
-
-     /**
+  /**
      *
      * @OA\Get(
      *      path="/v1.0/client/students",
@@ -617,14 +629,7 @@ class StudentController extends Controller
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *
-     *         @OA\Parameter(
-     *         name="business_id",
-     *         in="query",
-     *         description="business_id",
-     *         required=true,
-     *         example="2"
-     *          ),
+
      *              @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -636,6 +641,13 @@ class StudentController extends Controller
      * name="student_status_id",
      * in="query",
      * description="student_status_id",
+     * required=true,
+     * example="1"
+     * ),
+     *  *    *      * *  @OA\Parameter(
+     * name="course_title_id",
+     * in="query",
+     * description="course_title_id",
      * required=true,
      * example="1"
      * ),
@@ -775,6 +787,9 @@ class StudentController extends Controller
                  ->when(!empty($request->student_status_id), function ($query) use ($request) {
                      return $query->where('students.student_status_id',$request->student_status_id);
                  })
+                 ->when(!empty($request->course_title_id), function ($query) use ($request) {
+                    return $query->where('students.course_title_id',$request->course_title_id);
+                })
                  ->when(!empty($request->date_of_birth), function ($query) use ($request) {
                      return $query->where('students.date_of_birth',$request->date_of_birth);
                  })

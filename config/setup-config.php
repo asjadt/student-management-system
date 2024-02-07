@@ -103,6 +103,11 @@ return [
                 "student_status_view",
                 // "student_statuslete",
 
+                "course_title_create",
+                "course_title_update",
+                "course_title_view",
+                // "course_title_delete",
+
                 "setting_leave_type_create",
                 "setting_leave_type_update",
                 "setting_leave_type_view",
@@ -199,6 +204,11 @@ return [
                 // "student_status_activate",
                 "student_status_view",
                 // "student_status_delete",
+
+                "course_title_create",
+                "course_title_update",
+                "course_title_view",
+                // "course_title_delete",
 
 
 
@@ -383,6 +393,12 @@ return [
                 "student_status_activate",
                 "student_status_view",
                 "student_status_delete",
+
+                "course_title_create",
+                "course_title_update",
+                "course_title_activate",
+                "course_title_view",
+                 "course_title_delete",
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
@@ -586,6 +602,12 @@ return [
                 "student_status_activate",
                 "student_status_view",
                 // "student_status_delete",
+
+                "course_title_create",
+                "course_title_update",
+                "course_title_activate",
+                "course_title_view",
+                //  "course_title_delete",
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
@@ -841,6 +863,12 @@ return [
         "student_status_view",
         "student_status_delete",
 
+        "course_title_create",
+        "course_title_update",
+        "course_title_activate",
+        "course_title_view",
+         "course_title_delete",
+
         "setting_leave_type_create",
         "setting_leave_type_update",
         "setting_leave_type_activate",
@@ -1086,6 +1114,12 @@ return [
         "student_status_activate" => "",
         "student_status_view" => "Can view employment status",
         "student_status_delete" => "Can delete employment status",
+
+        "course_title_create" => "",
+        "course_title_update" => "",
+        "course_title_activate" => "",
+        "course_title_view" => "",
+         "course_title_delete" => "",
 
         "setting_leave_type_create" => "Can create setting leave type",
         "setting_leave_type_update" => "Can update setting leave type",
@@ -1362,6 +1396,16 @@ return [
         "student_status_activate" => "activate",
         "student_status_view" => "view",
         "student_status_delete" => "delete",
+
+
+        "courst_title_create" => "create",
+        "courst_title_update" => "update",
+        "courst_title_activate" => "activate",
+        "courst_title_view" => "view",
+        "courst_title_delete" => "delete",
+
+
+
 
         "setting_leave_type_create" => "create",
         "setting_leave_type_update" => "update",
@@ -1895,6 +1939,25 @@ return [
 
             ],
         ],
+
+        [
+            "header" => "student_status",
+            "permissions" => [
+
+        "course_title_create",
+        "course_title_update",
+        "course_title_activate",
+        "course_title_view",
+         "course_title_delete",
+
+
+
+
+
+            ],
+        ],
+
+
         [
             "header" => "setting_leave_type",
             "permissions" => [

@@ -25,8 +25,10 @@ class CreateStudentsTable extends Migration
             $table->date('course_start_date');
             $table->date('letter_issue_date')->nullable();
 
-            $table->unsignedBigInteger("student_status_id");
-            $table->foreign('student_status_id')->references('id')->on('student_statuses')->onDelete('cascade');
+            $table->unsignedBigInteger("student_status_id")->nullable();
+            $table->foreign('student_status_id')->references('id')->on('student_statuses')->onDelete('set null');
+            $table->unsignedBigInteger('course_title_id')->nullable();
+            $table->foreign('course_title_id')->references('id')->on('student_statuses')->onDelete('set null');
             $table->json('attachments')->nullable();
 
 
