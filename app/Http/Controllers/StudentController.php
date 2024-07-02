@@ -506,6 +506,42 @@ class StudentController extends Controller
      * required=true,
      * example="ASC"
      * ),
+     * * *  @OA\Parameter(
+     * name="is_single_search",
+     * in="query",
+     * description="is_single_search",
+     * required=true,
+     * example="ASC"
+     * ),
+     *    * * *  @OA\Parameter(
+     * name="id",
+     * in="query",
+     * description="id",
+     * required=true,
+     * example="id"
+     * ),
+     *     @OA\Parameter(
+     * name="first_name",
+     * in="query",
+     * description="first_name",
+     * required=true,
+     * example="first_name"
+     * ),
+     *    @OA\Parameter(
+     * name="middle_name",
+     * in="query",
+     * description="middle_name",
+     * required=true,
+     * example="middle_name"
+     * ),
+     *    *    @OA\Parameter(
+     * name="last_name",
+     * in="query",
+     * description="last_name",
+     * required=true,
+     * example="last_name"
+     * ),
+
 
 
      *      summary="This method is to get students  ",
@@ -564,7 +600,20 @@ class StudentController extends Controller
                     "students.business_id" => $business_id
                 ]
             )
+            ->when(!empty($request->id), function ($query) use ($request) {
+                return $query->where('students.id',$request->id);
+            })
 
+            ->when(!empty($request->first_name), function ($query) use ($request) {
+                return $query->where('students.first_name',$request->first_name);
+            })
+
+            ->when(!empty($request->middle_name), function ($query) use ($request) {
+                return $query->where('students.middle_name',$request->middle_name);
+            })
+            ->when(!empty($request->last_name), function ($query) use ($request) {
+                return $query->where('students.last_name',$request->last_name);
+            })
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
                         $term = $request->search_key;
@@ -606,11 +655,18 @@ class StudentController extends Controller
                 }, function ($query) {
                     return $query->orderBy("students.id", "DESC");
                 })
-                ->when(!empty($request->per_page), function ($query) use ($request) {
-                    return $query->paginate($request->per_page);
-                }, function ($query) {
-                    return $query->get();
-                });;
+
+                ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
+                        return $query->first();
+                }, function($query) {
+                    $query->when(!empty(request()->per_page), function ($query) {
+                        return $query->paginate(request()->per_page);
+                    }, function ($query) {
+                        return $query->get();
+                    });
+                });
+
+
 
 
 
@@ -620,6 +676,7 @@ class StudentController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
   /**
      *
      * @OA\Get(
@@ -694,6 +751,41 @@ class StudentController extends Controller
      * required=true,
      * example="ASC"
      * ),
+     *      * * *  @OA\Parameter(
+     * name="is_single_search",
+     * in="query",
+     * description="is_single_search",
+     * required=true,
+     * example="ASC"
+     * ),
+     *    * * *  @OA\Parameter(
+     * name="id",
+     * in="query",
+     * description="id",
+     * required=true,
+     * example="id"
+     * ),
+     *     @OA\Parameter(
+     * name="first_name",
+     * in="query",
+     * description="first_name",
+     * required=true,
+     * example="first_name"
+     * ),
+     *    @OA\Parameter(
+     * name="middle_name",
+     * in="query",
+     * description="middle_name",
+     * required=true,
+     * example="middle_name"
+     * ),
+     *    *    @OA\Parameter(
+     * name="last_name",
+     * in="query",
+     * description="last_name",
+     * required=true,
+     * example="last_name"
+     * ),
 
 
      *      summary="This method is to get students  ",
@@ -760,6 +852,20 @@ class StudentController extends Controller
                      "students.business_id" => $business_id
                  ]
              )
+             ->when(!empty($request->id), function ($query) use ($request) {
+                return $query->where('students.id',$request->id);
+            })
+
+            ->when(!empty($request->first_name), function ($query) use ($request) {
+                return $query->where('students.first_name',$request->first_name);
+            })
+
+            ->when(!empty($request->middle_name), function ($query) use ($request) {
+                return $query->where('students.middle_name',$request->middle_name);
+            })
+            ->when(!empty($request->last_name), function ($query) use ($request) {
+                return $query->where('students.last_name',$request->last_name);
+            })
 
                  ->when(!empty($request->search_key), function ($query) use ($request) {
                      return $query->where(function ($query) use ($request) {
@@ -802,11 +908,15 @@ class StudentController extends Controller
                  }, function ($query) {
                      return $query->orderBy("students.id", "DESC");
                  })
-                 ->when(!empty($request->per_page), function ($query) use ($request) {
-                     return $query->paginate($request->per_page);
-                 }, function ($query) {
-                     return $query->get();
-                 });;
+                 ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
+                    return $query->first();
+            }, function($query) {
+                $query->when(!empty(request()->per_page), function ($query) {
+                    return $query->paginate(request()->per_page);
+                }, function ($query) {
+                    return $query->get();
+                });
+            });
 
 
 
