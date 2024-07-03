@@ -659,7 +659,7 @@ class StudentController extends Controller
                 ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
                         return $query->first();
                 }, function($query) {
-                    $query->when(!empty(request()->per_page), function ($query) {
+                   return $query->when(!empty(request()->per_page), function ($query) {
                         return $query->paginate(request()->per_page);
                     }, function ($query) {
                         return $query->get();
@@ -786,6 +786,14 @@ class StudentController extends Controller
      * required=true,
      * example="last_name"
      * ),
+     *   *    *    @OA\Parameter(
+     * name="business_id",
+     * in="query",
+     * description="business_id",
+     * required=true,
+     * example="business_id"
+     * ),
+     *
 
 
      *      summary="This method is to get students  ",
@@ -911,7 +919,7 @@ class StudentController extends Controller
                  ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
                     return $query->first();
             }, function($query) {
-                $query->when(!empty(request()->per_page), function ($query) {
+               return $query->when(!empty(request()->per_page), function ($query) {
                     return $query->paginate(request()->per_page);
                 }, function ($query) {
                     return $query->get();
