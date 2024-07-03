@@ -647,7 +647,7 @@ class StudentController extends Controller
                     return $query->where('students.date_of_birth',$request->date_of_birth);
                 })
                 ->when(!empty($request->school_id), function ($query) use ($request) {
-                    return $query->where('students.school_id',$request->school_id);
+                    return $query->whereRaw('BINARY students.school_id = ?', [$request->school_id]);
                 })
 
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
@@ -908,8 +908,8 @@ class StudentController extends Controller
                      return $query->where('students.date_of_birth',$request->date_of_birth);
                  })
                  ->when(!empty($request->school_id), function ($query) use ($request) {
-                     return $query->where('students.school_id',$request->school_id);
-                 })
+                    return $query->whereRaw('BINARY students.school_id = ?', [$request->school_id]);
+                })
 
                  ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
                      return $query->orderBy("students.id", $request->order_by);
