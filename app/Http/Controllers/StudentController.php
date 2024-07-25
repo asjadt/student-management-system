@@ -319,7 +319,7 @@ class StudentController extends Controller
                 //         "message" => "no student found"
                 //     ], 404);
                 // }
-           
+
 
 
                 $student  =  tap(Student::where($student_query_params))->update(
@@ -861,7 +861,7 @@ class StudentController extends Controller
 
 
              $students = Student::
-             with("student_status")
+             with("student_status","course_title")
 
              ->where(
                  [

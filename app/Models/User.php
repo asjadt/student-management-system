@@ -149,7 +149,7 @@ class User extends Authenticatable
     }
 
     public function course_title() {
-        return $this->belongsTo(StudentStatus::class, 'course_title_id', 'id');
+        return $this->belongsTo(CourseTitle::class, 'course_title_id', 'id');
     }
 
 

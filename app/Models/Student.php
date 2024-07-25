@@ -33,6 +33,9 @@ class Student extends Model
     protected $casts = [
         'attachments' => 'json',
     ];
+    public function course_title() {
+        return $this->belongsTo(CourseTitle::class, 'course_title_id', 'id');
+    }
 
     // Relationships
     public function student_status()
