@@ -15,6 +15,8 @@ class Student extends Model
         'middle_name',
         'last_name',
         'nationality',
+        "course_fee",
+        "fee_paid",
         'passport_number',
         'school_id',
         'date_of_birth',

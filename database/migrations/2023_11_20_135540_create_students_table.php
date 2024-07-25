@@ -19,6 +19,11 @@ class CreateStudentsTable extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('nationality');
+
+             $table->double('course_fee');
+             $table->double('fee_paid');
+
+
             $table->string('passport_number')->nullable();
             $table->string('school_id')->nullable();
             $table->date('date_of_birth');

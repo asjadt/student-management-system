@@ -31,6 +31,9 @@ class StudentCreateRequest extends BaseFormRequest
             'middle_name' => 'nullable|string',
             'last_name' => 'required|string',
             'nationality' => 'required|string',
+            "course_fee" => "required|numeric",
+            "fee_paid" => "required|numeric",
+
             'passport_number' => 'nullable|string',
             'school_id' => 'nullable|string',
             'date_of_birth' => 'required|date',

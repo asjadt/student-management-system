@@ -137,6 +137,8 @@ class StudentController extends Controller
  *     @OA\Property(property="middle_name", type="string", format="string", example=""),
  *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
  *     @OA\Property(property="nationality", type="string", format="string", example="Country"),
+ * *     @OA\Property(property="course_fee", type="string", format="string", example="Country"),
+ * *     @OA\Property(property="fee_paid", type="string", format="string", example="Country"),
  *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
  *     @OA\Property(property="school_id", type="string", format="string", example="School123"),
  *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
@@ -241,6 +243,8 @@ class StudentController extends Controller
  *     @OA\Property(property="middle_name", type="string", format="string", example=""),
  *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
  *     @OA\Property(property="nationality", type="string", format="string", example="Country"),
+ *  * *     @OA\Property(property="course_fee", type="string", format="string", example="Country"),
+ * *     @OA\Property(property="fee_paid", type="string", format="string", example="Country"),
  *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
  *     @OA\Property(property="school_id", type="string", format="string", example="School123"),
  *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
@@ -315,6 +319,8 @@ class StudentController extends Controller
                 //         "message" => "no student found"
                 //     ], 404);
                 // }
+           
+
 
                 $student  =  tap(Student::where($student_query_params))->update(
                     collect($request_data)->only([
@@ -322,6 +328,8 @@ class StudentController extends Controller
                         'middle_name',
                         'last_name',
                         'nationality',
+                        "course_fee",
+                        "fee_paid",
                         'passport_number',
                         'school_id',
                         'date_of_birth',
