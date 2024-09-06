@@ -183,6 +183,8 @@ class StudentCreateRequest extends BaseFormRequest
             'attachments.*' => 'string',
 
 
+            'course_dutation'=> 'nullable|string',
+            'course_detail'=> 'nullable|string',
 
             'email' => 'nullable|email|max:255',
             'contact_number' => 'nullable|string|max:20',
