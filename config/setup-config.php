@@ -5,6 +5,14 @@ return [
         [
             "role" => "superadmin",
             "permissions" => [
+
+                "letter_template_create",
+                "letter_template_update",
+                "letter_template_activate",
+                "letter_template_view",
+                "letter_template_delete",
+
+
                 "global_business_background_image_create",
                 "global_business_background_image_view",
 
@@ -130,6 +138,12 @@ return [
             "role" => "reseller",
             "permissions" => [
 
+                "letter_template_create",
+                "letter_template_update",
+                "letter_template_activate",
+                "letter_template_view",
+                "letter_template_delete",
+
                 "role_view",
 
 
@@ -219,6 +233,13 @@ return [
         [
             "role" => "business_admin",
             "permissions" => [
+
+
+                "letter_template_create",
+                "letter_template_update",
+                "letter_template_activate",
+                "letter_template_view",
+                "letter_template_delete",
 
 
                 "student_create",
@@ -440,6 +461,12 @@ return [
             "role" => "business_staff",
             "permissions" => [
 
+                "letter_template_create",
+                "letter_template_update",
+                "letter_template_activate",
+                "letter_template_view",
+                "letter_template_delete",
+
                 "student_create",
                 "student_update",
                 "student_view",
@@ -649,6 +676,12 @@ return [
         "business_staff"
     ],
     "permissions" => [
+
+        "letter_template_create",
+        "letter_template_update",
+        "letter_template_activate",
+        "letter_template_view",
+        "letter_template_delete",
 
         "business_admin",
 
@@ -1120,6 +1153,12 @@ return [
         "course_title_activate" => "",
         "course_title_view" => "",
          "course_title_delete" => "",
+
+         "letter_template_create"=>"",
+         "letter_template_update"=>"",
+         "letter_template_activate"=>"",
+         "letter_template_view"=>"",
+         "letter_template_delete"=>"",
 
         "setting_leave_type_create" => "Can create setting leave type",
         "setting_leave_type_update" => "Can update setting leave type",
@@ -1940,8 +1979,14 @@ return [
             ],
         ],
 
+        "letter_template_create",
+        "letter_template_update",
+        "letter_template_activate",
+        "letter_template_view",
+        "letter_template_delete",
+
         [
-            "header" => "student_status",
+            "header" => "course_title",
             "permissions" => [
 
         "course_title_create",
