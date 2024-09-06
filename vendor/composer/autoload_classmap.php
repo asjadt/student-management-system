@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\CheckAndMigrate' => $baseDir . '/app/Console/Commands/CheckAndMigrate.php',
     'App\\Console\\Commands\\DeleteFilesScheduler' => $baseDir . '/app/Console/Commands/DeleteFilesScheduler.php',
     'App\\Console\\Commands\\PayrunScheduler' => $baseDir . '/app/Console/Commands/PayrunScheduler.php',
     'App\\Console\\Commands\\ReminderScheduler' => $baseDir . '/app/Console/Commands/ReminderScheduler.php',
@@ -106,6 +107,8 @@ return array(
     'App\\Http\\Requests\\BusinessUpdateSeparateRequest' => $baseDir . '/app/Http/Requests/BusinessUpdateSeparateRequest.php',
     'App\\Http\\Requests\\ChangePasswordRequest' => $baseDir . '/app/Http/Requests/ChangePasswordRequest.php',
     'App\\Http\\Requests\\CheckScheduleConflictRequest' => $baseDir . '/app/Http/Requests/CheckScheduleConflictRequest.php',
+    'App\\Http\\Requests\\CourseTitleCreateRequest' => $baseDir . '/app/Http/Requests/CourseTitleCreateRequest.php',
+    'App\\Http\\Requests\\CourseTitleUpdateRequest' => $baseDir . '/app/Http/Requests/CourseTitleUpdateRequest.php',
     'App\\Http\\Requests\\DepartmentCreateRequest' => $baseDir . '/app/Http/Requests/DepartmentCreateRequest.php',
     'App\\Http\\Requests\\DepartmentUpdateRequest' => $baseDir . '/app/Http/Requests/DepartmentUpdateRequest.php',
     'App\\Http\\Requests\\DesignationCreateRequest' => $baseDir . '/app/Http/Requests/DesignationCreateRequest.php',

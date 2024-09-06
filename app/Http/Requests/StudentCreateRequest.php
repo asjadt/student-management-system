@@ -181,6 +181,26 @@ class StudentCreateRequest extends BaseFormRequest
             ],
             'attachments' => 'present|array',
             'attachments.*' => 'string',
+
+
+
+            'email' => 'nullable|email|max:255',
+            'contact_number' => 'nullable|string|max:20',
+            'sex' => 'nullable|string|in:Male,Female,Other',
+            'address' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:100',
+            'city' => 'nullable|string|max:100',
+            'postcode' => 'nullable|string|max:10',
+            'lat' => 'nullable|string|regex:/^-?\d{1,3}\.\d+$/', // Validates latitude format
+            'long' => 'nullable|string|regex:/^-?\d{1,3}\.\d+$/', // Validates longitude format
+            'emergency_contact_details' => 'nullable|json',
+            'previous_education_history' => 'nullable|json',
+            'passport_issue_date' => 'nullable|date|before_or_equal:today',
+            'passport_expiry_date' => 'nullable|date|after:passport_issue_date',
+            'place_of_issue' => 'nullable|string|max:255',
+
+
+
         ];
     }
 

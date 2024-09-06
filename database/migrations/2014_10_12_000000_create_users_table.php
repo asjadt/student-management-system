@@ -28,12 +28,11 @@ class CreateUsersTable extends Migration
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
 
             $table->boolean('is_in_employee')->nullable()->default(false);
-            $table->unsignedBigInteger('designation_id')->nullable();
-            $table->foreign('designation_id')->references('id')->on('designations')->onDelete('restrict');
+
 
             $table->unsignedBigInteger('student_status_id')->nullable();
             $table->foreign('student_status_id')->references('id')->on('student_statuses')->onDelete('restrict');
-            
+
             $table->unsignedBigInteger('course_title_id')->nullable();
             $table->foreign('course_title_id')->references('id')->on('course_titles')->onDelete('restrict');
 
@@ -81,19 +80,12 @@ class CreateUsersTable extends Migration
             $table->enum('immigration_status', ['british_citizen', 'ilr', 'immigrant', 'sponsored'])->nullable();
             $table->boolean('is_sponsorship_offered')->default(0)->nullable();
 
-            $table->unsignedBigInteger("work_location_id")->nullable();
-            $table->foreign('work_location_id')->references('id')->on('work_locations')->onDelete('restrict');
-
-
-            $table->unsignedBigInteger("recruitment_process_id")->nullable();
-            $table->foreign('recruitment_process_id')->references('id')->on('recruitment_processes')->onDelete('restrict');
 
 
 
 
 
-            $table->unsignedBigInteger("bank_id")->nullable();
-            $table->foreign('bank_id')->references('id')->on('banks')->onDelete('restrict');
+
             $table->string("sort_code")->nullable();
             $table->string("account_number")->nullable();
             $table->string("account_name")->nullable();

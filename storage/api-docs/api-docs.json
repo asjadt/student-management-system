@@ -21231,6 +21231,41 @@
                         "description": "order_by",
                         "required": true,
                         "example": "ASC"
+                    },
+                    {
+                        "name": "is_single_search",
+                        "in": "query",
+                        "description": "is_single_search",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "id"
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "description": "first_name",
+                        "required": true,
+                        "example": "first_name"
+                    },
+                    {
+                        "name": "middle_name",
+                        "in": "query",
+                        "description": "middle_name",
+                        "required": true,
+                        "example": "middle_name"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "last_name",
+                        "required": true,
+                        "example": "last_name"
                     }
                 ],
                 "responses": {
@@ -21327,6 +21362,16 @@
                                         "format": "string",
                                         "example": "Country"
                                     },
+                                    "course_fee": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Country"
+                                    },
+                                    "fee_paid": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Country"
+                                    },
                                     "passport_number": {
                                         "type": "string",
                                         "format": "string",
@@ -21369,6 +21414,99 @@
                                             "/abcd.jpg",
                                             "/efgh.jpg"
                                         ]
+                                    },
+                                    "email": {
+                                        "description": "Email address of the student",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "student@example.com"
+                                    },
+                                    "contact_number": {
+                                        "description": "Contact number of the student",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "+1234567890"
+                                    },
+                                    "sex": {
+                                        "description": "Sex of the student",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Male"
+                                    },
+                                    "address": {
+                                        "description": "Address of the student",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "123 Main St, Apartment 4B"
+                                    },
+                                    "country": {
+                                        "description": "Country of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "United States"
+                                    },
+                                    "city": {
+                                        "description": "City of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "New York"
+                                    },
+                                    "postcode": {
+                                        "description": "Postal code of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "10001"
+                                    },
+                                    "lat": {
+                                        "description": "Latitude of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "40.712776"
+                                    },
+                                    "long": {
+                                        "description": "Longitude of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "-74.005974"
+                                    },
+                                    "emergency_contact_details": {
+                                        "description": "Emergency contact details of the student",
+                                        "type": "object",
+                                        "example": {
+                                            "name": "John Doe",
+                                            "relation": "Father",
+                                            "contact": "+1234567890"
+                                        }
+                                    },
+                                    "previous_education_history": {
+                                        "description": "Previous education history of the student",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "example": {
+                                                "institution": "High School",
+                                                "year": "2019",
+                                                "grade": "A"
+                                            }
+                                        }
+                                    },
+                                    "passport_issue_date": {
+                                        "description": "Passport issue date of the student",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2020-01-01"
+                                    },
+                                    "passport_expiry_date": {
+                                        "description": "Passport expiry date of the student",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2030-01-01"
+                                    },
+                                    "place_of_issue": {
+                                        "description": "Place where the student's passport was issued",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "New York, USA"
                                     }
                                 },
                                 "type": "object"
@@ -21464,6 +21602,21 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "Country"
+                                    },
+                                    "course_fee": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Country"
+                                    },
+                                    "fee_paid": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Country"
+                                    },
+                                    "contact_number": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "contact_number"
                                     },
                                     "passport_number": {
                                         "type": "string",
@@ -21716,6 +21869,48 @@
                         "description": "order_by",
                         "required": true,
                         "example": "ASC"
+                    },
+                    {
+                        "name": "is_single_search",
+                        "in": "query",
+                        "description": "is_single_search",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "id"
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "description": "first_name",
+                        "required": true,
+                        "example": "first_name"
+                    },
+                    {
+                        "name": "middle_name",
+                        "in": "query",
+                        "description": "middle_name",
+                        "required": true,
+                        "example": "middle_name"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "last_name",
+                        "required": true,
+                        "example": "last_name"
+                    },
+                    {
+                        "name": "business_id",
+                        "in": "query",
+                        "description": "business_id",
+                        "required": true,
+                        "example": "business_id"
                     }
                 ],
                 "responses": {

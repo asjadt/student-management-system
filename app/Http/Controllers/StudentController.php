@@ -146,7 +146,21 @@ class StudentController extends Controller
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
  *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
- *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"})
+ *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"}),
+ * *     @OA\Property(property="email", type="string", format="email", example="student@example.com", description="Email address of the student"),
+ *     @OA\Property(property="contact_number", type="string", format="string", example="+1234567890", description="Contact number of the student"),
+ *     @OA\Property(property="sex", type="string", format="string", example="Male", description="Sex of the student"),
+ *     @OA\Property(property="address", type="string", format="string", example="123 Main St, Apartment 4B", description="Address of the student"),
+ *     @OA\Property(property="country", type="string", format="string", example="United States", description="Country of the student's address"),
+ *     @OA\Property(property="city", type="string", format="string", example="New York", description="City of the student's address"),
+ *     @OA\Property(property="postcode", type="string", format="string", example="10001", description="Postal code of the student's address"),
+ *     @OA\Property(property="lat", type="string", format="string", example="40.712776", description="Latitude of the student's address"),
+ *     @OA\Property(property="long", type="string", format="string", example="-74.005974", description="Longitude of the student's address"),
+ *     @OA\Property(property="emergency_contact_details", type="object", example={"name": "John Doe", "relation": "Father", "contact": "+1234567890"}, description="Emergency contact details of the student"),
+ *     @OA\Property(property="previous_education_history", type="array", @OA\Items(type="object", example={"institution": "High School", "year": "2019", "grade": "A"}), description="Previous education history of the student"),
+ *     @OA\Property(property="passport_issue_date", type="string", format="date", example="2020-01-01", description="Passport issue date of the student"),
+ *     @OA\Property(property="passport_expiry_date", type="string", format="date", example="2030-01-01", description="Passport expiry date of the student"),
+ *     @OA\Property(property="place_of_issue", type="string", format="string", example="New York, USA", description="Place where the student's passport was issued")
  *
  *
  *
@@ -245,6 +259,7 @@ class StudentController extends Controller
  *     @OA\Property(property="nationality", type="string", format="string", example="Country"),
  *  * *     @OA\Property(property="course_fee", type="string", format="string", example="Country"),
  * *     @OA\Property(property="fee_paid", type="string", format="string", example="Country"),
+
  *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
  *     @OA\Property(property="school_id", type="string", format="string", example="School123"),
  *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
@@ -252,7 +267,21 @@ class StudentController extends Controller
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
  *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
  *  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
- *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"})
+ *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"}),
+ * *     @OA\Property(property="email", type="string", format="email", example="student@example.com", description="Email address of the student"),
+ *     @OA\Property(property="contact_number", type="string", format="string", example="+1234567890", description="Contact number of the student"),
+ *     @OA\Property(property="sex", type="string", format="string", example="Male", description="Sex of the student"),
+ *     @OA\Property(property="address", type="string", format="string", example="123 Main St, Apartment 4B", description="Address of the student"),
+ *     @OA\Property(property="country", type="string", format="string", example="United States", description="Country of the student's address"),
+ *     @OA\Property(property="city", type="string", format="string", example="New York", description="City of the student's address"),
+ *     @OA\Property(property="postcode", type="string", format="string", example="10001", description="Postal code of the student's address"),
+ *     @OA\Property(property="lat", type="string", format="string", example="40.712776", description="Latitude of the student's address"),
+ *     @OA\Property(property="long", type="string", format="string", example="-74.005974", description="Longitude of the student's address"),
+ *     @OA\Property(property="emergency_contact_details", type="object", example={"name": "John Doe", "relation": "Father", "contact": "+1234567890"}, description="Emergency contact details of the student"),
+ *     @OA\Property(property="previous_education_history", type="array", @OA\Items(type="object", example={"institution": "High School", "year": "2019", "grade": "A"}), description="Previous education history of the student"),
+ *     @OA\Property(property="passport_issue_date", type="string", format="date", example="2020-01-01", description="Passport issue date of the student"),
+ *     @OA\Property(property="passport_expiry_date", type="string", format="date", example="2030-01-01", description="Passport expiry date of the student"),
+ *     @OA\Property(property="place_of_issue", type="string", format="string", example="New York, USA", description="Place where the student's passport was issued")
 
      *
      *         ),
@@ -330,6 +359,7 @@ class StudentController extends Controller
                         'nationality',
                         "course_fee",
                         "fee_paid",
+                        "contact_number",
                         'passport_number',
                         'school_id',
                         'date_of_birth',

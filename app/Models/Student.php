@@ -25,14 +25,37 @@ class Student extends Model
         'student_status_id',
         "course_title_id",
         'attachments',
+
+        'email',
+        'contact_number',
+        'sex',
+        'address',
+        'country',
+        'city',
+        'postcode',
+        'lat',
+        'long',
+        'emergency_contact_details',
+        'previous_education_history',
+        'passport_issue_date',
+        'passport_expiry_date',
+        'place_of_issue',
+
+
+
         'is_active',
         'business_id',
         'created_by',
+
     ];
 
     protected $casts = [
         'attachments' => 'json',
+        'emergency_contact_details' => 'json',
+        'previous_education_history' => 'json',
     ];
+
+
     public function course_title() {
         return $this->belongsTo(CourseTitle::class, 'course_title_id', 'id');
     }
