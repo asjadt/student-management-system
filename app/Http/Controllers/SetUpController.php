@@ -187,126 +187,145 @@ return "swagger generated";
 
         return "You are done with setup";
     }
+    public function roleRefreshFunc()
+    {
 
+
+        // ###############################
+        // permissions
+        // ###############################
+        $permissions =  config("setup-config.permissions");
+
+        // setup permissions
+        foreach ($permissions as $permission) {
+            if (!Permission::where([
+                'name' => $permission,
+                'guard_name' => 'api'
+            ])
+                ->exists()) {
+                Permission::create(['guard_name' => 'api', 'name' => $permission]);
+            }
+        }
+        // setup roles
+        $roles = config("setup-config.roles");
+        foreach ($roles as $role) {
+            if (!Role::where([
+                'name' => $role,
+                'guard_name' => 'api',
+                "is_system_default" => 1,
+                "business_id" => NULL,
+                "is_default" => 1,
+            ])
+                ->exists()) {
+                Role::create([
+                    'guard_name' => 'api',
+                    'name' => $role,
+                    "is_system_default" => 1,
+                    "business_id" => NULL,
+                    "is_default" => 1,
+                    "is_default_for_business" => (in_array($role, [
+                        "business_owner",
+                        "business_admin",
+                        "business_manager",
+                        "business_employee"
+                    ]) ? 1 : 0)
+
+
+                ]);
+            }
+        }
+
+
+        // setup roles and permissions
+        $role_permissions = config("setup-config.roles_permission");
+        foreach ($role_permissions as $role_permission) {
+            $role = Role::where(["name" => $role_permission["role"]])->first();
+
+            $permissions = $role_permission["permissions"];
+
+
+            // Get current permissions associated with the role
+            $currentPermissions = $role->permissions()->pluck('name')->toArray();
+
+            // Determine permissions to remove
+            $permissionsToRemove = array_diff($currentPermissions, $permissions);
+
+            // Deassign permissions not included in the configuration
+            if (!empty($permissionsToRemove)) {
+                foreach ($permissionsToRemove as $permission) {
+                    $role->revokePermissionTo($permission);
+                }
+            }
+
+            // Assign permissions from the configuration
+            $role->syncPermissions($permissions);
+        }
+
+
+        // $business_ids = Business::get()->pluck("id");
+
+        // foreach ($role_permissions as $role_permission) {
+
+        //     if($role_permission["role"] == "business_employee"){
+        //         foreach($business_ids as $business_id){
+
+        //             $role = Role::where(["name" => $role_permission["role"] . "#" . $business_id])->first();
+
+        //            if(empty($role)){
+
+        //             continue;
+        //            }
+
+        //                 $permissions = $role_permission["permissions"];
+
+        //                 // Assign permissions from the configuration
+        //     $role->syncPermissions($permissions);
+
+
+
+        //         }
+
+        //     }
+
+        //     if($role_permission["role"] == "business_manager"){
+        //         foreach($business_ids as $business_id){
+
+        //             $role = Role::where(["name" => $role_permission["role"] . "#" . $business_id])->first();
+
+        //            if(empty($role)){
+
+        //             continue;
+        //            }
+
+        //                 $permissions = $role_permission["permissions"];
+
+        //                 // Assign permissions from the configuration
+        //     $role->syncPermissions($permissions);
+
+
+
+        //         }
+
+        //     }
+
+
+
+        // }
+    }
 
     public function roleRefresh(Request $request)
     {
 
         $this->storeActivity($request, "DUMMY activity","DUMMY description");
-// Delete all role permissions
-DB::table('role_has_permissions')->delete();
 
-// Delete all roles
-DB::table('roles')->delete();
-
-// Delete all permissions
-DB::table('permissions')->delete();
-
-// return "ok" ;
-   // ###############################
-        // permissions
-        // ###############################
-        $permissions =  config("setup-config.permissions");
-        // setup permissions
-        foreach ($permissions as $permission) {
-            $existingPermission = DB::table('permissions')
-            ->where('name', $permission)
-            ->where('guard_name', 'api')
-            ->first();
-
-        // If the permission does not exist, create it
-        if (!$existingPermission) {
-            DB::table('permissions')->insert([
-                'name' => $permission,
-                'guard_name' => 'api',
-                // Add any other necessary fields here
-            ]);
-        }
-
-        }
-        // setup roles
-        $roles = config("setup-config.roles");
-        foreach ($roles as $role) {
-            if(!Role::where([
-            'name' => $role,
-            'guard_name' => 'api',
-            "is_system_default" => 1,
-            "business_id" => NULL,
-            "is_default" => 1,
-            ])
-            ->exists()){
-             Role::create(['guard_name' => 'api', 'name' => $role,"is_system_default"=> 1, "business_id" => NULL,
-             "is_default" => 1,
-             "is_default_for_business" => (in_array($role ,[
-            "business_admin",
-             "business_staff"
-
-             ])?1:0)
-
-
-            ]);
-            }
-
-        }
-        // setup roles and permissions
-        $role_permissions = config("setup-config.roles_permission");
-        foreach ($role_permissions as $role_permission) {
-            $role = Role::where(["name" => $role_permission["role"]])->first();
-            error_log($role_permission["role"]);
-            $permissions = $role_permission["permissions"];
-            $role->syncPermissions($permissions);
-        }
-
-
-
-        $businesses = Business::query()->get();
-        foreach($businesses as $business){
-
-            $user = User::where("id",$business->owner_id)->first();
-            $user->assignRole('business_admin');
-        $defaultRoles = Role::where([
-            "business_id" => NULL,
-            "is_default" => 1,
-            "is_default_for_business" => 1,
-            "guard_name" => "api",
-        ])->get();
-
-        foreach ($defaultRoles as $defaultRole) {
-
-
-                $insertableData = [
-                    'name'  => ($defaultRole->name . "#" . $business->id),
-                    "is_default" => 1,
-                    "business_id" => $business->id,
-                    "is_default_for_business" => 0,
-                    "guard_name" => "api",
-                ];
-                $role  = Role::create($insertableData);
-                $attached_defaults["roles"][$defaultRole->id] = $role->id;
-
-                $permissions = $defaultRole->permissions;
-                foreach ($permissions as $permission) {
-                    if (!$role->hasPermissionTo($permission)) {
-                        $role->givePermissionTo($permission);
-                    }
-                }
-
-
-
-
-            }
-
-
-        }
-
-
-
+        $this->roleRefreshFunc();
 
 
 
 
         return "You are done with setup";
     }
+
 
 
     public function backup(Request $request) {

@@ -29,9 +29,9 @@ class CreateLetterTemplatesTable extends Migration
             ->constrained('businesses')
             ->onDelete('cascade');
 
-            $table->unsignedBigInteger('parent_id')->nullable()->after('id');
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('letter_templates')->onDelete('cascade');
-            
+
             $table->unsignedBigInteger("created_by");
             $table->softDeletes();
             $table->timestamps();
