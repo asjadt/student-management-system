@@ -2,9 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DownloadStudentLetterPdfRequest;
+use App\Http\Requests\StudentLetterCreateRequest;
+use App\Http\Requests\StudentLetterGenerateRequest;
+use App\Http\Requests\StudentLetterUpdateRequest;
+use App\Http\Requests\StudentLetterUpdateViewRequest;
+use App\Http\Utils\BasicUtil;
+use App\Http\Utils\BusinessUtil;
+use App\Http\Utils\EmailLogUtil;
+use App\Http\Utils\ErrorUtil;
+use App\Http\Utils\ModuleUtil;
+use App\Http\Utils\UserActivityUtil;
+use App\Mail\StudentLetterMail;
+use App\Models\LetterTemplate;
+use App\Models\Student;
 use App\Models\StudentLetter;
+use App\Models\StudentLetterEmailHistory;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use PDF;
 
 class StudentLetterController extends Controller
 {
@@ -15,14 +33,14 @@ class StudentLetterController extends Controller
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/user-letters",
+     *      path="/v1.0/student-letters",
      *      operationId="createStudentLetter",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to store user letters",
-     *      description="This method is to store user letters",
+     *      summary="This method is to store student letters",
+     *      description="This method is to store student letters",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -33,7 +51,7 @@ class StudentLetterController extends Controller
      * @OA\Property(property="sign_required", type="string", format="string", example="sign_required"),
      * @OA\Property(property="letter_view_required", type="string", format="string", example="letter_view_required"),
      *
-     * @OA\Property(property="user_id", type="string", format="string", example="user_id"),
+     * @OA\Property(property="student_id", type="string", format="string", example="student_id"),
      * @OA\Property(property="attachments", type="string", format="string", example="attachments"),
      *
      *
@@ -104,12 +122,12 @@ class StudentLetterController extends Controller
 
 
 
-                $user_letter =  StudentLetter::create($request_data);
+                $student_letter =  StudentLetter::create($request_data);
 
 
 
 
-                return response($user_letter, 201);
+                return response($student_letter, 201);
             });
         } catch (Exception $e) {
 
@@ -121,21 +139,21 @@ class StudentLetterController extends Controller
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/user-letters/generate",
+     *      path="/v1.0/student-letters/generate",
      *      operationId="generateStudentLetter",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to generate user letters",
-     *      description="This method is to generate user letters",
+     *      summary="This method is to generate student letters",
+     *      description="This method is to generate student letters",
      *
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      * @OA\Property(property="letter_template_id", type="string", format="string", example="sign_required"),
      * @OA\Property(property="letter_view_required", type="string", format="string", example="letter_view_required"),
-     * @OA\Property(property="user_id", type="string", format="string", example="user_id"),
+     * @OA\Property(property="student_id", type="string", format="string", example="student_id"),
 
      *
      *
@@ -194,16 +212,12 @@ class StudentLetterController extends Controller
                 $business = auth()->user()->business;
 
 
-                $employee = User::where([
-                    "id" => $request_data["user_id"]
+                $student = Student::where([
+                    "id" => $request_data["student_id"]
                 ])
                     ->first();
 
-                    $last_termination = Termination::where([
-                        "user_id" => $employee->id
-                    ])
-                        ->latest()
-                        ->first();
+
 
                 $letter_template = LetterTemplate::where([
                     "id" => $request_data["letter_template_id"]
@@ -220,55 +234,23 @@ class StudentLetterController extends Controller
 
                         // Replace [FULL_NAME] with the concatenated full name
                         if ($item == "[FULL_NAME]") {
-                            $fullName = trim($employee["first_Name"] . ' ' . $employee["middle_Name"] . ' ' . $employee["last_Name"]);
+                            $fullName = trim($student["first_name"] . ' ' . $student["middle_name"] . ' ' . $student["last_name"]);
                             $template = str_replace($item, !empty($fullName) ? $fullName : '--', $template);
                         }
-                        // Replace [DESIGNATION] with the designation name if it exists; otherwise, use "--"
-                        else if ($item == "[DESIGNATION]") {
-                            $designation = isset($employee->designation->name) ? $employee->designation->name : '--';
-                            $template = str_replace($item, $designation, $template);
+                        else if ($item == "[COURSE_TITLE]") {
+                            $COURSE_TITLE = isset($employee->course_title->name) ? $student->course_title->name : '--';
+                            $template = str_replace($item, $COURSE_TITLE, $template);
                         }
-                        // Replace [EMPLOYMENT_STATUS] with the employment status name if it exists; otherwise, use "--"
-                        else if ($item == "[EMPLOYMENT_STATUS]") {
-                            $employmentStatus = isset($employee->employment_status->name) ? $employee->employment_status->name : '--';
-                            $template = str_replace($item, $employmentStatus, $template);
-                        }
-                        // Replace [BANK_NAME] with the bank name if it exists; otherwise, use "--"
-                        else if ($item == "[BANK_NAME]") {
-                            $bankName = isset($employee->bank->name) ? $employee->bank->name : '--';
-                            $template = str_replace($item, $bankName, $template);
-                        }
-                        // Replace [JOINING_DATE] with the formatted joining date if it exists; otherwise, use "--"
-                        else if ($item == "[JOINING_DATE]") {
-                            $joiningDate = isset($employee["joining_date"]) ? Carbon::parse($employee["joining_date"])->format("d-m-Y") : '--';
-                            $template = str_replace($item, $joiningDate, $template);
-                        }
-                        else if ($item == "[NI_NUMBER]") {
-                            $NI_number = isset($employee["NI_number"]) ? $employee["NI_number"] : '--';
-                            $template = str_replace($item, $NI_number, $template);
-                        }
-                        else if (!empty($last_termination)) {
-                             if ($item == "[TERMINATION_DATE]") {
-                                $date_of_termination = isset($last_termination["date_of_termination"]) ? Carbon::parse($last_termination["date_of_termination"])->format("d-m-Y") : '--';
-                                $template = str_replace($item, $date_of_termination, $template);
-                            }
-                            else if ($item == "[REASON_FOR_TERMINATION]") {
-                                $terminationReason = isset($last_termination->terminationReason->name) ? $last_termination->terminationReason->name : '--';
-                                $template = str_replace($item, $terminationReason, $template);
-                            }
-                            else if ($item == "[TERMINATION_TYPE]") {
-                                $terminationType = isset($last_termination->terminationType->name) ? $last_termination->terminationType->name : '--';
-                                $template = str_replace($item, $terminationType, $template);
-                            }
-
-
+                        else if ($item == "[STUDENT_STATUS]") {
+                            $STUDENT_STATUS = isset($employee->student_status->name) ? $student->student_status->name : '--';
+                            $template = str_replace($item, $STUDENT_STATUS, $template);
                         }
 
 
 
                         else if ($item == "[COMPANY_NAME]") {
-                            $NI_number = isset($business["name"]) ? $business["name"] : '[COMPANY_NAME]';
-                            $template = str_replace($item, $NI_number, $template);
+                            $COMPANY_NAME = isset($business["name"]) ? $business["name"] : '[COMPANY_NAME]';
+                            $template = str_replace($item, $COMPANY_NAME, $template);
                         }
                         else if ($item == "[COMPANY_ADDRESS_LINE_1]") {
                             $NI_number = isset($business["address_line_1"]) ? $business["address_line_1"] : '[COMPANY_ADDRESS_LINE_1]';
@@ -288,7 +270,7 @@ class StudentLetterController extends Controller
                         }
 
                          else {
-                            $template = str_replace($item, $employee[$variableName], $template);
+                            $template = str_replace($item, $student[$variableName], $template);
                         }
                     }
                 }
@@ -308,9 +290,9 @@ class StudentLetterController extends Controller
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/user-letters/download",
+     *      path="/v1.0/student-letters/download",
      *      operationId="downloadStudentLetter",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -321,8 +303,8 @@ class StudentLetterController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *            required={"first_Name"},
-     *             @OA\Property(property="user_letter_id", type="string", format="string",example="user_letter_id"),
-     *             @OA\Property(property="user_id", type="string", format="string",example="user_id"),
+     *             @OA\Property(property="student_letter_id", type="string", format="string",example="student_letter_id"),
+     *             @OA\Property(property="student_id", type="string", format="string",example="student_id"),
      *
      *         ),
      *      ),
@@ -367,13 +349,13 @@ class StudentLetterController extends Controller
             $this->isModuleEnabled("letter_template");
             $request_data = $request->validated();
 
-            $user_letter =  StudentLetter::where([
-                "id" => $request_data["user_letter_id"]
+            $student_letter =  StudentLetter::where([
+                "id" => $request_data["student_letter_id"]
             ])
                 ->first();
 
 
-            $pdf = PDF::loadView('email.dynamic_mail', ["html_content" => $user_letter->letter_content]);
+            $pdf = PDF::loadView('email.dynamic_mail', ["html_content" => $student_letter->letter_content]);
             return $pdf->download(("letter" . '.pdf'));
         } catch (Exception $e) {
 
@@ -385,9 +367,9 @@ class StudentLetterController extends Controller
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/user-letters/send",
+     *      path="/v1.0/student-letters/send",
      *      operationId="sendStudentLetterEmail",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -398,8 +380,8 @@ class StudentLetterController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *            required={"first_Name"},
-     *             @OA\Property(property="user_letter_id", type="string", format="string",example="user_letter_id"),
-     *             @OA\Property(property="user_id", type="string", format="string",example="user_id"),
+     *             @OA\Property(property="student_letter_id", type="string", format="string",example="student_letter_id"),
+     *             @OA\Property(property="student_id", type="string", format="string",example="student_id"),
      *         ),
      *      ),
      *      @OA\Response(
@@ -442,12 +424,12 @@ class StudentLetterController extends Controller
         try {
             $request_data = $request->validated();
 
-            $user_letter = StudentLetter::where([
-                "id" => $request_data["user_letter_id"]
+            $student_letter = StudentLetter::where([
+                "id" => $request_data["student_letter_id"]
             ])->first();
 
-            $employee = User::where([
-                "id" => $request_data["user_id"]
+            $student = Student::where([
+                "id" => $request_data["student_id"]
             ])
                 ->first();
 
@@ -456,36 +438,36 @@ class StudentLetterController extends Controller
 
                 if (env('SEND_EMAIL') == true) {
                     // Log email sender actions
-                    $this->checkEmailSender(auth()->user()->id, 0);
+                    // $this->checkEmailSender(auth()->user()->id, 0);
 
-                    $pdf = PDF::loadView('email.dynamic_mail', ['html_content' => $user_letter->letter_content]);
+                    $pdf = PDF::loadView('email.dynamic_mail', ['html_content' => $student_letter->letter_content]);
 
                     try {
                         // Send the email
-                        Mail::to($employee->email)->send(new StudentLetterMail($pdf));
+                        Mail::to($student->email)->send(new StudentLetterMail($pdf));
 
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         // Set error message
                         $errorMessage = $e->getMessage();
                         $emailSent = false;
                     } finally {
                         // Ensure that email sender actions are always logged
-                        $this->storeEmailSender(auth()->user()->id, 0);
+                        // $this->storeEmailSender(auth()->user()->id, 0);
                     }
                 }
 
-                // Update the user_letter record if email was sent
+                // Update the student_letter record if email was sent
                 if ($emailSent) {
-                    $user_letter->email_sent = true;
-                    $user_letter->save();
+                    $student_letter->email_sent = true;
+                    $student_letter->save();
                 }
 
                 // Create a history record
                 StudentLetterEmailHistory::create([
-                    'user_letter_id' => $user_letter->id,
+                    'student_letter_id' => $student_letter->id,
                     'sent_at' => $emailSent ? now() : null,
-                    'recipient_email' => $employee->email,
-                    'email_content' => $user_letter->letter_content,
+                    'recipient_email' => $student->email,
+                    'email_content' => $student_letter->letter_content,
                     'status' => $emailSent ? 'sent' : 'failed',
                     'error_message' => $emailSent ? null : $errorMessage
                 ]);
@@ -501,14 +483,14 @@ class StudentLetterController extends Controller
     /**
      *
      * @OA\Put(
-     *      path="/v1.0/user-letters",
+     *      path="/v1.0/student-letters",
      *      operationId="updateStudentLetter",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to update user letters ",
-     *      description="This method is to update user letters ",
+     *      summary="This method is to update student letters ",
+     *      description="This method is to update student letters ",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -520,7 +502,7 @@ class StudentLetterController extends Controller
      * @OA\Property(property="sign_required", type="string", format="string", example="sign_required"),
      * @OA\Property(property="letter_view_required", type="string", format="string", example="letter_view_required"),
      *
-     * @OA\Property(property="user_id", type="string", format="string", example="user_id"),
+     * @OA\Property(property="student_id", type="string", format="string", example="student_id"),
      * @OA\Property(property="attachments", type="string", format="string", example="attachments"),
      *
      *         ),
@@ -575,28 +557,28 @@ class StudentLetterController extends Controller
 
 
 
-                $user_letter_query_params = [
+                $student_letter_query_params = [
                     "id" => $request_data["id"],
                 ];
 
-                $user_letter = StudentLetter::where($user_letter_query_params)->first();
+                $student_letter = StudentLetter::where($student_letter_query_params)->first();
 
-                if ($user_letter) {
-                    $user_letter->fill(collect($request_data)->only([
+                if ($student_letter) {
+                    $student_letter->fill(collect($request_data)->only([
 
                         "issue_date",
                         "letter_content",
                         "status",
                         "sign_required",
                         "letter_view_required",
-                        "user_id",
+                        "student_id",
                         "attachments",
                         // "is_default",
                         // "is_active",
                         // "business_id",
                         // "created_by"
                     ])->toArray());
-                    $user_letter->save();
+                    $student_letter->save();
                 } else {
                     return response()->json([
                         "message" => "something went wrong."
@@ -606,7 +588,7 @@ class StudentLetterController extends Controller
 
 
 
-                return response($user_letter, 201);
+                return response($student_letter, 201);
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -616,14 +598,14 @@ class StudentLetterController extends Controller
        /**
      *
      * @OA\Put(
-     *      path="/v1.0/user-letters/view",
+     *      path="/v1.0/student-letters/view",
      *      operationId="updateStudentLetterView",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to update user letters ",
-     *      description="This method is to update user letters ",
+     *      summary="This method is to update student letters ",
+     *      description="This method is to update student letters ",
      *
      *  @OA\RequestBody(
      *         required=true,
@@ -684,22 +666,22 @@ class StudentLetterController extends Controller
 
 
 
-                 $user_letter_query_params = [
+                 $student_letter_query_params = [
                      "id" => $request_data["id"],
-                     "user_id" => auth()->user()->id,
+                     "student_id" => auth()->user()->id,
                  ];
 
-                 $user_letter = StudentLetter::where($user_letter_query_params)->first();
+                 $student_letter = StudentLetter::where($student_letter_query_params)->first();
 
-                 if ($user_letter) {
-                     $user_letter->fill(collect($request_data)->only([
+                 if ($student_letter) {
+                     $student_letter->fill(collect($request_data)->only([
                          "letter_viewed",
                          // "is_default",
                          // "is_active",
                          // "business_id",
                          // "created_by"
                      ])->toArray());
-                     $user_letter->save();
+                     $student_letter->save();
                  } else {
                      return response()->json([
                          "message" => "something went wrong."
@@ -709,7 +691,7 @@ class StudentLetterController extends Controller
 
 
 
-                 return response($user_letter, 201);
+                 return response($student_letter, 201);
              });
          } catch (Exception $e) {
              error_log($e->getMessage());
@@ -723,9 +705,9 @@ class StudentLetterController extends Controller
     /**
      *
      * @OA\Get(
-     *      path="/v1.0/user-letters",
+     *      path="/v1.0/student-letters",
      *      operationId="getStudentLetters",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -828,15 +810,15 @@ class StudentLetterController extends Controller
      * example="ASC"
      * ),
      *    * *  @OA\Parameter(
-     * name="user_id",
+     * name="student_id",
      * in="query",
-     * description="user_id",
+     * description="student_id",
      * required=true,
      * example="ASC"
      * ),
      *
-     *      summary="This method is to get user letters  ",
-     *      description="This method is to get user letters ",
+     *      summary="This method is to get student letters  ",
+     *      description="This method is to get student letters ",
      *
 
      *      @OA\Response(
@@ -878,54 +860,51 @@ class StudentLetterController extends Controller
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             $this->isModuleEnabled("letter_template");
-            if (!$request->user()->hasPermissionTo('user_letter_view')) {
+            if (!$request->user()->hasPermissionTo('student_letter_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
-            $created_by  = NULL;
-            if (auth()->user()->business) {
-                $created_by = auth()->user()->business->created_by;
-            }
+
 
             $all_manager_department_ids = $this->get_all_departments_of_manager();
 
-            $user_letters = StudentLetter::with([
-                "user" => function ($query) {
-                    $query->select("users.id", "users.first_Name", "users.middle_Name", "users.last_Name");
+            $student_letters = StudentLetter::with([
+                "student" => function ($query) {
+                    $query->select("students.id", "students.first_Name", "students.middle_Name", "students.last_Name");
                 }
             ])
-                ->where('user_letters.business_id', auth()->user()->business_id)
+                ->where('student_letters.business_id', auth()->user()->business_id)
 
 
-                ->whereHas("user.department_user.department", function ($query) use ($all_manager_department_ids) {
-                    $query->whereIn("departments.id", $all_manager_department_ids);
-                })
+
 
                 ->when(!empty($request->id), function ($query) use ($request) {
-                    return $query->where('user_letters.id', $request->id);
+                    return $query->where('student_letters.id', $request->id);
                 })
 
                 ->when(!empty($request->start_issue_date), function ($query) use ($request) {
-                    return $query->where('user_letters.issue_date', ">=", $request->start_issue_date);
+                    return $query->where('student_letters.issue_date', ">=", $request->start_issue_date);
                 })
                 ->when(!empty($request->end_issue_date), function ($query) use ($request) {
-                    return $query->where('user_letters.issue_date', "<=", ($request->end_issue_date . ' 23:59:59'));
+                    return $query->where('student_letters.issue_date', "<=", ($request->end_issue_date . ' 23:59:59'));
                 })
 
 
 
                 ->when(!empty($request->status), function ($query) use ($request) {
-                    return $query->where('user_letters.status', $request->status);
+                    return $query->where('student_letters.status', $request->status);
                 })
 
                 ->when(
-                    empty($request->user_id),
+                    empty($request->student_id),
                     function ($query) use ($request) {
-                        return $query->whereNotIn('user_letters.user_id', [auth()->user()->id]);
+                        return $query
+                        // ->whereNotIn('student_letters.student_id', [auth()->user()->id])
+                        ;
                     },
                     function ($query) use ($request) {
-                        return $query->where('user_letters.user_id', $request->user_id);
+                        return $query->where('student_letters.student_id', $request->student_id);
                     }
                 )
 
@@ -934,21 +913,21 @@ class StudentLetterController extends Controller
                         $term = $request->search_key;
                         $query
 
-                            ->where("user_letters.letter_content", "like", "%" . $term . "%")
-                            ->orWhere("user_letters.status", "like", "%" . $term . "%");
+                            ->where("student_letters.letter_content", "like", "%" . $term . "%")
+                            ->orWhere("student_letters.status", "like", "%" . $term . "%");
                     });
                 })
 
                 ->when(!empty($request->start_date), function ($query) use ($request) {
-                    return $query->where('user_letters.created_at', ">=", $request->start_date);
+                    return $query->where('student_letters.created_at', ">=", $request->start_date);
                 })
                 ->when(!empty($request->end_date), function ($query) use ($request) {
-                    return $query->where('user_letters.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                    return $query->where('student_letters.created_at', "<=", ($request->end_date . ' 23:59:59'));
                 })
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("user_letters.id", $request->order_by);
+                    return $query->orderBy("student_letters.id", $request->order_by);
                 }, function ($query) {
-                    return $query->orderBy("user_letters.id", "DESC");
+                    return $query->orderBy("student_letters.id", "DESC");
                 })
                 ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
                     return $query->first();
@@ -960,12 +939,12 @@ class StudentLetterController extends Controller
                     });
                 });
 
-            if ($request->filled("is_single_search") && empty($user_letters)) {
+            if ($request->filled("is_single_search") && empty($student_letters)) {
                 throw new Exception("No data found", 404);
             }
 
 
-            return response()->json($user_letters, 200);
+            return response()->json($student_letters, 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -976,17 +955,17 @@ class StudentLetterController extends Controller
         /**
      *
      * @OA\Get(
-     *      path="/v1.0/user-letters-histories",
+     *      path="/v1.0/student-letters-histories",
      *      operationId="getStudentLetterHistories",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
 
 *     @OA\Parameter(
- *         name="user_letter_id",
+ *         name="student_letter_id",
  *         in="query",
- *         description="Filter by user letter ID.",
+ *         description="Filter by student letter ID.",
  *         required=false,
  *         @OA\Schema(type="integer")
  *     ),
@@ -1070,15 +1049,15 @@ class StudentLetterController extends Controller
      * example="ASC"
      * ),
      *    * *  @OA\Parameter(
-     * name="user_id",
+     * name="student_id",
      * in="query",
-     * description="user_id",
+     * description="student_id",
      * required=true,
      * example="ASC"
      * ),
      *
-     *      summary="This method is to get user letters  ",
-     *      description="This method is to get user letters ",
+     *      summary="This method is to get student letters  ",
+     *      description="This method is to get student letters ",
      *
 
      *      @OA\Response(
@@ -1128,60 +1107,60 @@ class StudentLetterController extends Controller
 
              $all_manager_department_ids = $this->get_all_departments_of_manager();
 
-             $user_letter_histories = StudentLetterEmailHistory::
-                 whereHas("user_letters.user.department_user.department", function ($query) use ($all_manager_department_ids) {
-                     $query->whereIn("departments.id", $all_manager_department_ids);
-                 })
+             $student_letter_histories = StudentLetterEmailHistory::
 
-                 ->when(
-                    empty($request->user_id),
+
+                 when(
+                    empty($request->student_id),
                     function ($query) use ($request) {
-                        return $query->whereHas("user_letters", function ($query)  {
-                            $query->whereNotIn("users.id", [auth()->user()->id]);
-                        });
+                        return $query
+                        // ->whereHas("student_letters", function ($query)  {
+                        //     $query->whereNotIn("students.id", [auth()->user()->id]);
+                        // })
+                        ;
                     },
                     function ($query) use ($request) {
-                        return $query->whereHas("user_letters", function ($query) use($request) {
-                            $query->whereIn("users.id", [$request->user_id]);
+                        return $query->whereHas("student_letters", function ($query) use($request) {
+                            $query->whereIn("students.id", [$request->student_id]);
                         });
 
                     }
                 )
-                ->when(!empty($request->user_letter_id), function ($query) use ($request) {
-                    return $query->where('user_letter_email_histories.user_letter_id', $request->user_letter_id);
+                ->when(!empty($request->student_letter_id), function ($query) use ($request) {
+                    return $query->where('student_letter_email_histories.student_letter_id', $request->student_letter_id);
                 })
                  ->when(!empty($request->id), function ($query) use ($request) {
-                     return $query->where('user_letter_email_histories.id', $request->id);
+                     return $query->where('student_letter_email_histories.id', $request->id);
                  })
                  ->when(!empty($request->start_sent_at), function ($query) use ($request) {
-                     return $query->where('user_letter_email_histories.sent_at', ">=", $request->start_sent_at);
+                     return $query->where('student_letter_email_histories.sent_at', ">=", $request->start_sent_at);
                  })
                  ->when(!empty($request->end_sent_at), function ($query) use ($request) {
-                     return $query->where('user_letter_email_histories.sent_at', "<=", ($request->end_sent_at . ' 23:59:59'));
+                     return $query->where('student_letter_email_histories.sent_at', "<=", ($request->end_sent_at . ' 23:59:59'));
                  })
                  ->when(!empty($request->status), function ($query) use ($request) {
-                     return $query->where('user_letter_email_histories.status', $request->status);
+                     return $query->where('student_letter_email_histories.status', $request->status);
                  })
                  ->when(!empty($request->search_key), function ($query) use ($request) {
                      return $query->where(function ($query) use ($request) {
                          $term = $request->search_key;
                          $query
 
-                             ->where("user_letter_email_histories.letter_content", "like", "%" . $term . "%")
-                             ->orWhere("user_letter_email_histories.recipient_email", "like", "%" . $term . "%");
+                             ->where("student_letter_email_histories.letter_content", "like", "%" . $term . "%")
+                             ->orWhere("student_letter_email_histories.recipient_email", "like", "%" . $term . "%");
                      });
                  })
 
                  ->when(!empty($request->start_date), function ($query) use ($request) {
-                     return $query->where('user_letter_email_histories.created_at', ">=", $request->start_date);
+                     return $query->where('student_letter_email_histories.created_at', ">=", $request->start_date);
                  })
                  ->when(!empty($request->end_date), function ($query) use ($request) {
-                     return $query->where('user_letter_email_histories.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                     return $query->where('student_letter_email_histories.created_at', "<=", ($request->end_date . ' 23:59:59'));
                  })
                  ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                     return $query->orderBy("user_letter_email_histories.id", $request->order_by);
+                     return $query->orderBy("student_letter_email_histories.id", $request->order_by);
                  }, function ($query) {
-                     return $query->orderBy("user_letter_email_histories.id", "DESC");
+                     return $query->orderBy("student_letter_email_histories.id", "DESC");
                  })
                  ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
                      return $query->first();
@@ -1193,12 +1172,12 @@ class StudentLetterController extends Controller
                      });
                  });
 
-             if ($request->filled("is_single_search") && empty($user_letters)) {
+             if ($request->filled("is_single_search") && empty($student_letters)) {
                  throw new Exception("No data found", 404);
              }
 
 
-             return response()->json($user_letter_histories, 200);
+             return response()->json($student_letter_histories, 200);
          } catch (Exception $e) {
 
              return $this->sendError($e, 500, $request);
@@ -1208,9 +1187,9 @@ class StudentLetterController extends Controller
     /**
      *
      *     @OA\Delete(
-     *      path="/v1.0/user-letters/{ids}",
+     *      path="/v1.0/student-letters/{ids}",
      *      operationId="deleteStudentLettersByIds",
-     *      tags={"user_letters"},
+     *      tags={"student_letters"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1221,8 +1200,8 @@ class StudentLetterController extends Controller
      *         required=true,
      *  example="1,2,3"
      *      ),
-     *      summary="This method is to delete user letter by id",
-     *      description="This method is to delete user letter by id",
+     *      summary="This method is to delete student letter by id",
+     *      description="This method is to delete student letter by id",
      *
 
      *      @OA\Response(
@@ -1273,7 +1252,7 @@ class StudentLetterController extends Controller
 
             $idsArray = explode(',', $ids);
             $existingIds = StudentLetter::whereIn('id', $idsArray)
-                ->where('user_letters.business_id', auth()->user()->business_id)
+                ->where('student_letters.business_id', auth()->user()->business_id)
 
                 ->select('id')
                 ->get()

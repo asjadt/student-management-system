@@ -11,31 +11,47 @@ trait BasicUtil
     {
         $letterTemplateVariables = [
             'PERSONAL DETAILS',
-            '[FULL_NAME]',
-            '[NI_NUMBER]',
-            '[DATE_OF_BIRTH]',
-            '[GENDER]',
-            '[PHONE]',
-            '[EMAIL]',
-            'EMPLOYMENT DETAILS',
-            '[DESIGNATION]',
-            '[EMPLOYMENT_STATUS]',
-            '[JOINING_DATE]',
-            '[SALARY_PER_ANNUM]',
-            '[WEEKLY_CONTRACTUAL_HOURS]',
-            '[MINIMUM_WORKING_DAYS_PER_WEEK]',
-            '[OVERTIME_RATE]',
-            'ADDRESS',
-            '[ADDRESS_LINE_1]',
-            // '[ADDRESS_LINE_2]',
-            '[CITY]',
-            '[POSTCODE]',
-            '[COUNTRY]',
-            'BANK DETAILS',
-            '[SORT_CODE]',
-            '[ACCOUNT_NUMBER]',
-            '[ACCOUNT_NAME]',
-            '[BANK_NAME]',
+    '[FIRST_NAME]',
+    '[MIDDLE_NAME]',
+    '[LAST_NAME]',
+    '[NATIONALITY]',
+    '[COURSE_FEE]',
+    '[FEE_PAID]',
+    '[PASSPORT_NUMBER]',
+    '[DATE_OF_BIRTH]',
+    '[COURSE_START_DATE]',
+    '[LETTER_ISSUE_DATE]',
+    '[STUDENT_STATUS]',
+
+    '[EMAIL]',
+    '[CONTACT_NUMBER]',
+    '[SEX]',
+
+    'ADDRESS',
+    '[ADDRESS]',
+    '[CITY]',
+    '[POSTCODE]',
+    '[COUNTRY]',
+
+    'COURSE DETAILS',
+    '[COURSE_TITLE]',
+    '[COURSE_DURATION]',
+    '[COURSE_DETAIL]',
+
+    'COMPANY DETAILS',
+    '[COMPANY_NAME]',
+    '[COMPANY_ADDRESS_LINE_1]',
+    '[COMPANY_CITY]',
+    '[COMPANY_POSTCODE]',
+    '[COMPANY_COUNTRY]',
+
+    'PASSPORT DETAILS',
+    '[PASSPORT_ISSUE_DATE]',
+    '[PASSPORT_EXPIRY_DATE]',
+    '[PLACE_OF_ISSUE]',
+
+
+
 
             'COMPANY DETAILS',
             'COMPANY_NAME',
@@ -45,17 +61,9 @@ trait BasicUtil
             'COMPANY_COUNTRY',
 
 
-            'TERMINATION DETAILS',
-            'TERMINATION_DATE',
-            'REASON_FOR_TERMINATION',
-            'TERMINATION_TYPE',
 
 
 
-            'TYPE_OF_LEAVE',
-            'LEAVE_START_DATE',
-            'LEAVE_END_DATE',
-            'TOTAL_DAYS'
 
         ];
 

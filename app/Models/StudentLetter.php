@@ -35,7 +35,7 @@ class StudentLetter extends Model
 
     public function student()
     {
-        return $this->belongsTo(Student::class, 'user_id', 'id');
+        return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 }
 

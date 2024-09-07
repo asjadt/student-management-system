@@ -38,6 +38,7 @@ class Student extends Model
         'postcode',
         'lat',
         'long',
+
         'emergency_contact_details',
         'previous_education_history',
         'passport_issue_date',

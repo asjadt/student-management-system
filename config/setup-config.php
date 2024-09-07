@@ -13,6 +13,10 @@ return [
                 "letter_template_delete",
 
 
+
+
+
+
                 "global_business_background_image_create",
                 "global_business_background_image_view",
 
@@ -233,6 +237,12 @@ return [
         [
             "role" => "business_admin",
             "permissions" => [
+
+
+                "user_letter_create",
+                "user_letter_update",
+                "user_letter_view",
+                "user_letter_delete",
 
 
                 "letter_template_create",
@@ -461,6 +471,14 @@ return [
             "role" => "business_staff",
             "permissions" => [
 
+
+        "user_letter_create",
+        "user_letter_update",
+
+        "user_letter_view",
+        "user_letter_delete",
+
+
                 "letter_template_create",
                 "letter_template_update",
                 "letter_template_activate",
@@ -676,6 +694,14 @@ return [
         "business_staff"
     ],
     "permissions" => [
+
+
+        "user_letter_create",
+        "user_letter_update",
+
+        "user_letter_view",
+        "user_letter_delete",
+
 
         "letter_template_create",
         "letter_template_update",

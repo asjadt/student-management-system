@@ -23,9 +23,11 @@ class CreateStudentLettersTable extends Migration
             $table->text('letter_content');
             $table->string('status');
             $table->boolean('sign_required');
-            $table->foreignId('user_id')
-            ->constrained('users')
+            
+            $table->foreignId('student_id')
+            ->constrained('students')
             ->onDelete('cascade');
+
             $table->json('attachments');
             $table->foreignId('business_id')
             ->constrained('businesses')

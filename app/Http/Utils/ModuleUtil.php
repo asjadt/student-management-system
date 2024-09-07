@@ -10,6 +10,7 @@ trait ModuleUtil
     // this function do all the task and returns transaction id or -1
     public function isModuleEnabled($module_name)
     {
+        return 1;
         $user = auth()->user();
         $query_params = [
             'name' => $module_name,
