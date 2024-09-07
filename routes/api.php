@@ -40,6 +40,7 @@ use App\Http\Controllers\SettingLeaveController;
 use App\Http\Controllers\SettingLeaveTypeController;
 use App\Http\Controllers\SettingPayrollController;
 use App\Http\Controllers\SocialSiteController;
+use App\Http\Controllers\StudentLetterController;
 use App\Http\Controllers\StudentStatusController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserAddressHistoryController;
@@ -701,6 +702,37 @@ Route::delete('/v1.0/recruitment-processes/{ids}', [RecruitmentProcessController
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // end letter templates management section
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // user letters management section
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Route::post('/v1.0/student-letters', [StudentLetterController::class, "createStudentLetter"]);
+
+    Route::post('/v1.0/student-letters/generate', [StudentLetterController::class, "generateStudentLetter"]);
+
+    Route::post('/v1.0/student-letters/download', [StudentLetterController::class, "downloadStudentLetter"]);
+    Route::post('/v1.0/student-letters/send', [StudentLetterController::class, "sendStudentLetterEmail"]);
+
+
+    Route::put('/v1.0/student-letters', [StudentLetterController::class, "updateStudentLetter"]);
+    Route::put('/v1.0/student-letters/view', [StudentLetterController::class, "updateStudentLetterView"]);
+
+    Route::get('/v1.0/student-letters', [StudentLetterController::class, "getStudentLetters"]);
+
+    Route::get('/v1.0/student-letters-histories', [StudentLetterController::class, "getStudentLetterHistories"]);
+
+    Route::delete('/v1.0/student-letters/{ids}', [StudentLetterController::class, "deleteStudentLettersByIds"]);
+
+
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // end user letters management section
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // student status management section
