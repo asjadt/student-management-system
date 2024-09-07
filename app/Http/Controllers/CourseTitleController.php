@@ -35,7 +35,8 @@ class CourseTitleController extends Controller
      *         @OA\JsonContent(
  * @OA\Property(property="name", type="string", format="string", example="tttttt"),
  *  * @OA\Property(property="color", type="string", format="string", example="red"),
- * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;")
+ * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
+ *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
  *
  *
      *
@@ -134,7 +135,8 @@ class CourseTitleController extends Controller
 *      @OA\Property(property="id", type="number", format="number", example="Updated Christmas"),
  * @OA\Property(property="name", type="string", format="string", example="tttttt"),
  *  *  * @OA\Property(property="color", type="string", format="string", example="red"),
- * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;")
+ * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
+ *  * *  * @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
 
 
      *
@@ -200,6 +202,7 @@ class CourseTitleController extends Controller
                         'name',
                         'color',
                         'description',
+                        "awarding_body_id"
                         // "is_active",
                         // "business_id",
 

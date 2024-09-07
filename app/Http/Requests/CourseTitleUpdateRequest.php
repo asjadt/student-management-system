@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\CourseTitle;
+use App\Rules\ValidateAwardingBody;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CourseTitleUpdateRequest extends FormRequest
@@ -147,6 +148,11 @@ class CourseTitleUpdateRequest extends FormRequest
             ],
             'description' => 'nullable|string',
             'color' => 'required|string',
+            "awarding_body_id" =>   [
+                "required",
+            'numeric',
+            new ValidateAwardingBody()
+            ]
         ];
 
         // if (!empty(auth()->user()->business_id)) {

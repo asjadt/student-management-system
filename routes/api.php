@@ -4,6 +4,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AssetTypeController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AwardingBodyController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DashboardManagementController;
 use App\Http\Controllers\EmailTemplateController;
@@ -749,6 +750,27 @@ Route::post('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "de
 // end student status  management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// awarding bodies management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/awarding-bodies', [AwardingBodyController::class, "createAwardingBody"]);
+Route::put('/v1.0/awarding-bodies', [AwardingBodyController::class, "updateAwardingBody"]);
+
+Route::put('/v1.0/awarding-bodies/toggle-active', [AwardingBodyController::class, "toggleActiveAwardingBody"]);
+
+Route::get('/v1.0/awarding-bodies', [AwardingBodyController::class, "getAwardingBodies"]);
+Route::delete('/v1.0/awarding-bodies/{ids}', [AwardingBodyController::class, "deleteAwardingBodiesByIds"]);
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end awarding bodies management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // course title management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1119,7 +1141,6 @@ Route::get('/v1.0/client/job-listings/{id}', [JobListingController::class, "getJ
 Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentByIdClient"]);
 Route::get('/v1.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClient"]);
 Route::get('/v1.0/client/students', [StudentController::class, "getStudentsClient"]);
-
 Route::get('/v1.0/client/course-titles', [CourseTitleController::class, "getCourseTitlesClient"]);
 
 

@@ -118,7 +118,16 @@ return [
                 "course_title_create",
                 "course_title_update",
                 "course_title_view",
-                // "course_title_delete",
+                "course_title_delete",
+
+
+                "awarding_body_create",
+                "awarding_body_update",
+                "awarding_body_activate",
+                "awarding_body_view",
+                "awarding_body_delete",
+
+
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
@@ -226,7 +235,7 @@ return [
                 "course_title_create",
                 "course_title_update",
                 "course_title_view",
-                // "course_title_delete",
+                "course_title_delete",
 
 
 
@@ -430,6 +439,16 @@ return [
                 "course_title_activate",
                 "course_title_view",
                  "course_title_delete",
+
+
+                 "awarding_body_create",
+                 "awarding_body_update",
+                "awarding_body_activate",
+
+                 "awarding_body_view",
+                 "awarding_body_delete",
+
+
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
@@ -652,7 +671,16 @@ return [
                 "course_title_update",
                 "course_title_activate",
                 "course_title_view",
-                //  "course_title_delete",
+                  "course_title_delete",
+
+
+                  "awarding_body_create",
+                  "awarding_body_update",
+                "awarding_body_activate",
+                  "awarding_body_view",
+                  "awarding_body_delete",
+
+
 
                 "setting_leave_type_create",
                 "setting_leave_type_update",
@@ -928,6 +956,12 @@ return [
         "course_title_view",
          "course_title_delete",
 
+         "awarding_body_create",
+         "awarding_body_update",
+       "awarding_body_activate",
+         "awarding_body_view",
+         "awarding_body_delete",
+
         "setting_leave_type_create",
         "setting_leave_type_update",
         "setting_leave_type_activate",
@@ -1179,6 +1213,12 @@ return [
         "course_title_activate" => "",
         "course_title_view" => "",
          "course_title_delete" => "",
+
+         "awarding_body_create"=>"",
+         "awarding_body_update"=>"",
+       "awarding_body_activate"=>"",
+         "awarding_body_view"=>"",
+         "awarding_body_delete"=>"",
 
          "letter_template_create"=>"",
          "letter_template_update"=>"",
@@ -2021,12 +2061,22 @@ return [
         "course_title_view",
          "course_title_delete",
 
+            ],
+        ],
+        [
+            "header" => "awarding_body",
+            "permissions" => [
 
-
-
+                "awarding_body_create",
+                "awarding_body_update",
+              "awarding_body_activate",
+                "awarding_body_view",
+                "awarding_body_delete",
 
             ],
         ],
+
+
 
 
         [

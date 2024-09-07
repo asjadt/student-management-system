@@ -12,6 +12,7 @@ class CourseTitle extends Model
         'name',
         'color',
         'description',
+        "awarding_body_id",
         "is_active",
         "is_default",
         "business_id",
@@ -21,6 +22,10 @@ class CourseTitle extends Model
     public function disabled()
     {
         return $this->hasMany(DisabledCourseTitle::class, 'course_title_id');
+    }
+    public function awarding_body()
+    {
+        return $this->belongsTo(AwardingBody ::class, 'awarding_body_id','id');
     }
 
 
