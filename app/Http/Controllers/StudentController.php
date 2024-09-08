@@ -148,8 +148,8 @@ class StudentController extends Controller
  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
  *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"}),
 
-             * *     @OA\Property(property="course_dutation", type="string", format="email", example="course_dutation", description="course_dutation"),
-             *  * *     @OA\Property(property="course_detail", type="string", format="email", example="course_detail", description="course_dutation"),
+             * *     @OA\Property(property="course_", type="string", format="email", example="course_duration", description="course_duration"),
+             *  * *     @OA\Property(property="course_detail", type="string", format="email", example="course_detail", description="course_duration"),
              *
  * *     @OA\Property(property="email", type="string", format="email", example="student@example.com", description="Email address of the student"),
  *     @OA\Property(property="contact_number", type="string", format="string", example="+1234567890", description="Contact number of the student"),
@@ -272,8 +272,8 @@ class StudentController extends Controller
  *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
  *  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
  *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"}),
- *       * *     @OA\Property(property="course_dutation", type="string", format="email", example="course_dutation", description="course_dutation"),
-             *  * *     @OA\Property(property="course_detail", type="string", format="email", example="course_detail", description="course_dutation"),
+ *       * *     @OA\Property(property="course_duration", type="string", format="email", example="course_duration", description="course_duration"),
+             *  * *     @OA\Property(property="course_detail", type="string", format="email", example="course_detail", description="course_duration"),
              *
  * *     @OA\Property(property="email", type="string", format="email", example="student@example.com", description="Email address of the student"),
  *     @OA\Property(property="contact_number", type="string", format="string", example="+1234567890", description="Contact number of the student"),
@@ -375,7 +375,7 @@ class StudentController extends Controller
         "course_title_id",
         'attachments',
 
-        'course_dutation',
+        'course_duration',
         'course_detail',
 
         'email',

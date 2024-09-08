@@ -26,7 +26,7 @@ class Student extends Model
         "course_title_id",
         'attachments',
 
-        'course_dutation',
+        'course_duration',
         'course_detail',
 
         'email',

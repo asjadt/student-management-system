@@ -15,14 +15,13 @@ class ValidateAwardingBodyName implements Rule
      * @return  void
      */
 
-     protected $id;
+    protected $id;
     protected $errMessage;
 
     public function __construct($id)
     {
         $this->id = $id;
         $this->errMessage = "";
-
     }
 
 
@@ -36,28 +35,28 @@ class ValidateAwardingBodyName implements Rule
     public function passes($attribute, $value)
     {
         $created_by  = NULL;
-        if(auth()->user()->business) {
+        if (auth()->user()->business) {
             $created_by = auth()->user()->business->created_by;
         }
 
-        $data = AwardingBody::where("awarding_bodies.name",$value)
-        ->when(!empty($this->id),function($query) {
-            $query->whereNotIn("id",[$this->id]);
-        })
-                        ->when(empty(auth()->user()->business_id), function ($query) use ( $created_by) {
-            $query->when(auth()->user()->hasRole('superadmin'), function ($query)  {
-                $query->forSuperAdmin('designations');
-            }, function ($query) use ($created_by) {
-                $query->forNonSuperAdmin('designations', 'disabled_designations', $created_by);
-            });
-        })
-        ->when(!empty(auth()->user()->business_id), function ($query) use ( $created_by) {
-            $query->forBusiness('designations', "disabled_designations", $created_by);
-        })
+        $data = AwardingBody::where("awarding_bodies.name", $value)
+            ->when(!empty($this->id), function ($query) {
+                $query->whereNotIn("id", [$this->id]);
+            })
+            ->when(empty(auth()->user()->business_id), function ($query) use ($created_by) {
+                $query->when(auth()->user()->hasRole('superadmin'), function ($query) {
+                    $query->forSuperAdmin('awarding_bodies');
+                }, function ($query) use ($created_by) {
+                    $query->forNonSuperAdmin('awarding_bodies', 'disabled_awarding_bodies', $created_by);
+                });
+            })
+            ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by) {
+                $query->forBusiness('awarding_bodies', "disabled_awarding_bodies", $created_by);
+            })
 
-        ->first();
+            ->first();
 
-        if(!empty($data)){
+        if (!empty($data)) {
 
 
             if ($data->is_active) {
@@ -68,9 +67,8 @@ class ValidateAwardingBodyName implements Rule
 
 
             return 0;
-
         }
-     return 1;
+        return 1;
     }
 
     /**
@@ -82,6 +80,4 @@ class ValidateAwardingBodyName implements Rule
     {
         return $this->errMessage;
     }
-
 }
-
