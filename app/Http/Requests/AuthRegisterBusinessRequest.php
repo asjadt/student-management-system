@@ -124,7 +124,7 @@ class AuthRegisterBusinessRequest extends BaseFormRequest
 
 
 
-            "times" => "required|array",
+            "times" => "present|array",
              "times.*.day" => 'required|numeric',
              "times.*.is_weekend" => ['required',"boolean"],
 
