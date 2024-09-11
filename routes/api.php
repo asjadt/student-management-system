@@ -90,27 +90,6 @@ Route::post('/auth/check/email', [AuthController::class, "checkEmail"]);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Route::post('/v1.0/user-image', [UserManagementController::class, "createUserImage"]);
 
 Route::post('/v1.0/business-image', [BusinessController::class, "createBusinessImage"]);
@@ -120,7 +99,7 @@ Route::post('/v1.0/business-image-multiple', [BusinessController::class, "create
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
 // Protected Routes
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware(['auth:api',"setup.db"])->group(function () {
     Route::post('/v1.0/logout', [AuthController::class, "logout"]);
     Route::get('/v1.0/user', [AuthController::class, "getUser"]);
     Route::patch('/auth/changepassword', [AuthController::class, "changePassword"]);
@@ -393,6 +372,8 @@ Route::delete('/v1.0/user-social-sites/{ids}', [UserSocialSiteController::class,
 Route::post('/v1.0/auth/check-schedule-conflict', [BusinessController::class, "checkScheduleConflict"]);
 Route::post('/v1.0/auth/register-with-business', [BusinessController::class, "registerUserWithBusiness"]);
 Route::post('/v1.0/businesses', [BusinessController::class, "createBusiness"]);
+Route::post('/v1.0/businesses/generate-database', [BusinessController::class, "generateDatabaseForBusiness"]);
+
 Route::put('/v1.0/businesses/toggle-active', [BusinessController::class, "toggleActiveBusiness"]);
 Route::put('/v1.0/businesses', [BusinessController::class, "updateBusiness"]);
 Route::put('/v1.0/businesses/separate', [BusinessController::class, "updateBusinessSeparate"]);
@@ -757,6 +738,7 @@ Route::post('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "de
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Route::post('/v1.0/awarding-bodies', [AwardingBodyController::class, "createAwardingBody"]);
+
 Route::put('/v1.0/awarding-bodies', [AwardingBodyController::class, "updateAwardingBody"]);
 
 Route::put('/v1.0/awarding-bodies/toggle-active', [AwardingBodyController::class, "toggleActiveAwardingBody"]);
@@ -1225,39 +1207,5 @@ Route::get('/v1.0/client/course-titles', [CourseTitleController::class, "getCour
 
 
 
-Route::middleware(['auth:api'])->group(function () {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-});
 
 

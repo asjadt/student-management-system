@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class BusinessTier extends Model
 {
     use HasFactory;
-    protected $fillable = [
+    protected $connection = 'mysql';
+        protected $fillable = [
         "name",
         "is_active",
         'created_by'
@@ -32,7 +33,7 @@ class BusinessTier extends Model
     }
 
 
-    
+
     public function getCreatedAtAttribute($value)
     {
         return (new Carbon($value))->format('d-m-Y');

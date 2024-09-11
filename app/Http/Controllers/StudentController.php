@@ -8,6 +8,7 @@ use App\Http\Requests\MultipleFileUploadRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\Business;
 use App\Models\Student;
 use Carbon\Carbon;
 use Exception;
@@ -914,6 +915,11 @@ class StudentController extends Controller
                 ];
                     throw new Exception(json_encode($error),422);
              }
+         $business = Business::where("id", $business_id)->first();
+         if(empty($business)) {
+            $business = Business::first();
+         }
+         $business_id = $business->id;
 
 
              $students = Student::

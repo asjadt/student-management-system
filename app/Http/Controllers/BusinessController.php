@@ -23,6 +23,7 @@ use App\Models\WorkShift;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -224,8 +225,7 @@ class BusinessController extends Controller
         return $this->sendError($e,500,$request);
         }
     }
-
-    /**
+  /**
         *
      * @OA\Post(
      *      path="/v1.0/businesses",
@@ -312,67 +312,184 @@ class BusinessController extends Controller
      *     )
      */
     public function createBusiness(BusinessCreateRequest $request) {
+        // this is business create by super admin
+                try{
+                    $this->storeActivity($request, "DUMMY activity","DUMMY description");
+             return  DB::transaction(function ()use (&$request) {
+
+                if(!$request->user()->hasPermissionTo('business_create')){
+                    return response()->json([
+                       "message" => "You can not perform this action"
+                    ],401);
+               }
+                $request_data = $request->validated();
+
+
+
+        $user = User::where([
+            "id" =>  $request_data['business']['owner_id']
+        ])
+        ->first();
+
+        if(!$user) {
+            $error =  [
+                "message" => "The given data was invalid.",
+                "errors" => ["owner_id"=>["No User Found"]]
+         ];
+            throw new Exception(json_encode($error),422);
+        }
+
+        if(!$user->hasRole('business_admin')) {
+            $error =  [
+                "message" => "The given data was invalid.",
+                "errors" => ["owner_id"=>["The user is not a businesses Owner"]]
+         ];
+            throw new Exception(json_encode($error),422);
+        }
+
+
+
+                $request_data['business']['status'] = "pending";
+
+                $request_data['business']['created_by'] = $request->user()->id;
+                $request_data['business']['is_active'] = true;
+                $business =  Business::create($request_data['business']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                return response([
+
+                    "business" => $business
+                ], 201);
+                });
+                } catch(Exception $e){
+
+                return $this->sendError($e,500,$request);
+                }
+
+            }
+
+    /**
+        *
+     * @OA\Post(
+     *      path="/v1.0/businesses/generate-database",
+     *      operationId="generateDatabaseForBusiness",
+     *      tags={"business_management"},
+    *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to store business",
+     *      description="This method is to store  business",
+     *
+     *  @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *            required={"user","business"},
+
+     *
+     *  @OA\Property(property="business", type="string", format="array",example={
+     *  "owner_id":"1",
+     * "name":"ABCD businesses",
+     * "about":"Best businesses in Dhaka",
+     * "web_page":"https://www.facebook.com/",
+     *  "phone":"01771034383",
+     *  "email":"rifatalashwad@gmail.com",
+     *  "phone":"01771034383",
+     *  "additional_information":"No Additional Information",
+     *  "address_line_1":"Dhaka",
+     *  "address_line_2":"Dinajpur",
+     *    * *  "lat":"23.704263332849386",
+     *    * *  "long":"90.44707059805279",
+     *
+     *  "country":"Bangladesh",
+     *  "city":"Dhaka",
+     *  * "currency":"BDT",
+     *  "postcode":"Dinajpur",
+     *
+     *  "logo":"https://images.unsplash.com/photo-1671410714831-969877d103b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+
+     *  *  "image":"https://images.unsplash.com/photo-1671410714831-969877d103b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+     *  "images":{"/a","/b","/c"}
+     *
+     * }),
+     *
+     *
+
+
+     *
+     *
+
+     *
+     *         ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+    public function generateDatabaseForBusiness(Request $request) {
 // this is business create by super admin
         try{
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-     return  DB::transaction(function ()use (&$request) {
 
-        if(!$request->user()->hasPermissionTo('business_create')){
-            return response()->json([
-               "message" => "You can not perform this action"
-            ],401);
-       }
-        $request_data = $request->validated();
+            if(!$request->user()->hasPermissionTo('business_create')){
+                return response()->json([
+                   "message" => "You can not perform this action"
+                ],401);
+           }
 
-
-
-$user = User::where([
-    "id" =>  $request_data['business']['owner_id']
-])
-->first();
-
-if(!$user) {
-    $error =  [
-        "message" => "The given data was invalid.",
-        "errors" => ["owner_id"=>["No User Found"]]
- ];
-    throw new Exception(json_encode($error),422);
-}
-
-if(!$user->hasRole('business_admin')) {
-    $error =  [
-        "message" => "The given data was invalid.",
-        "errors" => ["owner_id"=>["The user is not a businesses Owner"]]
- ];
-    throw new Exception(json_encode($error),422);
-}
+           $request->validate([
+            'business_id' => 'required|integer|exists:businesses,id', // Ensure business_id is required, is an integer, and exists in the businesses table
+        ]);
 
 
-
-        $request_data['business']['status'] = "pending";
-
-        $request_data['business']['created_by'] = $request->user()->id;
-        $request_data['business']['is_active'] = true;
-        $business =  Business::create($request_data['business']);
-
-
-
-
-
-
-
-
-
-
-
+        Artisan::call(('generate:database '. $request->business_id));
 
 
 
         return response([
-
-            "business" => $business
+            "ok" => true
         ], 201);
-        });
+
         } catch(Exception $e){
 
         return $this->sendError($e,500,$request);
@@ -742,7 +859,7 @@ if(!$user->hasRole('business_admin')) {
             Mail::to($request_data['user']['email'])->send(new SendPassword($user,$password));
         }
 
-
+        Artisan::call(('generate:database '. $business->id));
 
 
     // }

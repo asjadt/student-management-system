@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+
             \App\Http\Middleware\FormatDatesInRequest::class,
             \App\Http\Middleware\FormatDatesInResponse::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
@@ -58,6 +59,8 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
+        'setup.db' => \App\Http\Middleware\SetDatabaseConnection::class,
+
         'swagger' => \App\Http\Middleware\SwaggerMiddleware::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

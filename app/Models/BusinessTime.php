@@ -10,6 +10,7 @@ class BusinessTime extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
         "day",
         "start_at",
@@ -17,7 +18,7 @@ class BusinessTime extends Model
         "is_weekend",
         "business_id",
     ];
-    
+
     public function getCreatedAtAttribute($value)
     {
         return (new Carbon($value))->format('d-m-Y');
