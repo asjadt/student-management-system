@@ -6,7 +6,9 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Str;
 
 class GenerateDatabase extends Command
 {
@@ -15,104 +17,130 @@ class GenerateDatabase extends Command
 
     // The console command description.
     protected $description = 'Generate a new database for a given business ID';
+    public function handle()
+    {
+        $username = "quickreview_invoice_management";
 
+        // Replace 'localhost' with your database host if necessary
+        $dbHost = 'localhost';
+
+        // Example SQL command to grant all privileges
+     
+   // Correct SQL statement without placeholders
+   $sql = "GRANT ALL PRIVILEGES ON *.* TO '{$username}'@'{$dbHost}' WITH GRANT OPTION";
+
+   try {
+       DB::statement($sql);
+       $this->info("Access granted to user {$username}.");
+       Log::info("Access granted to user {$username} on {$dbHost}.");
+   } catch (\Exception $e) {
+       $this->error("An error occurred: " . $e->getMessage());
+       Log::error("Error granting access to user {$username} on {$dbHost}: " . $e->getMessage());
+   }
+    }
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
-{
-    Log::info("Starting database creation process...");
+    // public function handle()
+    // {
+    //     Log::info("Starting database creation process...");
 
-    // Retrieve the business_id from the command input
-    $businessId = $this->argument('business_id');
-    $databaseName = 'quickreview_business_' . $businessId;
+    //     // Retrieve the business_id from the command input
+    //     $businessId = $this->argument('business_id');
+    //     $databaseName = 'quickreview_business_' . $businessId;
 
-    Log::info("Business ID: $businessId");
-    Log::info("Database name: $databaseName");
+    //     Log::info("Business ID: $businessId");
+    //     Log::info("Database name: $databaseName");
 
-    // Check if the database exists
-    if ($this->databaseExists($databaseName)) {
-        Log::info("Database for business ID $businessId already exists.");
-        $this->info("Database for business ID $businessId already exists.");
-        return 0;
-    }
+    //     // Check if the database exists
+    //     if ($this->databaseExists($databaseName)) {
+    //         Log::info("Database for business ID $businessId already exists.");
+    //         $this->info("Database for business ID $businessId already exists.");
+    //         return 0;
+    //     }
 
-    try {
-        // cPanel API credentials
-        $cpanelUsername = 'quickreview'; // Replace with your cPanel username
-        $cpanelPassword = 'Quick@01_Review'; // Replace with your cPanel password
-        $cpanelDomain = 'https://quickreview.app'; // Replace with your cPanel domain
+    //     try {
+    //         // cPanel API credentials
+    //         $cpanelUsername = env('CPANEL_USERNAME');
+    //         $cpanelPassword = env('CPANEL_PASSWORD');
+    //         $cpanelDomain = env('CPANEL_DOMAIN');
 
-        // API URL for creating the database
-        $cpanelUrl = "https://$cpanelDomain:2083/execute/Mysql/create_database?name={$cpanelUsername}_{$databaseName}";
+    //         // API URL for creating the database
+    //         $cpanelUrl = "https://{$cpanelDomain}:2083/execute/Mysql/create_database?name={$cpanelUsername}_{$databaseName}";
 
-        // cURL request to cPanel API
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $cpanelUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERPWD, "$cpanelUsername:$cpanelPassword");
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        $response = curl_exec($ch);
+    //         // cURL request to cPanel API for creating the database
+    //         $ch = curl_init();
+    //         curl_setopt($ch, CURLOPT_URL, $cpanelUrl);
+    //         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    //         curl_setopt($ch, CURLOPT_USERPWD, "$cpanelUsername:$cpanelPassword");
+    //         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    //         $response = curl_exec($ch);
 
-        if (curl_errno($ch)) {
-            Log::error("cURL Error: " . curl_error($ch));
-            $this->error("cURL Error: " . curl_error($ch));
-            return 1;
-        }
+    //         if (curl_errno($ch)) {
+    //             Log::error("cURL Error: " . curl_error($ch));
+    //             $this->error("cURL Error: " . curl_error($ch));
+    //             return 1;
+    //         }
 
-        // Parse and handle the API response
-        $result = json_decode($response, true);
-        if (isset($result['status']) && $result['status'] == 1) {
-            Log::info("Database created successfully: {$databaseName}");
+    //         $result = json_decode($response, true);
+    //         if (isset($result['status']) && $result['status'] == 1) {
+    //             Log::info("Database created successfully: {$databaseName}");
 
-            // Configure new database connection
-            config([
-                'database.connections.business' => [
-                    'driver' => 'mysql',
-                    'host' => config('database.connections.mysql.host'),
-                    'port' => config('database.connections.mysql.port'),
-                    'database' => $databaseName,
-                    'username' => $cpanelUsername,
-                    'password' => $cpanelPassword,
-                    'unix_socket' => config('database.connections.mysql.unix_socket'),
-                    'charset' => 'utf8mb4',
-                    'collation' => 'utf8mb4_unicode_ci',
-                    'prefix' => '',
-                    'strict' => true,
-                    'engine' => null,
-                ],
-            ]);
+    //             // Fetch MySQL credentials from .env
+    //             $adminUser = env('DB_USERNAME', 'root'); // Admin user with privileges
+    //             $adminPassword = env('DB_PASSWORD', '');
 
-            // Run migrations on the new database
-            Log::info("Running migrations on new database '{$databaseName}'");
-            Artisan::call('migrate', [
-                '--database' => 'business',
-                '--path' => 'database/migrations',
-            ]);
+    //             // Connect to MySQL with an admin user and grant privileges
+    //             DB::statement("CREATE USER IF NOT EXISTS '{$adminUser}'@'localhost' IDENTIFIED BY '{$adminPassword}'");
+    //             DB::statement("GRANT ALL PRIVILEGES ON {$databaseName}.* TO '{$adminUser}'@'localhost'");
+    //             DB::statement("FLUSH PRIVILEGES");
 
-        } else {
-            Log::error("Failed to create database: " . $result['errors'][0] ?? 'Unknown error');
-            $this->error("Failed to create database: " . $result['errors'][0] ?? 'Unknown error');
-            return 1;
-        }
+    //             // Configure new database connection
+    //             config([
+    //                 'database.connections.business' => [
+    //                     'driver' => 'mysql',
+    //                     'host' => config('database.connections.mysql.host'),
+    //                     'port' => config('database.connections.mysql.port'),
+    //                     'database' => $databaseName,
+    //                     'username' => $adminUser,
+    //                     'password' => $adminPassword,
+    //                     'unix_socket' => config('database.connections.mysql.unix_socket'),
+    //                     'charset' => 'utf8mb4',
+    //                     'collation' => 'utf8mb4_unicode_ci',
+    //                     'prefix' => '',
+    //                     'strict' => true,
+    //                     'engine' => null,
+    //                 ],
+    //             ]);
 
-        curl_close($ch);
+    //             // Run migrations on the new database
+    //             Log::info("Running migrations on new database '{$databaseName}'");
+    //             Artisan::call('migrate', [
+    //                 '--database' => 'business',
+    //                 '--path' => 'database/migrations',
+    //             ]);
 
-    } catch (Exception $e) {
-        Log::error("An error occurred: " . $e->getMessage());
-        $this->error("An error occurred: " . $e->getMessage());
-        return 1;
-    }
+    //         } else {
+    //             Log::error("Failed to create database: " . ($result['errors'][0] ?? 'Unknown error'));
+    //             $this->error("Failed to create database: " . ($result['errors'][0] ?? 'Unknown error'));
+    //             return 1;
+    //         }
 
-    // Output a success message
-    Log::info("Database for business ID $businessId has been created successfully.");
-    $this->info("Database for business ID $businessId has been created.");
+    //         curl_close($ch);
 
-    return 0;
-}
+    //     } catch (Exception $e) {
+    //         Log::error("An error occurred: " . $e->getMessage());
+    //         $this->error("An error occurred: " . $e->getMessage());
+    //         return 1;
+    //     }
 
+    //     Log::info("Database for business ID $businessId has been created successfully.");
+    //     $this->info("Database for business ID $businessId has been created.");
+
+    //     return 0;
+    // }
 
 
 

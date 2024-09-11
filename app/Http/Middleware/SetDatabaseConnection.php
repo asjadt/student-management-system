@@ -18,6 +18,7 @@ class SetDatabaseConnection
      */
     public function handle($request, Closure $next)
     {
+        return $next($request);
         if (Auth::check()) {
             $user = Auth::user();
             $businessId = $user->business_id; // Adjust this according to how you retrieve the business ID
