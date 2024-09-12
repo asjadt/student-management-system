@@ -122,8 +122,34 @@ return [
 
                 "semester_create",
                 "semester_update",
+                "semester_activate",
                 "semester_view",
                 "semester_delete",
+
+                "subject_create",
+                "subject_update",
+                "subject_activate",
+                "subject_view",
+                "subject_delete",
+
+
+                "teacher_create",
+                "teacher_update",
+                "teacher_activate",
+                "teacher_view",
+                "teacher_delete",
+
+
+                "class_routine_create",
+                "class_routine_update",
+                "class_routine_activate",
+                "class_routine_view",
+                "class_routine_delete",
+
+
+
+
+
 
 
                 "awarding_body_create",
@@ -453,8 +479,31 @@ return [
 
                  "semester_create",
                  "semester_update",
+                 "semester_activate",
                  "semester_view",
                  "semester_delete",
+
+                 "subject_create",
+                 "subject_update",
+                 "subject_activate",
+                 "subject_view",
+                 "subject_delete",
+
+
+                 "teacher_create",
+                 "teacher_update",
+                 "teacher_activate",
+                 "teacher_view",
+                 "teacher_delete",
+
+                 "class_routine_create",
+                 "class_routine_update",
+                 "class_routine_activate",
+                 "class_routine_view",
+                 "class_routine_delete",
+
+
+
 
                  "awarding_body_create",
                  "awarding_body_update",
@@ -690,8 +739,28 @@ return [
 
                   "semester_create",
                   "semester_update",
+                  "semester_activate",
                   "semester_view",
                   "semester_delete",
+
+                  "subject_create",
+                  "subject_update",
+                  "subject_activate",
+                  "subject_view",
+                  "subject_delete",
+
+                  "teacher_create",
+                  "teacher_update",
+                  "teacher_activate",
+                  "teacher_view",
+                  "teacher_delete",
+
+                  "class_routine_create",
+                  "class_routine_update",
+                  "class_routine_activate",
+                  "class_routine_view",
+                  "class_routine_delete",
+
 
                   "awarding_body_create",
                   "awarding_body_update",
@@ -977,8 +1046,28 @@ return [
 
          "semester_create",
          "semester_update",
+         "semester_activate",
          "semester_view",
          "semester_delete",
+
+         "subject_create",
+         "subject_update",
+         "subject_activate",
+         "subject_view",
+         "subject_delete",
+
+         "teacher_create",
+         "teacher_update",
+         "teacher_activate",
+         "teacher_view",
+         "teacher_delete",
+
+         "class_routine_create",
+         "class_routine_update",
+         "class_routine_activate",
+         "class_routine_view",
+         "class_routine_delete",
+
 
 
 
@@ -1244,6 +1333,27 @@ return [
          "semester_update" => "",
          "semester_view" => "",
          "semester_delete" => "",
+         "semester_activate" => "",
+
+
+         "subject_create" => "",
+         "subject_update" => "",
+         "subject_activate" => "",
+         "subject_view" => "",
+         "subject_delete" => "",
+
+         "teacher_create"=>"",
+         "teacher_update"=>"",
+         "teacher_activate"=>"",
+         "teacher_view"=>"",
+         "teacher_delete"=>"",
+
+         "class_routine_create" => "",
+         "class_routine_update" => "",
+         "class_routine_activate" => "",
+         "class_routine_view" => "",
+         "class_routine_delete" => "",
+
 
          "awarding_body_create"=>"",
          "awarding_body_update"=>"",
@@ -2095,14 +2205,61 @@ return [
             ],
         ],
 
+
+
+                [
+                    "header" => "class_routine",
+                    "permissions" => [
+
+                        "class_routine_create",
+                        "class_routine_update",
+                        "class_routine_activate",
+                        "class_routine_view",
+                        "class_routine_delete",
+
+
+
+                    ],
+                ],
+
+
+
+        [
+            "header" => "teacher",
+            "permissions" => [
+
+                "teacher_create",
+                "teacher_update",
+                "teacher_activate",
+                "teacher_view",
+                "teacher_delete",
+
+
+            ],
+        ],
+
+        [
+            "header" => "subject",
+            "permissions" => [
+
+                "subject_create",
+                "subject_update",
+                "subject_activate",
+                "subject_view",
+                "subject_delete",
+
+            ],
+        ],
+
         [
             "header" => "semester",
             "permissions" => [
 
                 "semester_create",
-                "semester_update",
-                "semester_view",
-                "semester_delete",
+        "semester_update",
+        "semester_activate",
+        "semester_view",
+        "semester_delete",
 
             ],
         ],

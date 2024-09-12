@@ -13,6 +13,7 @@ use App\Http\Controllers\BusinessBackgroundImageController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\BusinessTierController;
 use App\Http\Controllers\BusinessTimesController;
+use App\Http\Controllers\ClassRoutineController;
 use App\Http\Controllers\CourseTitleController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\StudentController;
@@ -44,7 +45,9 @@ use App\Http\Controllers\SettingPayrollController;
 use App\Http\Controllers\SocialSiteController;
 use App\Http\Controllers\StudentLetterController;
 use App\Http\Controllers\StudentStatusController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserAddressHistoryController;
 use App\Http\Controllers\UserAssetController;
 use App\Http\Controllers\UserDocumentController;
@@ -757,11 +760,77 @@ Route::delete('/v1.0/awarding-bodies/{ids}', [AwardingBodyController::class, "de
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// teachers management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/teachers', [TeacherController::class, "createTeacher"]);
+Route::put('/v1.0/teachers', [TeacherController::class, "updateTeacher"]);
+
+Route::put('/v1.0/teachers/toggle-active', [TeacherController::class, "toggleActiveTeacher"]);
+
+Route::get('/v1.0/teachers', [TeacherController::class, "getTeachers"]);
+Route::delete('/v1.0/teachers/{ids}', [TeacherController::class, "deleteTeachersByIds"]);
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end teachers management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// class routines management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/class-routines', [ClassRoutineController::class, "createClassRoutine"]);
+Route::put('/v1.0/class-routines', [ClassRoutineController::class, "updateClassRoutine"]);
+
+
+
+Route::put('/v1.0/class-routines/toggle-active', [ClassRoutineController::class, "toggleActiveClassRoutine"]);
+
+Route::get('/v1.0/class-routines', [ClassRoutineController::class, "getClassRoutines"]);
+Route::delete('/v1.0/class-routines/{ids}', [ClassRoutineController::class, "deleteClassRoutinesByIds"]);
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end class routines management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// subjects management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/subjects', [SubjectController::class, "createSubject"]);
+Route::put('/v1.0/subjects', [SubjectController::class, "updateSubject"]);
+
+Route::put('/v1.0/subjects/toggle-active', [SubjectController::class, "toggleActiveSubject"]);
+
+Route::get('/v1.0/subjects', [SubjectController::class, "getSubjects"]);
+Route::delete('/v1.0/subjects/{ids}', [SubjectController::class, "deleteSubjectsByIds"]);
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end subjects management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // semesters management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Route::post('/v1.0/semesters', [SemesterController::class, "createSemester"]);
 Route::put('/v1.0/semesters', [SemesterController::class, "updateSemester"]);
+
+Route::put('/v1.0/semesters/toggle-active', [SemesterController::class, "toggleActiveSemester"]);
 
 Route::get('/v1.0/semesters', [SemesterController::class, "getSemesters"]);
 Route::delete('/v1.0/semesters/{ids}', [SemesterController::class, "deleteSemestersByIds"]);

@@ -6,21 +6,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SemesterCreateRequest;
-use App\Http\Requests\SemesterUpdateRequest;
+use App\Http\Requests\SubjectCreateRequest;
+use App\Http\Requests\SubjectUpdateRequest;
 use App\Http\Requests\GetIdRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
-use App\Models\Semester;
-use App\Models\DisabledSemester;
+use App\Models\Subject;
+use App\Models\DisabledSubject;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SemesterController extends Controller
+class SubjectController extends Controller
 {
 
     use ErrorUtil, UserActivityUtil, BusinessUtil;
@@ -29,23 +29,22 @@ class SemesterController extends Controller
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/semesters",
-     *      operationId="createSemester",
-     *      tags={"semesters"},
+     *      path="/v1.0/subjects",
+     *      operationId="createSubject",
+     *      tags={"subjects"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to store semesters",
-     *      description="This method is to store semesters",
+     *      summary="This method is to store subjects",
+     *      description="This method is to store subjects",
      *
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      * @OA\Property(property="name", type="string", format="string", example="name"),
-     * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
-     * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
-     * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
-     * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3})
+     * @OA\Property(property="description", type="string", format="string", example="description"),
+     *
+     *    * @OA\Property(property="teacher_ids", type="string", format="array", example={1,2,3}),
      *
      *
      *
@@ -85,13 +84,13 @@ class SemesterController extends Controller
      *     )
      */
 
-    public function createSemester(SemesterCreateRequest $request)
+    public function createSubject(SubjectCreateRequest $request)
     {
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             return DB::transaction(function () use ($request) {
-                if (!auth()->user()->hasPermissionTo('semester_create')) {
+                if (!auth()->user()->hasPermissionTo('subject_create')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -99,6 +98,7 @@ class SemesterController extends Controller
 
                 $request_data = $request->validated();
 
+                $request_data["is_active"] = 1;
 
 
                 $request_data["created_by"] = auth()->user()->id;
@@ -111,13 +111,11 @@ class SemesterController extends Controller
                     }
                 }
 
+                $subject =  Subject::create($request_data);
 
-                $semester =  Semester::create($request_data);
+                $subject->teachers()->sync($request_data["teacher_ids"]);
 
-                $semester->subjects->sync($request_data["subject_ids"]);
-
-
-                return response($semester, 201);
+                return response($subject, 201);
             });
         } catch (Exception $e) {
 
@@ -127,24 +125,22 @@ class SemesterController extends Controller
     /**
      *
      * @OA\Put(
-     *      path="/v1.0/semesters",
-     *      operationId="updateSemester",
-     *      tags={"semesters"},
+     *      path="/v1.0/subjects",
+     *      operationId="updateSubject",
+     *      tags={"subjects"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to update semesters ",
-     *      description="This method is to update semesters ",
+     *      summary="This method is to update subjects ",
+     *      description="This method is to update subjects ",
      *
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      *      @OA\Property(property="id", type="number", format="number", example="1"),
      * @OA\Property(property="name", type="string", format="string", example="name"),
-     * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
-     * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
-     *      * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
-     * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3})
+     * @OA\Property(property="description", type="string", format="string", example="description"),
+     * @OA\Property(property="teacher_ids", type="string", format="array", example={1,2,3}),
      *
      *         ),
      *      ),
@@ -182,48 +178,48 @@ class SemesterController extends Controller
      *     )
      */
 
-    public function updateSemester(SemesterUpdateRequest $request)
+    public function updateSubject(SubjectUpdateRequest $request)
     {
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             return DB::transaction(function () use ($request) {
-                if (!auth()->user()->hasPermissionTo('semester_update')) {
+                if (!auth()->user()->hasPermissionTo('subject_update')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
                 }
                 $request_data = $request->validated();
 
-                $semester_query_params = [
+
+
+                $subject_query_params = [
                     "id" => $request_data["id"],
                 ];
 
-                $semester = Semester::where($semester_query_params)->first();
+                $subject = Subject::where($subject_query_params)->first();
 
-                if ($semester) {
-                    $semester->fill(collect($request_data)->only([
+                if ($subject) {
+                    $subject->fill(collect($request_data)->only([
 
                         "name",
-                        "start_date",
-                        "end_date",
-                        "course_id"
+                        "description",
                         // "is_default",
                         // "is_active",
                         // "business_id",
                         // "created_by"
                     ])->toArray());
-                    $semester->save();
+                    $subject->save();
                 } else {
                     return response()->json([
                         "message" => "something went wrong."
                     ], 500);
                 }
+                $subject->teachers()->sync($request_data["teacher_ids"]);
 
-                $semester->subjects()->sync($request_data["subject_ids"]);
 
 
-                return response($semester, 201);
+                return response($subject, 201);
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -232,107 +228,107 @@ class SemesterController extends Controller
     }
 
 
-  /**
-*
-* @OA\Put(
-*      path="/v1.0/semesters/toggle-active",
-*      operationId="toggleActiveSemester",
-*      tags={"semesters"},
-*       security={
-*           {"bearerAuth": {}}
-*       },
-*      summary="This method is to toggle semesters",
-*      description="This method is to toggle semesters",
-*
-*  @OA\RequestBody(
-*         required=true,
-*         @OA\JsonContent(
+    /**
+     *
+     * @OA\Put(
+     *      path="/v1.0/subjects/toggle-active",
+     *      operationId="toggleActiveSubject",
+     *      tags={"subjects"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to toggle subjects",
+     *      description="This method is to toggle subjects",
+     *
+     *  @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
 
-*           @OA\Property(property="id", type="string", format="number",example="1"),
-*
-*         ),
-*      ),
-*      @OA\Response(
-*          response=200,
-*          description="Successful operation",
-*       @OA\JsonContent(),
-*       ),
-*      @OA\Response(
-*          response=401,
-*          description="Unauthenticated",
-* @OA\JsonContent(),
-*      ),
-*        @OA\Response(
-*          response=422,
-*          description="Unprocesseble Content",
-*    @OA\JsonContent(),
-*      ),
-*      @OA\Response(
-*          response=403,
-*          description="Forbidden",
-*   @OA\JsonContent()
-* ),
-*  * @OA\Response(
-*      response=400,
-*      description="Bad Request",
-*   *@OA\JsonContent()
-*   ),
-* @OA\Response(
-*      response=404,
-*      description="not found",
-*   *@OA\JsonContent()
-*   )
-*      )
-*     )
-*/
+     *           @OA\Property(property="id", type="string", format="number",example="1"),
+     *
+     *         ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
 
-public function toggleActiveSemester(GetIdRequest $request)
-{
+    public function toggleActiveSubject(GetIdRequest $request)
+    {
 
-   try {
+        try {
 
-       $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-       if (!$request->user()->hasPermissionTo('semester_activate')) {
-           return response()->json([
-               "message" => "You can not perform this action"
-           ], 401);
-       }
-       $request_data = $request->validated();
+            if (!$request->user()->hasPermissionTo('subject_activate')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
+            $request_data = $request->validated();
 
-       $semester =  Semester::where([
-           "id" => $request_data["id"],
-       ])
-           ->first();
-       if (!$semester) {
+            $subject =  Subject::where([
+                "id" => $request_data["id"],
+            ])
+                ->first();
+            if (!$subject) {
 
-           return response()->json([
-               "message" => "no data found"
-           ], 404);
-       }
+                return response()->json([
+                    "message" => "no data found"
+                ], 404);
+            }
 
-       $semester->update([
-        'is_active' => !$semester->is_active
-    ]);
-
-
+            $subject->update([
+                'is_active' => !$subject->is_active
+            ]);
 
 
-       return response()->json(['message' => 'semester status updated successfully'], 200);
-   } catch (Exception $e) {
-       error_log($e->getMessage());
-       return $this->sendError($e, 500, $request);
-   }
-}
+
+
+            return response()->json(['message' => 'subject status updated successfully'], 200);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
 
 
     /**
      *
      * @OA\Get(
-     *      path="/v1.0/semesters",
-     *      operationId="getSemesters",
-     *      tags={"semesters"},
+     *      path="/v1.0/subjects",
+     *      operationId="getSubjects",
+     *      tags={"subjects"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -348,33 +344,9 @@ public function toggleActiveSemester(GetIdRequest $request)
 
 
      *         @OA\Parameter(
-     *         name="start_start_date",
+     *         name="description",
      *         in="query",
-     *         description="start_start_date",
-     *         required=true,
-     *  example="6"
-     *      ),
-     *         @OA\Parameter(
-     *         name="end_start_date",
-     *         in="query",
-     *         description="end_start_date",
-     *         required=true,
-     *  example="6"
-     *      ),
-
-
-
-     *         @OA\Parameter(
-     *         name="start_end_date",
-     *         in="query",
-     *         description="start_end_date",
-     *         required=true,
-     *  example="6"
-     *      ),
-     *         @OA\Parameter(
-     *         name="end_end_date",
-     *         in="query",
-     *         description="end_end_date",
+     *         description="description",
      *         required=true,
      *  example="6"
      *      ),
@@ -431,19 +403,12 @@ public function toggleActiveSemester(GetIdRequest $request)
      * required=true,
      * example="ASC"
      * ),
-     * *  @OA\Parameter(
-     * name="is_single_search",
-     * in="query",
-     * description="is_single_search",
-     * required=true,
-     * example="ASC"
-     * ),
 
 
 
 
-     *      summary="This method is to get semesters  ",
-     *      description="This method is to get semesters ",
+     *      summary="This method is to get subjects  ",
+     *      description="This method is to get subjects ",
      *
 
      *      @OA\Response(
@@ -480,11 +445,11 @@ public function toggleActiveSemester(GetIdRequest $request)
      *     )
      */
 
-    public function getSemesters(Request $request)
+    public function getSubjects(Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            if (!$request->user()->hasPermissionTo('semester_view')) {
+            if (!$request->user()->hasPermissionTo('subject_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
@@ -496,39 +461,26 @@ public function toggleActiveSemester(GetIdRequest $request)
 
 
 
-            $semesters = Semester::with("subjects","course")
-            ->where('semesters.business_id', auth()->user()->business_id)
+            $subjects = Subject::
+            with("teachers")
+            ->where('subjects.business_id', auth()->user()->business_id)
 
 
 
                 ->when(!empty($request->id), function ($query) use ($request) {
-                    return $query->where('semesters.id', $request->id);
+                    return $query->where('subjects.id', $request->id);
                 })
 
                 ->when(!empty($request->name), function ($query) use ($request) {
-                    return $query->where('semesters.id', $request->string);
+                    return $query->where('subjects.id', $request->string);
                 })
 
 
 
 
 
-                ->when(!empty($request->start_start_date), function ($query) use ($request) {
-                    return $query->where('semesters.start_date', ">=", $request->start_start_date);
-                })
-                ->when(!empty($request->end_start_date), function ($query) use ($request) {
-                    return $query->where('semesters.start_date', "<=", ($request->end_start_date . ' 23:59:59'));
-                })
-
-
-
-
-
-                ->when(!empty($request->start_end_date), function ($query) use ($request) {
-                    return $query->where('semesters.end_date', ">=", $request->start_end_date);
-                })
-                ->when(!empty($request->end_end_date), function ($query) use ($request) {
-                    return $query->where('semesters.end_date', "<=", ($request->end_end_date . ' 23:59:59'));
+                ->when(!empty($request->description), function ($query) use ($request) {
+                    return $query->where('subjects.id', $request->string);
                 })
 
 
@@ -540,26 +492,28 @@ public function toggleActiveSemester(GetIdRequest $request)
                         $term = $request->search_key;
                         $query
 
-                            ->orWhere("semesters.name", "like", "%" . $term . "%");
+                            ->orWhere("subjects.name", "like", "%" . $term . "%")
+                            ->where("subjects.description", "like", "%" . $term . "%")
+                        ;
                     });
                 })
 
 
                 ->when(!empty($request->start_date), function ($query) use ($request) {
-                    return $query->where('semesters.created_at', ">=", $request->start_date);
+                    return $query->where('subjects.created_at', ">=", $request->start_date);
                 })
                 ->when(!empty($request->end_date), function ($query) use ($request) {
-                    return $query->where('semesters.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                    return $query->where('subjects.created_at', "<=", ($request->end_date . ' 23:59:59'));
                 })
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("semesters.id", $request->order_by);
+                    return $query->orderBy("subjects.id", $request->order_by);
                 }, function ($query) {
-                    return $query->orderBy("semesters.id", "DESC");
+                    return $query->orderBy("subjects.id", "DESC");
                 })
-                ->when($request->filled("id"), function ($query)  {
+                ->when($request->filled("id"), function ($query) use ($request) {
                     return $query
-                    ->where('semesters.id',request()->input("id"))
-                    ->first();
+                        ->where("subjects.id", $request->input("id"))
+                        ->first();
                 }, function ($query) {
                     return $query->when(!empty(request()->per_page), function ($query) {
                         return $query->paginate(request()->per_page);
@@ -568,12 +522,12 @@ public function toggleActiveSemester(GetIdRequest $request)
                     });
                 });
 
-            if ($request->filled("id") && empty($semesters)) {
+            if ($request->filled("id") && empty($subjects)) {
                 throw new Exception("No data found", 404);
             }
 
 
-            return response()->json($semesters, 200);
+            return response()->json($subjects, 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -583,9 +537,9 @@ public function toggleActiveSemester(GetIdRequest $request)
     /**
      *
      *     @OA\Delete(
-     *      path="/v1.0/semesters/{ids}",
-     *      operationId="deleteSemestersByIds",
-     *      tags={"semesters"},
+     *      path="/v1.0/subjects/{ids}",
+     *      operationId="deleteSubjectsByIds",
+     *      tags={"subjects"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -596,8 +550,8 @@ public function toggleActiveSemester(GetIdRequest $request)
      *         required=true,
      *  example="1,2,3"
      *      ),
-     *      summary="This method is to delete semester by id",
-     *      description="This method is to delete semester by id",
+     *      summary="This method is to delete subject by id",
+     *      description="This method is to delete subject by id",
      *
 
      *      @OA\Response(
@@ -634,20 +588,20 @@ public function toggleActiveSemester(GetIdRequest $request)
      *     )
      */
 
-    public function deleteSemestersByIds(Request $request, $ids)
+    public function deleteSubjectsByIds(Request $request, $ids)
     {
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            if (!$request->user()->hasPermissionTo('semester_delete')) {
+            if (!$request->user()->hasPermissionTo('subject_delete')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
 
             $idsArray = explode(',', $ids);
-            $existingIds = Semester::whereIn('id', $idsArray)
-                ->where('semesters.business_id', auth()->user()->business_id)
+            $existingIds = Subject::whereIn('id', $idsArray)
+                ->where('subjects.business_id', auth()->user()->business_id)
 
                 ->select('id')
                 ->get()
@@ -666,7 +620,7 @@ public function toggleActiveSemester(GetIdRequest $request)
 
 
 
-            Semester::destroy($existingIds);
+            Subject::destroy($existingIds);
 
 
             return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $existingIds], 200);

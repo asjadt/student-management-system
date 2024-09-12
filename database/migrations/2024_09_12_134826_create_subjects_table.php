@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSemestersTable extends Migration
+class CreateSubjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,35 +14,20 @@ class CreateSemestersTable extends Migration
      */
     public function up()
     {
-        Schema::create('semesters', function (Blueprint $table) {
+        Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-
-
 
             $table->string('name');
 
-
-
-
-
-            $table->date('start_date');
-
-
-            $table->date('end_date');
+            $table->text('description')->nullable();
 
 
             $table->boolean('is_active')->default(false);
 
 
-            $table->foreignId('course_id')
-            ->nullable()
-            ->constrained('course_titles')
-            ->onDelete('cascade');
-
-
             $table->foreignId('business_id')
-            ->constrained('businesses')
-            ->onDelete('cascade');
+                ->constrained('businesses')
+                ->onDelete('cascade');
 
             $table->unsignedBigInteger("created_by");
             $table->softDeletes();
@@ -57,9 +42,6 @@ class CreateSemestersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('semesters');
+        Schema::dropIfExists('subjects');
     }
 }
-
-
-

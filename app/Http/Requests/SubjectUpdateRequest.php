@@ -4,11 +4,11 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Semester;
-use App\Rules\ValidateSemesterName;
+use App\Models\Subject;
+use App\Rules\ValidateSubjectName;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SemesterUpdateRequest extends BaseFormRequest
+class SubjectUpdateRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,33 +35,33 @@ class SemesterUpdateRequest extends BaseFormRequest
                 'numeric',
                 function ($attribute, $value, $fail) {
 
-                    $semester_query_params = [
+                    $subject_query_params = [
                         "id" => $this->id,
                     ];
-                    $semester = Semester::where($semester_query_params)
+                    $subject = Subject::where($subject_query_params)
                         ->first();
-                    if (!$semester) {
+                    if (!$subject) {
                         // $fail($attribute . " is invalid.");
-                        $fail("no semester found");
+                        $fail("no subject found");
                         return 0;
                     }
                     if (empty(auth()->user()->business_id)) {
 
                         if (auth()->user()->hasRole('superadmin')) {
-                            if (($semester->business_id != NULL)) {
+                            if (($subject->business_id != NULL)) {
                                 // $fail($attribute . " is invalid.");
-                                $fail("You do not have permission to update this semester due to role restrictions.");
+                                $fail("You do not have permission to update this subject due to role restrictions.");
                             }
                         } else {
-                            if (($semester->business_id != NULL || $semester->is_default != 0 || $semester->created_by != auth()->user()->id)) {
+                            if (($subject->business_id != NULL || $subject->is_default != 0 || $subject->created_by != auth()->user()->id)) {
                                 // $fail($attribute . " is invalid.");
-                                $fail("You do not have permission to update this semester due to role restrictions.");
+                                $fail("You do not have permission to update this subject due to role restrictions.");
                             }
                         }
                     } else {
-                        if (($semester->business_id != auth()->user()->business_id || $semester->is_default != 0)) {
+                        if (($subject->business_id != auth()->user()->business_id || $subject->is_default != 0)) {
                             // $fail($attribute . " is invalid.");
-                            $fail("You do not have permission to update this semester due to role restrictions.");
+                            $fail("You do not have permission to update this subject due to role restrictions.");
                         }
                     }
                 },
@@ -72,32 +72,31 @@ class SemesterUpdateRequest extends BaseFormRequest
             'name' => [
                 'required',
                 'string',
+
+
+
+                new ValidateSubjectName(NULL)
+
+
+
+
             ],
 
-            'start_date' => [
-                'required',
-                'string',
-            ],
-
-            'end_date' => [
-                'required',
-                'string',
-            ],
-            'course_id' => [
+            'description' => [
                 'nullable',
-                'numeric',
-                "exists:course_titles,id"
+                'text',
+
             ],
 
-            'subject_ids' => [
+            'teacher_ids' => [
                 'present',
                 'array',
             ],
-            'subject_ids.*' => [
-               "numeric",
-               "exists:subjects,id"
-            ],
 
+            'teacher_ids.*' => [
+                'numeric',
+                'exists:teachers,id',
+            ],
 
 
 
@@ -105,7 +104,6 @@ class SemesterUpdateRequest extends BaseFormRequest
 
 
         ];
-
 
 
         return $rules;

@@ -12,8 +12,9 @@ id (Primary Key)
 name
 code
 description
-Course_Semester
 
+
+Course_Semester
 id (Primary Key)
 course_id (Foreign Key)
 semester_id (Foreign Key)
