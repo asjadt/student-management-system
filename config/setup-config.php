@@ -120,12 +120,22 @@ return [
                 "course_title_view",
                 "course_title_delete",
 
+                "semester_create",
+                "semester_update",
+                "semester_view",
+                "semester_delete",
+
 
                 "awarding_body_create",
                 "awarding_body_update",
                 "awarding_body_activate",
                 "awarding_body_view",
                 "awarding_body_delete",
+
+
+
+
+
 
 
 
@@ -441,10 +451,14 @@ return [
                  "course_title_delete",
 
 
+                 "semester_create",
+                 "semester_update",
+                 "semester_view",
+                 "semester_delete",
+
                  "awarding_body_create",
                  "awarding_body_update",
                 "awarding_body_activate",
-
                  "awarding_body_view",
                  "awarding_body_delete",
 
@@ -673,6 +687,11 @@ return [
                 "course_title_view",
                   "course_title_delete",
 
+
+                  "semester_create",
+                  "semester_update",
+                  "semester_view",
+                  "semester_delete",
 
                   "awarding_body_create",
                   "awarding_body_update",
@@ -956,6 +975,13 @@ return [
         "course_title_view",
          "course_title_delete",
 
+         "semester_create",
+         "semester_update",
+         "semester_view",
+         "semester_delete",
+
+
+
          "awarding_body_create",
          "awarding_body_update",
        "awarding_body_activate",
@@ -1213,6 +1239,11 @@ return [
         "course_title_activate" => "",
         "course_title_view" => "",
          "course_title_delete" => "",
+
+         "semester_create" => "",
+         "semester_update" => "",
+         "semester_view" => "",
+         "semester_delete" => "",
 
          "awarding_body_create"=>"",
          "awarding_body_update"=>"",
@@ -2063,6 +2094,19 @@ return [
 
             ],
         ],
+
+        [
+            "header" => "semester",
+            "permissions" => [
+
+                "semester_create",
+                "semester_update",
+                "semester_view",
+                "semester_delete",
+
+            ],
+        ],
+
         [
             "header" => "awarding_body",
             "permissions" => [

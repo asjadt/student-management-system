@@ -14,6 +14,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\BusinessTierController;
 use App\Http\Controllers\BusinessTimesController;
 use App\Http\Controllers\CourseTitleController;
+use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
@@ -751,6 +752,27 @@ Route::delete('/v1.0/awarding-bodies/{ids}', [AwardingBodyController::class, "de
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // end awarding bodies management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// semesters management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/semesters', [SemesterController::class, "createSemester"]);
+Route::put('/v1.0/semesters', [SemesterController::class, "updateSemester"]);
+
+Route::get('/v1.0/semesters', [SemesterController::class, "getSemesters"]);
+Route::delete('/v1.0/semesters/{ids}', [SemesterController::class, "deleteSemestersByIds"]);
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end semesters management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
