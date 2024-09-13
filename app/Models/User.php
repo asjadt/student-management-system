@@ -228,8 +228,7 @@ class User extends Authenticatable
 
         static::deleting(function ($user) {
             // Cascade soft delete to related children
-            $user->leaves()->delete();
-            $user->attendances()->delete();
+
 
         });
 

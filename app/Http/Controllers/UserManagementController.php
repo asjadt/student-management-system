@@ -4731,7 +4731,7 @@ class UserManagementController extends Controller
                 ], 401);
             }
 
-            $business_id =  $request->user()->business_id;
+
             $idsArray = explode(',', $ids);
             $existingIds = User::whereIn('id', $idsArray)
                 ->when(!$request->user()->hasRole('superadmin'), function ($query) use ($business_id) {
