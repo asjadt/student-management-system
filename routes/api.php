@@ -1192,7 +1192,10 @@ Route::get('/v1.0/data-collector-dashboard', [DashboardManagementController::cla
 
 Route::post('/v1.0/dashboard-widgets', [DashboardManagementController::class, "createDashboardWidget"]);
 Route::delete('/v1.0/dashboard-widgets/{ids}', [DashboardManagementController::class, "deleteDashboardWidgetsByIds"]);
+
 Route::get('/v1.0/business-user-dashboard', [DashboardManagementController::class, "getBusinessUserDashboardData"]);
+
+Route::get('/v1.0/business-admin-dashboard', [DashboardManagementController::class, "getBusinessAdminDashboardData"]);
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // end dashboard section
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

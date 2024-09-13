@@ -6,7 +6,9 @@ use App\Http\Requests\WidgetCreateRequest;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\AwardingBody;
 use App\Models\Business;
+use App\Models\CourseTitle;
 use App\Models\Student;
 use App\Models\DashboardWidget;
 use App\Models\Department;
@@ -1828,7 +1830,6 @@ class DashboardManagementController extends Controller
 
         return $data;
     }
-
     /**
      *
      * @OA\Get(
@@ -1878,7 +1879,422 @@ class DashboardManagementController extends Controller
      *     )
      */
 
-    public function getBusinessUserDashboardData(Request $request)
+     public function getBusinessUserDashboardData(Request $request)
+     {
+
+         try {
+             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+             $business_id = auth()->user()->business_id;
+             if (!$business_id) {
+                 return response()->json([
+                     "message" => "You are not a business user"
+                 ], 401);
+             }
+             $today = today();
+
+             $start_date_of_next_month = Carbon::now()->startOfMonth()->addMonth(1);
+             $end_date_of_next_month = Carbon::now()->endOfMonth()->addMonth(1);
+             $start_date_of_this_month = Carbon::now()->startOfMonth();
+             $end_date_of_this_month = Carbon::now()->endOfMonth();
+             $start_date_of_previous_month = Carbon::now()->startOfMonth()->subMonth(1);
+             $end_date_of_previous_month = Carbon::now()->endOfMonth()->subMonth(1);
+
+             $start_date_of_next_week = Carbon::now()->startOfWeek()->addWeek(1);
+             $end_date_of_next_week = Carbon::now()->endOfWeek()->addWeek(1);
+             $start_date_of_this_week = Carbon::now()->startOfWeek();
+             $end_date_of_this_week = Carbon::now()->endOfWeek();
+             $start_date_of_previous_week = Carbon::now()->startOfWeek()->subWeek(1);
+             $end_date_of_previous_week = Carbon::now()->endOfWeek()->subWeek(1);
+
+
+
+
+
+
+
+
+
+
+
+             // $business = Business::where([
+             //     "id" => $business_id,
+             //     "owner_id" => $request->user()->id
+             // ])
+             //     ->first();
+
+             // if (!$business) {
+             //     return response()->json([
+             //         "message" => "you are not the owner of the business or the request business does not exits"
+             //     ], 404);
+             // }
+
+       $dashboard_widgets =  DashboardWidget::where([
+                 "user_id" => auth()->user()->id
+             ])
+             ->get()
+             ->keyBy('widget_name');
+
+             // $data["dashboard_widgets"] = $dashboard_widgets;
+
+
+             $all_manager_department_ids = [];
+             $manager_departments = Department::where("manager_id", $request->user()->id)->get();
+             foreach ($manager_departments as $manager_department) {
+                 $all_manager_department_ids[] = $manager_department->id;
+                 $all_manager_department_ids = array_merge($all_manager_department_ids, $manager_department->getAllDescendantIds());
+             }
+             $data["employees"] = $this->employees(
+                 $today,
+                 $start_date_of_next_month,
+                 $end_date_of_next_month,
+                 $start_date_of_this_month,
+                 $end_date_of_this_month,
+                 $start_date_of_previous_month,
+                 $end_date_of_previous_month,
+                 $start_date_of_next_week,
+                 $end_date_of_next_week,
+                 $start_date_of_this_week,
+                 $end_date_of_this_week,
+                 $start_date_of_previous_week,
+                 $end_date_of_previous_week,
+                 $all_manager_department_ids
+             );
+
+             $widget = $dashboard_widgets->get("employees");
+
+             $data["employees"]["id"] = 1;
+             if($widget) {
+                 $data["employees"]["widget_id"] = $widget->id;
+                 $data["employees"]["widget_order"] = $widget->widget_order;
+             }
+             else {
+                 $data["employees"]["widget_id"] = 0;
+                 $data["employees"]["widget_order"] = 0;
+             }
+
+             $data["employees"]["widget_name"] = "employees";
+
+             //     $data["approved_leaves"] = $this->approved_leaves(
+             //         $today,
+             //         $start_date_of_this_month,
+             //         $end_date_of_this_month,
+             //         $start_date_of_previous_month,
+             //         $end_date_of_previous_month,
+             //         $start_date_of_this_week,
+             //         $end_date_of_this_week,
+             //         $start_date_of_previous_week,
+             //         $end_date_of_previous_week,
+             //         $all_manager_department_ids
+             // );
+
+             $data["employee_on_holiday"] = $this->employee_on_holiday(
+                 $today,
+                 $start_date_of_next_month,
+                 $end_date_of_next_month,
+                 $start_date_of_this_month,
+                 $end_date_of_this_month,
+                 $start_date_of_previous_month,
+                 $end_date_of_previous_month,
+                 $start_date_of_next_week,
+                 $end_date_of_next_week,
+                 $start_date_of_this_week,
+                 $end_date_of_this_week,
+                 $start_date_of_previous_week,
+                 $end_date_of_previous_week,
+                 $all_manager_department_ids,
+
+             );
+             $widget = $dashboard_widgets->get("employee_on_holiday");
+
+
+             $data["employee_on_holiday"]["id"] = 2;
+             if($widget) {
+                 $data["employee_on_holiday"]["widget_id"] = $widget->id;
+                 $data["employee_on_holiday"]["widget_order"] = $widget->widget_order;
+             }
+             else {
+                 $data["employee_on_holiday"]["widget_id"] = 0;
+                 $data["employee_on_holiday"]["widget_order"] = 0;
+             }
+
+             $data["employee_on_holiday"]["widget_name"] = "employee_on_holiday";
+
+
+             $leave_statuses = ['pending_approval','progress', 'approved','rejected'];
+             foreach ($leave_statuses as $index=>$leave_status) {
+                 $data[($leave_status . "_leaves")] = $this->leaves(
+                     $today,
+                     $start_date_of_next_month,
+                     $end_date_of_next_month,
+                     $start_date_of_this_month,
+                     $end_date_of_this_month,
+                     $start_date_of_previous_month,
+                     $end_date_of_previous_month,
+                     $start_date_of_next_week,
+                     $end_date_of_next_week,
+                     $start_date_of_this_week,
+                     $end_date_of_this_week,
+                     $start_date_of_previous_week,
+                     $end_date_of_previous_week,
+                     $all_manager_department_ids,
+                     $leave_status
+                 );
+                 $widget = $dashboard_widgets->get(($leave_status . "_leaves"));
+
+
+
+                 $data[($leave_status . "_leaves")]["id"] = 3 + $index;
+                 if($widget) {
+                     $data[($leave_status . "_leaves")]["widget_id"] = $widget->id;
+                     $data[($leave_status . "_leaves")]["widget_order"] = $widget->widget_order;
+                 }
+                 else {
+                     $data[($leave_status . "_leaves")]["widget_id"] = 0;
+                     $data[($leave_status . "_leaves")]["widget_order"] = 0;
+                 }
+
+
+                 $data[($leave_status . "_leaves")]["widget_name"] = ($leave_status . "_leaves");
+             }
+
+
+
+             $data["open_roles"] = $this->open_roles(
+                 $today,
+                 $start_date_of_next_month,
+                 $end_date_of_next_month,
+                 $start_date_of_this_month,
+                 $end_date_of_this_month,
+                 $start_date_of_previous_month,
+                 $end_date_of_previous_month,
+                 $start_date_of_next_week,
+                 $end_date_of_next_week,
+                 $start_date_of_this_week,
+                 $end_date_of_this_week,
+                 $start_date_of_previous_week,
+                 $end_date_of_previous_week,
+                 $all_manager_department_ids
+             );
+             $widget = $dashboard_widgets->get("open_roles");
+
+
+             $data["open_roles"]["id"] = 4 + $index;
+             if($widget) {
+                 $data["open_roles"]["widget_id"] = $widget->id;
+                 $data["open_roles"]["widget_order"] = $widget->widget_order;
+             }
+             else {
+                 $data["open_roles"]["widget_id"] = 0;
+                 $data["open_roles"]["widget_order"] = 0;
+             }
+
+
+             $data["open_roles"]["widget_name"] = "open_roles";
+
+
+             $data["upcoming_passport_expiries"] = $this->upcoming_passport_expiries(
+                 $today,
+                 $start_date_of_next_month,
+                 $end_date_of_next_month,
+                 $start_date_of_this_month,
+                 $end_date_of_this_month,
+                 $start_date_of_previous_month,
+                 $end_date_of_previous_month,
+                 $start_date_of_next_week,
+                 $end_date_of_next_week,
+                 $start_date_of_this_week,
+                 $end_date_of_this_week,
+                 $start_date_of_previous_week,
+                 $end_date_of_previous_week,
+                 $all_manager_department_ids
+             );
+             $widget = $dashboard_widgets->get("upcoming_passport_expiries");
+
+
+             $data["upcoming_passport_expiries"]["id"] = 5 + $index;
+             if($widget) {
+                 $data["upcoming_passport_expiries"]["widget_id"] = $widget->id;
+                 $data["upcoming_passport_expiries"]["widget_order"] = $widget->widget_order;
+             }
+             else {
+                 $data["upcoming_passport_expiries"]["widget_id"] = 0;
+                 $data["upcoming_passport_expiries"]["widget_order"] = 0;
+             }
+
+
+
+
+
+             $data["upcoming_passport_expiries"]["widget_name"] = "upcoming_passport_expiries";
+
+
+             $data["upcoming_visa_expiries"] = $this->upcoming_visa_expiries(
+                 $today,
+                 $start_date_of_next_month,
+                 $end_date_of_next_month,
+                 $start_date_of_this_month,
+                 $end_date_of_this_month,
+                 $start_date_of_previous_month,
+                 $end_date_of_previous_month,
+                 $start_date_of_next_week,
+                 $end_date_of_next_week,
+                 $start_date_of_this_week,
+                 $end_date_of_this_week,
+                 $start_date_of_previous_week,
+                 $end_date_of_previous_week,
+                 $all_manager_department_ids
+             );
+             $widget = $dashboard_widgets->get("upcoming_visa_expiries");
+
+
+             $data["upcoming_visa_expiries"]["id"] = 6 + $index;
+             if($widget) {
+                 $data["upcoming_visa_expiries"]["widget_id"] = $widget->id;
+                 $data["upcoming_visa_expiries"]["widget_order"] = $widget->widget_order;
+             }
+             else {
+                 $data["upcoming_visa_expiries"]["widget_id"] = 0;
+                 $data["upcoming_visa_expiries"]["widget_order"] = 0;
+             }
+
+
+             $data["upcoming_visa_expiries"]["widget_name"] = "upcoming_visa_expiries";
+
+
+
+
+
+             $data["upcoming_sponsorship_expiries"] = $this->upcoming_sponsorship_expiries(
+                 $today,
+                 $start_date_of_next_month,
+                 $end_date_of_next_month,
+                 $start_date_of_this_month,
+                 $end_date_of_this_month,
+                 $start_date_of_previous_month,
+                 $end_date_of_previous_month,
+                 $start_date_of_next_week,
+                 $end_date_of_next_week,
+                 $start_date_of_this_week,
+                 $end_date_of_this_week,
+                 $start_date_of_previous_week,
+                 $end_date_of_previous_week,
+                 $all_manager_department_ids
+             );
+             $widget = $dashboard_widgets->get("upcoming_sponsorship_expiries");
+
+
+
+             $data["upcoming_sponsorship_expiries"]["id"] = 7  + $index;
+             if($widget) {
+                 $data["upcoming_sponsorship_expiries"]["widget_id"] = $widget->id;
+                 $data["upcoming_sponsorship_expiries"]["widget_order"] = $widget->widget_order;
+             }
+             else {
+                 $data["upcoming_sponsorship_expiries"]["widget_id"] = 0;
+                 $data["upcoming_sponsorship_expiries"]["widget_order"] = 0;
+             }
+
+
+
+             $data["upcoming_sponsorship_expiries"]["widget_name"] = "upcoming_sponsorship_expiries";
+
+
+
+             $sponsorship_statuses = ['unassigned', 'assigned', 'visa_applied','visa_rejected','visa_grantes','withdrawal'];
+             foreach ($sponsorship_statuses as $index2=>$sponsorship_status) {
+                 $data[($sponsorship_status . "_sponsorships")] = $this->sponsorships(
+                     $today,
+                     $start_date_of_next_month,
+                     $end_date_of_next_month,
+                     $start_date_of_this_month,
+                     $end_date_of_this_month,
+                     $start_date_of_previous_month,
+                     $end_date_of_previous_month,
+                     $start_date_of_next_week,
+                     $end_date_of_next_week,
+                     $start_date_of_this_week,
+                     $end_date_of_this_week,
+                     $start_date_of_previous_week,
+                     $end_date_of_previous_week,
+                     $all_manager_department_ids,
+                     $sponsorship_status
+                 );
+                 $widget = $dashboard_widgets->get(($sponsorship_status . "_sponsorships"));
+
+
+                 $data[($sponsorship_status . "_sponsorships")]["id"] = 8 + $index + $index2;
+                 if($widget) {
+                     $data[($sponsorship_status . "_sponsorships")]["widget_id"] = $widget->id;
+                     $data[($sponsorship_status . "_sponsorships")]["widget_order"] = $widget->widget_order;
+                 }
+                 else {
+                     $data[($sponsorship_status . "_sponsorships")]["widget_id"] = 0;
+                     $data[($sponsorship_status . "_sponsorships")]["widget_order"] = 0;
+                 }
+
+
+                 $data[($sponsorship_status . "_sponsorships")]["widget_name"] = ($sponsorship_status . "_sponsorships");
+             }
+
+
+
+             return response()->json($data, 200);
+         } catch (Exception $e) {
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
+    /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/business-admin-dashboard",
+     *      operationId="getBusinessAdminDashboardData",
+     *      tags={"dashboard_management.business_admin"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+
+     *      summary="get all dashboard data combined",
+     *      description="get all dashboard data combined",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function getBusinessAdminDashboardData(Request $request)
     {
 
         try {
@@ -1907,338 +2323,30 @@ class DashboardManagementController extends Controller
             $end_date_of_previous_week = Carbon::now()->endOfWeek()->subWeek(1);
 
 
+            $data = [];
+
+            // Total counts
+            $data["total_awarding_bodies"] = AwardingBody::count();
+            $data["total_courses"] = CourseTitle::count();
+            $data["total_students"] = Student::count();
+
+            // Expiry intervals
+            $expiryIntervals = [30, 60, 90];
 
 
-
-
-
-
-
-
-
-            // $business = Business::where([
-            //     "id" => $business_id,
-            //     "owner_id" => $request->user()->id
-            // ])
-            //     ->first();
-
-            // if (!$business) {
-            //     return response()->json([
-            //         "message" => "you are not the owner of the business or the request business does not exits"
-            //     ], 404);
-            // }
-
-      $dashboard_widgets =  DashboardWidget::where([
-                "user_id" => auth()->user()->id
-            ])
-            ->get()
-            ->keyBy('widget_name');
-
-            // $data["dashboard_widgets"] = $dashboard_widgets;
-
-
-            $all_manager_department_ids = [];
-            $manager_departments = Department::where("manager_id", $request->user()->id)->get();
-            foreach ($manager_departments as $manager_department) {
-                $all_manager_department_ids[] = $manager_department->id;
-                $all_manager_department_ids = array_merge($all_manager_department_ids, $manager_department->getAllDescendantIds());
-            }
-            $data["employees"] = $this->employees(
-                $today,
-                $start_date_of_next_month,
-                $end_date_of_next_month,
-                $start_date_of_this_month,
-                $end_date_of_this_month,
-                $start_date_of_previous_month,
-                $end_date_of_previous_month,
-                $start_date_of_next_week,
-                $end_date_of_next_week,
-                $start_date_of_this_week,
-                $end_date_of_this_week,
-                $start_date_of_previous_week,
-                $end_date_of_previous_week,
-                $all_manager_department_ids
-            );
-
-            $widget = $dashboard_widgets->get("employees");
-
-            $data["employees"]["id"] = 1;
-            if($widget) {
-                $data["employees"]["widget_id"] = $widget->id;
-                $data["employees"]["widget_order"] = $widget->widget_order;
-            }
-            else {
-                $data["employees"]["widget_id"] = 0;
-                $data["employees"]["widget_order"] = 0;
-            }
-
-            $data["employees"]["widget_name"] = "employees";
-
-            //     $data["approved_leaves"] = $this->approved_leaves(
-            //         $today,
-            //         $start_date_of_this_month,
-            //         $end_date_of_this_month,
-            //         $start_date_of_previous_month,
-            //         $end_date_of_previous_month,
-            //         $start_date_of_this_week,
-            //         $end_date_of_this_week,
-            //         $start_date_of_previous_week,
-            //         $end_date_of_previous_week,
-            //         $all_manager_department_ids
-            // );
-
-            $data["employee_on_holiday"] = $this->employee_on_holiday(
-                $today,
-                $start_date_of_next_month,
-                $end_date_of_next_month,
-                $start_date_of_this_month,
-                $end_date_of_this_month,
-                $start_date_of_previous_month,
-                $end_date_of_previous_month,
-                $start_date_of_next_week,
-                $end_date_of_next_week,
-                $start_date_of_this_week,
-                $end_date_of_this_week,
-                $start_date_of_previous_week,
-                $end_date_of_previous_week,
-                $all_manager_department_ids,
-
-            );
-            $widget = $dashboard_widgets->get("employee_on_holiday");
-
-
-            $data["employee_on_holiday"]["id"] = 2;
-            if($widget) {
-                $data["employee_on_holiday"]["widget_id"] = $widget->id;
-                $data["employee_on_holiday"]["widget_order"] = $widget->widget_order;
-            }
-            else {
-                $data["employee_on_holiday"]["widget_id"] = 0;
-                $data["employee_on_holiday"]["widget_order"] = 0;
-            }
-
-            $data["employee_on_holiday"]["widget_name"] = "employee_on_holiday";
-
-
-            $leave_statuses = ['pending_approval','progress', 'approved','rejected'];
-            foreach ($leave_statuses as $index=>$leave_status) {
-                $data[($leave_status . "_leaves")] = $this->leaves(
-                    $today,
-                    $start_date_of_next_month,
-                    $end_date_of_next_month,
-                    $start_date_of_this_month,
-                    $end_date_of_this_month,
-                    $start_date_of_previous_month,
-                    $end_date_of_previous_month,
-                    $start_date_of_next_week,
-                    $end_date_of_next_week,
-                    $start_date_of_this_week,
-                    $end_date_of_this_week,
-                    $start_date_of_previous_week,
-                    $end_date_of_previous_week,
-                    $all_manager_department_ids,
-                    $leave_status
-                );
-                $widget = $dashboard_widgets->get(($leave_status . "_leaves"));
-
-
-
-                $data[($leave_status . "_leaves")]["id"] = 3 + $index;
-                if($widget) {
-                    $data[($leave_status . "_leaves")]["widget_id"] = $widget->id;
-                    $data[($leave_status . "_leaves")]["widget_order"] = $widget->widget_order;
-                }
-                else {
-                    $data[($leave_status . "_leaves")]["widget_id"] = 0;
-                    $data[($leave_status . "_leaves")]["widget_order"] = 0;
-                }
-
-
-                $data[($leave_status . "_leaves")]["widget_name"] = ($leave_status . "_leaves");
+            foreach ($expiryIntervals as $days) {
+                $data["awarding_body_expiry_in_{$days}_days"] = AwardingBody::where('expiry_date', '<=', Carbon::now()->addDays($days))->count();
             }
 
 
 
-            $data["open_roles"] = $this->open_roles(
-                $today,
-                $start_date_of_next_month,
-                $end_date_of_next_month,
-                $start_date_of_this_month,
-                $end_date_of_this_month,
-                $start_date_of_previous_month,
-                $end_date_of_previous_month,
-                $start_date_of_next_week,
-                $end_date_of_next_week,
-                $start_date_of_this_week,
-                $end_date_of_this_week,
-                $start_date_of_previous_week,
-                $end_date_of_previous_week,
-                $all_manager_department_ids
-            );
-            $widget = $dashboard_widgets->get("open_roles");
-
-
-            $data["open_roles"]["id"] = 4 + $index;
-            if($widget) {
-                $data["open_roles"]["widget_id"] = $widget->id;
-                $data["open_roles"]["widget_order"] = $widget->widget_order;
-            }
-            else {
-                $data["open_roles"]["widget_id"] = 0;
-                $data["open_roles"]["widget_order"] = 0;
-            }
-
-
-            $data["open_roles"]["widget_name"] = "open_roles";
-
-
-            $data["upcoming_passport_expiries"] = $this->upcoming_passport_expiries(
-                $today,
-                $start_date_of_next_month,
-                $end_date_of_next_month,
-                $start_date_of_this_month,
-                $end_date_of_this_month,
-                $start_date_of_previous_month,
-                $end_date_of_previous_month,
-                $start_date_of_next_week,
-                $end_date_of_next_week,
-                $start_date_of_this_week,
-                $end_date_of_this_week,
-                $start_date_of_previous_week,
-                $end_date_of_previous_week,
-                $all_manager_department_ids
-            );
-            $widget = $dashboard_widgets->get("upcoming_passport_expiries");
-
-
-            $data["upcoming_passport_expiries"]["id"] = 5 + $index;
-            if($widget) {
-                $data["upcoming_passport_expiries"]["widget_id"] = $widget->id;
-                $data["upcoming_passport_expiries"]["widget_order"] = $widget->widget_order;
-            }
-            else {
-                $data["upcoming_passport_expiries"]["widget_id"] = 0;
-                $data["upcoming_passport_expiries"]["widget_order"] = 0;
-            }
+            return response()->json($data,200);
 
 
 
 
 
-            $data["upcoming_passport_expiries"]["widget_name"] = "upcoming_passport_expiries";
 
-
-            $data["upcoming_visa_expiries"] = $this->upcoming_visa_expiries(
-                $today,
-                $start_date_of_next_month,
-                $end_date_of_next_month,
-                $start_date_of_this_month,
-                $end_date_of_this_month,
-                $start_date_of_previous_month,
-                $end_date_of_previous_month,
-                $start_date_of_next_week,
-                $end_date_of_next_week,
-                $start_date_of_this_week,
-                $end_date_of_this_week,
-                $start_date_of_previous_week,
-                $end_date_of_previous_week,
-                $all_manager_department_ids
-            );
-            $widget = $dashboard_widgets->get("upcoming_visa_expiries");
-
-
-            $data["upcoming_visa_expiries"]["id"] = 6 + $index;
-            if($widget) {
-                $data["upcoming_visa_expiries"]["widget_id"] = $widget->id;
-                $data["upcoming_visa_expiries"]["widget_order"] = $widget->widget_order;
-            }
-            else {
-                $data["upcoming_visa_expiries"]["widget_id"] = 0;
-                $data["upcoming_visa_expiries"]["widget_order"] = 0;
-            }
-
-
-            $data["upcoming_visa_expiries"]["widget_name"] = "upcoming_visa_expiries";
-
-
-
-
-
-            $data["upcoming_sponsorship_expiries"] = $this->upcoming_sponsorship_expiries(
-                $today,
-                $start_date_of_next_month,
-                $end_date_of_next_month,
-                $start_date_of_this_month,
-                $end_date_of_this_month,
-                $start_date_of_previous_month,
-                $end_date_of_previous_month,
-                $start_date_of_next_week,
-                $end_date_of_next_week,
-                $start_date_of_this_week,
-                $end_date_of_this_week,
-                $start_date_of_previous_week,
-                $end_date_of_previous_week,
-                $all_manager_department_ids
-            );
-            $widget = $dashboard_widgets->get("upcoming_sponsorship_expiries");
-
-
-
-            $data["upcoming_sponsorship_expiries"]["id"] = 7  + $index;
-            if($widget) {
-                $data["upcoming_sponsorship_expiries"]["widget_id"] = $widget->id;
-                $data["upcoming_sponsorship_expiries"]["widget_order"] = $widget->widget_order;
-            }
-            else {
-                $data["upcoming_sponsorship_expiries"]["widget_id"] = 0;
-                $data["upcoming_sponsorship_expiries"]["widget_order"] = 0;
-            }
-
-
-
-            $data["upcoming_sponsorship_expiries"]["widget_name"] = "upcoming_sponsorship_expiries";
-
-
-
-            $sponsorship_statuses = ['unassigned', 'assigned', 'visa_applied','visa_rejected','visa_grantes','withdrawal'];
-            foreach ($sponsorship_statuses as $index2=>$sponsorship_status) {
-                $data[($sponsorship_status . "_sponsorships")] = $this->sponsorships(
-                    $today,
-                    $start_date_of_next_month,
-                    $end_date_of_next_month,
-                    $start_date_of_this_month,
-                    $end_date_of_this_month,
-                    $start_date_of_previous_month,
-                    $end_date_of_previous_month,
-                    $start_date_of_next_week,
-                    $end_date_of_next_week,
-                    $start_date_of_this_week,
-                    $end_date_of_this_week,
-                    $start_date_of_previous_week,
-                    $end_date_of_previous_week,
-                    $all_manager_department_ids,
-                    $sponsorship_status
-                );
-                $widget = $dashboard_widgets->get(($sponsorship_status . "_sponsorships"));
-
-
-                $data[($sponsorship_status . "_sponsorships")]["id"] = 8 + $index + $index2;
-                if($widget) {
-                    $data[($sponsorship_status . "_sponsorships")]["widget_id"] = $widget->id;
-                    $data[($sponsorship_status . "_sponsorships")]["widget_order"] = $widget->widget_order;
-                }
-                else {
-                    $data[($sponsorship_status . "_sponsorships")]["widget_id"] = 0;
-                    $data[($sponsorship_status . "_sponsorships")]["widget_order"] = 0;
-                }
-
-
-                $data[($sponsorship_status . "_sponsorships")]["widget_name"] = ($sponsorship_status . "_sponsorships");
-            }
-
-
-
-            return response()->json($data, 200);
         } catch (Exception $e) {
             return $this->sendError($e, 500, $request);
         }
