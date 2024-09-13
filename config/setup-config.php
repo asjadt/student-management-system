@@ -115,6 +115,23 @@ return [
                 "student_status_view",
                 // "student_statuslete",
 
+
+                "installment_payment_create",
+                "installment_payment_update",
+                "installment_payment_activate",
+                "installment_payment_view",
+                "installment_payment_delete",
+
+
+
+                "installment_plan_create",
+                "installment_plan_update",
+                "installment_plan_activate",
+                "installment_plan_view",
+                "installment_plan_delete",
+
+
+
                 "course_title_create",
                 "course_title_update",
                 "course_title_view",
@@ -267,6 +284,22 @@ return [
                 // "student_status_activate",
                 "student_status_view",
                 // "student_status_delete",
+
+                "installment_payment_create",
+                "installment_payment_update",
+                "installment_payment_activate",
+                "installment_payment_view",
+                "installment_payment_delete",
+
+
+
+                "installment_plan_create",
+                "installment_plan_update",
+                "installment_plan_activate",
+                "installment_plan_view",
+                "installment_plan_delete",
+
+
 
                 "course_title_create",
                 "course_title_update",
@@ -469,6 +502,18 @@ return [
                 "student_status_activate",
                 "student_status_view",
                 "student_status_delete",
+
+                "installment_payment_create",
+                "installment_payment_update",
+                "installment_payment_activate",
+                "installment_payment_view",
+                "installment_payment_delete",
+
+                "installment_plan_create",
+                "installment_plan_update",
+                "installment_plan_activate",
+                "installment_plan_view",
+                "installment_plan_delete",
 
                 "course_title_create",
                 "course_title_update",
@@ -727,6 +772,18 @@ return [
                 "student_status_activate",
                 "student_status_view",
                 // "student_status_delete",
+
+                "installment_payment_create",
+                "installment_payment_update",
+                "installment_payment_activate",
+                "installment_payment_view",
+                "installment_payment_delete",
+
+                "installment_plan_create",
+                "installment_plan_update",
+                "installment_plan_activate",
+                "installment_plan_view",
+                "installment_plan_delete",
 
                 "course_title_create",
                 "course_title_update",
@@ -1035,6 +1092,18 @@ return [
         "student_status_view",
         "student_status_delete",
 
+        "installment_payment_create",
+        "installment_payment_update",
+        "installment_payment_activate",
+        "installment_payment_view",
+        "installment_payment_delete",
+
+        "installment_plan_create",
+        "installment_plan_update",
+        "installment_plan_activate",
+        "installment_plan_view",
+        "installment_plan_delete",
+
         "course_title_create",
         "course_title_update",
         "course_title_activate",
@@ -1319,6 +1388,18 @@ return [
         "student_status_activate" => "",
         "student_status_view" => "Can view employment status",
         "student_status_delete" => "Can delete employment status",
+
+        "installment_payment_create" => "",
+        "installment_payment_update" => "",
+        "installment_payment_activate" => "",
+        "installment_payment_view" => "",
+        "installment_payment_delete" => "",
+
+        "installment_plan_create" => "",
+        "installment_plan_update" => "",
+        "installment_plan_activate" => "",
+        "installment_plan_view" => "",
+        "installment_plan_delete" => "",
 
         "course_title_create" => "",
         "course_title_update" => "",
@@ -2183,11 +2264,52 @@ return [
             ],
         ],
 
-        "letter_template_create",
+
+
+        [
+            "header" => "letter_template",
+            "permissions" => [
+
+                "letter_template_create",
         "letter_template_update",
         "letter_template_activate",
         "letter_template_view",
         "letter_template_delete",
+
+
+            ],
+        ],
+
+
+
+
+        [
+            "header" => "installment_payment",
+            "permissions" => [
+
+                "installment_payment_create",
+        "installment_payment_update",
+        "installment_payment_activate",
+        "installment_payment_view",
+        "installment_payment_delete",
+
+            ],
+        ],
+
+        [
+            "header" => "installment_plan",
+            "permissions" => [
+
+                "installment_plan_create",
+                "installment_plan_update",
+                "installment_plan_activate",
+                "installment_plan_view",
+                "installment_plan_delete",
+
+            ],
+        ],
+
+
 
         [
             "header" => "course_title",

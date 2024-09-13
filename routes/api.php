@@ -22,6 +22,8 @@ use App\Http\Controllers\DesignationController;
 
 use App\Http\Controllers\HistoryDetailsController;
 use App\Http\Controllers\HolidayController;
+use App\Http\Controllers\InstallmentPaymentController;
+use App\Http\Controllers\InstallmentPlanController;
 use App\Http\Controllers\JobListingController;
 use App\Http\Controllers\JobPlatformController;
 use App\Http\Controllers\JobTypeController;
@@ -162,11 +164,13 @@ Route::delete('/v1.0/business-tiers/{ids}', [BusinessTierController::class, "del
 
 
 
+
 // ********************************************
 // user management section --user
 // ********************************************
 
 Route::post('/v1.0/users/single-file-upload', [UserManagementController::class, "createUserFileSingle"]);
+
 Route::post('/v1.0/users/multiple-file-upload', [UserManagementController::class, "createUserFileMultiple"]);
 Route::post('/v1.0/users', [UserManagementController::class, "createUser"]);
 Route::get('/v1.0/users/{id}', [UserManagementController::class, "getUserById"]);
@@ -734,6 +738,50 @@ Route::post('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "de
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // end student status  management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// installment payments management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/installment-payments', [InstallmentPaymentController::class, "createInstallmentPayment"]);
+Route::put('/v1.0/installment-payments', [InstallmentPaymentController::class, "updateInstallmentPayment"]);
+
+
+
+Route::put('/v1.0/installment-payments/toggle-active', [InstallmentPaymentController::class, "toggleActiveInstallmentPayment"]);
+
+Route::get('/v1.0/installment-payments', [InstallmentPaymentController::class, "getInstallmentPayments"]);
+Route::delete('/v1.0/installment-payments/{ids}', [InstallmentPaymentController::class, "deleteInstallmentPaymentsByIds"]);
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end installment payments management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// installment plans management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/installment-plans', [InstallmentPlanController::class, "createInstallmentPlan"]);
+Route::put('/v1.0/installment-plans', [InstallmentPlanController::class, "updateInstallmentPlan"]);
+
+
+
+Route::put('/v1.0/installment-plans/toggle-active', [InstallmentPlanController::class, "toggleActiveInstallmentPlan"]);
+
+Route::get('/v1.0/installment-plans', [InstallmentPlanController::class, "getInstallmentPlans"]);
+Route::delete('/v1.0/installment-plans/{ids}', [InstallmentPlanController::class, "deleteInstallmentPlansByIds"]);
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end installment plans management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
