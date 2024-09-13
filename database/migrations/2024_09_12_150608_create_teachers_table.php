@@ -37,7 +37,7 @@ class CreateTeachersTable extends Migration
 
 
 
-            $table->email('email');
+            $table->string('email');
 
 
 

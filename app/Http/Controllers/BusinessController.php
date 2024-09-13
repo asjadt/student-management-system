@@ -482,7 +482,7 @@ class BusinessController extends Controller
         ]);
 
 
-        Artisan::call(('generate:database '. $request->business_id));
+        // Artisan::call(('generate:database '. $request->business_id));
 
 
 
@@ -859,7 +859,7 @@ class BusinessController extends Controller
             Mail::to($request_data['user']['email'])->send(new SendPassword($user,$password));
         }
 
-        Artisan::call(('generate:database '. $business->id));
+        // Artisan::call(('generate:database '. $business->id));
 
 
     // }

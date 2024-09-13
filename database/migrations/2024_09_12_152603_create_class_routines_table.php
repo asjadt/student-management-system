@@ -19,7 +19,7 @@ class CreateClassRoutinesTable extends Migration
 
 
 
-            $table->numeric('day_of_week');
+            $table->integer('day_of_week');
 
 
 
