@@ -538,7 +538,9 @@ class CourseTitleController extends Controller
             }
 
 
-            $course_titles = CourseTitle::when(empty($request->user()->business_id), function ($query) use ($request, $created_by) {
+            $course_titles = CourseTitle::
+               with("awarding_body")
+            ->when(empty($request->user()->business_id), function ($query) use ($request, $created_by) {
                 if (auth()->user()->hasRole('superadmin')) {
                     return $query->where('course_titles.business_id', NULL)
                         ->where('course_titles.is_default', 1)

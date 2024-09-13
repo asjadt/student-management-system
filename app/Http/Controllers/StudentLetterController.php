@@ -99,7 +99,7 @@ class StudentLetterController extends Controller
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             $this->isModuleEnabled("letter_template");
             return DB::transaction(function () use ($request) {
-                if (!$request->user()->hasPermissionTo('user_letter_create')) {
+                if (!$request->user()->hasPermissionTo('student_letter_create')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -201,7 +201,7 @@ class StudentLetterController extends Controller
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             $this->isModuleEnabled("letter_template");
             return DB::transaction(function () use ($request) {
-                if (!$request->user()->hasPermissionTo('user_letter_create')) {
+                if (!$request->user()->hasPermissionTo('student_letter_create')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -245,7 +245,7 @@ class StudentLetterController extends Controller
                             $awardingBodyName = optional($student->course_title->awarding_body)->name ?? '--';
                             $template = str_replace($item, $awardingBodyName, $template);
                         }
-                        
+
 
 
                         else if ($item == "[STUDENT_STATUS]") {
@@ -555,7 +555,7 @@ class StudentLetterController extends Controller
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             $this->isModuleEnabled("letter_template");
             return DB::transaction(function () use ($request) {
-                if (!$request->user()->hasPermissionTo('user_letter_update')) {
+                if (!$request->user()->hasPermissionTo('student_letter_update')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -664,7 +664,7 @@ class StudentLetterController extends Controller
              $this->isModuleEnabled("letter_template");
              return DB::transaction(function () use ($request) {
 
-                //  if (!$request->user()->hasPermissionTo('user_letter_update')) {
+                //  if (!$request->user()->hasPermissionTo('student_letter_update')) {
                 //      return response()->json([
                 //          "message" => "You can not perform this action"
                 //      ], 401);
@@ -712,7 +712,7 @@ class StudentLetterController extends Controller
     /**
      *
      * @OA\Get(
-     *      path="/v1.0/student-letters",
+     *      path="/v1.0/student-letters-get",
      *      operationId="getStudentLetters",
      *      tags={"student_letters"},
      *       security={
@@ -874,7 +874,7 @@ class StudentLetterController extends Controller
             }
 
 
-            $all_manager_department_ids = $this->get_all_departments_of_manager();
+
 
             $student_letters = StudentLetter::with([
                 "student" => function ($query) {
@@ -1106,7 +1106,7 @@ class StudentLetterController extends Controller
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
              $this->isModuleEnabled("letter_template");
-             if (!$request->user()->hasPermissionTo('user_letter_view')) {
+             if (!$request->user()->hasPermissionTo('student_letter_view')) {
                  return response()->json([
                      "message" => "You can not perform this action"
                  ], 401);
@@ -1251,7 +1251,7 @@ class StudentLetterController extends Controller
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             $this->isModuleEnabled("letter_template");
-            if (!$request->user()->hasPermissionTo('user_letter_delete')) {
+            if (!$request->user()->hasPermissionTo('student_letter_delete')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);

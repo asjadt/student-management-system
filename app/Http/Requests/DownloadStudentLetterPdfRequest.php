@@ -30,7 +30,7 @@ class DownloadStudentLetterPdfRequest extends FormRequest
 
 
             $rules = [
-                'user_letter_id' => [
+                'student_letter_id' => [
                     'required',
                     'numeric',
                     function ($attribute, $value, $fail) {

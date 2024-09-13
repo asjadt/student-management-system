@@ -704,7 +704,8 @@ Route::delete('/v1.0/recruitment-processes/{ids}', [RecruitmentProcessController
     Route::put('/v1.0/student-letters', [StudentLetterController::class, "updateStudentLetter"]);
     Route::put('/v1.0/student-letters/view', [StudentLetterController::class, "updateStudentLetterView"]);
 
-    Route::get('/v1.0/student-letters', [StudentLetterController::class, "getStudentLetters"]);
+
+    Route::get('/v1.0/student-letters-get', [StudentLetterController::class, "getStudentLetters"]);
 
     Route::get('/v1.0/student-letters-histories', [StudentLetterController::class, "getStudentLetterHistories"]);
 
