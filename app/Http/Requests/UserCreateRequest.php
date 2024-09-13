@@ -55,9 +55,10 @@ class UserCreateRequest extends BaseFormRequest
                 $role  = Role::where(["name" => $value])->first();
 
 
-                if (!$role){
+                if (empty($role)){
                          // $fail("$attribute is invalid.")
                          $fail("Role does not exists.");
+                         return 0;
 
                 }
 
@@ -65,18 +66,19 @@ class UserCreateRequest extends BaseFormRequest
                     if (empty($role->business_id)){
                         // $fail("$attribute is invalid.")
                       $fail("You don't have this role");
+                      return 0;
 
                   }
-                    if ($role->business_id != auth()->user()->business_id){
+                if ($role->business_id != auth()->user()->business_id){
                           // $fail("$attribute is invalid.")
                         $fail("You don't have this role");
-
+                        return 0;
                     }
                 } else {
                     if (!empty($role->business_id)){
                         // $fail("$attribute is invalid.")
                       $fail("You don't have this role");
-
+                      return 0;
                   }
                 }
 
@@ -92,78 +94,6 @@ class UserCreateRequest extends BaseFormRequest
 
         'gender' => 'nullable|string|in:male,female,other',
         'is_in_employee' => "nullable|boolean",
-        'designation_id' => [
-            "nullable",
-            'numeric',
-            function ($attribute, $value, $fail) {
-                if(!empty($value)){
-                    $created_by  = NULL;
-                    if(auth()->user()->business) {
-                        $created_by = auth()->user()->business->created_by;
-                    }
-
-                    $exists = Designation::where("designations.id",$value)
-                    ->when(empty(auth()->user()->business_id), function ($query) use ( $created_by, $value) {
-                        if (auth()->user()->hasRole('superadmin')) {
-                            return $query->where('designations.business_id', NULL)
-                                ->where('designations.is_default', 1)
-                                ->where('designations.is_active', 1);
-
-                        } else {
-                            return $query->where('designations.business_id', NULL)
-                                ->where('designations.is_default', 1)
-                                ->where('designations.is_active', 1)
-                                ->whereDoesntHave("disabled", function($q) {
-                                    $q->whereIn("disabled_designations.created_by", [auth()->user()->id]);
-                                })
-
-                                ->orWhere(function ($query) use($value)  {
-                                    $query->where("designations.id",$value)->where('designations.business_id', NULL)
-                                        ->where('designations.is_default', 0)
-                                        ->where('designations.created_by', auth()->user()->id)
-                                        ->where('designations.is_active', 1);
-
-
-                                });
-                        }
-                    })
-                        ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by, $value) {
-                            return $query->where('designations.business_id', NULL)
-                                ->where('designations.is_default', 1)
-                                ->where('designations.is_active', 1)
-                                ->whereDoesntHave("disabled", function($q) use($created_by) {
-                                    $q->whereIn("disabled_designations.created_by", [$created_by]);
-                                })
-                                ->whereDoesntHave("disabled", function($q)  {
-                                    $q->whereIn("disabled_designations.business_id",[auth()->user()->business_id]);
-                                })
-
-                                ->orWhere(function ($query) use( $created_by, $value){
-                                    $query->where("designations.id",$value)->where('designations.business_id', NULL)
-                                        ->where('designations.is_default', 0)
-                                        ->where('designations.created_by', $created_by)
-                                        ->where('designations.is_active', 1)
-                                        ->whereDoesntHave("disabled", function($q) {
-                                            $q->whereIn("disabled_designations.business_id",[auth()->user()->business_id]);
-                                        });
-                                })
-                                ->orWhere(function ($query) use($value)  {
-                                    $query->where("designations.id",$value)->where('designations.business_id', auth()->user()->business_id)
-                                        ->where('designations.is_default', 0)
-                                        ->where('designations.is_active', 1);
-
-                                });
-                        })
-                    ->exists();
-
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
-                }
-
-            },
-        ],
-
         'joining_date' => "nullable|date",
         'salary_per_annum' => "nullable|numeric",
         'weekly_contractual_hours' => 'nullable|numeric',

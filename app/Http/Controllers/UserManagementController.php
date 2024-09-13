@@ -445,10 +445,7 @@ class UserManagementController extends Controller
             }
             $business_id = $request->user()->business_id;
 
-           $department = Department::where([
-                "business_id" => auth()->user()->business_id
-            ])
-            ->first();
+
 
             $request_data = $request->validated();
 
@@ -483,9 +480,6 @@ class UserManagementController extends Controller
             $user->email_verified_at = today();
             $user->save();
 
-            if($department) {
-                $user->departments()->sync($department->id, []);
-            }
 
             $user->assignRole($request_data['role']);
 
@@ -504,8 +498,8 @@ class UserManagementController extends Controller
             $user->roles = $user->roles->pluck('name');
 
 
-            $this->loadDefaultSettingLeave($user->business_id);
-            $this->loadDefaultAttendanceSetting($user->business_id);
+            // $this->loadDefaultSettingLeave($user->business_id);
+            // $this->loadDefaultAttendanceSetting($user->business_id);
 
 
 
@@ -1010,7 +1004,7 @@ class UserManagementController extends Controller
                     "image",
                     'gender',
                     'is_in_employee',
-                    'designation_id',
+
                     'student_status_id',
                     "course_title_id",
                     'joining_date',
@@ -3106,24 +3100,13 @@ class UserManagementController extends Controller
             }
 
 
-            $all_manager_department_ids = [];
-            $manager_departments = Department::where("manager_id", $request->user()->id)->get();
-            foreach ($manager_departments as $manager_department) {
-                $all_manager_department_ids[] = $manager_department->id;
-                $all_manager_department_ids = array_merge($all_manager_department_ids, $manager_department->getAllDescendantIds());
-            }
-            $today = today();
+
+
 
             $users = User::with(
                 [
-                    "designation" => function ($query) {
-                        $query->select(
-                            'designations.id',
-                            'designations.name',
-                        );
-                    },
                     "roles",
-                    "work_location"
+
                 ]
             )
 
@@ -3148,12 +3131,10 @@ class UserManagementController extends Controller
                         });
                     }
                 })
-                ->when(!empty(auth()->user()->business_id), function ($query) use ($request, $all_manager_department_ids) {
-                    return $query->where(function ($query) use ($all_manager_department_ids) {
+                ->when(!empty(auth()->user()->business_id), function ($query) use ($request) {
+                    return $query->where(function ($query)  {
                         return  $query->where('business_id', auth()->user()->business_id)
-                            ->whereHas("departments", function ($query) use ($all_manager_department_ids) {
-                                $query->whereIn("departments.id", $all_manager_department_ids);
-                            });;
+                          ;
                     });
                 })
                 ->when(!empty($request->role), function ($query) use ($request) {
@@ -3736,11 +3717,10 @@ class UserManagementController extends Controller
             $user = User::with(
                 [
                     "roles",
-                    "departments",
-                    "designation",
+
                     "student_status",
                     "business",
-                    "work_location"
+
 
 
                 ]
@@ -3771,7 +3751,7 @@ class UserManagementController extends Controller
             // ->whereHas('roles', function ($query) {
             //     // return $query->where('name','!=', 'customer');
             // });
-            $user->work_shift = $user->work_shifts()->first();
+
 
             if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', ])) {
                 if (strtoupper($request->response_type) == 'PDF') {

@@ -54,7 +54,7 @@ $rules = [
 
     'teacher_ids.*' => [
         'numeric',
-        'exists:teachers,id',
+        'exists:users,id',
     ],
 
 

@@ -18,6 +18,7 @@ use App\Mail\SendPassword;
 
 use App\Models\Business;
 use App\Models\BusinessTime;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\WorkShift;
 use Carbon\Carbon;
@@ -823,6 +824,33 @@ class BusinessController extends Controller
                 "is_weekend"=> $business_time["is_weekend"],
             ]);
            }
+
+
+           $defaultRoles = Role::where([
+            "business_id" => NULL,
+            "is_default" => 1,
+            "is_default_for_business" => 1,
+            "guard_name" => "api",
+        ])->get();
+
+        foreach ($defaultRoles as $defaultRole) {
+            $insertableData = [
+                'name'  => ($defaultRole->name . "#" . $business->id),
+                "is_default" => 1,
+                "business_id" => $business->id,
+                "is_default_for_business" => 0,
+                "guard_name" => "api",
+            ];
+            $role  = Role::create($insertableData);
+            
+
+            $permissions = $defaultRole->permissions;
+            foreach ($permissions as $permission) {
+                if (!$role->hasPermissionTo($permission)) {
+                    $role->givePermissionTo($permission);
+                }
+            }
+        }
 
 
 

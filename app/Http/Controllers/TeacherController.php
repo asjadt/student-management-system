@@ -31,7 +31,7 @@ class TeacherController extends Controller
 * @OA\Post(
 *      path="/v1.0/teachers",
 *      operationId="createTeacher",
-*      tags={"teachers"},
+*      tags={"z.unused"},
 *       security={
 *           {"bearerAuth": {}}
 *       },
@@ -137,7 +137,7 @@ return $this->sendError($e, 500, $request);
 * @OA\Put(
 *      path="/v1.0/teachers",
 *      operationId="updateTeacher",
-*      tags={"teachers"},
+*      tags={"z.unused"},
 *       security={
 *           {"bearerAuth": {}}
 *       },
@@ -252,7 +252,7 @@ return $this->sendError($e, 500, $request);
 * @OA\Put(
 *      path="/v1.0/teachers/toggle-active",
 *      operationId="toggleActiveTeacher",
-*      tags={"teachers"},
+*      tags={"z.unused"},
 *       security={
 *           {"bearerAuth": {}}
 *       },
@@ -347,7 +347,7 @@ return $this->sendError($e, 500, $request);
 * @OA\Get(
 *      path="/v1.0/teachers",
 *      operationId="getTeachers",
-*      tags={"teachers"},
+*      tags={"z.unused"},
 *       security={
 *           {"bearerAuth": {}}
 *       },
@@ -663,7 +663,7 @@ return $this->sendError($e, 500, $request);
 *     @OA\Delete(
 *      path="/v1.0/teachers/{ids}",
 *      operationId="deleteTeachersByIds",
-*      tags={"teachers"},
+*      tags={"z.unused"},
 *       security={
 *           {"bearerAuth": {}}
 *       },

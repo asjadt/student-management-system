@@ -24,7 +24,7 @@ class CreateSubjectTeachersTable extends Migration
 
 
             $table->foreignId("teacher_id")
-            ->constrained("subjects")
+            ->constrained("users")
             ->onDelete("CASCADE");
 
 

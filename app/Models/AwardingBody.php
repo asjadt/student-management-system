@@ -1,11 +1,6 @@
 <?php
 
 
-
-namespace App\Models;
-
-
-
 namespace App\Models;
 
 use App\Http\Utils\DefaultQueryScopesTrait;
@@ -35,21 +30,13 @@ class AwardingBody extends Model
 
     protected $casts = [
 
-
-
-
-
-
-
-
-
-
-
-
   ];
 
 
 
+public function courses() {
+    return $this->hasMany(CourseTitle::class,"awarding_body_id","id");
+}
 
 
 
@@ -59,8 +46,7 @@ class AwardingBody extends Model
 
 
 
-
-                  public function disabled()
+   public function disabled()
       {
           return $this->hasMany(DisabledAwardingBody::class, 'awarding_body_id', 'id');
       }

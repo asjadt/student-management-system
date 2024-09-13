@@ -363,16 +363,6 @@ class AwardingBodyController extends Controller
 
 
      *         @OA\Parameter(
-     *         name="description",
-     *         in="query",
-     *         description="description",
-     *         required=true,
-     *  example="6"
-     *      ),
-
-
-
-     *         @OA\Parameter(
      *         name="start_accreditation_start_date",
      *         in="query",
      *         description="start_accreditation_start_date",
@@ -406,13 +396,6 @@ class AwardingBodyController extends Controller
 
 
 
-     *         @OA\Parameter(
-     *         name="logo",
-     *         in="query",
-     *         description="logo",
-     *         required=true,
-     *  example="6"
-     *      ),
 
 
 
@@ -466,13 +449,7 @@ class AwardingBodyController extends Controller
      * required=true,
      * example="ASC"
      * ),
-     * *  @OA\Parameter(
-     * name="is_single_search",
-     * in="query",
-     * description="is_single_search",
-     * required=true,
-     * example="ASC"
-     * ),
+
 
 
 
@@ -531,7 +508,9 @@ class AwardingBodyController extends Controller
 
 
 
-            $awarding_bodies = AwardingBody::when(empty(auth()->user()->business_id), function ($query) use ($request, $created_by) {
+            $awarding_bodies = AwardingBody::with("courses")
+
+            ->when(empty(auth()->user()->business_id), function ($query) use ($request, $created_by) {
                     $query->when(auth()->user()->hasRole('superadmin'), function ($query) use ($request) {
                         $query->forSuperAdmin('awarding_bodies');
                     }, function ($query) use ($request, $created_by) {
@@ -541,21 +520,8 @@ class AwardingBodyController extends Controller
 
 
 
-
-                ->when(!empty($request->id), function ($query) use ($request) {
-                    return $query->where('awarding_bodies.id', $request->id);
-                })
-
                 ->when(!empty($request->name), function ($query) use ($request) {
-                    return $query->where('awarding_bodies.id', $request->string);
-                })
-
-
-
-
-
-                ->when(!empty($request->description), function ($query) use ($request) {
-                    return $query->where('awarding_bodies.id', $request->string);
+                    return $query->where('awarding_bodies.name', $request->name);
                 })
 
 
@@ -565,12 +531,10 @@ class AwardingBodyController extends Controller
                 ->when(!empty($request->start_accreditation_start_date), function ($query) use ($request) {
                     return $query->where('awarding_bodies.accreditation_start_date', ">=", $request->start_accreditation_start_date);
                 })
+
                 ->when(!empty($request->end_accreditation_start_date), function ($query) use ($request) {
                     return $query->where('awarding_bodies.accreditation_start_date', "<=", ($request->end_accreditation_start_date . ' 23:59:59'));
                 })
-
-
-
 
 
                 ->when(!empty($request->start_accreditation_expiry_date), function ($query) use ($request) {
@@ -582,11 +546,6 @@ class AwardingBodyController extends Controller
 
 
 
-
-
-                ->when(!empty($request->logo), function ($query) use ($request) {
-                    return $query->where('awarding_bodies.id', $request->string);
-                })
 
 
 
@@ -616,8 +575,8 @@ class AwardingBodyController extends Controller
                 }, function ($query) {
                     return $query->orderBy("awarding_bodies.id", "DESC");
                 })
-                ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
-                    return $query->first();
+                ->when($request->boolean("id"), function ($query) use ($request) {
+                    return $query->where('awarding_bodies.id', $request->id)->first();
                 }, function ($query) {
                     return $query->when(!empty(request()->per_page), function ($query) {
                         return $query->paginate(request()->per_page);
@@ -626,7 +585,7 @@ class AwardingBodyController extends Controller
                     });
                 });
 
-            if ($request->filled("is_single_search") && empty($awarding_bodies)) {
+            if ($request->filled("id") && empty($awarding_bodies)) {
                 throw new Exception("No data found", 404);
             }
 

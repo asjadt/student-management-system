@@ -284,10 +284,10 @@ return [
             "permissions" => [
 
 
-                "user_letter_create",
-                "user_letter_update",
-                "user_letter_view",
-                "user_letter_delete",
+                "student_letter_create",
+                "student_letter_update",
+                "student_letter_view",
+                "student_letter_delete",
 
 
                 "letter_template_create",
@@ -553,12 +553,10 @@ return [
             "role" => "business_staff",
             "permissions" => [
 
-
-        "user_letter_create",
-        "user_letter_update",
-
-        "user_letter_view",
-        "user_letter_delete",
+                "student_letter_create",
+                "student_letter_update",
+                "student_letter_view",
+                "student_letter_delete",
 
 
                 "letter_template_create",
@@ -812,11 +810,10 @@ return [
     "permissions" => [
 
 
-        "user_letter_create",
-        "user_letter_update",
-
-        "user_letter_view",
-        "user_letter_delete",
+        "student_letter_create",
+        "student_letter_update",
+        "student_letter_view",
+        "student_letter_delete",
 
 
         "letter_template_create",

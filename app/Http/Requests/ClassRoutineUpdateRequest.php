@@ -127,7 +127,7 @@ $rules = [
     'teacher_id' => [
     'required',
     'numeric',
-    "exists:teachers,id"
+    "exists:users,id"
 
 ],
 

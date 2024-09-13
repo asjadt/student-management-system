@@ -43,7 +43,7 @@ class CreateClassRoutinesTable extends Migration
 
 
             $table->foreignId('teacher_id')
-            ->constrained('teachers')
+            ->constrained('users')
             ->onDelete('cascade');
 
             $table->foreignId('subject_id')

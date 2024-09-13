@@ -95,7 +95,7 @@ class SubjectUpdateRequest extends BaseFormRequest
 
             'teacher_ids.*' => [
                 'numeric',
-                'exists:teachers,id',
+                'exists:users,id',
             ],
 
 

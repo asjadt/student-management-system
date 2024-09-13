@@ -123,6 +123,7 @@ trait BasicUtil
     '[COUNTRY]',
 
     'COURSE DETAILS',
+    '[AWARDING_BODY]',
     '[COURSE_TITLE]',
     '[COURSE_DURATION]',
     '[COURSE_DETAIL]',
@@ -158,7 +159,7 @@ trait BasicUtil
 
         return $letterTemplateVariables;
     }
-  
+
 
     // this function do all the task and returns transaction id or -1
 
