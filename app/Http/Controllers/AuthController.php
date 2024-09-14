@@ -162,9 +162,9 @@ class AuthController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *            required={"email","password"},
-     *            @OA\Property(property="email", type="string", format="string",example="admin@gmail.com"),
+     *            @OA\Property(property="email", type="string", format="string",example="asjadtariq@gmail.com"),
 
-     * *  @OA\Property(property="password", type="string", format="string",example="12345678"),
+     * *  @OA\Property(property="password", type="string", format="string",example="12345678@We"),
      *
      *         ),
      *      ),
@@ -1239,9 +1239,9 @@ try{
      *            required={"first_Name","last_Name","email","password","password_confirmation","phone","address_line_1","address_line_2","country","city","postcode"},
      *             @OA\Property(property="first_Name", type="string", format="string",example="tsa"),
      *            @OA\Property(property="last_Name", type="string", format="string",example="ts"),
-     *            @OA\Property(property="email", type="string", format="string",example="admin@gmail.com"),
+     *            @OA\Property(property="email", type="string", format="string",example="asjadtariq@gmail.com"),
 
-     * *  @OA\Property(property="password", type="boolean", format="boolean",example="12345678"),
+     * *  @OA\Property(property="password", type="boolean", format="boolean",example="12345678@We"),
      *  * *  @OA\Property(property="password_confirmation", type="string", format="string",example="12345678"),
      *  * *  @OA\Property(property="phone", type="string", format="string",example="1"),
      *  * *  @OA\Property(property="address_line_1", type="string", format="string",example="1"),

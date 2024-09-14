@@ -27,6 +27,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -399,38 +400,11 @@ class BusinessController extends Controller
      *            required={"user","business"},
 
      *
-     *  @OA\Property(property="business", type="string", format="array",example={
-     *  "owner_id":"1",
-     * "name":"ABCD businesses",
-     * "about":"Best businesses in Dhaka",
-     * "web_page":"https://www.facebook.com/",
-     *  "phone":"01771034383",
-     *  "email":"rifatalashwad@gmail.com",
-     *  "phone":"01771034383",
-     *  "additional_information":"No Additional Information",
-     *  "address_line_1":"Dhaka",
-     *  "address_line_2":"Dinajpur",
-     *    * *  "lat":"23.704263332849386",
-     *    * *  "long":"90.44707059805279",
-     *
-     *  "country":"Bangladesh",
-     *  "city":"Dhaka",
-     *  * "currency":"BDT",
-     *  "postcode":"Dinajpur",
-     *
-     *  "logo":"https://images.unsplash.com/photo-1671410714831-969877d103b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-
-     *  *  "image":"https://images.unsplash.com/photo-1671410714831-969877d103b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-     *  "images":{"/a","/b","/c"}
-     *
-     * }),
+     *  @OA\Property(property="business_id", type="string", format="array",example="1"),
      *
      *
-
-
      *
      *
-
      *
      *         ),
      *      ),
@@ -483,8 +457,11 @@ class BusinessController extends Controller
         ]);
 
 
-        // Artisan::call(('generate:database '. $request->business_id));
-
+        Log::info("test1..");
+        if(env("SELF_DB") == true) {
+            Log::info("test");
+            Artisan::call(('generate:database '. $request->business_id));
+            }
 
 
         return response([
@@ -842,7 +819,7 @@ class BusinessController extends Controller
                 "guard_name" => "api",
             ];
             $role  = Role::create($insertableData);
-            
+
 
             $permissions = $defaultRole->permissions;
             foreach ($permissions as $permission) {
@@ -887,7 +864,13 @@ class BusinessController extends Controller
             Mail::to($request_data['user']['email'])->send(new SendPassword($user,$password));
         }
 
-        // Artisan::call(('generate:database '. $business->id));
+
+        if(env("SELF_DB") == true) {
+        Artisan::call(('generate:database '. $business->id));
+        }
+
+
+
 
 
     // }

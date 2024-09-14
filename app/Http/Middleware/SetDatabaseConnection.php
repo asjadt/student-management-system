@@ -18,26 +18,28 @@ class SetDatabaseConnection
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
-        if (Auth::check()) {
-            $user = Auth::user();
-            $businessId = $user->business_id; // Adjust this according to how you retrieve the business ID
+        if(env("SELF_DB") == true) {
+            if (Auth::check()) {
+                $user = Auth::user();
+                $businessId = $user->business_id; // Adjust this according to how you retrieve the business ID
 
-            if (!empty($businessId)) {
-                $databaseName = 'business_' . $businessId;
+                if (!empty($businessId)) {
+                    $databaseName = 'business_' . $businessId;
 
-                // Dynamically set the default database connection configuration
-                Config::set('database.connections.mysql.database', $databaseName);
+                    // Dynamically set the default database connection configuration
+                    Config::set('database.connections.mysql.database', $databaseName);
 
-                // Reconnect to the database using the updated configuration
-                DB::purge('mysql');
-                DB::reconnect('mysql');
-            } else {
-                // Optionally handle the case where there is no business_id
-                // For example, set to a default database or keep the default connection
-                Config::set('database.connections.mysql.database', null);
+                    // Reconnect to the database using the updated configuration
+                    DB::purge('mysql');
+                    DB::reconnect('mysql');
+                } else {
+                    // Optionally handle the case where there is no business_id
+                    // For example, set to a default database or keep the default connection
+                    Config::set('database.connections.mysql.database', null);
+                }
             }
-        }
+            }
+
 
         return $next($request);
     }
