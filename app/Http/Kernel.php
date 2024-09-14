@@ -44,7 +44,7 @@ class Kernel extends HttpKernel
         'api' => [
 
             \App\Http\Middleware\FormatDatesInRequest::class,
-            \App\Http\Middleware\FormatDatesInResponse::class,
+            \App\Http\Middleware\ResponseMiddleware::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
     //  'throttle:9999999,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,

@@ -750,13 +750,10 @@ Route::post('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "de
 Route::post('/v1.0/installment-payments', [InstallmentPaymentController::class, "createInstallmentPayment"]);
 Route::put('/v1.0/installment-payments', [InstallmentPaymentController::class, "updateInstallmentPayment"]);
 
-
-
 Route::put('/v1.0/installment-payments/toggle-active', [InstallmentPaymentController::class, "toggleActiveInstallmentPayment"]);
 
 Route::get('/v1.0/installment-payments', [InstallmentPaymentController::class, "getInstallmentPayments"]);
 Route::delete('/v1.0/installment-payments/{ids}', [InstallmentPaymentController::class, "deleteInstallmentPaymentsByIds"]);
-
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

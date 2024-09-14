@@ -266,14 +266,10 @@ class User extends Authenticatable
         return (new Carbon($value))->format('d-m-Y');
     }
 
-
-
-
     public function getJoiningDateAttribute($value)
     {
         return (new Carbon($value))->format('d-m-Y');
     }
-
 
 
 }

@@ -2245,6 +2245,47 @@ class DashboardManagementController extends Controller
          }
      }
 
+     public function total_students(
+        $today,
+        $start_date_of_next_month,
+        $end_date_of_next_month,
+        $start_date_of_this_month,
+        $end_date_of_this_month,
+        $start_date_of_previous_month,
+        $end_date_of_previous_month,
+        $start_date_of_next_week,
+        $end_date_of_next_week,
+        $start_date_of_this_week,
+        $end_date_of_this_week,
+        $start_date_of_previous_week,
+        $end_date_of_previous_week
+    ) {
+
+        $data_query  = Student::where("business_id", auth()->user()->business_id);
+
+        $data["total_data_count"] = $data_query->count();
+
+        $data["today_data_count"] = clone $data_query;
+        $data["today_data_count"] = $data["today_data_count"]->whereBetween('created_at', [$today->copy()->startOfDay(), $today->copy()->endOfDay()])->count();
+
+        $data["next_week_data_count"] = clone $data_query;
+        $data["next_week_data_count"] = $data["next_week_data_count"]->whereBetween('created_at', [$start_date_of_next_week, ($end_date_of_next_week . ' 23:59:59')])->count();
+
+        $data["this_week_data_count"] = clone $data_query;
+        $data["this_week_data_count"] = $data["this_week_data_count"]->whereBetween('created_at', [$start_date_of_this_week, ($end_date_of_this_week . ' 23:59:59')])->count();
+
+
+
+        $data["next_month_data_count"] = clone $data_query;
+        $data["next_month_data_count"] = $data["next_month_data_count"]->whereBetween('created_at', [$start_date_of_next_month, ($end_date_of_next_month . ' 23:59:59')])->count();
+
+        $data["this_month_data_count"] = clone $data_query;
+        $data["this_month_data_count"] = $data["this_month_data_count"]->whereBetween('created_at', [$start_date_of_this_month, ($end_date_of_this_month . ' 23:59:59')])->count();
+
+        return $data;
+    }
+
+
     /**
      *
      * @OA\Get(
@@ -2325,17 +2366,35 @@ class DashboardManagementController extends Controller
 
             $data = [];
 
+            $data["total_students"] = $this->total_students(
+                $today,
+                $start_date_of_next_month,
+                $end_date_of_next_month,
+                $start_date_of_this_month,
+                $end_date_of_this_month,
+                $start_date_of_previous_month,
+                $end_date_of_previous_month,
+                $start_date_of_next_week,
+                $end_date_of_next_week,
+                $start_date_of_this_week,
+                $end_date_of_this_week,
+                $start_date_of_previous_week,
+                $end_date_of_previous_week,
+
+            );
+
             // Total counts
             $data["total_awarding_bodies"] = AwardingBody::count();
             $data["total_courses"] = CourseTitle::count();
-            $data["total_students"] = Student::count();
+
+
 
             // Expiry intervals
             $expiryIntervals = [30, 60, 90];
 
-
             foreach ($expiryIntervals as $days) {
-                $data["awarding_body_expiry_in_{$days}_days"] = AwardingBody::where('expiry_date', '<=', Carbon::now()->addDays($days))->count();
+
+                $data["awarding_body_expiry_in_{$days}_days"] = AwardingBody::where('accreditation_start_date', '<=', Carbon::now()->addDays($days))->count();
             }
 
 
