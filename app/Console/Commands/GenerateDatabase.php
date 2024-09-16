@@ -80,7 +80,7 @@ class GenerateDatabase extends Command
         // Run migrations on the new database
         Log::info("Running migrations on new database '{$databaseName}'");
 
-        Artisan::call('migrate', [
+        Artisan::call('migrate:fresh', [
             '--database' => 'business',
             '--path' => 'database/business_migrations',
         ]);
@@ -96,40 +96,6 @@ class GenerateDatabase extends Command
 
     return 0;
 }
-
-function dropTablesFromBusinessMigrations() {
-    // Get all migration files from the 'business_migrations' folder
-    $migrationFiles = File::files(database_path('business_migrations'));
-
-    foreach ($migrationFiles as $file) {
-        // Include the migration file to make its class available
-        require_once $file->getPathname();
-
-        // Get the migration class name from the filename
-        $class = $this->getClassNameFromFile($file->getFilename());
-
-        // If the migration class exists, instantiate it
-        if (class_exists($class)) {
-            $migration = new $class;
-
-            // Check if the migration has a 'down' method to reverse the migration
-            if (method_exists($migration, 'down')) {
-                // Run the 'down' method to drop the table
-                $migration->down();
-            }
-        }
-    }
-}
-
-// Helper function to get the class name from the migration file name
-function getClassNameFromFile($filename) {
-    return str_replace('.php', '', implode('', array_map('ucfirst', explode('_', $filename))));
-}
-
-/**
- * Check if the database already exists.
- */
-
 
 
 

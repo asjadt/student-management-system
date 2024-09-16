@@ -12,6 +12,7 @@ use App\Models\DisabledStudentStatus;
 use App\Models\StudentStatus;
 use App\Models\SettingPaidLeaveStudentStatus;
 use App\Models\SettingUnpaidLeaveStudentStatus;
+use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -1074,56 +1075,15 @@ class StudentStatusController extends Controller
                 ], 404);
             }
 
-            $user_exists =  User::whereIn("student_status_id",$existingIds)->exists();
+            $user_exists =  Student::whereIn("student_status_id",$existingIds)->exists();
             if($user_exists) {
-                $conflictingUsers = User::whereIn("student_status_id", $existingIds)->get(['id', 'first_Name',
-                'last_Name',]);
-                $this->storeError(
-                    "Some users are associated with the specified student statuses"
-                    ,
-                    409,
-                    "front end error",
-                    "front end error"
-                   );
+
                 return response()->json([
-                    "message" => "Some users are associated with the specified student statuses",
-                    "conflicting_users" => $conflictingUsers
+                    "message" => "Some students are associated with the specified student statuses",
                 ], 409);
 
             }
 
-            $paid_student_status_exists =  SettingPaidLeaveStudentStatus::whereIn("student_status_id",$existingIds)->exists();
-            if($paid_student_status_exists) {
-                $conflictingPaidStudentStatus = SettingPaidLeaveStudentStatus::whereIn("student_status_id", $existingIds)->get(['id']);
-                $this->storeError(
-                    "Some leave settings are associated with the specified student statuses"
-                    ,
-                    409,
-                    "front end error",
-                    "front end error"
-                   );
-                return response()->json([
-                    "message" => "Some leave settings are associated with the specified student statuses",
-                    "conflicting_paid_student_status" => $conflictingPaidStudentStatus
-                ], 409);
-
-            }
-            $unpaid_student_status_exists =  SettingUnpaidLeaveStudentStatus::whereIn("student_status_id",$existingIds)->exists();
-            if($unpaid_student_status_exists) {
-                $conflictingUnpaidStudentStatus = SettingPaidLeaveStudentStatus::whereIn("student_status_id", $existingIds)->get(['id']);
-                $this->storeError(
-                    "Some leave settings are associated with the specified student statuses"
-                    ,
-                    409,
-                    "front end error",
-                    "front end error"
-                   );
-                return response()->json([
-                    "message" => "Some leave settings are associated with the specified student statuses",
-                    "conflicting_unpaid_student_status" => $conflictingUnpaidStudentStatus
-                ], 409);
-
-            }
             StudentStatus::destroy($existingIds);
 
 

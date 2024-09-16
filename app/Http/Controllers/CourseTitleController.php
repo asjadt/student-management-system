@@ -977,7 +977,7 @@ class CourseTitleController extends Controller
 
     /**
      *
-     *     @OA\Post(
+     *     @OA\Delete(
      *      path="/v1.0/course-titles/{ids}",
      *      operationId="deleteCourseTitlesByIds",
      *      tags={"student.course_titles"},

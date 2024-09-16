@@ -899,7 +899,7 @@ Route::post('/v1.0/course-titles-update', [CourseTitleController::class, "update
 Route::post('/v1.0/course-titles/toggle-active', [CourseTitleController::class, "toggleActiveCourseTitle"]);
 Route::get('/v1.0/course-titles', [CourseTitleController::class, "getCourseTitles"]);
 Route::get('/v1.0/course-titles/{id}', [CourseTitleController::class, "getCourseTitleById"]);
-Route::post('/v1.0/course-titles/{ids}', [CourseTitleController::class, "deleteCourseTitlesByIds"]);
+Route::delete('/v1.0/course-titles/{ids}', [CourseTitleController::class, "deleteCourseTitlesByIds"]);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // end course title  management section

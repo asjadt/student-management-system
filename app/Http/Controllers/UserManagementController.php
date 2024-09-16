@@ -4734,7 +4734,7 @@ class UserManagementController extends Controller
 
             $idsArray = explode(',', $ids);
             $existingIds = User::whereIn('id', $idsArray)
-                ->when(!$request->user()->hasRole('superadmin'), function ($query) use ($business_id) {
+                ->when(!$request->user()->hasRole('superadmin'), function ($query)  {
                     return $query->where(function ($query) {
                         return  $query->where('created_by', auth()->user()->id)
                             ->orWhere('business_id', auth()->user()->business_id);

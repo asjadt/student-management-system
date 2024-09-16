@@ -60,6 +60,7 @@ class SetUpController extends Controller
     public function migrate(Request $request) {
         $this->storeActivity($request, "DUMMY activity","DUMMY description");
         Artisan::call('check:migrate');
+
         return "migrated";
             }
 
@@ -71,7 +72,7 @@ return "swagger generated";
 
     public function setUp(Request $request)
     {
-        $this->storeActivity($request, "DUMMY activity","DUMMY description");
+        // $this->storeActivity($request, "DUMMY activity","DUMMY description");
 
         // @@@@@@@@@@@@@@@@@@@
         // clear everything
@@ -91,6 +92,11 @@ return "swagger generated";
         Artisan::call('migrate', ['--path' => 'vendor/laravel/passport/database/migrations']);
         Artisan::call('passport:install');
         Artisan::call('l5-swagger:generate');
+
+        Artisan::call('migrate:fresh', [
+            '--path' => 'database/activity_migrations',
+            '--database' => 'logs'
+        ]);
 
 
 
