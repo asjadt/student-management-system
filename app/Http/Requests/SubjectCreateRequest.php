@@ -43,7 +43,7 @@ $rules = [
 
         'description' => [
         'nullable',
-        'text',
+        'string',
 
     ],
 

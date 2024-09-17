@@ -31,7 +31,7 @@ class Subject extends Model
 
 
   public function teachers () {
-$this->belongsToMany(User::class,"subject_teachers","subject_id","teacher_id");
+          return    $this->belongsToMany(User::class,"subject_teachers","subject_id","teacher_id");
   }
 
 

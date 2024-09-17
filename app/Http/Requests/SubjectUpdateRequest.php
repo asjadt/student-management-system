@@ -84,7 +84,7 @@ class SubjectUpdateRequest extends BaseFormRequest
 
             'description' => [
                 'nullable',
-                'text',
+                'string',
 
             ],
 
