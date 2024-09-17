@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StudentStatusCreateRequest;
 use App\Http\Requests\StudentStatusUpdateRequest;
 use App\Http\Requests\GetIdRequest;
+use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 
 class StudentStatusController extends Controller
 {
-    use ErrorUtil, UserActivityUtil, BusinessUtil;
+    use ErrorUtil, UserActivityUtil, BusinessUtil, BasicUtil;
     /**
      *
      * @OA\Post(
@@ -122,7 +123,7 @@ class StudentStatusController extends Controller
 
     /**
      *
-     * @OA\Post(
+     * @OA\Put(
      *      path="/v1.0/student-statuses-update",
      *      operationId="updateStudentStatus",
      *      tags={"student.student_statuses"},
@@ -228,7 +229,7 @@ class StudentStatusController extends Controller
 
   /**
      *
-     * @OA\Post(
+     * @OA\Put(
      *      path="/v1.0/student-statuses/toggle-active",
      *      operationId="toggleActiveStudentStatus",
      *      tags={"student.student_statuses"},
@@ -292,138 +293,15 @@ class StudentStatusController extends Controller
              }
              $request_data = $request->validated();
 
-             $student_status =  StudentStatus::where([
-                 "id" => $request_data["id"],
-             ])
-                 ->first();
-             if (!$student_status) {
-                $this->storeError(
-                    "no data found"
-                    ,
-                    404,
-                    "front end error",
-                    "front end error"
-                   );
-                 return response()->json([
-                     "message" => "no data found"
-                 ], 404);
-             }
-             $should_update = 0;
-             $should_disable = 0;
-             if (empty(auth()->user()->business_id)) {
-
-                 if (auth()->user()->hasRole('superadmin')) {
-                     if (($student_status->business_id != NULL || $student_status->is_default != 1)) {
-                        $this->storeError(
-                            "You do not have permission to update this due to role restrictions.",
-                            403,
-                            "front end error",
-                            "front end error"
-                           );
-                         return response()->json([
-                             "message" => "You do not have permission to update this student status due to role restrictions."
-                         ], 403);
-                     } else {
-                         $should_update = 1;
-                     }
-                 } else {
-                     if ($student_status->business_id != NULL) {
-                        $this->storeError(
-                            "You do not have permission to update this due to role restrictions.",
-                            403,
-                            "front end error",
-                            "front end error"
-                           );
-                         return response()->json([
-                             "message" => "You do not have permission to update this student status due to role restrictions."
-                         ], 403);
-                     } else if ($student_status->is_default == 0) {
-
-                         if($student_status->created_by != auth()->user()->id) {
-                            $this->storeError(
-                                "You do not have permission to update this due to role restrictions.",
-                                403,
-                                "front end error",
-                                "front end error"
-                               );
-                             return response()->json([
-                                 "message" => "You do not have permission to update this student status due to role restrictions."
-                             ], 403);
-                         }
-                         else {
-                             $should_update = 1;
-                         }
 
 
-
-                     }
-                     else {
-                      $should_disable = 1;
-
-                     }
-                 }
-             } else {
-                 if ($student_status->business_id != NULL) {
-                     if (($student_status->business_id != auth()->user()->business_id)) {
-                        $this->storeError(
-                            "You do not have permission to update this due to role restrictions.",
-                            403,
-                            "front end error",
-                            "front end error"
-                           );
-                         return response()->json([
-                             "message" => "You do not have permission to update this student status due to role restrictions."
-                         ], 403);
-                     } else {
-                         $should_update = 1;
-                     }
-                 } else {
-                     if ($student_status->is_default == 0) {
-                         if ($student_status->created_by != auth()->user()->created_by) {
-                            $this->storeError(
-                                "You do not have permission to update this due to role restrictions.",
-                                403,
-                                "front end error",
-                                "front end error"
-                               );
-                             return response()->json([
-                                 "message" => "You do not have permission to update this student status due to role restrictions."
-                             ], 403);
-                         } else {
-                             $should_disable = 1;
-
-                         }
-                     } else {
-                         $should_disable = 1;
-
-                     }
-                 }
-             }
-
-             if ($should_update) {
-                 $student_status->update([
-                     'is_active' => !$student_status->is_active
-                 ]);
-             }
-
-             if($should_disable) {
-
-                 $disabled_student_status =    DisabledStudentStatus::where([
-                     'student_status_id' => $student_status->id,
-                     'business_id' => auth()->user()->business_id,
-                     'created_by' => auth()->user()->id,
-                 ])->first();
-                 if(!$disabled_student_status) {
-                    DisabledStudentStatus::create([
-                         'student_status_id' => $student_status->id,
-                         'business_id' => auth()->user()->business_id,
-                         'created_by' => auth()->user()->id,
-                     ]);
-                 } else {
-                     $disabled_student_status->delete();
-                 }
-             }
-
+                 $this->toggleActivation(
+                    StudentStatus::class,
+                    DisabledStudentStatus::class,
+                    'student_status_id',
+                    $request_data["id"],
+                    auth()->user()
+                );
 
              return response()->json(['message' => 'student status status updated successfully'], 200);
          } catch (Exception $e) {
@@ -976,7 +854,7 @@ class StudentStatusController extends Controller
 
     /**
      *
-     *     @OA\Post(
+     *     @OA\Delete(
      *      path="/v1.0/student-statuses/{ids}",
      *      operationId="deleteStudentStatusesByIds",
      *      tags={"student.student_statuses"},

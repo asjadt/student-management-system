@@ -730,11 +730,11 @@ Route::delete('/v1.0/recruitment-processes/{ids}', [RecruitmentProcessController
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Route::post('/v1.0/student-statuses', [StudentStatusController::class, "createStudentStatus"]);
-Route::post('/v1.0/student-statuses-update', [StudentStatusController::class, "updateStudentStatus"]);
-Route::post('/v1.0/student-statuses/toggle-active', [StudentStatusController::class, "toggleActiveStudentStatus"]);
+Route::put('/v1.0/student-statuses-update', [StudentStatusController::class, "updateStudentStatus"]);
+Route::put('/v1.0/student-statuses/toggle-active', [StudentStatusController::class, "toggleActiveStudentStatus"]);
 Route::get('/v1.0/student-statuses', [StudentStatusController::class, "getStudentStatuses"]);
 Route::get('/v1.0/student-statuses/{id}', [StudentStatusController::class, "getStudentStatusById"]);
-Route::post('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "deleteStudentStatusesByIds"]);
+Route::delete('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "deleteStudentStatusesByIds"]);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // end student status  management section
@@ -895,8 +895,8 @@ Route::delete('/v1.0/semesters/{ids}', [SemesterController::class, "deleteSemest
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Route::post('/v1.0/course-titles', [CourseTitleController::class, "createCourseTitle"]);
-Route::post('/v1.0/course-titles-update', [CourseTitleController::class, "updateCourseTitle"]);
-Route::post('/v1.0/course-titles/toggle-active', [CourseTitleController::class, "toggleActiveCourseTitle"]);
+Route::put('/v1.0/course-titles-update', [CourseTitleController::class, "updateCourseTitle"]);
+Route::put('/v1.0/course-titles/toggle-active', [CourseTitleController::class, "toggleActiveCourseTitle"]);
 Route::get('/v1.0/course-titles', [CourseTitleController::class, "getCourseTitles"]);
 Route::get('/v1.0/course-titles/{id}', [CourseTitleController::class, "getCourseTitleById"]);
 Route::delete('/v1.0/course-titles/{ids}', [CourseTitleController::class, "deleteCourseTitlesByIds"]);

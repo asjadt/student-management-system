@@ -575,8 +575,8 @@ class AwardingBodyController extends Controller
                 }, function ($query) {
                     return $query->orderBy("awarding_bodies.id", "DESC");
                 })
-                ->when($request->boolean("id"), function ($query) use ($request) {
-                    return $query->where('awarding_bodies.id', $request->id)->first();
+                ->when($request->filled("id"), function ($query)  {
+                    return $query->where('awarding_bodies.id', request()->input("id"))->first();
                 }, function ($query) {
                     return $query->when(!empty(request()->per_page), function ($query) {
                         return $query->paginate(request()->per_page);

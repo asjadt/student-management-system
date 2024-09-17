@@ -20,9 +20,8 @@ class ClassRoutine extends Model
                     'subject_id',
                     'teacher_id',
 
-                  "is_active",
-
-
+                    
+                    "is_active",
 
         "business_id",
         "created_by"
@@ -36,7 +35,6 @@ class ClassRoutine extends Model
   {
       return $this->belongsTo(User::class, 'teacher_id','id');
   }
-
 
 
 

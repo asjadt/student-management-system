@@ -33,7 +33,7 @@ class StudentLetterUpdateRequest extends FormRequest
                 'numeric',
                 function ($attribute, $value, $fail) {
                     $exists = StudentLetter::where('id', $value)
-                        ->where('student_letters.student_id', '=', $this->user_id)
+                        ->where('student_letters.student_id', '=', $this->student_id)
                         ->exists();
 
                     if (!$exists) {

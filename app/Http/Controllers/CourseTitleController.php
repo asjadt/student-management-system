@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CourseTitleCreateRequest;
 use App\Http\Requests\CourseTitleUpdateRequest;
 use App\Http\Requests\GetIdRequest;
+use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class CourseTitleController extends Controller
 {
-    use ErrorUtil, UserActivityUtil, BusinessUtil;
+    use ErrorUtil, UserActivityUtil, BusinessUtil, BasicUtil;
     /**
      *
      * @OA\Post(
@@ -227,7 +228,7 @@ class CourseTitleController extends Controller
 
   /**
      *
-     * @OA\Post(
+     * @OA\Put(
      *      path="/v1.0/course-titles/toggle-active",
      *      operationId="toggleActiveCourseTitle",
      *      tags={"student.course_titles"},
@@ -291,138 +292,13 @@ class CourseTitleController extends Controller
              }
              $request_data = $request->validated();
 
-             $course_title =  CourseTitle::where([
-                 "id" => $request_data["id"],
-             ])
-                 ->first();
-             if (!$course_title) {
-                $this->storeError(
-                    "no data found"
-                    ,
-                    404,
-                    "front end error",
-                    "front end error"
-                   );
-                 return response()->json([
-                     "message" => "no data found"
-                 ], 404);
-             }
-             $should_update = 0;
-             $should_disable = 0;
-             if (empty(auth()->user()->business_id)) {
-
-                 if (auth()->user()->hasRole('superadmin')) {
-                     if (($course_title->business_id != NULL || $course_title->is_default != 1)) {
-                        $this->storeError(
-                            "You do not have permission to update this due to role restrictions.",
-                            403,
-                            "front end error",
-                            "front end error"
-                           );
-                         return response()->json([
-                             "message" => "You do not have permission to update this course title due to role restrictions."
-                         ], 403);
-                     } else {
-                         $should_update = 1;
-                     }
-                 } else {
-                     if ($course_title->business_id != NULL) {
-                        $this->storeError(
-                            "You do not have permission to update this due to role restrictions.",
-                            403,
-                            "front end error",
-                            "front end error"
-                           );
-                         return response()->json([
-                             "message" => "You do not have permission to update this course title due to role restrictions."
-                         ], 403);
-                     } else if ($course_title->is_default == 0) {
-
-                         if($course_title->created_by != auth()->user()->id) {
-                            $this->storeError(
-                                "You do not have permission to update this due to role restrictions.",
-                                403,
-                                "front end error",
-                                "front end error"
-                               );
-                             return response()->json([
-                                 "message" => "You do not have permission to update this course title due to role restrictions."
-                             ], 403);
-                         }
-                         else {
-                             $should_update = 1;
-                         }
-
-
-
-                     }
-                     else {
-                      $should_disable = 1;
-
-                     }
-                 }
-             } else {
-                 if ($course_title->business_id != NULL) {
-                     if (($course_title->business_id != auth()->user()->business_id)) {
-                        $this->storeError(
-                            "You do not have permission to update this due to role restrictions.",
-                            403,
-                            "front end error",
-                            "front end error"
-                           );
-                         return response()->json([
-                             "message" => "You do not have permission to update this course title due to role restrictions."
-                         ], 403);
-                     } else {
-                         $should_update = 1;
-                     }
-                 } else {
-                     if ($course_title->is_default == 0) {
-                         if ($course_title->created_by != auth()->user()->created_by) {
-                            $this->storeError(
-                                "You do not have permission to update this due to role restrictions.",
-                                403,
-                                "front end error",
-                                "front end error"
-                               );
-                             return response()->json([
-                                 "message" => "You do not have permission to update this course title due to role restrictions."
-                             ], 403);
-                         } else {
-                             $should_disable = 1;
-
-                         }
-                     } else {
-                         $should_disable = 1;
-
-                     }
-                 }
-             }
-
-             if ($should_update) {
-                 $course_title->update([
-                     'is_active' => !$course_title->is_active
-                 ]);
-             }
-
-             if($should_disable) {
-
-                 $disabled_course_title =    DisabledCourseTitle::where([
-                     'course_title_id' => $course_title->id,
-                     'business_id' => auth()->user()->business_id,
-                     'created_by' => auth()->user()->id,
-                 ])->first();
-                 if(!$disabled_course_title) {
-                    DisabledCourseTitle::create([
-                         'course_title_id' => $course_title->id,
-                         'business_id' => auth()->user()->business_id,
-                         'created_by' => auth()->user()->id,
-                     ]);
-                 } else {
-                     $disabled_course_title->delete();
-                 }
-             }
-
+                $this->toggleActivation(
+                    CourseTitle::class,
+                    DisabledCourseTitle::class,
+                    'course_title_id',
+                    $request_data["id"],
+                    auth()->user()
+                );
 
              return response()->json(['message' => 'course title status updated successfully'], 200);
          } catch (Exception $e) {
