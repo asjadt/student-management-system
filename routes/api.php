@@ -40,6 +40,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RecruitmentProcessController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingAttendanceController;
 use App\Http\Controllers\SettingLeaveController;
 use App\Http\Controllers\SettingLeaveTypeController;
@@ -739,6 +740,27 @@ Route::delete('/v1.0/student-statuses/{ids}', [StudentStatusController::class, "
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // end student status  management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// sessions management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Route::post('/v1.0/sessions', [SessionController::class, "createSession"]);
+Route::put('/v1.0/sessions', [SessionController::class, "updateSession"]);
+
+Route::put('/v1.0/sessions/toggle-active', [SessionController::class, "toggleActiveSession"]);
+
+Route::get('/v1.0/sessions', [SessionController::class, "getSessions"]);
+Route::delete('/v1.0/sessions/{ids}', [SessionController::class, "deleteSessionsByIds"]);
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end sessions management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
 
 

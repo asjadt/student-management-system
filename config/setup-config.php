@@ -323,6 +323,15 @@ return [
                 "student_letter_delete",
 
 
+                "session_create",
+                "session_update",
+                "session_activate",
+                "session_view",
+                "session_delete",
+
+
+
+
                 "letter_template_create",
                 "letter_template_update",
                 "letter_template_activate",
@@ -603,6 +612,12 @@ return [
                 "student_letter_view",
                 "student_letter_delete",
 
+                "session_create",
+                "session_update",
+                "session_activate",
+                "session_view",
+                "session_delete",
+
 
                 "letter_template_create",
                 "letter_template_update",
@@ -871,6 +886,12 @@ return [
         "student_letter_update",
         "student_letter_view",
         "student_letter_delete",
+
+        "session_create",
+        "session_update",
+        "session_activate",
+        "session_view",
+        "session_delete",
 
 
         "letter_template_create",
@@ -2101,6 +2122,21 @@ return [
 
             ],
         ],
+
+        [
+            "header" => "session",
+            "permissions" => [
+                "session_create",
+        "session_update",
+        "session_activate",
+        "session_view",
+        "session_delete",
+
+
+            ],
+        ],
+
+
 
 
         [
