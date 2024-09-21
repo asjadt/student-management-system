@@ -182,6 +182,8 @@ return array(
     'App\\Http\\Requests\\RoleUpdateRequest' => $baseDir . '/app/Http/Requests/RoleUpdateRequest.php',
     'App\\Http\\Requests\\SemesterCreateRequest' => $baseDir . '/app/Http/Requests/SemesterCreateRequest.php',
     'App\\Http\\Requests\\SemesterUpdateRequest' => $baseDir . '/app/Http/Requests/SemesterUpdateRequest.php',
+    'App\\Http\\Requests\\SessionCreateRequest' => $baseDir . '/app/Http/Requests/SessionCreateRequest.php',
+    'App\\Http\\Requests\\SessionUpdateRequest' => $baseDir . '/app/Http/Requests/SessionUpdateRequest.php',
     'App\\Http\\Requests\\SettingAttendanceCreateRequest' => $baseDir . '/app/Http/Requests/SettingAttendanceCreateRequest.php',
     'App\\Http\\Requests\\SettingLeaveCreateRequest' => $baseDir . '/app/Http/Requests/SettingLeaveCreateRequest.php',
     'App\\Http\\Requests\\SettingLeaveTypeCreateRequest' => $baseDir . '/app/Http/Requests/SettingLeaveTypeCreateRequest.php',

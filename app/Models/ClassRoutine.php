@@ -19,8 +19,9 @@ class ClassRoutine extends Model
                     'room_number',
                     'subject_id',
                     'teacher_id',
+                    'session_id',
 
-                    
+
                     "is_active",
 
         "business_id",
@@ -46,6 +47,10 @@ class ClassRoutine extends Model
 
 
 
+  public function session()
+  {
+      return $this->belongsTo(Session::class, 'session_id','id');
+  }
 
 
 

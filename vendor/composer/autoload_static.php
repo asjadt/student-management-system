@@ -893,6 +893,8 @@ class ComposerStaticInit21d3eeeef4e11a73df45b8701b58e483
         'App\\Http\\Requests\\RoleUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/RoleUpdateRequest.php',
         'App\\Http\\Requests\\SemesterCreateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SemesterCreateRequest.php',
         'App\\Http\\Requests\\SemesterUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SemesterUpdateRequest.php',
+        'App\\Http\\Requests\\SessionCreateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SessionCreateRequest.php',
+        'App\\Http\\Requests\\SessionUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SessionUpdateRequest.php',
         'App\\Http\\Requests\\SettingAttendanceCreateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SettingAttendanceCreateRequest.php',
         'App\\Http\\Requests\\SettingLeaveCreateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SettingLeaveCreateRequest.php',
         'App\\Http\\Requests\\SettingLeaveTypeCreateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SettingLeaveTypeCreateRequest.php',

@@ -83,7 +83,10 @@ return "swagger generated";
 
 
 
-
+        Artisan::call('migrate:fresh', [
+            '--path' => 'database/activity_migrations',
+            '--database' => 'logs'
+        ]);
 
 
 
@@ -93,10 +96,7 @@ return "swagger generated";
         Artisan::call('passport:install');
         Artisan::call('l5-swagger:generate');
 
-        Artisan::call('migrate:fresh', [
-            '--path' => 'database/activity_migrations',
-            '--database' => 'logs'
-        ]);
+
 
 
 

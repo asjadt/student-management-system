@@ -131,6 +131,13 @@ $rules = [
 
 ],
 
+'session_id' => [
+    'nullable',
+    'numeric',
+    "exists:sessions,id"
+
+],
+
 
 
 

@@ -7,7 +7,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateClassRoutineName;
 
-class ClassRoutineCreateRequest extends BaseFormRequest
+class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,81 +26,47 @@ class ClassRoutineCreateRequest extends BaseFormRequest
      */
     public function rules()
     {
-
-        $rules = [
-
-            'day_of_week' => [
+        return [
+            'days' => [
                 'required',
-                'numeric',
-
-
-
-
-
-
+                'array',
             ],
-
-            'start_time' => [
+            'days.*.day_of_week' => [
                 'required',
-                'string',
-
-
-
-
-
-
+                'string', // Use string if day_of_week is a name like "Monday"
             ],
-
-            'end_time' => [
+            'days.*.start_time' => [
+                'required',
+                'string', // Ensure valid time format if needed
+            ],
+            'days.*.end_time' => [
+                'required',
+                'string', // Ensure valid time format if needed
+            ],
+            'days.*.room_number' => [
                 'required',
                 'string',
-
-
-
-
-
-
             ],
-
-            'room_number' => [
-                'required',
-                'string',
-
-
-
-
-
-
-            ],
-
-            'subject_id' => [
+            'days.*.subject_id' => [
                 'required',
                 'numeric',
-                'exists:subjects,id'
-
+                'exists:subjects,id',
             ],
-
-            'teacher_id' => [
+            'days.*.teacher_id' => [
                 'required',
                 'numeric',
-                "exists:users,id"
-
+                'exists:users,id',
             ],
-
             'session_id' => [
                 'nullable',
                 'numeric',
-                "exists:sessions,id"
-
+                'exists:sessions,id',
             ],
-
-
-
-
         ];
-
-
-
-        return $rules;
     }
+
+
+
+
+
 }
