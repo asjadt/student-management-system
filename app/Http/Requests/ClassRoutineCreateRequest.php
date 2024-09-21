@@ -87,10 +87,10 @@ class ClassRoutineCreateRequest extends BaseFormRequest
 
             ],
 
-            'session_id' => [
+            'semester_id' => [
                 'nullable',
                 'numeric',
-                "exists:sessions,id"
+                "exists:semesters,id"
 
             ],
 

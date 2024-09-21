@@ -57,10 +57,10 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
                 'numeric',
                 'exists:users,id',
             ],
-            'session_id' => [
+            'semester_id' => [
                 'nullable',
                 'numeric',
-                'exists:sessions,id',
+                'exists:semesters,id',
             ],
         ];
     }
