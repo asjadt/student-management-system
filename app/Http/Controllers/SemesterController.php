@@ -44,8 +44,7 @@ class SemesterController extends Controller
      * @OA\Property(property="name", type="string", format="string", example="name"),
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
-     * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
-     * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3})
+     * @OA\Property(property="course_ids", type="string", format="array", example={1,2,3})
      *
      *
      *
@@ -114,7 +113,7 @@ class SemesterController extends Controller
 
                 $semester =  Semester::create($request_data);
 
-                $semester->subjects->sync($request_data["subject_ids"]);
+                $semester->courses->sync($request_data["course_ids"]);
 
 
                 return response($semester, 201);
@@ -143,8 +142,8 @@ class SemesterController extends Controller
      * @OA\Property(property="name", type="string", format="string", example="name"),
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
-     *      * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
-     * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3})
+
+     * @OA\Property(property="course_ids", type="string", format="array", example={1,2,3})
      *
      *         ),
      *      ),
@@ -207,7 +206,7 @@ class SemesterController extends Controller
                         "name",
                         "start_date",
                         "end_date",
-                        "course_id"
+
                         // "is_default",
                         // "is_active",
                         // "business_id",
@@ -220,7 +219,7 @@ class SemesterController extends Controller
                     ], 500);
                 }
 
-                $semester->subjects()->sync($request_data["subject_ids"]);
+                $semester->courses()->sync($request_data["course_ids"]);
 
 
                 return response($semester, 201);
@@ -489,14 +488,11 @@ public function toggleActiveSemester(GetIdRequest $request)
                     "message" => "You can not perform this action"
                 ], 401);
             }
-            $created_by  = NULL;
-            if (auth()->user()->business) {
-                $created_by = auth()->user()->business->created_by;
-            }
 
 
 
-            $semesters = Semester::with("subjects","course")
+
+            $semesters = Semester::with("courses")
             ->where('semesters.business_id', auth()->user()->business_id)
 
 

@@ -149,10 +149,20 @@ class CourseTitleUpdateRequest extends FormRequest
             'description' => 'nullable|string',
             'color' => 'required|string',
             "awarding_body_id" =>   [
-                "required",
+            "required",
             'numeric',
             new ValidateAwardingBody()
-            ]
+            ],
+
+            'subject_ids' => [
+                'present',
+                'array',
+            ],
+            'subject_ids.*' => [
+               "numeric",
+               "exists:subjects,id"
+            ],
+
         ];
 
         // if (!empty(auth()->user()->business_id)) {
@@ -169,4 +179,11 @@ class CourseTitleUpdateRequest extends FormRequest
 
 return $rules;
     }
+
+
+
+
+
+
+
 }

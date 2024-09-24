@@ -105,7 +105,17 @@ class CourseTitleCreateRequest extends FormRequest
                 "required",
             'numeric',
             new ValidateAwardingBody()
-            ]
+            ],
+
+            'subject_ids' => [
+                'present',
+                'array',
+            ],
+            'subject_ids.*' => [
+               "numeric",
+               "exists:subjects,id"
+            ],
+
         ];
 
         // if (!empty(auth()->user()->business_id)) {

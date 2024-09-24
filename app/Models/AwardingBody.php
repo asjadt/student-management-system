@@ -23,7 +23,6 @@ class AwardingBody extends Model
       "is_default",
 
 
-
         "business_id",
         "created_by"
     ];

@@ -38,6 +38,7 @@ class CourseTitleController extends Controller
  *  * @OA\Property(property="color", type="string", format="string", example="red"),
  * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
  *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
+ *      * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3}),
  *
  *
      *
@@ -107,7 +108,7 @@ class CourseTitleController extends Controller
 
                 $course_title =  CourseTitle::create($request_data);
 
-
+                $course_title->subjects->sync($request_data["subject_ids"]);
 
 
                 return response($course_title, 201);
@@ -138,6 +139,7 @@ class CourseTitleController extends Controller
  *  *  * @OA\Property(property="color", type="string", format="string", example="red"),
  * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
  *  * *  * @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
+ *      * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3}),
 
 
      *
@@ -217,6 +219,7 @@ class CourseTitleController extends Controller
                         "message" => "something went wrong."
                     ], 500);
                 }
+                $course_title->subjects->sync($request_data["subject_ids"]);
 
                 return response($course_title, 201);
             });
@@ -416,90 +419,18 @@ class CourseTitleController extends Controller
 
             $course_titles = CourseTitle::
                with("awarding_body")
-            ->when(empty($request->user()->business_id), function ($query) use ($request, $created_by) {
-                if (auth()->user()->hasRole('superadmin')) {
-                    return $query->where('course_titles.business_id', NULL)
-                        ->where('course_titles.is_default', 1)
-                        ->when(isset($request->is_active), function ($query) use ($request) {
-                            return $query->where('course_titles.is_active', intval($request->is_active));
-                        });
-                } else {
-                    return $query
-
-                    ->where(function($query) use($request) {
-                        $query->where('course_titles.business_id', NULL)
-                        ->where('course_titles.is_default', 1)
-                        ->where('course_titles.is_active', 1)
-                        ->when(isset($request->is_active), function ($query) use ($request) {
-                            if(intval($request->is_active)) {
-                                return $query->whereDoesntHave("disabled", function($q) {
-                                    $q->whereIn("disabled_course_titles.created_by", [auth()->user()->id]);
-                                });
-                            }
-
-                        })
-                        ->orWhere(function ($query) use ($request) {
-                            $query->where('course_titles.business_id', NULL)
-                                ->where('course_titles.is_default', 0)
-                                ->where('course_titles.created_by', auth()->user()->id)
-                                ->when(isset($request->is_active), function ($query) use ($request) {
-                                    return $query->where('course_titles.is_active', intval($request->is_active));
-                                });
-                        });
-
-                    });
-                }
+               ->when(empty(auth()->user()->business_id), function ($query) use ($request, $created_by) {
+                $query->when(auth()->user()->hasRole('superadmin'), function ($query) use ($request) {
+                    $query->forSuperAdmin('course_titles');
+                }, function ($query) use ($request, $created_by) {
+                    $query->forNonSuperAdmin('course_titles', 'disabled_letter_templates', $created_by);
+                });
             })
-                ->when(!empty($request->user()->business_id), function ($query) use ($request, $created_by) {
-                    return $query
-                    ->where(function($query) use($request, $created_by) {
 
+            ->when(!empty(auth()->user()->business_id), function ($query) use ( $created_by) {
+                $query->forBusiness('course_titles', "disabled_letter_templates", $created_by);
+            })
 
-                        $query->where('course_titles.business_id', NULL)
-                        ->where('course_titles.is_default', 1)
-                        ->where('course_titles.is_active', 1)
-                        ->whereDoesntHave("disabled", function($q) use($created_by) {
-                            $q->whereIn("disabled_course_titles.created_by", [$created_by]);
-                        })
-                        ->when(isset($request->is_active), function ($query) use ($request, $created_by)  {
-                            if(intval($request->is_active)) {
-                                return $query->whereDoesntHave("disabled", function($q) use($created_by) {
-                                    $q->whereIn("disabled_course_titles.business_id",[auth()->user()->business_id]);
-                                });
-                            }
-
-                        })
-
-
-                        ->orWhere(function ($query) use($request, $created_by){
-                            $query->where('course_titles.business_id', NULL)
-                                ->where('course_titles.is_default', 0)
-                                ->where('course_titles.created_by', $created_by)
-                                ->where('course_titles.is_active', 1)
-
-                                ->when(isset($request->is_active), function ($query) use ($request) {
-                                    if(intval($request->is_active)) {
-                                        return $query->whereDoesntHave("disabled", function($q) {
-                                            $q->whereIn("disabled_course_titles.business_id",[auth()->user()->business_id]);
-                                        });
-                                    }
-
-                                })
-
-
-                                ;
-                        })
-                        ->orWhere(function ($query) use($request) {
-                            $query->where('course_titles.business_id', auth()->user()->business_id)
-                                ->where('course_titles.is_default', 0)
-                                ->when(isset($request->is_active), function ($query) use ($request) {
-                                    return $query->where('course_titles.is_active', intval($request->is_active));
-                                });;
-                        });
-                    });
-
-
-                })
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
                         $term = $request->search_key;
@@ -510,6 +441,9 @@ class CourseTitleController extends Controller
                 //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
                 //        return $query->where('product_category_id', $request->product_category_id);
                 //    })
+                ->when(!empty($request->awarding_body_id), function ($query) use ($request) {
+                    return $query->where('course_titles.awarding_body_id', $request->awarding_body_id);
+                })
                 ->when(!empty($request->start_date), function ($query) use ($request) {
                     return $query->where('course_titles.created_at', ">=", $request->start_date);
                 })

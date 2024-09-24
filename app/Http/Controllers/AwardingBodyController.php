@@ -508,7 +508,7 @@ class AwardingBodyController extends Controller
 
 
 
-            $awarding_bodies = AwardingBody::with("courses")
+            $awarding_bodies = AwardingBody::with("courses.subjects")
 
             ->when(empty(auth()->user()->business_id), function ($query) use ($request, $created_by) {
                     $query->when(auth()->user()->hasRole('superadmin'), function ($query) use ($request) {

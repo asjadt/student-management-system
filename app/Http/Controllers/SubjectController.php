@@ -454,17 +454,12 @@ class SubjectController extends Controller
                     "message" => "You can not perform this action"
                 ], 401);
             }
-            $created_by  = NULL;
-            if (auth()->user()->business) {
-                $created_by = auth()->user()->business->created_by;
-            }
 
 
 
             $subjects = Subject::
             with("teachers")
             ->where('subjects.business_id', auth()->user()->business_id)
-
 
 
                 ->when(!empty($request->id), function ($query) use ($request) {
@@ -475,7 +470,9 @@ class SubjectController extends Controller
                     return $query->where('subjects.id', $request->string);
                 })
 
-
+                ->when(!empty($request->description), function ($query) use ($request) {
+                    return $query->where('subjects.id', $request->string);
+                })
 
 
 

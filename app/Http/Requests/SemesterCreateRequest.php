@@ -43,18 +43,16 @@ class SemesterCreateRequest extends BaseFormRequest
                 'required',
                 'date',
             ],
-            'course_id' => [
-                'nullable',
-                'numeric',
-                "exists:course_titles,id"
-            ],
-            'subject_ids' => [
+
+
+            'course_ids' => [
                 'present',
                 'array',
             ],
-            'subject_ids.*' => [
+
+            'course_ids.*' => [
                "numeric",
-               "exists:subjects,id"
+               "exists:course_titles,id"
             ],
 
 

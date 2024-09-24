@@ -24,12 +24,16 @@ class CourseTitle extends Model
     {
         return $this->hasMany(DisabledCourseTitle::class, 'course_title_id');
     }
+
+
     public function awarding_body()
     {
         return $this->belongsTo(AwardingBody ::class, 'awarding_body_id','id');
     }
 
-
+   public function subjects() {
+        return $this->belongsToMany(Subject::class,"course_subjects","course_id","subject_id");
+    }
 
 
 }
