@@ -29,7 +29,7 @@ class Semester extends Model
 
 
     public function courses() {
-        return $this->belongsToMany(CourseTitle::class,"semester_subjects","semester_id","subject_id");
+        return $this->belongsToMany(CourseTitle::class,"semester_courses","semester_id","course_id");
     }
 
 

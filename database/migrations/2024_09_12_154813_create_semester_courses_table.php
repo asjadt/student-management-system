@@ -15,7 +15,7 @@ class CreateSemesterCoursesTable extends Migration
     {
         Schema::create('semester_courses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("courses_id")
+            $table->foreignId("course_id")
             ->constrained("course_titles")
             ->onDelete("CASCADE");
 

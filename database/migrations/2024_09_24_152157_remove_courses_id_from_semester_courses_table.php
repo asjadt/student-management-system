@@ -8,16 +8,16 @@ class RemoveCoursesIdFromSemesterCoursesTable extends Migration
 {
     public function up()
     {
-        Schema::table('semester_courses', function (Blueprint $table) {
-            $table->dropForeign(['courses_id']); // Drop foreign key if exists
-            $table->dropColumn('courses_id');    // Remove the 'courses_id' column
+        Schema::table('semesters', function (Blueprint $table) {
+            $table->dropForeign(['course_id']); // Drop foreign key if exists
+            $table->dropColumn('course_id');    // Remove the 'courses_id' column
         });
     }
 
     public function down()
     {
-        Schema::table('semester_courses', function (Blueprint $table) {
-            $table->foreignId('courses_id')->constrained()->onDelete('cascade');
+        Schema::table('semesters', function (Blueprint $table) {
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
         });
     }
 }
