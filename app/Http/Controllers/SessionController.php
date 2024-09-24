@@ -40,6 +40,8 @@ class SessionController extends Controller
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
+     *
+     * @OA\Property(property="name", type="string", format="string", example="name"),
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
      * @OA\Property(property="holiday_dates", type="string", format="string", example="holiday_dates"),
@@ -98,10 +100,6 @@ class SessionController extends Controller
 
                 $request_data["is_active"] = 1;
 
-
-
-
-
                 $request_data["created_by"] = auth()->user()->id;
                 $request_data["business_id"] = auth()->user()->business_id;
 
@@ -112,13 +110,7 @@ class SessionController extends Controller
                     }
                 }
 
-
-
-
                 $session =  Session::create($request_data);
-
-
-
 
                 return response($session, 201);
             });
@@ -127,6 +119,8 @@ class SessionController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
+
     /**
      *
      * @OA\Put(
@@ -142,7 +136,8 @@ class SessionController extends Controller
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *      @OA\Property(property="id", type="number", format="number", example="1"),
+     * @OA\Property(property="id", type="number", format="number", example="1"),
+     * @OA\Property(property="name", type="string", format="string", example="name"),
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
      * @OA\Property(property="holiday_dates", type="string", format="string", example="holiday_dates"),
@@ -206,7 +201,7 @@ class SessionController extends Controller
 
                 if ($session) {
                     $session->fill(collect($request_data)->only([
-
+                        "name",
                         "start_date",
                         "end_date",
                         "holiday_dates",

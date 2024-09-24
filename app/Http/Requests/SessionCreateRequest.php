@@ -30,6 +30,12 @@ public function rules()
 
 $rules = [
 
+    'name' => [
+        'required',
+        'string',
+        "unique:sessions,name"
+    ],
+
         'start_date' => [
         'required',
         'date',

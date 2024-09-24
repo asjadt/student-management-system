@@ -68,7 +68,11 @@ $rules = [
   },
 ],
 
-
+'name' => [
+    'required',
+    'string',
+    'unique:sessions,name,' . $this->id . ',id' // Exclude the current record from the uniqueness check
+],
 
     'start_date' => [
     'required',

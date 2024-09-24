@@ -13,13 +13,12 @@ class Session extends Model
 {
     use HasFactory, DefaultQueryScopesTrait;
     protected $fillable = [
+
+                    'name',
                     'start_date',
                     'end_date',
                     'holiday_dates',
-
                   "is_active",
-
-
 
         "business_id",
         "created_by"
