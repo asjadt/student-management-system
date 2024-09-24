@@ -108,7 +108,7 @@ class CourseTitleController extends Controller
 
                 $course_title =  CourseTitle::create($request_data);
 
-                $course_title->subjects->sync($request_data["subject_ids"]);
+                $course_title->subjects()->sync($request_data["subject_ids"]);
 
 
                 return response($course_title, 201);
@@ -219,7 +219,7 @@ class CourseTitleController extends Controller
                         "message" => "something went wrong."
                     ], 500);
                 }
-                $course_title->subjects->sync($request_data["subject_ids"]);
+                $course_title->subjects()->sync($request_data["subject_ids"]);
 
                 return response($course_title, 201);
             });
