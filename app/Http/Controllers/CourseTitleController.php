@@ -418,7 +418,7 @@ class CourseTitleController extends Controller
 
 
             $course_titles = CourseTitle::
-               with("awarding_body")
+               with("awarding_body","subjects")
                ->when(empty(auth()->user()->business_id), function ($query) use ($request, $created_by) {
                 $query->when(auth()->user()->hasRole('superadmin'), function ($query) use ($request) {
                     $query->forSuperAdmin('course_titles');
@@ -690,7 +690,7 @@ class CourseTitleController extends Controller
                 ], 401);
             }
 
-            $course_title =  CourseTitle::where([
+            $course_title =  CourseTitle::with("subjects")->where([
                 "id" => $id,
 
             ])

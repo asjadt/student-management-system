@@ -16,6 +16,8 @@ class Semester extends Model
         'name',
         'start_date',
         'end_date',
+        'break_start_date',
+        'break_end_date',
 
         "business_id",
         "created_by"

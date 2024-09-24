@@ -45,6 +45,17 @@ class SemesterCreateRequest extends BaseFormRequest
             ],
 
 
+            'break_start_date' => [
+                'nullable',
+                'date',
+            ],
+
+            'break_end_date' => [
+                'nullable',
+                'date',
+            ],
+
+
             'course_ids' => [
                 'present',
                 'array',

@@ -44,6 +44,9 @@ class SemesterController extends Controller
      * @OA\Property(property="name", type="string", format="string", example="name"),
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
+     *      * @OA\Property(property="break_start_date", type="string", format="string", example="break_start_date"),
+     * @OA\Property(property="break_end_date", type="string", format="string", example="break_end_date"),
+
      * @OA\Property(property="course_ids", type="string", format="array", example={1,2,3})
      *
      *
@@ -113,7 +116,7 @@ class SemesterController extends Controller
 
                 $semester =  Semester::create($request_data);
 
-                $semester->courses->sync($request_data["course_ids"]);
+                $semester->courses()->sync($request_data["course_ids"]);
 
 
                 return response($semester, 201);
@@ -142,6 +145,8 @@ class SemesterController extends Controller
      * @OA\Property(property="name", type="string", format="string", example="name"),
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
+     *      *      * @OA\Property(property="break_start_date", type="string", format="string", example="break_start_date"),
+     * @OA\Property(property="break_end_date", type="string", format="string", example="break_end_date"),
 
      * @OA\Property(property="course_ids", type="string", format="array", example={1,2,3})
      *
@@ -206,6 +211,9 @@ class SemesterController extends Controller
                         "name",
                         "start_date",
                         "end_date",
+                        
+                        "break_start_date",
+                        "break_end_date",
 
                         // "is_default",
                         // "is_active",
