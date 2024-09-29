@@ -41,7 +41,7 @@ class InstallmentPlanController extends Controller
 *  @OA\RequestBody(
 *         required=true,
 *         @OA\JsonContent(
-
+ * @OA\Property(property="name", type="string", format="string", example="name"),
 * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
 * @OA\Property(property="number_of_installments", type="string", format="string", example="number_of_installments"),
 * @OA\Property(property="installment_amount", type="string", format="string", example="installment_amount"),
@@ -147,7 +147,7 @@ return $this->sendError($e, 500, $request);
 *         required=true,
 *         @OA\JsonContent(
 *      @OA\Property(property="id", type="number", format="number", example="1"),
-
+ * @OA\Property(property="name", type="string", format="string", example="name"),
 * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
 * @OA\Property(property="number_of_installments", type="string", format="string", example="number_of_installments"),
 * @OA\Property(property="installment_amount", type="string", format="string", example="installment_amount"),

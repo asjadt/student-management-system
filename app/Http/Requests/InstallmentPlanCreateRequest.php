@@ -31,6 +31,11 @@ $rules = [
 
 
 
+    'name' => [
+        'required',
+        'string',
+        'unique:installment_plans,name'
+    ],
         'course_id' => [
         'required',
         'numeric',

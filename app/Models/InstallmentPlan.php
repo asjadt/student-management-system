@@ -13,6 +13,7 @@ class InstallmentPlan extends Model
 {
     use HasFactory, DefaultQueryScopesTrait;
     protected $fillable = [
+                    'name',
                     'student_id',
                     'course_id',
                     'number_of_installments',
@@ -29,7 +30,7 @@ class InstallmentPlan extends Model
     ];
 
     protected $casts = [
-            
+
   ];
 
 

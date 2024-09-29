@@ -67,7 +67,11 @@ $rules = [
   },
 ],
 
-
+'name' => [
+    'required',
+    'string',
+    'unique:installment_plans,name,' . $this->id . ',id'
+],
 
 
 
