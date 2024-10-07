@@ -26,7 +26,7 @@ class StudentCreateRequest extends BaseFormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'first_name' => 'required|string',
             'middle_name' => 'nullable|string',
             'last_name' => 'required|string',
@@ -204,6 +204,15 @@ class StudentCreateRequest extends BaseFormRequest
 
 
         ];
+
+
+        if(empty(auth()->user())) {
+            $rules['business_id'] = 'required|numeric|exists:businesses,id';
+        }
+
+        return $rules;
+
+
     }
 
     public function messages()

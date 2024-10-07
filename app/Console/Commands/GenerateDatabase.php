@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Business;
+use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +28,13 @@ class GenerateDatabase extends Command
 
     // Retrieve the business_id from the command input
     $businessId = $this->argument('business_id');
+
+    $business = Business::where([
+        "id" => $businessId
+    ])
+    ->first();
+
+
     $databaseName = 'svs_business_' . $businessId;
 
     Log::info("Business ID: $businessId");
@@ -84,6 +93,18 @@ class GenerateDatabase extends Command
             '--database' => 'business',
             '--path' => 'database/business_migrations',
         ]);
+
+
+     
+        $userData = DB::connection('default')->table('users')
+        ->where([
+          "users.id" => $business->owner_id
+        ])
+        ->first();
+
+// Convert object to array
+User::create((array) $userData);
+
 
 
 

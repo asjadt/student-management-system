@@ -25706,80 +25706,6 @@
                 ]
             }
         },
-        "/v1.0/students/validate/school-id/{school_id}": {
-            "get": {
-                "tags": [
-                    "students"
-                ],
-                "summary": "This method is to validate student id",
-                "description": "This method is to validate student id",
-                "operationId": "validateStudentId",
-                "parameters": [
-                    {
-                        "name": "school_id",
-                        "in": "path",
-                        "description": "school_id",
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/v1.0/client/students": {
             "get": {
                 "tags": [
@@ -25893,6 +25819,333 @@
                         "description": "business_id",
                         "required": true,
                         "example": "business_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "students"
+                ],
+                "summary": "This method is to store student",
+                "description": "This method is to store student",
+                "operationId": "createStudentClient",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "John"
+                                    },
+                                    "middle_name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": ""
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Doe"
+                                    },
+                                    "nationality": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Country"
+                                    },
+                                    "course_fee": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Country"
+                                    },
+                                    "fee_paid": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Country"
+                                    },
+                                    "passport_number": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "ABC123"
+                                    },
+                                    "school_id": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "School123"
+                                    },
+                                    "date_of_birth": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2000-01-01"
+                                    },
+                                    "course_start_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-31"
+                                    },
+                                    "letter_issue_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-02-01"
+                                    },
+                                    "student_status_id": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": 1
+                                    },
+                                    "course_title_id": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": 1
+                                    },
+                                    "attachments": {
+                                        "type": "string",
+                                        "format": "array",
+                                        "example": [
+                                            "a.png",
+                                            "b.jpeg"
+                                        ]
+                                    },
+                                    "course_": {
+                                        "description": "course_duration",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "course_duration"
+                                    },
+                                    "course_detail": {
+                                        "description": "course_duration",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "course_detail"
+                                    },
+                                    "email": {
+                                        "description": "Email address of the student",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "student@example.com"
+                                    },
+                                    "contact_number": {
+                                        "description": "Contact number of the student",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "+1234567890"
+                                    },
+                                    "sex": {
+                                        "description": "Sex of the student",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Male"
+                                    },
+                                    "address": {
+                                        "description": "Address of the student",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "123 Main St, Apartment 4B"
+                                    },
+                                    "country": {
+                                        "description": "Country of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "United States"
+                                    },
+                                    "city": {
+                                        "description": "City of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "New York"
+                                    },
+                                    "postcode": {
+                                        "description": "Postal code of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "10001"
+                                    },
+                                    "lat": {
+                                        "description": "Latitude of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "40.712776"
+                                    },
+                                    "long": {
+                                        "description": "Longitude of the student's address",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "-74.005974"
+                                    },
+                                    "emergency_contact_details": {
+                                        "description": "Emergency contact details of the student",
+                                        "type": "object",
+                                        "example": {
+                                            "name": "John Doe",
+                                            "relation": "Father",
+                                            "contact": "+1234567890"
+                                        }
+                                    },
+                                    "previous_education_history": {
+                                        "description": "Previous education history of the student",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "example": {
+                                                "institution": "High School",
+                                                "year": "2019",
+                                                "grade": "A"
+                                            }
+                                        }
+                                    },
+                                    "passport_issue_date": {
+                                        "description": "Passport issue date of the student",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2020-01-01"
+                                    },
+                                    "passport_expiry_date": {
+                                        "description": "Passport expiry date of the student",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2030-01-01"
+                                    },
+                                    "place_of_issue": {
+                                        "description": "Place where the student's passport was issued",
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "New York, USA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/students/validate/school-id/{school_id}": {
+            "get": {
+                "tags": [
+                    "students"
+                ],
+                "summary": "This method is to validate student id",
+                "description": "This method is to validate student id",
+                "operationId": "validateStudentId",
+                "parameters": [
+                    {
+                        "name": "school_id",
+                        "in": "path",
+                        "description": "school_id",
+                        "required": true,
+                        "example": "1"
                     }
                 ],
                 "responses": {

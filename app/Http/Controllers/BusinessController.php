@@ -716,10 +716,11 @@ class BusinessController extends Controller
      */
     public function registerUserWithBusiness(AuthRegisterBusinessRequest $request) {
 
-
+        DB::beginTransaction();
         try{
+
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-     return  DB::transaction(function ()use (&$request) {
+
 
         if(!$request->user()->hasPermissionTo('business_create')){
             return response()->json([
@@ -875,12 +876,14 @@ class BusinessController extends Controller
 
     // }
 
-        return response([
+    DB::commit();
+        return response()->json([
             "user" => $user,
             "business" => $business
         ], 201);
-        });
+
         } catch(Exception $e){
+            DB::rollBack();
 
         return $this->sendError($e,500,$request);
         }
