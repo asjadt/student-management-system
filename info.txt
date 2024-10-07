@@ -57,7 +57,8 @@ git-push() {
     git commit -m "$commit_message"
     git push -u origin "$branch"
 }
-alias lamppmanager='cd /opt/lampp && sudo ./manager-linux-x64.run'
+alias lampp-start='cd /opt/lampp && sudo ./manager-linux-x64.run'
+
 
 
 

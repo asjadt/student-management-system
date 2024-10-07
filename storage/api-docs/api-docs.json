@@ -6335,6 +6335,11 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "teacher_id"
+                                    },
+                                    "semester_id": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "semester_id"
                                     }
                                 },
                                 "type": "object"
@@ -6440,6 +6445,11 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "teacher_id"
+                                    },
+                                    "semester_id": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "semester_id"
                                     }
                                 },
                                 "type": "object"
@@ -6490,6 +6500,121 @@
                     },
                     "404": {
                         "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/class-routines/week": {
+            "post": {
+                "tags": [
+                    "class_routines"
+                ],
+                "summary": "This method is to store class routines for each day of the week",
+                "description": "This method is to store class routines for multiple days with a common session ID",
+                "operationId": "createWeeklyClassRoutine",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "days": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "day_of_week": {
+                                                    "type": "string",
+                                                    "example": "Monday"
+                                                },
+                                                "start_time": {
+                                                    "type": "string",
+                                                    "format": "time",
+                                                    "example": "09:00"
+                                                },
+                                                "end_time": {
+                                                    "type": "string",
+                                                    "format": "time",
+                                                    "example": "10:00"
+                                                },
+                                                "room_number": {
+                                                    "type": "string",
+                                                    "example": "101"
+                                                },
+                                                "subject_id": {
+                                                    "type": "string",
+                                                    "example": "1"
+                                                },
+                                                "teacher_id": {
+                                                    "type": "string",
+                                                    "example": "2"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "semester_id": {
+                                        "type": "string",
+                                        "example": "semester_id"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
                         "content": {
                             "application/json": {
                                 "schema": {}
@@ -6800,6 +6925,15 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "awarding_body_id"
+                                    },
+                                    "subject_ids": {
+                                        "type": "string",
+                                        "format": "array",
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -6902,6 +7036,15 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "awarding_body_id"
+                                    },
+                                    "subject_ids": {
+                                        "type": "string",
+                                        "format": "array",
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -6967,7 +7110,7 @@
             }
         },
         "/v1.0/course-titles/toggle-active": {
-            "post": {
+            "put": {
                 "tags": [
                     "student.course_titles"
                 ],
@@ -7239,7 +7382,7 @@
             }
         },
         "/v1.0/course-titles/{ids}": {
-            "post": {
+            "delete": {
                 "tags": [
                     "student.course_titles"
                 ],
@@ -12350,6 +12493,11 @@
                                         "format": "number",
                                         "example": "1"
                                     },
+                                    "name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "name"
+                                    },
                                     "course_id": {
                                         "type": "string",
                                         "format": "string",
@@ -12450,6 +12598,11 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "name"
+                                    },
                                     "course_id": {
                                         "type": "string",
                                         "format": "string",
@@ -21952,12 +22105,17 @@
                                         "format": "string",
                                         "example": "end_date"
                                     },
-                                    "course_id": {
+                                    "break_start_date": {
                                         "type": "string",
                                         "format": "string",
-                                        "example": "course_id"
+                                        "example": "break_start_date"
                                     },
-                                    "subject_ids": {
+                                    "break_end_date": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "break_end_date"
+                                    },
+                                    "course_ids": {
                                         "type": "string",
                                         "format": "array",
                                         "example": [
@@ -22056,12 +22214,17 @@
                                         "format": "string",
                                         "example": "end_date"
                                     },
-                                    "course_id": {
+                                    "break_start_date": {
                                         "type": "string",
                                         "format": "string",
-                                        "example": "course_id"
+                                        "example": "break_start_date"
                                     },
-                                    "subject_ids": {
+                                    "break_end_date": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "break_end_date"
+                                    },
+                                    "course_ids": {
                                         "type": "string",
                                         "format": "array",
                                         "example": [
@@ -22223,6 +22386,501 @@
                 "summary": "This method is to delete semester by id",
                 "description": "This method is to delete semester by id",
                 "operationId": "deleteSemestersByIds",
+                "parameters": [
+                    {
+                        "name": "ids",
+                        "in": "path",
+                        "description": "ids",
+                        "required": true,
+                        "example": "1,2,3"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/sessions": {
+            "get": {
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "This method is to get sessions  ",
+                "description": "This method is to get sessions ",
+                "operationId": "getSessions",
+                "parameters": [
+                    {
+                        "name": "start_start_date",
+                        "in": "query",
+                        "description": "start_start_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "end_start_date",
+                        "in": "query",
+                        "description": "end_start_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_end_date",
+                        "in": "query",
+                        "description": "start_end_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "end_end_date",
+                        "in": "query",
+                        "description": "end_end_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "This method is to update sessions ",
+                "description": "This method is to update sessions ",
+                "operationId": "updateSession",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": "1"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "name"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "start_date"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "end_date"
+                                    },
+                                    "holiday_dates": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "holiday_dates"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "This method is to store sessions",
+                "description": "This method is to store sessions",
+                "operationId": "createSession",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "name"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "start_date"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "end_date"
+                                    },
+                                    "holiday_dates": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "holiday_dates"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/sessions/toggle-active": {
+            "put": {
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "This method is to toggle sessions",
+                "description": "This method is to toggle sessions",
+                "operationId": "toggleActiveSession",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "format": "number",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/sessions/{ids}": {
+            "delete": {
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "This method is to delete session by id",
+                "description": "This method is to delete session by id",
+                "operationId": "deleteSessionsByIds",
                 "parameters": [
                     {
                         "name": "ids",
@@ -26702,7 +27360,7 @@
             }
         },
         "/v1.0/student-statuses-update": {
-            "post": {
+            "put": {
                 "tags": [
                     "student.student_statuses"
                 ],
@@ -26799,7 +27457,7 @@
             }
         },
         "/v1.0/student-statuses/toggle-active": {
-            "post": {
+            "put": {
                 "tags": [
                     "student.student_statuses"
                 ],
@@ -27071,7 +27729,7 @@
             }
         },
         "/v1.0/student-statuses/{ids}": {
-            "post": {
+            "delete": {
                 "tags": [
                     "student.student_statuses"
                 ],
