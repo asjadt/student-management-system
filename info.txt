@@ -46,3 +46,18 @@ day_of_week
 start_time
 end_time
 room_number
+
+
+
+alias zip-laravel='zip -r laravel_backup.zip app bootstrap config database reso>
+git-push() {
+    commit_message=${1:-"update"}
+    branch=${2:-"main"}
+    git add .
+    git commit -m "$commit_message"
+    git push -u origin "$branch"
+}
+alias lamppmanager='cd /opt/lampp && sudo ./manager-linux-x64.run'
+
+
+
