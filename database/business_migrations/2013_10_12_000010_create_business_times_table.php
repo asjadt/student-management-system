@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class CreateBusinessTimesTable extends Migration
@@ -20,9 +22,16 @@ class CreateBusinessTimesTable extends Migration
             $table->time('end_at')->nullable();
             $table->boolean("is_weekend");
             $table->unsignedBigInteger("business_id");
-            $table->foreign('business_id')->references('id')->on('businesses')->onDelete('cascade');
+
+               $table->foreign('business_id')
+               ->references('id')
+               ->on(env('DB_DATABASE') . '.businesses')
+               ->onDelete('cascade');
             $table->timestamps();
         });
+
+
+
     }
 
     /**
@@ -32,6 +41,7 @@ class CreateBusinessTimesTable extends Migration
      */
     public function down()
     {
+
         Schema::dropIfExists('business_times');
     }
 }

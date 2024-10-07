@@ -4,6 +4,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class CreateLetterTemplatesTable extends Migration
@@ -24,18 +26,23 @@ class CreateLetterTemplatesTable extends Migration
             $table->boolean('is_active')->default(false);
             $table->boolean('is_default')->default(false);
 
-            $table->foreignId('business_id')
-            ->nullable() // Make the column nullable
-            ->constrained('businesses')
-            ->onDelete('cascade');
+
 
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('letter_templates')->onDelete('cascade');
+
+            $table->unsignedBigInteger("business_id")->nullable(true);
+            $table->foreign('business_id')
+            ->references('id')
+            ->on(env('DB_DATABASE') . '.businesses')
+            ->onDelete('cascade');
 
             $table->unsignedBigInteger("created_by");
             $table->softDeletes();
             $table->timestamps();
         });
+
+
     }
 
     /**
@@ -45,6 +52,7 @@ class CreateLetterTemplatesTable extends Migration
      */
     public function down()
     {
+
         Schema::dropIfExists('letter_templates');
     }
 }

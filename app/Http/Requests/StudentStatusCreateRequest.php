@@ -33,7 +33,7 @@ class StudentStatusCreateRequest extends BaseFormRequest
                 function ($attribute, $value, $fail) {
 
                     $exists = StudentStatus::where("student_statuses.name",$value)
-                  
+
                         ->where("business_id",auth()->user()->business_id)
 
 
@@ -51,6 +51,10 @@ class StudentStatusCreateRequest extends BaseFormRequest
             'color' => 'required|string',
         ];
 
+        if(empty(auth()->user())) {
+            $rules['business_id'] = 'required|numeric|exists:businesses,id';
+        }
+
         // if (!empty(auth()->user()->business_id)) {
         //     $rules['name'] .= '|unique:student_statuses,name,NULL,id,business_id,' . auth()->user()->business_id;
         // } else {
@@ -58,7 +62,7 @@ class StudentStatusCreateRequest extends BaseFormRequest
         // }
 
 
-return $rules;
+       return $rules;
 
 
 

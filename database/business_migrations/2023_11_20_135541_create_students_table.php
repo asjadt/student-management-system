@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class CreateStudentsTable extends Migration
@@ -54,9 +56,10 @@ class CreateStudentsTable extends Migration
             // Business and User References
             $table->unsignedBigInteger('business_id');
             $table->foreign('business_id')
-                ->references('id')
-                ->on('businesses')
-                ->onDelete('cascade');
+            ->references('id')
+            ->on(env('DB_DATABASE') . '.businesses')
+            ->onDelete('cascade');
+
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')
                 ->references('id')
@@ -71,6 +74,9 @@ class CreateStudentsTable extends Migration
             $table->softDeletes();
         });
 
+
+
+
     }
 
     /**
@@ -80,6 +86,7 @@ class CreateStudentsTable extends Migration
      */
     public function down()
     {
+
         Schema::dropIfExists('students');
     }
 }

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 class StudentStatusController extends Controller
 {
     use ErrorUtil, UserActivityUtil, BusinessUtil, BasicUtil;
-    /**
+        /**
      *
      * @OA\Post(
      *      path="/v1.0/student-statuses",
@@ -80,7 +80,104 @@ class StudentStatusController extends Controller
      *     )
      */
 
-    public function createStudentStatus(StudentStatusCreateRequest $request)
+     public function createStudentStatus(StudentStatusCreateRequest $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+             return DB::transaction(function () use ($request) {
+                 if (!$request->user()->hasPermissionTo('student_status_create')) {
+                     return response()->json([
+                         "message" => "You can not perform this action"
+                     ], 401);
+                 }
+
+                 $request_data = $request->validated();
+
+
+                 $request_data["is_active"] = 1;
+                 $request_data["is_default"] = 0;
+                 $request_data["created_by"] = $request->user()->id;
+                 $request_data["business_id"] = $request->user()->business_id;
+
+                 if (empty($request->user()->business_id)) {
+                     $request_data["business_id"] = NULL;
+                     if ($request->user()->hasRole('superadmin')) {
+                         $request_data["is_default"] = 1;
+                     }
+                 }
+
+
+
+                 $student_status =  StudentStatus::create($request_data);
+
+
+
+
+                 return response($student_status, 201);
+             });
+         } catch (Exception $e) {
+             error_log($e->getMessage());
+             return $this->sendError($e, 500, $request);
+         }
+     }
+    /**
+     *
+     * @OA\Post(
+     *      path="/v1.0/client/student-statuses",
+     *      operationId="createStudentStatusClient",
+     *      tags={"student.student_statuses"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to store student status",
+     *      description="This method is to store student status",
+     *
+     *  @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+ * @OA\Property(property="name", type="string", format="string", example="tttttt"),
+ *  * @OA\Property(property="color", type="string", format="string", example="red"),
+ * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;")
+ *
+ *
+     *
+     *         ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function createStudentStatusClient(StudentStatusCreateRequest $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
@@ -96,15 +193,9 @@ class StudentStatusController extends Controller
 
                 $request_data["is_active"] = 1;
                 $request_data["is_default"] = 0;
-                $request_data["created_by"] = $request->user()->id;
-                $request_data["business_id"] = $request->user()->business_id;
+                $request_data["created_by"] = NULL;
 
-                if (empty($request->user()->business_id)) {
-                    $request_data["business_id"] = NULL;
-                    if ($request->user()->hasRole('superadmin')) {
-                        $request_data["is_default"] = 1;
-                    }
-                }
+
 
 
 

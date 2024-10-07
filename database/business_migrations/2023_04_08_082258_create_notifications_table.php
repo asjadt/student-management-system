@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class CreateNotificationsTable extends Migration
@@ -31,7 +33,11 @@ class CreateNotificationsTable extends Migration
 
 
             $table->unsignedBigInteger("business_id")->nullable();
-            $table->foreign('business_id')->references('id')->on('businesses')->onDelete('cascade');
+            $table->foreign('business_id')
+            ->references('id')
+            ->on(env('DB_DATABASE') . '.businesses')
+            ->onDelete('cascade');
+
 
             $table->boolean("is_system_generated")->nullable();
 
@@ -46,6 +52,9 @@ class CreateNotificationsTable extends Migration
 
             $table->timestamps();
         });
+
+
+
     }
 
     /**
@@ -55,6 +64,7 @@ class CreateNotificationsTable extends Migration
      */
     public function down()
     {
+
         Schema::dropIfExists('notifications');
     }
 }

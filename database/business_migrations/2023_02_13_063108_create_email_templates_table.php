@@ -23,7 +23,9 @@ class CreateEmailTemplatesTable extends Migration
 
 
             $table->unsignedBigInteger("wrapper_id");
-            $table->foreign('wrapper_id')->references('id')->on('email_template_wrappers')->onDelete('restrict');
+            $table->foreign('wrapper_id')->references('id')->on(env('DB_DATABASE') . '.email_template_wrappers')->onDelete('restrict');
+           
+
             $table->timestamps();
         });
         DB::table('email_templates')->insert(

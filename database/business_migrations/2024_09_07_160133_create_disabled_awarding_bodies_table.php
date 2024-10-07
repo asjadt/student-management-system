@@ -3,6 +3,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class CreateDisabledAwardingBodiesTable extends Migration
@@ -21,10 +23,12 @@ class CreateDisabledAwardingBodiesTable extends Migration
             ->constrained('awarding_bodies')
             ->onDelete('cascade');
 
-            $table->foreignId('business_id')
-            ->constrained('businesses')
-            ->onDelete('cascade');
 
+            $table->unsignedBigInteger("business_id")->nullable(true);
+            $table->foreign('business_id')
+            ->references('id')
+            ->on(env('DB_DATABASE') . '.businesses')
+            ->onDelete('cascade');
             $table->foreignId('created_by')
             ->nullable()
             ->constrained('users')
@@ -33,6 +37,8 @@ class CreateDisabledAwardingBodiesTable extends Migration
 
             $table->timestamps();
         });
+
+
     }
 
     /**
@@ -42,6 +48,7 @@ class CreateDisabledAwardingBodiesTable extends Migration
      */
     public function down()
     {
+
         Schema::dropIfExists('disabled_awarding_bodies');
     }
 }

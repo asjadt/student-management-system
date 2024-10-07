@@ -566,7 +566,7 @@ trait BusinessUtil
 
 
         foreach ($defaultSettingLeaves as $defaultSettingLeave) {
-            error_log($defaultSettingLeave);
+        
             $insertableData = [
                 'start_month' => $defaultSettingLeave->start_month,
                 'approval_level' => $defaultSettingLeave->approval_level,
@@ -710,7 +710,7 @@ trait BusinessUtil
     {
 
 
-        
+
         $work_location =  WorkLocation::create([
             'name' => ($business_name . " " . "Office"),
             "is_active" => 1,

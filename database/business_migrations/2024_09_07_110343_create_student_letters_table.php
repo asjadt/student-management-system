@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class CreateStudentLettersTable extends Migration
@@ -23,20 +25,24 @@ class CreateStudentLettersTable extends Migration
             $table->text('letter_content');
             $table->string('status');
             $table->boolean('sign_required');
-            
+
             $table->foreignId('student_id')
             ->constrained('students')
             ->onDelete('cascade');
 
             $table->json('attachments');
-            $table->foreignId('business_id')
-            ->constrained('businesses')
-            ->onDelete('cascade');
 
+            $table->unsignedBigInteger("business_id")->nullable(true);
+            $table->foreign('business_id')
+            ->references('id')
+            ->on(env('DB_DATABASE') . '.businesses')
+            ->onDelete('cascade');
             $table->unsignedBigInteger("created_by");
             $table->softDeletes();
             $table->timestamps();
         });
+
+
     }
 
     /**
@@ -46,6 +52,7 @@ class CreateStudentLettersTable extends Migration
      */
     public function down()
     {
+
         Schema::dropIfExists('student_letters');
     }
 }

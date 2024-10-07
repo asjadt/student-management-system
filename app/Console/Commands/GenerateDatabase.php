@@ -26,7 +26,7 @@ class GenerateDatabase extends Command
 
     // Retrieve the business_id from the command input
     $businessId = $this->argument('business_id');
-    $databaseName = 'business_' . $businessId;
+    $databaseName = 'svs_business_' . $businessId;
 
     Log::info("Business ID: $businessId");
     Log::info("Database name: $databaseName");
@@ -84,6 +84,9 @@ class GenerateDatabase extends Command
             '--database' => 'business',
             '--path' => 'database/business_migrations',
         ]);
+
+
+
 
     } catch (Exception $e) {
         Log::error("An error occurred: " . $e->getMessage());

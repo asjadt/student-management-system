@@ -22,6 +22,7 @@ class CreateActivityLogsTable extends Migration
 
 
 
+
             $table->text("user")->nullable();
             $table->unsignedBigInteger("user_id")->nullable();
             $table->text("activity")->nullable();
