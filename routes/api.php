@@ -106,8 +106,7 @@ Route::post('/v1.0/business-image-multiple', [BusinessController::class, "create
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
 // Protected Routes
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
-Route::middleware(['auth:api',"
-.db"])->group(function () {
+Route::middleware(['auth:api',"setup.db"])->group(function () {
     Route::post('/v1.0/logout', [AuthController::class, "logout"]);
     Route::get('/v1.0/user', [AuthController::class, "getUser"]);
     Route::patch('/auth/changepassword', [AuthController::class, "changePassword"]);
