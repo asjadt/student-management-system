@@ -210,7 +210,7 @@ class AuthController extends Controller
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
 
 
-            if(!empty($request->business_id)) {
+            if(!empty($request->business_id) && env("SELF_DB") == true) {
                 $databaseName = 'svs_business_' . $request->business_id;
 
                 // Dynamically set the default database connection configuration
@@ -1329,6 +1329,7 @@ try{
                 'first_Name' ,
                 'middle_Name',
                 'last_Name',
+                'email',
                 'password',
                 'phone',
                 'address_line_1',
