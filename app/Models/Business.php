@@ -12,7 +12,7 @@ class Business extends Model
 
     use HasFactory,  SoftDeletes;
 
-    protected $connection = 'mysql';
+    protected $connection = 'default';
     protected $fillable = [
         "name",
         "about",

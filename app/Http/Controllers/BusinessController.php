@@ -716,7 +716,6 @@ class BusinessController extends Controller
      */
     public function registerUserWithBusiness(AuthRegisterBusinessRequest $request) {
 
-        DB::beginTransaction();
         try{
 
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
@@ -822,6 +821,7 @@ class BusinessController extends Controller
             $role  = Role::create($insertableData);
 
 
+
             $permissions = $defaultRole->permissions;
             foreach ($permissions as $permission) {
                 if (!$role->hasPermissionTo($permission)) {
@@ -872,18 +872,18 @@ class BusinessController extends Controller
 
 
 
-
+        Log::info("Business created");
 
     // }
 
-    DB::commit();
+
         return response()->json([
             "user" => $user,
             "business" => $business
         ], 201);
 
         } catch(Exception $e){
-            DB::rollBack();
+
 
         return $this->sendError($e,500,$request);
         }

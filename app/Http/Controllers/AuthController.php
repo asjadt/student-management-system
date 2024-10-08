@@ -23,6 +23,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -207,6 +208,27 @@ class AuthController extends Controller
 
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+
+
+            if(!empty($request->business_id)) {
+                $databaseName = 'svs_business_' . $request->business_id;
+
+                // Dynamically set the default database connection configuration
+                $adminUser = env('DB_USERNAME', 'root'); // Admin user with privileges
+                $adminPassword = env('DB_PASSWORD', '');
+
+                // Dynamically set the default database connection configuration
+
+                Config::set('database.connections.mysql.database', $databaseName);
+                Config::set('database.connections.mysql.username', $adminUser);
+                Config::set('database.connections.mysql.password', $adminPassword);
+
+                // Reconnect to the database using the updated configuration
+                DB::purge('mysql');
+                DB::reconnect('mysql');
+            }
+
+
             $loginData = $request->validate([
                 'email' => 'email|required',
                 'password' => 'required'
@@ -300,8 +322,6 @@ class AuthController extends Controller
                 }
 
             }
-
-
 
 
 

@@ -658,6 +658,14 @@ class StudentController extends Controller
      * required=true,
      * example="ASC"
      * ),
+     *      *   * *  @OA\Parameter(
+     * name="is_online_registered",
+     * in="query",
+     * description="is_online_registered",
+     * required=true,
+     * example=""
+     * ),
+     *
 
      *      * *  @OA\Parameter(
      * name="start_date",
@@ -821,6 +829,14 @@ class StudentController extends Controller
                 ->when(!empty($request->student_status_id), function ($query) use ($request) {
                     return $query->where('students.student_status_id',$request->student_status_id);
                 })
+                ->when(request()->boolean("is_online_registered"), function ($query) use ($request) {
+                    return $query->whereNull('students.student_status_id');
+                })
+
+
+
+
+
                 ->when(!empty($request->course_title_id), function ($query) use ($request) {
                     return $query->where('students.course_title_id',$request->course_title_id);
                 })

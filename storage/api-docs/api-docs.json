@@ -8000,6 +8000,15 @@
                 "summary": "get all dashboard data combined",
                 "description": "get all dashboard data combined",
                 "operationId": "getBusinessAdminDashboardData",
+                "parameters": [
+                    {
+                        "name": "business_id",
+                        "in": "query",
+                        "description": "business_id",
+                        "required": true,
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -25073,6 +25082,13 @@
                         "description": "date_of_birth",
                         "required": true,
                         "example": "ASC"
+                    },
+                    {
+                        "name": "is_online_registered",
+                        "in": "query",
+                        "description": "is_online_registered",
+                        "required": true,
+                        "example": ""
                     },
                     {
                         "name": "start_date",

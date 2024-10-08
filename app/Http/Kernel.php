@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
+        'custom.auth' => \App\Http\Middleware\CustomAuthMiddleware::class,
         'setup.db' => \App\Http\Middleware\SetDatabaseConnection::class,
 
         'swagger' => \App\Http\Middleware\SwaggerMiddleware::class,
