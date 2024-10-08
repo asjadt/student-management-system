@@ -344,7 +344,7 @@ $datediff = $now - $user_created_date;
 
             return response()->json(['data' => $user,   "ok" => true], 200);
         } catch (Exception $e) {
-
+             error_log($e->getMessage());
             return $this->sendError($e, 500,$request);
         }
     }
