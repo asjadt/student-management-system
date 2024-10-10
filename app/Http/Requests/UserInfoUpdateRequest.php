@@ -28,7 +28,7 @@ class UserInfoUpdateRequest extends BaseFormRequest
             'first_Name' => 'required|string|max:255',
             'middle_Name' => 'nullable|string|max:255',
             'last_Name' => 'required|string|max:255',
-            // 'email' => 'required|string|email|indisposable|max:255|unique:users',
+            'email' => 'required|string|email|indisposable|max:255|unique:users',
             'password' => 'nullable|confirmed|string|min:6',
             'phone' => 'required|string',
             'image' => 'nullable|string',
