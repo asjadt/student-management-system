@@ -512,11 +512,6 @@ $letter_template->save();
      *       security={
      *           {"bearerAuth": {}}
      *       },
-
-
-
-
-
      *      summary="This method is to get letter templates  ",
      *      description="This method is to get letter templates ",
      *
@@ -566,8 +561,8 @@ $letter_template->save();
                  ], 401);
              }
 
- $letterTemplateVariables = $this->getLetterTemplateVariablesFunc();
 
+       $letterTemplateVariables = $this->getLetterTemplateVariablesFuncV2();
 
             return response()->json($letterTemplateVariables, 200);
 

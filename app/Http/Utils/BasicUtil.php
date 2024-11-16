@@ -7,7 +7,8 @@ use App\Models\Module;
 
 trait BasicUtil
 {
-    function toggleActivation($modelClass, $disabledModelClass, $modelIdName, $modelId, $authUser) {
+    function toggleActivation($modelClass, $disabledModelClass, $modelIdName, $modelId, $authUser)
+    {
         // Fetch the model instance
         $modelInstance = $modelClass::where('id', $modelId)->first();
         if (!$modelInstance) {
@@ -100,45 +101,45 @@ trait BasicUtil
     {
         $letterTemplateVariables = [
             'PERSONAL DETAILS',
-    '[FIRST_NAME]',
-    '[MIDDLE_NAME]',
-    '[LAST_NAME]',
-    '[NATIONALITY]',
-    '[COURSE_FEE]',
-    '[FEE_PAID]',
-    '[PASSPORT_NUMBER]',
-    '[DATE_OF_BIRTH]',
-    '[COURSE_START_DATE]',
-    '[LETTER_ISSUE_DATE]',
-    '[STUDENT_STATUS]',
+            '[FIRST_NAME]',
+            '[MIDDLE_NAME]',
+            '[LAST_NAME]',
+            '[NATIONALITY]',
+            '[COURSE_FEE]',
+            '[FEE_PAID]',
+            '[PASSPORT_NUMBER]',
+            '[DATE_OF_BIRTH]',
+            '[COURSE_START_DATE]',
+            '[LETTER_ISSUE_DATE]',
+            '[STUDENT_STATUS]',
 
-    '[EMAIL]',
-    '[CONTACT_NUMBER]',
-    '[SEX]',
+            '[EMAIL]',
+            '[CONTACT_NUMBER]',
+            '[SEX]',
 
-    'ADDRESS',
-    '[ADDRESS]',
-    '[CITY]',
-    '[POSTCODE]',
-    '[COUNTRY]',
+            'ADDRESS',
+            '[ADDRESS]',
+            '[CITY]',
+            '[POSTCODE]',
+            '[COUNTRY]',
 
-    'COURSE DETAILS',
-    '[AWARDING_BODY]',
-    '[COURSE_TITLE]',
-    '[COURSE_DURATION]',
-    '[COURSE_DETAIL]',
+            'COURSE DETAILS',
+            '[AWARDING_BODY]',
+            '[COURSE_TITLE]',
+            '[COURSE_DURATION]',
+            '[COURSE_DETAIL]',
 
-    'COMPANY DETAILS',
-    '[COMPANY_NAME]',
-    '[COMPANY_ADDRESS_LINE_1]',
-    '[COMPANY_CITY]',
-    '[COMPANY_POSTCODE]',
-    '[COMPANY_COUNTRY]',
+            'COMPANY DETAILS',
+            '[COMPANY_NAME]',
+            '[COMPANY_ADDRESS_LINE_1]',
+            '[COMPANY_CITY]',
+            '[COMPANY_POSTCODE]',
+            '[COMPANY_COUNTRY]',
 
-    'PASSPORT DETAILS',
-    '[PASSPORT_ISSUE_DATE]',
-    '[PASSPORT_EXPIRY_DATE]',
-    '[PLACE_OF_ISSUE]',
+            'PASSPORT DETAILS',
+            '[PASSPORT_ISSUE_DATE]',
+            '[PASSPORT_EXPIRY_DATE]',
+            '[PLACE_OF_ISSUE]',
 
 
 
@@ -159,7 +160,53 @@ trait BasicUtil
 
         return $letterTemplateVariables;
     }
+    public function getLetterTemplateVariablesFuncV2()
+    {
+        $letterTemplateVariables = [
+            'Personal Details' => [
+                '[FIRST_NAME]',
+                '[MIDDLE_NAME]',
+                '[LAST_NAME]',
+                '[NATIONALITY]',
+                '[COURSE_FEE]',
+                '[FEE_PAID]',
+                '[PASSPORT_NUMBER]',
+                '[DATE_OF_BIRTH]',
+                '[COURSE_START_DATE]',
+                '[LETTER_ISSUE_DATE]',
+                '[STUDENT_STATUS]',
+                '[EMAIL]',
+                '[CONTACT_NUMBER]',
+                '[SEX]',
+            ],
+            'Address' => [
+                '[ADDRESS]',
+                '[CITY]',
+                '[POSTCODE]',
+                '[COUNTRY]',
+            ],
+            'Course Details' => [
+                '[AWARDING_BODY]',
+                '[COURSE_TITLE]',
+                '[COURSE_DURATION]',
+                '[COURSE_DETAIL]',
+            ],
+            'Company Details' => [
+                '[COMPANY_NAME]',
+                '[COMPANY_ADDRESS_LINE_1]',
+                '[COMPANY_CITY]',
+                '[COMPANY_POSTCODE]',
+                '[COMPANY_COUNTRY]',
+            ],
+            'Passport Details' => [
+                '[PASSPORT_ISSUE_DATE]',
+                '[PASSPORT_EXPIRY_DATE]',
+                '[PLACE_OF_ISSUE]',
+            ],
+        ];
 
+        return $letterTemplateVariables;
+    }
 
     // this function do all the task and returns transaction id or -1
 
