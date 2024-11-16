@@ -163,7 +163,7 @@ trait BasicUtil
     public function getLetterTemplateVariablesFuncV2()
     {
         $letterTemplateVariables = [
-            'Personal Details' => [
+            'Personal_Details' => [
                 '[FIRST_NAME]',
                 '[MIDDLE_NAME]',
                 '[LAST_NAME]',
@@ -185,20 +185,20 @@ trait BasicUtil
                 '[POSTCODE]',
                 '[COUNTRY]',
             ],
-            'Course Details' => [
+            'Course_Details' => [
                 '[AWARDING_BODY]',
                 '[COURSE_TITLE]',
                 '[COURSE_DURATION]',
                 '[COURSE_DETAIL]',
             ],
-            'Company Details' => [
+            'Company_Details' => [
                 '[COMPANY_NAME]',
                 '[COMPANY_ADDRESS_LINE_1]',
                 '[COMPANY_CITY]',
                 '[COMPANY_POSTCODE]',
                 '[COMPANY_COUNTRY]',
             ],
-            'Passport Details' => [
+            'Passport_Details' => [
                 '[PASSPORT_ISSUE_DATE]',
                 '[PASSPORT_EXPIRY_DATE]',
                 '[PLACE_OF_ISSUE]',
