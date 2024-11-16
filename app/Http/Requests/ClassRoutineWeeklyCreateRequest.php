@@ -52,16 +52,30 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
                 'numeric',
                 'exists:subjects,id',
             ],
+            'days.*.course_id' => [
+                'required',
+                'numeric',
+                'exists:course_titles,id',
+            ],
+
+
             'days.*.teacher_id' => [
                 'required',
                 'numeric',
                 'exists:users,id',
             ],
+
             'semester_id' => [
                 'nullable',
                 'numeric',
                 'exists:semesters,id',
             ],
+            'session_id' => [
+                'nullable',
+                'numeric',
+                'exists:sessions,id',
+            ],
+
         ];
     }
 

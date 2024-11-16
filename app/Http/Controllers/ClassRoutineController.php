@@ -45,8 +45,13 @@ class ClassRoutineController extends Controller
      * @OA\Property(property="end_time", type="string", format="string", example="end_time"),
      * @OA\Property(property="room_number", type="string", format="string", example="room_number"),
      * @OA\Property(property="subject_id", type="string", format="string", example="subject_id"),
+   * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
+     *
      * @OA\Property(property="teacher_id", type="string", format="string", example="teacher_id"),
      * @OA\Property(property="semester_id", type="string", format="string", example="semester_id"),
+     * @OA\Property(property="session_id", type="string", format="string", example="session_id"),
+     *
+     *
      *
      *
      *
@@ -155,10 +160,14 @@ class ClassRoutineController extends Controller
  *                 @OA\Property(property="end_time", type="string", format="time", example="10:00"),
  *                 @OA\Property(property="room_number", type="string", example="101"),
  *                 @OA\Property(property="subject_id", type="string", example="1"),
+ *  *                 @OA\Property(property="course_id", type="string", example="1"),
+ *
  *                 @OA\Property(property="teacher_id", type="string", example="2"),
  *             )
  *         ),
- *         @OA\Property(property="semester_id", type="string", example="semester_id")
+ *         @OA\Property(property="semester_id", type="string", example="semester_id"),
+ *         @OA\Property(property="session_id", type="string", example="session_id"),
+ *
  *     ),
  * ),
  *
@@ -211,12 +220,16 @@ class ClassRoutineController extends Controller
              $request_data = $request->validated();
 
              $semester_id = $request_data['semester_id'];
+             $session_id = $request_data['session_id'];
+
              $days = $request_data['days'];
 
              $created_routines = [];
 
              foreach ($days as $day) {
                  $day['semester_id'] = $semester_id;
+                 $day['session_id'] = $session_id;
+
                  $day['is_active'] = 1;
                  $day['created_by'] = auth()->user()->id;
                  $day['business_id'] = auth()->user()->business_id ?? null;
@@ -266,8 +279,12 @@ class ClassRoutineController extends Controller
      * @OA\Property(property="end_time", type="string", format="string", example="end_time"),
      * @OA\Property(property="room_number", type="string", format="string", example="room_number"),
      * @OA\Property(property="subject_id", type="string", format="string", example="subject_id"),
+    * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
+     *
      * @OA\Property(property="teacher_id", type="string", format="string", example="teacher_id"),
      * @OA\Property(property="semester_id", type="string", format="string", example="semester_id"),
+      * @OA\Property(property="session_id", type="string", format="string", example="session_id"),
+     *
      *
      *         ),
      *      ),
@@ -334,8 +351,10 @@ class ClassRoutineController extends Controller
                         "end_time",
                         "room_number",
                         "subject_id",
+                        "course_id",
                         "teacher_id",
                         "semester_id",
+                        "session_id"
                         // "is_default",
                         // "is_active",
                         // "business_id",

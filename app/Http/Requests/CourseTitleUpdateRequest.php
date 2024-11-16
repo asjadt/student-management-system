@@ -162,6 +162,8 @@ class CourseTitleUpdateRequest extends FormRequest
                "numeric",
                "exists:subjects,id"
             ],
+          
+
 
         ];
 

@@ -820,8 +820,6 @@ class BusinessController extends Controller
             ];
             $role  = Role::create($insertableData);
 
-
-
             $permissions = $defaultRole->permissions;
             foreach ($permissions as $permission) {
                 if (!$role->hasPermissionTo($permission)) {
@@ -829,12 +827,6 @@ class BusinessController extends Controller
                 }
             }
         }
-
-
-
-
-
-
 
 
 
@@ -858,20 +850,12 @@ class BusinessController extends Controller
 
 
     //  if($request_data['user']['send_password']) {
-
-
-
         if(env("SEND_EMAIL") == true) {
             Mail::to($request_data['user']['email'])->send(new SendPassword($user,$password));
         }
-
-
         if(env("SELF_DB") == true) {
         Artisan::call(('generate:database '. $business->id));
         }
-
-
-
         Log::info("Business created");
 
     // }

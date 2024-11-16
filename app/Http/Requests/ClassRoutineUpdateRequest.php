@@ -121,8 +121,14 @@ $rules = [
     'required',
     'numeric',
     'exists:subjects,id'
-
 ],
+
+'course_id' => [
+    'required',
+    'numeric',
+    'exists:course_titles,id',
+],
+
 
     'teacher_id' => [
     'required',
@@ -137,7 +143,11 @@ $rules = [
     "exists:semesters,id"
 
 ],
-
+'session_id' => [
+    'nullable',
+    'numeric',
+    'exists:sessions,id',
+],
 
 
 

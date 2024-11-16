@@ -41,7 +41,6 @@ class CreateClassRoutinesTable extends Migration
 
 
 
-
             $table->foreignId('teacher_id')
             ->constrained('users')
             ->onDelete('cascade');
@@ -50,11 +49,7 @@ class CreateClassRoutinesTable extends Migration
             ->constrained('subjects')
             ->onDelete('cascade');
 
-
-
-
-
-                            $table->boolean('is_active')->default(false);
+            $table->boolean('is_active')->default(false);
 
 
 

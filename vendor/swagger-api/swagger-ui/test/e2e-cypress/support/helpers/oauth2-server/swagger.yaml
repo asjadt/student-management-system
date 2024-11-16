@@ -1,10 +1,10 @@
-openapi: 3.0.0
+swagger: "2.0"
 host: localhost:3231
 paths:
   /password:
     get:
       summary: OAuth2 Password
-      security:
+      security: 
       - oauthPassword: []
       responses:
         200:
@@ -14,7 +14,7 @@ paths:
   /application:
     get:
       summary: OAuth2 Application
-      security:
+      security: 
       - oauthApplication: []
       responses:
         200:

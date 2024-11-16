@@ -73,13 +73,8 @@ class SubjectUpdateRequest extends BaseFormRequest
                 'required',
                 'string',
 
-
-
-                new ValidateSubjectName(NULL)
-
-
-
-
+                new ValidateSubjectName($this->id)
+                
             ],
 
             'description' => [

@@ -39,9 +39,9 @@ class AddFieldsToStudentsTable extends Migration
             $table->json('previous_education_history')->nullable();
 
             // Passport Information
-            $table->date('passport_issue_date');
-            $table->date('passport_expiry_date');
-            $table->string('place_of_issue');
+            $table->date('passport_issue_date')->nullable();
+            $table->date('passport_expiry_date')->nullable();
+            $table->string('place_of_issue')->nullable();
         });
     }
 

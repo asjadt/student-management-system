@@ -58,14 +58,12 @@ class ValidateAwardingBodyName implements Rule
 
         if (!empty($data)) {
 
-
             if ($data->is_active) {
                 $this->errMessage = "A awarding body with the same name already exists.";
             } else {
                 $this->errMessage = "A awarding body with the same name exists but is deactivated. Please activate it to use.";
             }
-
-
+            
             return 0;
         }
         return 1;

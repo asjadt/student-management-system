@@ -32,22 +32,11 @@ class ClassRoutineCreateRequest extends BaseFormRequest
             'day_of_week' => [
                 'required',
                 'numeric',
-
-
-
-
-
-
             ],
 
             'start_time' => [
                 'required',
                 'string',
-
-
-
-
-
 
             ],
 
@@ -56,19 +45,11 @@ class ClassRoutineCreateRequest extends BaseFormRequest
                 'string',
 
 
-
-
-
-
             ],
 
             'room_number' => [
                 'required',
                 'string',
-
-
-
-
 
 
             ],
@@ -79,6 +60,12 @@ class ClassRoutineCreateRequest extends BaseFormRequest
                 'exists:subjects,id'
 
             ],
+            'course_id' => [
+                'required',
+                'numeric',
+                'exists:course_titles,id',
+            ],
+
 
             'teacher_id' => [
                 'required',
@@ -91,6 +78,12 @@ class ClassRoutineCreateRequest extends BaseFormRequest
                 'nullable',
                 'numeric',
                 "exists:semesters,id"
+
+            ],
+            'session_id' => [
+                'nullable',
+                'numeric',
+                "exists:sessions,id"
 
             ],
 

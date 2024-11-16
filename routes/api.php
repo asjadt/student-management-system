@@ -857,6 +857,7 @@ Route::put('/v1.0/class-routines', [ClassRoutineController::class, "updateClassR
 Route::put('/v1.0/class-routines/toggle-active', [ClassRoutineController::class, "toggleActiveClassRoutine"]);
 
 Route::get('/v1.0/class-routines', [ClassRoutineController::class, "getClassRoutines"]);
+
 Route::delete('/v1.0/class-routines/{ids}', [ClassRoutineController::class, "deleteClassRoutinesByIds"]);
 
 

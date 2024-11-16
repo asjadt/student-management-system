@@ -20,6 +20,7 @@ class ClassRoutine extends Model
                     'subject_id',
                     'teacher_id',
                     'semester_id',
+                    'session_id',
 
 
                     "is_active",
@@ -44,6 +45,10 @@ class ClassRoutine extends Model
       return $this->belongsTo(Subject::class, 'subject_id','id');
   }
 
+  public function course()
+  {
+      return $this->belongsTo(CourseTitle::class, 'course_id','id');
+  }
 
 
 
