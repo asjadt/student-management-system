@@ -11,6 +11,7 @@ class CourseTitle extends Model
     use HasFactory, DefaultQueryScopesTrait;
     protected $fillable = [
         'name',
+        'level',
         'color',
         'description',
         "awarding_body_id",

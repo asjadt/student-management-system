@@ -146,6 +146,7 @@ class CourseTitleUpdateRequest extends FormRequest
 
                 },
             ],
+            'level' => 'nullable|string',
             'description' => 'nullable|string',
             'color' => 'required|string',
             "awarding_body_id" =>   [
@@ -162,7 +163,7 @@ class CourseTitleUpdateRequest extends FormRequest
                "numeric",
                "exists:subjects,id"
             ],
-          
+
 
 
         ];

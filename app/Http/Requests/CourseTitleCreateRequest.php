@@ -99,6 +99,8 @@ class CourseTitleCreateRequest extends FormRequest
 
                 },
             ],
+
+            'level' => 'nullable|string',
             'description' => 'nullable|string',
             'color' => 'required|string',
             "awarding_body_id" =>   [

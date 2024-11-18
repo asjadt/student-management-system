@@ -101,15 +101,14 @@ trait BasicUtil
     {
         $letterTemplateVariables = [
             'PERSONAL DETAILS',
-            '[FIRST_NAME]',
-            '[MIDDLE_NAME]',
-            '[LAST_NAME]',
+            '[FULL_NAME]',
             '[NATIONALITY]',
             '[COURSE_FEE]',
             '[FEE_PAID]',
             '[PASSPORT_NUMBER]',
             '[DATE_OF_BIRTH]',
             '[COURSE_START_DATE]',
+            '[COURSE_END_DATE]',
             '[LETTER_ISSUE_DATE]',
             '[STUDENT_STATUS]',
 
@@ -126,6 +125,7 @@ trait BasicUtil
             'COURSE DETAILS',
             '[AWARDING_BODY]',
             '[COURSE_TITLE]',
+            '[COURSE_LEVEL]',
             '[COURSE_DURATION]',
             '[COURSE_DETAIL]',
 
@@ -164,15 +164,13 @@ trait BasicUtil
     {
         $letterTemplateVariables = [
             'Personal_Details' => [
-                '[FIRST_NAME]',
-                '[MIDDLE_NAME]',
-                '[LAST_NAME]',
+                '[FULL_NAME]',
                 '[NATIONALITY]',
                 '[COURSE_FEE]',
                 '[FEE_PAID]',
                 '[PASSPORT_NUMBER]',
                 '[DATE_OF_BIRTH]',
-                '[COURSE_START_DATE]',
+
                 '[LETTER_ISSUE_DATE]',
                 '[STUDENT_STATUS]',
                 '[EMAIL]',
@@ -188,7 +186,11 @@ trait BasicUtil
             'Course_Details' => [
                 '[AWARDING_BODY]',
                 '[COURSE_TITLE]',
+                '[COURSE_LEVEL]',
+
                 '[COURSE_DURATION]',
+                '[COURSE_START_DATE]',
+                '[COURSE_END_DATE]',
                 '[COURSE_DETAIL]',
             ],
             'Company_Details' => [

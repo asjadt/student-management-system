@@ -203,6 +203,7 @@ class CourseTitleController extends Controller
                 $course_title  =  tap(CourseTitle::where($course_title_query_params))->update(
                     collect($request_data)->only([
                         'name',
+                        'level',
                         'color',
                         'description',
                         "awarding_body_id"

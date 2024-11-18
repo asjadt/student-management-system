@@ -241,6 +241,10 @@ class StudentLetterController extends Controller
                             $COURSE_TITLE = isset($student->course_title->name) ? $student->course_title->name : '--';
                             $template = str_replace($item, $COURSE_TITLE, $template);
                         }
+                        else if ($item == "[COURSE_LEVEL]") {
+                            $COURSE_TITLE = isset($student->course_title->level) ? $student->course_title->level : '--';
+                            $template = str_replace($item, $COURSE_TITLE, $template);
+                        }
                         else if ($item === "[AWARDING_BODY]") {
                             $awardingBodyName = optional($student->course_title->awarding_body)->name ?? '--';
                             $template = str_replace($item, $awardingBodyName, $template);

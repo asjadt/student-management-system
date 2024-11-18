@@ -487,6 +487,7 @@ class StudentController extends Controller
         'school_id',
         'date_of_birth',
         'course_start_date',
+        'course_end_date',
         'letter_issue_date',
         'student_status_id',
         "course_title_id",
