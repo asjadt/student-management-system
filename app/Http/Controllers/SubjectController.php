@@ -483,10 +483,9 @@ class SubjectController extends Controller
                 ->when(!empty($request->id), function ($query) use ($request) {
                     return $query->where('subjects.id', $request->id);
                 })
-                ->when(!empty($request->course_id), function ($query) use($request) {
-                    return $query->whereHas('courses', function($query) use($request) {
-                        $query->join('course_titles', 'course_titles.id', '=', 'course_subjects.course_id') // Add join with course_titles
-                              ->where("course_titles.id", $request->course_id);
+                ->when(!empty($request->course_id), function ($query) use ($request) {
+                    return $query->whereHas('courses', function ($query) use ($request) {
+                        $query->where("course_titles.id", $request->course_id);
                     });
                 })
                 ->when(!empty($request->name), function ($query) use ($request) {
