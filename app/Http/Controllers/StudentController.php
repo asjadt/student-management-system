@@ -488,14 +488,13 @@ class StudentController extends Controller
         'date_of_birth',
         'course_start_date',
         'course_end_date',
+        'level',
         'letter_issue_date',
         'student_status_id',
         "course_title_id",
         'attachments',
-
         'course_duration',
         'course_detail',
-
         'email',
         'contact_number',
         'sex',

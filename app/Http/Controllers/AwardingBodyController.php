@@ -517,7 +517,9 @@ class AwardingBodyController extends Controller
                         $query->forNonSuperAdmin('awarding_bodies', 'disabled_awarding_bodies', $created_by);
                     });
                 })
-
+                ->when(!empty(auth()->user()->business_id), function ($query) use ( $created_by) {
+                    $query->forBusiness('awarding_bodies', "disabled_awarding_bodies", $created_by);
+                })
 
 
                 ->when(!empty($request->name), function ($query) use ($request) {

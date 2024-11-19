@@ -757,12 +757,10 @@ if(!$check_work_shift_details["ok"]) {
                 });
             })
             ->when(empty(auth()->user()->business_id), function ($query) use ($request) {
-
                 return $query->where([
                     "work_shifts.is_default" => 1,
                     "work_shifts.business_id" => NULL
                 ]);
-
             })
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {

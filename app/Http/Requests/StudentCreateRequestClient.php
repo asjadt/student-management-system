@@ -34,6 +34,7 @@ class StudentCreateRequestClient extends BaseFormRequest
             "course_fee" => "nullable|numeric",
             "fee_paid" => "nullable|numeric",
             'course_end_date' => 'required|date',
+            'level' => 'nullable|string',
 
             'passport_number' => 'nullable|string',
             'school_id' => 'nullable|string',

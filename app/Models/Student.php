@@ -23,6 +23,7 @@ class Student extends Model
 
         'course_start_date',
         'course_end_date',
+        'level',
 
         'letter_issue_date',
         'student_status_id',

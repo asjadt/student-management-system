@@ -39,7 +39,9 @@ class StudentCreateRequest extends BaseFormRequest
             'date_of_birth' => 'required|date',
             'course_start_date' => 'required|date',
             'course_end_date' => 'required|date',
-            
+            'level' => 'nullable|string',
+
+
             'letter_issue_date' => 'nullable|date',
             'student_status_id' => [
                 "required",

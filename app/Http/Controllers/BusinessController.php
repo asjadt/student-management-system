@@ -752,7 +752,7 @@ class BusinessController extends Controller
     $request_data['user']['address_line_2'] = (!empty($request_data['business']['address_line_2'])?$request_data['business']['address_line_2']:"") ;
     $request_data['user']['country'] = $request_data['business']['country'];
     $request_data['user']['city'] = $request_data['business']['city'];
-    $request_data['user']['postcode'] = $request_data['business']['postcode'];
+    $request_data['user']['postcode'] = $request_data['business']['postcode']?? null;
     $request_data['user']['lat'] = $request_data['business']['lat'];
     $request_data['user']['long'] = $request_data['business']['long'];
 
@@ -1035,13 +1035,14 @@ class BusinessController extends Controller
         }
         $request_data['user']['is_active'] = true;
         $request_data['user']['remember_token'] = Str::random(10);
-        $request_data['user']['address_line_1'] = $request_data['business']['address_line_1'];
-    $request_data['user']['address_line_2'] = $request_data['business']['address_line_2'];
-    $request_data['user']['country'] = $request_data['business']['country'];
-    $request_data['user']['city'] = $request_data['business']['city'];
-    $request_data['user']['postcode'] = $request_data['business']['postcode'];
-    $request_data['user']['lat'] = $request_data['business']['lat'];
-    $request_data['user']['long'] = $request_data['business']['long'];
+        $request_data['user']['address_line_1'] = $request_data['business']['address_line_1']?? null;
+        $request_data['user']['address_line_2'] = $request_data['business']['address_line_2'] ?? null;
+
+    $request_data['user']['country'] = $request_data['business']['country'] ?? null;
+    $request_data['user']['city'] = $request_data['business']['city'] ?? null;
+    $request_data['user']['postcode'] = $request_data['business']['postcode'] ?? null;
+    $request_data['user']['lat'] = $request_data['business']['lat'] ?? null;
+    $request_data['user']['long'] = $request_data['business']['long'] ?? null;
         $user  =  tap(User::where([
             "id" => $request_data['user']["id"]
             ]))->update(collect($request_data['user'])->only([
