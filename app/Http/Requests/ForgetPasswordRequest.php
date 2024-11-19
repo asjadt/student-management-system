@@ -25,16 +25,10 @@ class ForgetPasswordRequest extends BaseFormRequest
     {
         return [
             'email' => 'email|required',
-            'client_site' => 'string|required|in:client,dashboard',
+            'client_site' => 'string|required',
         ];
     }
 
-    public function messages()
-    {
-
-        return [
-            'client_site.in' => 'The client_site field must be either "client" or "dashboard".',
-        ];
-    }
+   
 
 }
