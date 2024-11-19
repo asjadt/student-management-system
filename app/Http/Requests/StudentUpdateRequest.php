@@ -52,7 +52,7 @@ class StudentUpdateRequest extends BaseFormRequest
             'school_id' => 'nullable|string',
             'date_of_birth' => 'required|date',
             'course_start_date' => 'required|date',
-            'course_end_date' => 'required|date',
+            'course_end_date' => 'nullable|date',
             'level' => 'nullable|string',
             'letter_issue_date' => 'nullable|date',
 
