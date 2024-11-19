@@ -74,8 +74,13 @@ class SubjectUpdateRequest extends BaseFormRequest
                 'string',
 
                 new ValidateSubjectName($this->id)
-                
+
             ],
+            'course_id' => [
+                "nullable",
+                "numeric",
+                "exists:course_titles,id"
+             ],
 
             'description' => [
                 'nullable',

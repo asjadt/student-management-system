@@ -46,6 +46,11 @@ $rules = [
         'string',
 
     ],
+    'course_id' => [
+        "nullable",
+        "numeric",
+        "exists:course_titles,id"
+     ],
 
     'teacher_ids' => [
         'present',

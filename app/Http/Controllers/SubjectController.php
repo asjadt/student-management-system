@@ -12,6 +12,7 @@ use App\Http\Requests\GetIdRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\CourseSubject;
 use App\Models\Subject;
 use App\Models\DisabledSubject;
 use App\Models\User;
@@ -114,6 +115,14 @@ class SubjectController extends Controller
                 $subject =  Subject::create($request_data);
 
                 $subject->teachers()->sync($request_data["teacher_ids"]);
+
+
+                if(!empty($request_data["course_id"])){
+                  CourseSubject::create([
+                    "course_id" => $request_data["course_id"],
+                    "subject_id" => $subject->id
+                  ]);
+                }
 
                 return response($subject, 201);
             });
@@ -403,6 +412,15 @@ class SubjectController extends Controller
      * required=true,
      * example="ASC"
      * ),
+     * * *  @OA\Parameter(
+     * name="course_id",
+     * in="query",
+     * description="course_id",
+     * required=true,
+     * example="ASC"
+     * ),
+     *
+     *
 
 
 
@@ -458,18 +476,22 @@ class SubjectController extends Controller
 
 
             $subjects = Subject::
-            with("teachers")
+            with("teachers","courses")
             ->where('subjects.business_id', auth()->user()->business_id)
 
 
                 ->when(!empty($request->id), function ($query) use ($request) {
                     return $query->where('subjects.id', $request->id);
                 })
-
+                ->when(!empty($request->course_id), function ($query) use($request) {
+                    return $query->whereHas('courses', function($query) use($request) {
+                        $query->join('course_titles', 'course_titles.id', '=', 'course_subjects.course_id') // Add join with course_titles
+                              ->where("course_titles.id", $request->course_id);
+                    });
+                })
                 ->when(!empty($request->name), function ($query) use ($request) {
                     return $query->where('subjects.id', $request->string);
                 })
-
                 ->when(!empty($request->description), function ($query) use ($request) {
                     return $query->where('subjects.id', $request->string);
                 })
