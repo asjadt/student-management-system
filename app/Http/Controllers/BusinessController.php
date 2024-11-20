@@ -1127,36 +1127,6 @@ class BusinessController extends Controller
     $timesArray = collect($request_data["times"])->unique("day");
 
 
-    $conflicted_work_shift_ids = collect();
-
-    foreach($timesArray as $business_time) {
-        $work_shift_ids = WorkShift::where([
-            "business_id" => auth()->user()->business_id
-        ])
-        ->whereHas('details', function ($query) use ($business_time) {
-            $query->where('work_shift_details.day',($business_time["day"]))
-            ->when(!empty($time["is_weekend"]), function($query) {
-                $query->where('work_shift_details.is_weekend',1);
-            })
-            ->where(function($query) use($business_time) {
-                $query->whereTime('work_shift_details.start_at', '<=', ($business_time["start_at"]))
-                      ->orWhereTime('work_shift_details.end_at', '>=', ($business_time["end_at"]));
-
-            });
-        })
-        ->pluck("id");
-        $conflicted_work_shift_ids = $conflicted_work_shift_ids->merge($work_shift_ids);
-
-    }
-    $conflicted_work_shift_ids = $conflicted_work_shift_ids->unique()->values()->all();
-
-    if(!empty($conflicted_work_shift_ids)) {
-        WorkShift::whereIn("id",$conflicted_work_shift_ids)->update([
-            "is_active" => 0
-        ]);
-    }
-
-
 
 
 

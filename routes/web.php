@@ -54,50 +54,31 @@ Route::post("/swagger-login",[SwaggerLoginController::class,"passUser"]);
 
 
 
-Route::get("/activate/{token}",function(Request $request,$token) {
+Route::get("/activate/{token}", function (Request $request, $token) {
     $user = User::where([
         "email_verify_token" => $token,
     ])
         ->where("email_verify_token_expires", ">", now())
         ->first();
+
     if (!$user) {
         return response()->json([
-            "message" => "Invalid Url Or Url Expired"
+            "message" => "Invalid URL or URL expired",
         ], 400);
     }
 
+    // Mark the email as verified
     $user->email_verified_at = now();
     $user->save();
 
-
-    $email_content = EmailTemplate::where([
-        "type" => "welcome_message",
-        "is_active" => 1
-
-    ])->first();
-
-
-    $html_content = json_decode($email_content->template);
-    $html_content =  str_replace("[FirstName]", $user->first_Name, $html_content );
-    $html_content =  str_replace("[LastName]", $user->last_Name, $html_content );
-    $html_content =  str_replace("[FullName]", ($user->first_Name. " " .$user->last_Name), $html_content );
-    $html_content =  str_replace("[AccountVerificationLink]", (env('APP_URL').'/activate/'.$user->email_verify_token), $html_content);
-    $html_content =  str_replace("[ForgotPasswordLink]", (env('FRONT_END_URL').'/fotget-password/'.$user->resetPasswordToken), $html_content );
-
-
-
-    $email_template_wrapper = EmailTemplateWrapper::where([
-        "id" => $email_content->wrapper_id
-    ])
-    ->first();
-
-
-    $html_final = json_decode($email_template_wrapper->template);
-    $html_final =  str_replace("[content]", $html_content, $html_final);
-
-
-    return view("dynamic-welcome-message",["html_content" => $html_final]);
+    return view("email.welcome", [
+        'first_name' => $user->first_Name,
+        'last_name' => $user->last_Name,
+        'reset_password_link' => env('FRONT_END_URL') . "/forget-password/{$user->resetPasswordToken}",
+    ]);
 });
+
+
 
 Route::get("/test",function() {
     $html_content = EmailTemplate::where([
