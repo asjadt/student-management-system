@@ -114,10 +114,7 @@ class BusinessTimesController extends Controller
                }
 
 
-     $business = Business::where([
-    "business_id" => auth()->user()->business_id
-])
-->first();
+     
 
 
 
@@ -193,7 +190,7 @@ class BusinessTimesController extends Controller
                 "business_id" => auth()->user()->business_id
             ])->orderByDesc("id")->get();
 
-            
+
             return response()->json($business_times, 200);
         } catch(Exception $e){
 
