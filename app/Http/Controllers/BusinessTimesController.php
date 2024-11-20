@@ -114,9 +114,6 @@ class BusinessTimesController extends Controller
                }
 
 
-     
-
-
 
                 return response(["message" => "data inserted"], 201);
             });
