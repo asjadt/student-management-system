@@ -1406,7 +1406,8 @@ return [
         "business_admin",
         "business_staff",
         "business_administrator",
-        "business_teacher"
+        "business_teacher",
+        
     ],
     "permissions" => [
 
