@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ClassRoutineCreateRequest;
 use App\Http\Requests\ClassRoutineUpdateRequest;
 use App\Http\Requests\ClassRoutineWeeklyCreateRequest;
+use App\Http\Requests\ClassRoutineWeeklyUpdateRequest;
 use App\Http\Requests\GetIdRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
@@ -151,22 +152,32 @@ class ClassRoutineController extends Controller
  * @OA\RequestBody(
  *     required=true,
  *     @OA\JsonContent(
- *         @OA\Property(
- *             property="days",
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="day_of_week", type="string", example="Monday"),
- *                 @OA\Property(property="start_time", type="string", format="time", example="09:00"),
- *                 @OA\Property(property="end_time", type="string", format="time", example="10:00"),
- *                 @OA\Property(property="room_number", type="string", example="101"),
- *                 @OA\Property(property="subject_id", type="string", example="1"),
- *  *                 @OA\Property(property="course_id", type="string", example="1"),
- *
- *                 @OA\Property(property="teacher_id", type="string", example="2"),
+ *     @OA\Property(
+ *         property="course_data",
+ *         type="array",
+ *         @OA\Items(
+ *             @OA\Property(
+ *                 property="course_id",
+ *                 type="integer",
+ *                 example=1
+ *             ),
+ *             @OA\Property(
+ *                 property="days",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     @OA\Property(property="day_of_week", type="string", example="Monday"),
+ *                     @OA\Property(property="start_time", type="string", format="time", example="09:00"),
+ *                     @OA\Property(property="end_time", type="string", format="time", example="10:00"),
+ *                     @OA\Property(property="room_number", type="string", example="101"),
+ *                     @OA\Property(property="subject_id", type="integer", example=1),
+ *                     @OA\Property(property="course_id", type="integer", example=1),
+ *                     @OA\Property(property="teacher_id", type="integer", example=2)
+ *                 )
  *             )
- *         ),
- *         @OA\Property(property="semester_id", type="string", example="semester_id"),
- *         @OA\Property(property="session_id", type="string", example="session_id"),
+ *         )
+ *     ),
+ *     @OA\Property(property="semester_id", type="string", example="semester_id"),
+ *     @OA\Property(property="session_id", type="string", example="session_id")
  *
  *     ),
  * ),
@@ -219,42 +230,179 @@ class ClassRoutineController extends Controller
 
              $request_data = $request->validated();
 
-             $semester_id = $request_data['semester_id'];
+             $semester_id = $request_data['semester_id']??NULL;
              $session_id = $request_data['session_id'];
 
-             $days = $request_data['days'];
+             $course_data = $request_data['course_data'];
 
              $created_routines = [];
 
-             foreach ($days as $day) {
-                 $day['semester_id'] = $semester_id;
-                 $day['session_id'] = $session_id;
+             foreach ($course_data as $course) {
+                // Ensure the course_id is available
+                $course_id = $course['course_id'];
 
-                 $day['is_active'] = 1;
-                 $day['created_by'] = auth()->user()->id;
-                 $day['business_id'] = auth()->user()->business_id ?? null;
+                foreach ($course['days'] as $day) {
+                    $day['semester_id'] = $semester_id;
+                    $day['session_id'] = $session_id;
+                    $day['course_id'] = $course_id;  // Add course_id to each day's data
+                    $day['is_active'] = 1;
+                    $day['created_by'] = auth()->user()->id;
+                    $day['business_id'] = auth()->user()->business_id ?? null;
 
-                 if (empty(auth()->user()->business_id) && auth()->user()->hasRole('superadmin')) {
-                     $day['is_default'] = 1;
-                 }
+                    // Check if business_id is empty and user is a superadmin to set is_default
+                    if (empty(auth()->user()->business_id) && auth()->user()->hasRole('superadmin')) {
+                        $day['is_default'] = 1;
+                    }
 
-                 $class_routine = ClassRoutine::create($day);
-                 $created_routines[] = $class_routine;
-             }
-
+                    // Create ClassRoutine instance for each day and store it in created_routines
+                    $class_routine = ClassRoutine::create($day);
+                    $created_routines[] = $class_routine;
+                }
+            }
              DB::commit();
-
              return response($created_routines, 201);
-
      } catch (Exception $e) {
 
         DB::rollBack();
          return $this->sendError($e, 500, $request);
 
-
      }
  }
 
+
+ /**
+ * @OA\Put(
+ *     path="/v1.0/class-routines/week",
+ *     operationId="updateWeeklyClassRoutine",
+ *     tags={"class_routines"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     summary="This method is to update class routines for each day of the week",
+ *     description="This method is to update class routines for multiple days with a common session ID",
+ *
+ * @OA\RequestBody(
+ *     required=true,
+ *     @OA\JsonContent(
+ *         @OA\Property(property="id", type="integer", example=1),
+ *         @OA\Property(
+ *             property="course_data",
+ *             type="array",
+ *             @OA\Items(
+ *                 @OA\Property(property="course_id", type="integer", example=1),
+ *                 @OA\Property(property="days", type="array",
+ *                     @OA\Items(
+ *                         @OA\Property(property="day_of_week", type="string", example="Monday"),
+ *                         @OA\Property(property="start_time", type="string", format="time", example="09:00"),
+ *                         @OA\Property(property="end_time", type="string", format="time", example="10:00"),
+ *                         @OA\Property(property="room_number", type="string", example="101"),
+ *                         @OA\Property(property="subject_id", type="integer", example=1),
+ *                         @OA\Property(property="teacher_id", type="integer", example=2)
+ *                     )
+ *                 )
+ *             )
+ *         ),
+ *         @OA\Property(property="semester_id", type="string", example="semester_id"),
+ *         @OA\Property(property="session_id", type="string", example="session_id")
+ *     ),
+ * ),
+ *
+ * @OA\Response(
+ *     response=200,
+ *     description="Successful operation",
+ *     @OA\JsonContent(),
+ * ),
+ * @OA\Response(
+ *     response=401,
+ *     description="Unauthenticated",
+ *     @OA\JsonContent(),
+ * ),
+ * @OA\Response(
+ *     response=422,
+ *     description="Unprocessable Content",
+ *     @OA\JsonContent(),
+ * ),
+ * @OA\Response(
+ *     response=403,
+ *     description="Forbidden",
+ *     @OA\JsonContent(),
+ * ),
+ * @OA\Response(
+ *     response=400,
+ *     description="Bad Request",
+ *     @OA\JsonContent(),
+ * ),
+ * @OA\Response(
+ *     response=404,
+ *     description="Not found",
+ *     @OA\JsonContent(),
+ * )
+ * )
+ */
+public function updateWeeklyClassRoutine(ClassRoutineWeeklyUpdateRequest $request)
+{
+    try {
+        $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+        DB::beginTransaction();
+
+        if (!auth()->user()->hasPermissionTo('class_routine_update')) {
+            return response()->json([
+                "message" => "You cannot perform this action"
+            ], 401);
+        }
+
+        $request_data = $request->validated();
+
+        // Get the ID from the request body
+        $routine_id = $request_data['id'];
+
+        // Ensure the requested data exists
+        $semester_id = $request_data['semester_id'] ?? NULL;
+        $session_id = $request_data['session_id'];
+        $course_data = $request_data['course_data'];
+
+        $updated_routines = [];
+
+        foreach ($course_data as $course) {
+            $course_id = $course['course_id'];
+
+            foreach ($course['days'] as $day) {
+                $existing_routine = ClassRoutine::find($routine_id);
+
+                if (!$existing_routine) {
+                    return response()->json([
+                        'message' => 'Routine not found'
+                    ], 404);
+                }
+
+                // Update the existing routine
+                $day['semester_id'] = $semester_id;
+                $day['session_id'] = $session_id;
+                $day['course_id'] = $course_id;  // Ensure course_id is set
+                $day['is_active'] = 1;
+                $day['updated_by'] = auth()->user()->id;
+                $day['business_id'] = auth()->user()->business_id ?? null;
+
+                if (empty(auth()->user()->business_id) && auth()->user()->hasRole('superadmin')) {
+                    $day['is_default'] = 1;
+                }
+
+                $existing_routine->fill($day);
+                $existing_routine->save();
+
+                $updated_routines[] = $existing_routine;
+            }
+        }
+
+        DB::commit();
+
+        return response($updated_routines, 200);
+    } catch (Exception $e) {
+        DB::rollBack();
+        return $this->sendError($e, 500, $request);
+    }
+}
 
 
 

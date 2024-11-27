@@ -852,6 +852,8 @@ Route::delete('/v1.0/teachers/{ids}', [TeacherController::class, "deleteTeachers
 Route::post('/v1.0/class-routines', [ClassRoutineController::class, "createClassRoutine"]);
 Route::put('/v1.0/class-routines', [ClassRoutineController::class, "updateClassRoutine"]);
 Route::post('/v1.0/class-routines/week', [ClassRoutineController::class, "createWeeklyClassRoutine"]);
+Route::put('/v1.0/class-routines/week', [ClassRoutineController::class, "updateWeeklyClassRoutine"]);
+
 
 
 Route::put('/v1.0/class-routines/toggle-active', [ClassRoutineController::class, "toggleActiveClassRoutine"]);

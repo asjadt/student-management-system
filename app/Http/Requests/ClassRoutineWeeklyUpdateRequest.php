@@ -1,13 +1,10 @@
 <?php
 
-
 namespace App\Http\Requests;
 
-
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ValidateClassRoutineName;
 
-class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
+class ClassRoutineWeeklyUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +24,7 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
     public function rules()
     {
         return [
+            'id' => 'required|integer|exists:class_routines,id', // Validate the ID
           'course_data' => [
     'required',
     'array',

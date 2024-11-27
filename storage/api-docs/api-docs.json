@@ -6331,6 +6331,11 @@
                                         "format": "string",
                                         "example": "subject_id"
                                     },
+                                    "course_id": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "course_id"
+                                    },
                                     "teacher_id": {
                                         "type": "string",
                                         "format": "string",
@@ -6340,6 +6345,11 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "semester_id"
+                                    },
+                                    "session_id": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "session_id"
                                     }
                                 },
                                 "type": "object"
@@ -6441,6 +6451,11 @@
                                         "format": "string",
                                         "example": "subject_id"
                                     },
+                                    "course_id": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "course_id"
+                                    },
                                     "teacher_id": {
                                         "type": "string",
                                         "format": "string",
@@ -6450,6 +6465,11 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "semester_id"
+                                    },
+                                    "session_id": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "session_id"
                                     }
                                 },
                                 "type": "object"
@@ -6515,6 +6535,139 @@
             }
         },
         "/v1.0/class-routines/week": {
+            "put": {
+                "tags": [
+                    "class_routines"
+                ],
+                "summary": "This method is to update class routines for each day of the week",
+                "description": "This method is to update class routines for multiple days with a common session ID",
+                "operationId": "updateWeeklyClassRoutine",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "course_data": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "course_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "days": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "day_of_week": {
+                                                                "type": "string",
+                                                                "example": "Monday"
+                                                            },
+                                                            "start_time": {
+                                                                "type": "string",
+                                                                "format": "time",
+                                                                "example": "09:00"
+                                                            },
+                                                            "end_time": {
+                                                                "type": "string",
+                                                                "format": "time",
+                                                                "example": "10:00"
+                                                            },
+                                                            "room_number": {
+                                                                "type": "string",
+                                                                "example": "101"
+                                                            },
+                                                            "subject_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "teacher_id": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "semester_id": {
+                                        "type": "string",
+                                        "example": "semester_id"
+                                    },
+                                    "session_id": {
+                                        "type": "string",
+                                        "example": "session_id"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "class_routines"
@@ -6528,35 +6681,51 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "days": {
+                                    "course_data": {
                                         "type": "array",
                                         "items": {
                                             "properties": {
-                                                "day_of_week": {
-                                                    "type": "string",
-                                                    "example": "Monday"
+                                                "course_id": {
+                                                    "type": "integer",
+                                                    "example": 1
                                                 },
-                                                "start_time": {
-                                                    "type": "string",
-                                                    "format": "time",
-                                                    "example": "09:00"
-                                                },
-                                                "end_time": {
-                                                    "type": "string",
-                                                    "format": "time",
-                                                    "example": "10:00"
-                                                },
-                                                "room_number": {
-                                                    "type": "string",
-                                                    "example": "101"
-                                                },
-                                                "subject_id": {
-                                                    "type": "string",
-                                                    "example": "1"
-                                                },
-                                                "teacher_id": {
-                                                    "type": "string",
-                                                    "example": "2"
+                                                "days": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "day_of_week": {
+                                                                "type": "string",
+                                                                "example": "Monday"
+                                                            },
+                                                            "start_time": {
+                                                                "type": "string",
+                                                                "format": "time",
+                                                                "example": "09:00"
+                                                            },
+                                                            "end_time": {
+                                                                "type": "string",
+                                                                "format": "time",
+                                                                "example": "10:00"
+                                                            },
+                                                            "room_number": {
+                                                                "type": "string",
+                                                                "example": "101"
+                                                            },
+                                                            "subject_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "course_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "teacher_id": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"
@@ -6565,6 +6734,10 @@
                                     "semester_id": {
                                         "type": "string",
                                         "example": "semester_id"
+                                    },
+                                    "session_id": {
+                                        "type": "string",
+                                        "example": "session_id"
                                     }
                                 },
                                 "type": "object"
@@ -8000,15 +8173,6 @@
                 "summary": "get all dashboard data combined",
                 "description": "get all dashboard data combined",
                 "operationId": "getBusinessAdminDashboardData",
-                "parameters": [
-                    {
-                        "name": "business_id",
-                        "in": "query",
-                        "description": "business_id",
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -28142,6 +28306,13 @@
                         "description": "id",
                         "required": true,
                         "example": "ASC"
+                    },
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "description": "course_id",
+                        "required": true,
+                        "example": "ASC"
                     }
                 ],
                 "responses": {
@@ -39565,8 +39736,288 @@
     },
     "tags": [
         {
-            "name": "HRM",
-            "description": "API Endpoints of HRM Project"
+            "name": "administrator.announcements",
+            "description": "administrator.announcements"
+        },
+        {
+            "name": "administrator.asset_type",
+            "description": "administrator.asset_type"
+        },
+        {
+            "name": "attendances",
+            "description": "attendances"
+        },
+        {
+            "name": "auth",
+            "description": "auth"
+        },
+        {
+            "name": "awarding_bodies",
+            "description": "awarding_bodies"
+        },
+        {
+            "name": "banks",
+            "description": "banks"
+        },
+        {
+            "name": "business_background_image",
+            "description": "business_background_image"
+        },
+        {
+            "name": "business_management",
+            "description": "business_management"
+        },
+        {
+            "name": "business_tiers",
+            "description": "business_tiers"
+        },
+        {
+            "name": "business_times_management",
+            "description": "business_times_management"
+        },
+        {
+            "name": "class_routines",
+            "description": "class_routines"
+        },
+        {
+            "name": "student.course_titles",
+            "description": "student.course_titles"
+        },
+        {
+            "name": "dashboard_management.business_admin",
+            "description": "dashboard_management.business_admin"
+        },
+        {
+            "name": "dashboard_management.business_user",
+            "description": "dashboard_management.business_user"
+        },
+        {
+            "name": "dashboard_management.dashboard_widgets",
+            "description": "dashboard_management.dashboard_widgets"
+        },
+        {
+            "name": "dashboard_management.superadmin",
+            "description": "dashboard_management.superadmin"
+        },
+        {
+            "name": "dashboard_management.data_collector",
+            "description": "dashboard_management.data_collector"
+        },
+        {
+            "name": "administrator.department",
+            "description": "administrator.department"
+        },
+        {
+            "name": "designations",
+            "description": "designations"
+        },
+        {
+            "name": "z.unused",
+            "description": "z.unused"
+        },
+        {
+            "name": "template_management.email",
+            "description": "template_management.email"
+        },
+        {
+            "name": "template_management.wrapper.email",
+            "description": "template_management.wrapper.email"
+        },
+        {
+            "name": "histories",
+            "description": "histories"
+        },
+        {
+            "name": "administrator.holiday",
+            "description": "administrator.holiday"
+        },
+        {
+            "name": "installment_payments",
+            "description": "installment_payments"
+        },
+        {
+            "name": "installment_plans",
+            "description": "installment_plans"
+        },
+        {
+            "name": "job_listing",
+            "description": "job_listing"
+        },
+        {
+            "name": "job_platforms",
+            "description": "job_platforms"
+        },
+        {
+            "name": "job_types",
+            "description": "job_types"
+        },
+        {
+            "name": "leaves",
+            "description": "leaves"
+        },
+        {
+            "name": "letter_templates",
+            "description": "letter_templates"
+        },
+        {
+            "name": "modules",
+            "description": "modules"
+        },
+        {
+            "name": "notification_management",
+            "description": "notification_management"
+        },
+        {
+            "name": "template_management.notification",
+            "description": "template_management.notification"
+        },
+        {
+            "name": "payment_type_management",
+            "description": "payment_type_management"
+        },
+        {
+            "name": "administrator.payruns",
+            "description": "administrator.payruns"
+        },
+        {
+            "name": "user_management",
+            "description": "user_management"
+        },
+        {
+            "name": "shop_section.product_category_management",
+            "description": "shop_section.product_category_management"
+        },
+        {
+            "name": "basics",
+            "description": "basics"
+        },
+        {
+            "name": "shop_section.product_management",
+            "description": "shop_section.product_management"
+        },
+        {
+            "name": "project",
+            "description": "project"
+        },
+        {
+            "name": "recruitment_processes",
+            "description": "recruitment_processes"
+        },
+        {
+            "name": "reminders",
+            "description": "reminders"
+        },
+        {
+            "name": "user_management.role",
+            "description": "user_management.role"
+        },
+        {
+            "name": "semesters",
+            "description": "semesters"
+        },
+        {
+            "name": "sessions",
+            "description": "sessions"
+        },
+        {
+            "name": "settings.setting_attendance",
+            "description": "settings.setting_attendance"
+        },
+        {
+            "name": "settings.setting_leave",
+            "description": "settings.setting_leave"
+        },
+        {
+            "name": "settings.setting_leave_types",
+            "description": "settings.setting_leave_types"
+        },
+        {
+            "name": "settings.setting_payroll.payrun",
+            "description": "settings.setting_payroll.payrun"
+        },
+        {
+            "name": "settings.setting_payroll.payslip",
+            "description": "settings.setting_payroll.payslip"
+        },
+        {
+            "name": "social_sites",
+            "description": "social_sites"
+        },
+        {
+            "name": "students",
+            "description": "students"
+        },
+        {
+            "name": "student_letters",
+            "description": "student_letters"
+        },
+        {
+            "name": "student.student_statuses",
+            "description": "student.student_statuses"
+        },
+        {
+            "name": "subjects",
+            "description": "subjects"
+        },
+        {
+            "name": "task",
+            "description": "task"
+        },
+        {
+            "name": "user_address_histories",
+            "description": "user_address_histories"
+        },
+        {
+            "name": "user_assets",
+            "description": "user_assets"
+        },
+        {
+            "name": "user_documents",
+            "description": "user_documents"
+        },
+        {
+            "name": "user_education_histories",
+            "description": "user_education_histories"
+        },
+        {
+            "name": "user_job_histories",
+            "description": "user_job_histories"
+        },
+        {
+            "name": "user_management.employee",
+            "description": "user_management.employee"
+        },
+        {
+            "name": "user_management.dont_use_now",
+            "description": "user_management.dont_use_now"
+        },
+        {
+            "name": "user_notes",
+            "description": "user_notes"
+        },
+        {
+            "name": "user_passport_histories",
+            "description": "user_passport_histories"
+        },
+        {
+            "name": "user_social_sites",
+            "description": "user_social_sites"
+        },
+        {
+            "name": "user_sponsorship_histories",
+            "description": "user_sponsorship_histories"
+        },
+        {
+            "name": "user_visa_histories",
+            "description": "user_visa_histories"
+        },
+        {
+            "name": "work_locations",
+            "description": "work_locations"
+        },
+        {
+            "name": "administrator.work_shift",
+            "description": "administrator.work_shift"
         }
     ]
 }
