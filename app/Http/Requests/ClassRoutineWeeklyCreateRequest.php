@@ -61,11 +61,7 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
     'numeric',
     'exists:subjects,id',
 ],
-'course_data.*.days.*.course_id' => [
-    'required',
-    'numeric',
-    'exists:course_titles,id',
-],
+
 'course_data.*.days.*.teacher_id' => [
     'required',
     'numeric',
