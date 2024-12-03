@@ -21,7 +21,7 @@ class ClassRoutine extends Model
                     'teacher_id',
                     'semester_id',
                     'session_id',
-
+                    'course_id',
 
                     "is_active",
 

@@ -7,6 +7,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateSessionName;
+use Illuminate\Validation\Rule;
 
 class SessionCreateRequest extends BaseFormRequest
 {
@@ -31,10 +32,10 @@ public function rules()
 $rules = [
 
     'name' => [
-        'required',
-        'string',
-        "unique:sessions,name"
-    ],
+    'required',
+    'string',
+    Rule::unique('sessions')->where('business_id', auth()->user()->business_id)
+],
 
         'start_date' => [
         'required',

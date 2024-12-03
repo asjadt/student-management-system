@@ -23,6 +23,8 @@ class AddSessionIdToClassRoutinesTable extends Migration
                   ->on('sessions')
                   ->onDelete('set null');
 
+        $table->unsignedBigInteger('course_id')->nullable()->after('session_id');
+
             // Add course_id column with foreign key constraint
             $table->foreignId('course_id')
                   ->constrained('course_titles')

@@ -111,10 +111,11 @@ trait BasicUtil
             '[COURSE_END_DATE]',
             '[LETTER_ISSUE_DATE]',
             '[STUDENT_STATUS]',
-
+         
             '[EMAIL]',
             '[CONTACT_NUMBER]',
             '[SEX]',
+            '[QR_CODE]',
 
             'ADDRESS',
             '[ADDRESS]',
@@ -170,12 +171,12 @@ trait BasicUtil
                 '[FEE_PAID]',
                 '[PASSPORT_NUMBER]',
                 '[DATE_OF_BIRTH]',
-
                 '[LETTER_ISSUE_DATE]',
                 '[STUDENT_STATUS]',
                 '[EMAIL]',
                 '[CONTACT_NUMBER]',
                 '[SEX]',
+                '[QR_CODE]',
             ],
             'Address' => [
                 '[ADDRESS]',

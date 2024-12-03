@@ -23,6 +23,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use PDF;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 class StudentLetterController extends Controller
 {
@@ -279,7 +281,24 @@ class StudentLetterController extends Controller
                             $NI_number = isset($business["country"]) ? $business["country"] : '[COMPANY_COUNTRY]';
                             $template = str_replace($item, $NI_number, $template);
                         }
+                        else if ($item == "[QR_CODE]") {
+                            // Get the URL from the environment variable
+                            $url = $student->business->url . "/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
 
+                            // Generate the QR code image
+                            $qrCode = new QrCode($url);
+                            $writer = new PngWriter();
+
+                            // Generate the image as a string (binary data)
+                            $image = $writer->write($qrCode)->getString();  // Correct method to get the binary data
+
+                            // Convert the binary data to a base64 string to embed in the HTML
+                            $base64Image = base64_encode($image);
+                            $qrCodeImage = 'data:image/png;base64,' . $base64Image;
+
+                            // Replace [QR_CODE] with the image in the template
+                            $template = str_replace($item, '<img src="' . $qrCodeImage . '" alt="QR Code" />', $template);
+                        }
                          else {
                             $template = str_replace($item, $student[$variableName], $template);
                         }

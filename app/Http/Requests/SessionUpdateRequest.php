@@ -8,6 +8,7 @@ namespace App\Http\Requests;
 use App\Models\Session;
 use App\Rules\ValidateSessionName;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SessionUpdateRequest extends BaseFormRequest
 {
@@ -71,7 +72,9 @@ $rules = [
 'name' => [
     'required',
     'string',
-    'unique:sessions,name,' . $this->id . ',id' // Exclude the current record from the uniqueness check
+    Rule::unique('sessions')
+    ->where('business_id', $this->business_id)
+    ->whereNotIn('id', [$this->id]) // Exclude the current record by `id`
 ],
 
     'start_date' => [

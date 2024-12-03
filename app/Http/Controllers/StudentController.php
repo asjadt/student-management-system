@@ -1040,28 +1040,22 @@ class StudentController extends Controller
             //          "message" => "You can not perform this action"
             //      ], 401);
             //  }
-             $business_id =  $request->business_id;
-             if(!$business_id) {
-                $error = [ "message" => "The given data was invalid.",
-                "errors" => ["business_id"=>["The business id field is required."]]
-                ];
-                    throw new Exception(json_encode($error),422);
-             }
-         $business = Business::where("id", $business_id)->first();
-         if(empty($business)) {
-            $business = Business::first();
-         }
-         $business_id = $business->id;
+
+
+
 
 
              $students = Student::
              with("student_status","course_title")
 
-             ->where(
-                 [
-                     "students.business_id" => $business_id
-                 ]
-             )
+             ->when(request()->filled("business_id"), function($query) {
+                $query->where(
+                    [
+                        "students.business_id" => request()->input("business_id")
+                    ]
+                    );
+             })
+
              ->when(!empty($request->id), function ($query) use ($request) {
                 return $query->where('students.id',$request->id);
             })
