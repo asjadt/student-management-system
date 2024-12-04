@@ -15,6 +15,7 @@ class Business extends Model
     protected $connection = 'default';
     protected $fillable = [
         "name",
+        "url",
         "about",
         "web_page",
         "phone",

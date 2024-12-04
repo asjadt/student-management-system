@@ -1405,4 +1405,179 @@ class StudentController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
+
+
+
+
+
+        /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/students/generate/student-id/{business_id}",
+     *      operationId="generateStudentId",
+     *      tags={"students"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     @OA\Parameter(
+     *         name="business_id",
+     *         in="path",
+     *         description="business_id",
+     *         required=true,
+     *  example=""
+     *      ),
+     *
+     *
+     *      summary="This method is to generate student id",
+     *      description="This method is to generate student id",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+    public function generateStudentId($business_id,Request $request)
+    {
+
+        $studentId = $this->generateUniqueId(Business::class, $business_id, Student::class, 'student_id');
+
+        return response()->json(["student_id" => $studentId], 200);
+    }
+
+
+    /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/students/validate/student-id/{student_id}/{business_id}",
+     *      operationId="validateStudentIdV2",
+     *      tags={"user_management.employee"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *              @OA\Parameter(
+     *         name="student_id",
+     *         in="path",
+     *         description="student_id",
+     *         required=true,
+     *  example=""
+     *      ),
+     *  *              @OA\Parameter(
+     *         name="business_id",
+     *         in="path",
+     *         description="business_id",
+     *         required=true,
+     *  example=""
+     *      ),
+     *    *              @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="id",
+     *         required=true,
+     *  example="1"
+     *      ),
+
+
+     *      summary="This method is to validate student id",
+     *      description="This method is to validate student id",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+    public function validateStudentIdV2($student_id,$business_id, Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+            $student_id_exists = DB::table('students')->where(
+                [
+                    'student_id' => $student_id,
+                    "business_id" => $business_id
+                ]
+            )
+                ->when(
+                    !empty($request->id),
+                    function ($query) use ($request) {
+                        $query->whereNotIn("id", [$request->id]);
+                    }
+                )
+                ->exists();
+
+
+            return response()->json(["student_id_exists" => $student_id_exists], 200);
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
+
+
+
+
+
+
+
+
 }
