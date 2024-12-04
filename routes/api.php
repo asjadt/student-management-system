@@ -1297,10 +1297,6 @@ Route::get('/v1.0/client/course-titles', [CourseTitleController::class, "getCour
 Route::get('/v1.0/client/businesses-get-by-url/{url}', [BusinessController::class, "getByUrlClient"]);
 
 
-
-
-
-
 Route::get('/v1.0/students/generate/student-id/{business_id}', [StudentController::class, "generateStudentId"]);
 
 Route::get('/v1.0/students/validate/student-id/{student_id}/{business_id}', [StudentController::class, "validateStudentIdV2"]);

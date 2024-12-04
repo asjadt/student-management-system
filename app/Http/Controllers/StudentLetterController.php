@@ -236,54 +236,48 @@ class StudentLetterController extends Controller
 
                         // Replace [FULL_NAME] with the concatenated full name
                         if ($item == "[FULL_NAME]") {
-                            $fullName = trim($student["first_name"] . ' ' . $student["middle_name"] . ' ' . $student["last_name"]);
+                            $fullName = trim(($student["first_name"] ?? '') . ' ' . ($student["middle_name"] ?? '') . ' ' . ($student["last_name"] ?? ''));
                             $template = str_replace($item, !empty($fullName) ? $fullName : '--', $template);
                         }
                         else if ($item == "[COURSE_TITLE]") {
-                            $COURSE_TITLE = isset($student->course_title->name) ? $student->course_title->name : '--';
-                            $template = str_replace($item, $COURSE_TITLE, $template);
+                            $courseTitle = optional($student->course_title)->name ?? '--';
+                            $template = str_replace($item, $courseTitle, $template);
                         }
                         else if ($item == "[COURSE_LEVEL]") {
-                            $COURSE_TITLE = isset($student->course_title->level) ? $student->course_title->level : '--';
-                            $template = str_replace($item, $COURSE_TITLE, $template);
+                            $courseLevel = optional($student->course_title)->level ?? '--';
+                            $template = str_replace($item, $courseLevel, $template);
                         }
-                        else if ($item === "[AWARDING_BODY]") {
-                            $awardingBodyName = optional($student->course_title->awarding_body)->name ?? '--';
+                        else if ($item == "[AWARDING_BODY]") {
+                            $awardingBodyName = optional(optional($student->course_title)->awarding_body)->name ?? '--';
                             $template = str_replace($item, $awardingBodyName, $template);
                         }
-
-
-
                         else if ($item == "[STUDENT_STATUS]") {
-                            $STUDENT_STATUS = isset($student->student_status->name) ? $student->student_status->name : '--';
-                            $template = str_replace($item, $STUDENT_STATUS, $template);
+                            $studentStatus = optional($student->student_status)->name ?? '--';
+                            $template = str_replace($item, $studentStatus, $template);
                         }
-
-
-
                         else if ($item == "[COMPANY_NAME]") {
-                            $COMPANY_NAME = isset($business["name"]) ? $business["name"] : '[COMPANY_NAME]';
-                            $template = str_replace($item, $COMPANY_NAME, $template);
+                            $companyName = $business["name"] ?? '[COMPANY_NAME]';
+                            $template = str_replace($item, $companyName, $template);
                         }
                         else if ($item == "[COMPANY_ADDRESS_LINE_1]") {
-                            $NI_number = isset($business["address_line_1"]) ? $business["address_line_1"] : '[COMPANY_ADDRESS_LINE_1]';
-                            $template = str_replace($item, $NI_number, $template);
+                            $addressLine1 = $business["address_line_1"] ?? '[COMPANY_ADDRESS_LINE_1]';
+                            $template = str_replace($item, $addressLine1, $template);
                         }
                         else if ($item == "[COMPANY_CITY]") {
-                            $NI_number = isset($business["city"]) ? $business["city"] : '[COMPANY_CITY]';
-                            $template = str_replace($item, $NI_number, $template);
+                            $companyCity = $business["city"] ?? '[COMPANY_CITY]';
+                            $template = str_replace($item, $companyCity, $template);
                         }
                         else if ($item == "[COMPANY_POSTCODE]") {
-                            $NI_number = isset($business["postcode"]) ? $business["postcode"] : '[COMPANY_POSTCODE]';
-                            $template = str_replace($item, $NI_number, $template);
+                            $companyPostcode = $business["postcode"] ?? '[COMPANY_POSTCODE]';
+                            $template = str_replace($item, $companyPostcode, $template);
                         }
                         else if ($item == "[COMPANY_COUNTRY]") {
-                            $NI_number = isset($business["country"]) ? $business["country"] : '[COMPANY_COUNTRY]';
-                            $template = str_replace($item, $NI_number, $template);
+                            $companyCountry = $business["country"] ?? '[COMPANY_COUNTRY]';
+                            $template = str_replace($item, $companyCountry, $template);
                         }
                         else if ($item == "[QR_CODE]") {
                             // Get the URL from the environment variable
-                            $url = $student->business->url . "/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
+                            $url = "https://app.smartcollegeportal.com/dev-blue-hrm" . "/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
 
                             // Generate the QR code image
                             $qrCode = new QrCode($url);

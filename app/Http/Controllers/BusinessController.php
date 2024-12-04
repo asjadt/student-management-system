@@ -1742,9 +1742,10 @@ class BusinessController extends Controller
         } catch(Exception $e){
 
         return $this->sendError($e,500,$request);
+        
         }
-
     }
+
      /**
         *
      * @OA\Get(
