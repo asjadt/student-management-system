@@ -48,7 +48,20 @@ class CreateClassRoutinesTable extends Migration
             $table->foreignId('subject_id')
             ->constrained('subjects')
             ->onDelete('cascade');
+            $table->unsignedBigInteger('session_id')->nullable();
 
+            // Add foreign key constraint for session_id
+            $table->foreign('session_id')
+                  ->references('id')
+                  ->on('sessions')
+                  ->onDelete('set null');
+
+
+
+            // Add course_id column with foreign key constraint
+            $table->foreignId('course_id')
+                  ->constrained('course_titles')
+                  ->onDelete('cascade');
             $table->boolean('is_active')->default(false);
 
 
