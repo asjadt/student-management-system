@@ -74,10 +74,10 @@ class BusinessUpdateRequest extends BaseFormRequest
             'business.images' => 'nullable|array',
             'business.images.*' => 'nullable|string',
 
-            
-            'business.student_disabled_fields' => 'present|array',
+
+            'business.student_disabled_fields' => 'nullable|array',
             'business.student_disabled_fields.*' => 'string',
-            'business.student_optional_fields' => 'present|array',
+            'business.student_optional_fields' => 'nullable|array',
             'business.student_optional_fields.*' => 'string',
 
 
