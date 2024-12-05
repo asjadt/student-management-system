@@ -497,6 +497,7 @@ class StudentController extends Controller
         "fee_paid",
         'passport_number',
         'school_id',
+        'student_id',
         'date_of_birth',
         'course_start_date',
         'course_end_date',
@@ -824,6 +825,8 @@ class StudentController extends Controller
                             ->orWhere("students.nationality", "like", "%" . $term . "%")
                             ->orWhere("students.passport_number", "like", "%" . $term . "%")
                             ->orWhere("students.school_id", "like", "%" . $term . "%")
+                            ->orWhere("students.student_id", "like", "%" . $term . "%")
+
                             ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
                     });
                 })
@@ -862,8 +865,8 @@ class StudentController extends Controller
                 ->when(!empty($request->date_of_birth), function ($query) use ($request) {
                     return $query->where('students.date_of_birth',$request->date_of_birth);
                 })
-                ->when(!empty($request->school_id), function ($query) use ($request) {
-                    return $query->whereRaw('BINARY students.school_id = ?', [$request->school_id]);
+                ->when(!empty($request->student_id), function ($query) use ($request) {
+                    return $query->whereRaw('BINARY students.student_id = ?', [$request->student_id]);
                 })
 
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
@@ -1100,7 +1103,7 @@ class StudentController extends Controller
                              ->orWhere("students.last_name", "like", "%" . $term . "%")
                              ->orWhere("students.nationality", "like", "%" . $term . "%")
                              ->orWhere("students.passport_number", "like", "%" . $term . "%")
-                             ->orWhere("students.school_id", "like", "%" . $term . "%")
+                             ->orWhere("students.student_id", "like", "%" . $term . "%")
                              ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
                      });
                  })
@@ -1122,8 +1125,8 @@ class StudentController extends Controller
                  ->when(!empty($request->date_of_birth), function ($query) use ($request) {
                      return $query->where('students.date_of_birth',$request->date_of_birth);
                  })
-                 ->when(!empty($request->school_id), function ($query) use ($request) {
-                    return $query->whereRaw('BINARY students.school_id = ?', [$request->school_id]);
+                 ->when(!empty($request->student_id), function ($query) use ($request) {
+                    return $query->whereRaw('BINARY students.student_id = ?', [$request->student_id]);
                 })
 
                  ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {

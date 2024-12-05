@@ -49,7 +49,7 @@ class StudentUpdateRequest extends BaseFormRequest
             "course_fee" => "required|numeric",
             "fee_paid" => "required|numeric",
             'passport_number' => 'nullable|string',
-            'school_id' => 'nullable|string',
+            'student_id' => 'nullable|string',
             'date_of_birth' => 'required|date',
             'course_start_date' => 'required|date',
             'course_end_date' => 'nullable|date',

@@ -37,7 +37,7 @@ class StudentCreateRequestClient extends BaseFormRequest
             'level' => 'nullable|string',
 
             'passport_number' => 'nullable|string',
-            'school_id' => 'nullable|string',
+            'student_id' => 'nullable|string',
             'date_of_birth' => 'required|date',
             'course_start_date' => 'nullable|date',
             'letter_issue_date' => 'nullable|date',
