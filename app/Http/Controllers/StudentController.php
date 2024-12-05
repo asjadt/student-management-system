@@ -522,8 +522,6 @@ class StudentController extends Controller
         'passport_expiry_date',
         'place_of_issue',
 
-
-
                         // "is_active",
                         // "business_id",
                         // "created_by"

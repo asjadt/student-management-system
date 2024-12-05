@@ -1284,9 +1284,7 @@ Route::get('/v1.0/business-admin-dashboard', [DashboardManagementController::cla
 
 
 Route::get('/v1.0/client/job-listings', [JobListingController::class, "getJobListingsClient"]);
-
 Route::get('/v1.0/client/job-listings/{id}', [JobListingController::class, "getJobListingByIdClient"]);
-
 Route::post('/v1.0/client/students', [StudentController::class, "createStudentClient"]);
 Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentByIdClient"]);
 Route::get('/v1.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClient"]);
