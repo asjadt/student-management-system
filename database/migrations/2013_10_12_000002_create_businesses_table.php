@@ -20,6 +20,10 @@ class CreateBusinessesTable extends Migration
 
             $table->text("about")->nullable();
             $table->string("web_page")->nullable();
+
+            $table->json("student_disabled_fields")->nullable();
+            $table->json("student_optional_fields")->nullable();
+
             $table->string("phone")->nullable();
             $table->string("email")->nullable()->unique();
             $table->text("additional_information")->nullable();

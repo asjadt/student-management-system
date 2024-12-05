@@ -14,6 +14,9 @@ class Business extends Model
 
     protected $connection = 'default';
     protected $fillable = [
+        "student_disabled_fields",
+        "student_optional_fields",
+
         "name",
         "url",
         "about",
@@ -40,6 +43,16 @@ class Business extends Model
         "business_tier_id",
         "owner_id",
         'created_by'
+
+    ];
+
+    protected $casts = [
+
+
+        'student_disabled_fields' => 'array',
+        'student_optional_fields' => 'array'
+
+
 
     ];
 

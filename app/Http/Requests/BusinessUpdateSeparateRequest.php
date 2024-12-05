@@ -52,7 +52,12 @@ class BusinessUpdateSeparateRequest extends BaseFormRequest
 
             'business.images' => 'nullable|array',
             'business.images.*' => 'nullable|string',
+            
+            'business.student_disabled_fields' => 'present|array',
+            'business.student_disabled_fields.*' => 'string',
 
+            'business.student_optional_fields' => 'present|array',
+            'business.student_optional_fields.*' => 'string',
 
 
 
@@ -110,6 +115,7 @@ class BusinessUpdateSeparateRequest extends BaseFormRequest
 
             'business.images.array' => 'The images field must be an array.',
             'business.images.*.string' => 'Each image in the images field must be a string.',
+
 
 
 
