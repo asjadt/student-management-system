@@ -1654,9 +1654,7 @@ class BusinessController extends Controller
         }
 
     }
-
-
-         /**
+     /**
         *
      * @OA\Get(
      *      path="/v1.0/businesses/{id}",
@@ -1742,7 +1740,84 @@ class BusinessController extends Controller
         } catch(Exception $e){
 
         return $this->sendError($e,500,$request);
-        
+
+        }
+    }
+
+         /**
+        *
+     * @OA\Get(
+     *      path="/v1.0/client/businesses/{id}",
+     *      operationId="getBusinessByIdClient",
+     *      tags={"business_management"},
+    *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *              @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="id",
+     *         required=true,
+     *  example="1"
+     *      ),
+     *      summary="This method is to get business by id",
+     *      description="This method is to get business by id",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function getBusinessByIdClient($id,Request $request) {
+
+        try{
+            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+
+
+            $business = Business::where([
+                "id" => $id
+            ])
+            ->select("id","name","logo","web_page")
+            ->first();
+
+
+
+
+        return response()->json($business, 200);
+        } catch(Exception $e){
+
+        return $this->sendError($e,500,$request);
+
         }
     }
 

@@ -1301,6 +1301,8 @@ Route::get('/v1.0/students/generate/student-id/{business_id}', [StudentControlle
 
 Route::get('/v1.0/students/validate/student-id/{student_id}/{business_id}', [StudentController::class, "validateStudentIdV2"]);
 
+Route::get('/v1.0/client/businesses/{id}', [BusinessController::class, "getBusinessByIdClient"]);
+
 
 
 

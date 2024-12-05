@@ -6,6 +6,7 @@ use App\Http\Requests\StudentCreateRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\MultipleFileUploadRequest;
 use App\Http\Requests\StudentCreateRequestClient;
+use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
-    use ErrorUtil, UserActivityUtil, BusinessUtil;
+    use ErrorUtil, UserActivityUtil, BusinessUtil, BasicUtil;
 
     /**
         *
@@ -343,12 +344,23 @@ class StudentController extends Controller
                 $request_data["course_fee"] = 0;
                 $request_data["fee_paid"] = 0;
                 $request_data["course_start_date"] = "1970-01-01";
+
+
+
+                $request_data["student_id"] = $this->generateUniqueId(Business::class, $request_data["business_id"], Student::class, 'student_id');
+
                 $student =  Student::create($request_data);
 
+                $business = $student->business;
 
 
+                $response = [
+                  "id" => $student->id,
+                  "student_id" => $student->student_id,
+                  "business_name" => $business->name,
+                ];
 
-                return response($student, 201);
+                return response($response, 201);
             });
         } catch (Exception $e) {
             error_log($e->getMessage());

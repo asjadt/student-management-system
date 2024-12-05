@@ -166,7 +166,7 @@ trait BasicUtil
     protected function getPrefix(?Model $relation): string
     {
         // First, check if the authenticated user's business has an identifier prefix
-        $businessPrefix = optional(auth()->user()->business)->identifier_prefix;
+        $businessPrefix = optional($relation)->identifier_prefix;
 
         if ($businessPrefix) {
             return $businessPrefix;
@@ -193,22 +193,22 @@ trait BasicUtil
         // Generate the prefix based on the related model or the authenticated user's business
         $prefix = $this->getPrefix($relation);
 
-        $currentNumber = 1;
+        $currentNumber = 10001;
 
         // Generate a unique identifier by checking for existing records
         do {
             $uniqueIdentifier = $prefix . '-' . str_pad($currentNumber, 4, '0', STR_PAD_LEFT);
             $currentNumber++;
-        } while ($this->identifierExists($mainModel, $uniqueIdentifierColumn, $uniqueIdentifier));
+        } while ($this->identifierExists($mainModel, $uniqueIdentifierColumn, $uniqueIdentifier,$relationModelId));
 
         return $uniqueIdentifier;
     }
 
 
-    protected function identifierExists(string $modelClass, string $column, string $value): bool
+    protected function identifierExists(string $modelClass, string $column, string $value,$relationModelId): bool
     {
         return $modelClass::where($column, $value)
-            ->where('business_id', auth()->user()->business_id)
+            ->where('business_id', $relationModelId)
             ->exists();
     }
 
