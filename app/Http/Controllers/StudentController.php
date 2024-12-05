@@ -551,7 +551,7 @@ class StudentController extends Controller
      * @OA\Get(
      *      path="/v1.0/students/validate/school-id/{school_id}",
      *      operationId="validateStudentId",
-     *      tags={"students"},
+     *      tags={"students.unused"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1502,7 +1502,7 @@ class StudentController extends Controller
      * @OA\Get(
      *      path="/v1.0/students/validate/student-id/{student_id}/{business_id}",
      *      operationId="validateStudentIdV2",
-     *      tags={"user_management.employee"},
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
