@@ -839,9 +839,18 @@ class StudentController extends Controller
                 ->when(!empty($request->student_status_id), function ($query) use ($request) {
                     return $query->where('students.student_status_id',$request->student_status_id);
                 })
-                ->when(request()->boolean("is_online_registered"), function ($query) use ($request) {
-                    return $query->whereNull('students.student_status_id');
-                })
+                ->when(
+                    request()->boolean("is_online_registered"),
+                    function ($query) {
+                        // Check if 'student_status_id' is NULL for online registration
+                        return $query->whereNull('students.student_status_id');
+                    },
+                    function ($query) {
+                        // Check if 'student_status_id' is NOT NULL for offline registration
+                        return $query->whereNotNull('students.student_status_id');
+                    }
+                )
+
 
 
 
