@@ -1807,7 +1807,7 @@ class BusinessController extends Controller
             $business = Business::where([
                 "id" => $id
             ])
-            ->select("id","name","logo","web_page")
+            ->select("id","name","logo","web_page","email")
             ->first();
 
 
