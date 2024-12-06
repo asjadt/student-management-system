@@ -10,12 +10,14 @@ use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Mail\StudentApplicationSubmitted;
 use App\Models\Business;
 use App\Models\Student;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class StudentController extends Controller
 {
@@ -352,6 +354,11 @@ class StudentController extends Controller
                 $student =  Student::create($request_data);
 
                 $business = $student->business;
+                $businessOwner = $business->owner;
+
+
+
+ Mail::to($businessOwner->email)->send(new StudentApplicationSubmitted($student, $businessOwner));
 
 
                 $response = [
@@ -361,6 +368,7 @@ class StudentController extends Controller
                 ];
 
                 return response($response, 201);
+
             });
         } catch (Exception $e) {
             error_log($e->getMessage());

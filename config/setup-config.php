@@ -1407,7 +1407,7 @@ return [
         "business_staff",
         "business_administrator",
         "business_teacher",
-        
+
     ],
     "permissions" => [
 
@@ -3094,7 +3094,7 @@ return [
     "business_background_image_location_full" => "business_background_image/business_background_image.jpeg",
 
     "temporary_files_location" => "temporary_files",
-
+    "folder_locations" => ["student"],
 
     "reminder_options"  => [
         [

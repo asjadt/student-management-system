@@ -19,7 +19,7 @@ use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
-
+use App\Http\Controllers\FileManagementController;
 use App\Http\Controllers\HistoryDetailsController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\InstallmentPaymentController;
@@ -89,6 +89,7 @@ Route::post('/v2.0/forgetpassword', [AuthController::class, "storeTokenV2"]);
 Route::post('/resend-email-verify-mail', [AuthController::class, "resendEmailVerifyToken"]);
 
 Route::patch('/forgetpassword/reset/{token}', [AuthController::class, "changePasswordByToken"]);
+
 Route::post('/auth/check/email', [AuthController::class, "checkEmail"]);
 
 
@@ -107,6 +108,18 @@ Route::post('/v1.0/business-image-multiple', [BusinessController::class, "create
 // Protected Routes
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
 Route::middleware(['custom.auth'])->group(function () {
+
+
+    Route::post('/v2.0/files/single-file-upload', [FileManagementController::class, "createFileSingleV2"]);
+    Route::post('/v2.0/files/multiple-file-upload', [FileManagementController::class, "createFileMultipleV2"]);
+    Route::get('/v1.0/file/{filename}', [FileManagementController::class, "getFile"]);
+
+
+
+
+
+
+
     Route::post('/v1.0/logout', [AuthController::class, "logout"]);
     Route::get('/v1.0/user', [AuthController::class, "getUser"]);
     Route::patch('/auth/changepassword', [AuthController::class, "changePassword"]);
@@ -1114,17 +1127,15 @@ Route::delete('/v1.0/job-listings/{ids}', [JobListingController::class, "deleteJ
 // students  management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+
 Route::post('/v1.0/students/multiple-file-upload', [StudentController::class, "createStudentFileMultiple"]);
 Route::post('/v1.0/students', [StudentController::class, "createStudent"]);
 Route::put('/v1.0/students', [StudentController::class, "updateStudent"]);
 Route::get('/v1.0/students/validate/school-id/{school_id}', [StudentController::class, "validateStudentId"]);
 Route::get('/v1.0/students', [StudentController::class, "getStudents"]);
-
-
-
-
 Route::get('/v1.0/students/{id}', [StudentController::class, "getStudentById"]);
 Route::delete('/v1.0/students/{ids}', [StudentController::class, "deleteStudentsByIds"]);
+
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // end students management section
@@ -1285,7 +1296,10 @@ Route::get('/v1.0/business-admin-dashboard', [DashboardManagementController::cla
 
 Route::get('/v1.0/client/job-listings', [JobListingController::class, "getJobListingsClient"]);
 Route::get('/v1.0/client/job-listings/{id}', [JobListingController::class, "getJobListingByIdClient"]);
+
 Route::post('/v1.0/client/students', [StudentController::class, "createStudentClient"]);
+
+
 Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentByIdClient"]);
 Route::get('/v1.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClient"]);
 Route::get('/v1.0/client/students', [StudentController::class, "getStudentsClient"]);

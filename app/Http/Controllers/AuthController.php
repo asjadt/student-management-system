@@ -327,8 +327,8 @@ class AuthController extends Controller
 
 
             $now = time(); // or your date as well
-$user_created_date = strtotime($user->created_at);
-$datediff = $now - $user_created_date;
+   $user_created_date = strtotime($user->created_at);
+   $datediff = $now - $user_created_date;
 
             if(!$user->email_verified_at && (($datediff / (60 * 60 * 24))>1)){
                 $this->storeError(
@@ -734,8 +734,6 @@ $datediff = $now - $user_created_date;
             $user->resetPasswordToken = $token;
             $user->resetPasswordExpires = Carbon::now()->subDays(-1);
             $user->save();
-
-
 
 
             $result = Mail::to($user->email)->send(new ForgetPasswordMail($user, $request_data["client_site"]));
