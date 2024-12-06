@@ -358,7 +358,7 @@ class StudentController extends Controller
 
 
 
- Mail::to($businessOwner->email)->send(new StudentApplicationSubmitted($student, $businessOwner));
+                   Mail::to($business->email)->send(new StudentApplicationSubmitted($student, $businessOwner,$business->name));
 
 
                 $response = [

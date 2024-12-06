@@ -13,6 +13,7 @@ class StudentApplicationSubmitted extends Mailable
 
     public $student;
     public $businessOwner;
+    public $collegeName;
 
     /**
      * Create a new message instance.
@@ -20,10 +21,11 @@ class StudentApplicationSubmitted extends Mailable
      * @param  \App\Models\Student  $student
      * @return void
      */
-    public function __construct($student,$businessOwner)
+    public function __construct($student,$businessOwner,$collegeName)
     {
         $this->student = $student;
         $this->businessOwner = $businessOwner;
+        $this->collegeName = $collegeName;
     }
 
     /**
@@ -33,15 +35,16 @@ class StudentApplicationSubmitted extends Mailable
      */
     public function build()
     {
-        return $this->subject('New Student Application Submission')
+        return $this->subject('New Student Application Reference: ' . $this->student->student_id)
             ->view('email.student_application')
             ->with([
                 'studentName' => $this->student->first_name . ' ' . $this->student->middle_name . " " . $this->student->last_name,
-                'applicationDate' => now()->toDateString(),
+                'applicationDate' => now()->format('d-m-Y'),
                 'courseAppliedFor' => $this->student->course_title->name,  // Adjust if you have course relationships
                 'applicationId' => $this->student->student_id,
                 'studentEmail' => $this->student->email,
-                'businessOwnerName' => $this->businessOwner->name,
+                'businessOwnerName' => $this->businessOwner->first_Name . ' ' . $this->businessOwner->middle_Name . " " . $this->businessOwner->last_Name,
+                'collegeName' => $this->collegeName,
             ]);
     }
 

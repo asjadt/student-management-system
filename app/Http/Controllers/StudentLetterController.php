@@ -369,6 +369,7 @@ class StudentLetterController extends Controller
     public function downloadStudentLetter(DownloadStudentLetterPdfRequest $request)
     {
         try {
+
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             $this->isModuleEnabled("letter_template");
             $request_data = $request->validated();
@@ -380,9 +381,9 @@ class StudentLetterController extends Controller
 
 
             $pdf = PDF::loadView('email.dynamic_mail', ["html_content" => $student_letter->letter_content]);
+
             return $pdf->download(("letter" . '.pdf'));
         } catch (Exception $e) {
-
             return $this->sendError($e, 500, $request);
         }
     }

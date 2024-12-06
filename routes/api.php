@@ -716,6 +716,7 @@ Route::delete('/v1.0/recruitment-processes/{ids}', [RecruitmentProcessController
     Route::post('/v1.0/student-letters/generate', [StudentLetterController::class, "generateStudentLetter"]);
 
     Route::post('/v1.0/student-letters/download', [StudentLetterController::class, "downloadStudentLetter"]);
+
     Route::post('/v1.0/student-letters/send', [StudentLetterController::class, "sendStudentLetterEmail"]);
 
 

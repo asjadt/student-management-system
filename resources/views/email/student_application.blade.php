@@ -15,11 +15,13 @@
         <li><strong>Application Date:</strong> {{ $applicationDate }}</li>
         <li><strong>Course Applied For:</strong> {{ $courseAppliedFor }}</li>
         <li><strong>Application ID:</strong> {{ $applicationId }}</li>
+        <li><strong>Student Email:</strong> {{ $studentEmail }}</li>
     </ul>
 
     <p>The student has successfully completed all required sections of the application.</p>
 
     <p>Best regards,</p>
     <p>Student Management System</p>
+    <p><strong>{{ $collegeName }}</strong></p>
 </body>
 </html>
