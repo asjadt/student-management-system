@@ -14,9 +14,6 @@
                 background-color: #f2f2f2;
                 text-align: center;
                 line-height: 35px;
-
-
-
             }
             .footer {
                 position: fixed;
@@ -36,14 +33,15 @@
     </head>
     <body>
         <div class="header">
-            Header Content
+        {!! $letter_template_header !!}
         </div>
 
         <div class="footer">
-            Footer Content
+        {!! $html_content !!}
         </div>
+        
         <div class="content">
-            {!! $html_content !!}
+            {!! $letter_template_footer !!}
         </div>
     </body>
     </html>
