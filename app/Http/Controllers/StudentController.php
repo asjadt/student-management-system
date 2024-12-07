@@ -10,14 +10,12 @@ use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
-use App\Mail\StudentApplicationSubmitted;
 use App\Models\Business;
 use App\Models\Student;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class StudentController extends Controller
 {
@@ -354,11 +352,6 @@ class StudentController extends Controller
                 $student =  Student::create($request_data);
 
                 $business = $student->business;
-                $businessOwner = $business->owner;
-
-
-
-                   Mail::to($business->email)->send(new StudentApplicationSubmitted($student, $businessOwner,$business->name));
 
 
                 $response = [
@@ -368,7 +361,6 @@ class StudentController extends Controller
                 ];
 
                 return response($response, 201);
-
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -505,7 +497,6 @@ class StudentController extends Controller
         "fee_paid",
         'passport_number',
         'school_id',
-        'student_id',
         'date_of_birth',
         'course_start_date',
         'course_end_date',
@@ -559,7 +550,7 @@ class StudentController extends Controller
      * @OA\Get(
      *      path="/v1.0/students/validate/school-id/{school_id}",
      *      operationId="validateStudentId",
-     *      tags={"students.unused"},
+     *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -833,8 +824,6 @@ class StudentController extends Controller
                             ->orWhere("students.nationality", "like", "%" . $term . "%")
                             ->orWhere("students.passport_number", "like", "%" . $term . "%")
                             ->orWhere("students.school_id", "like", "%" . $term . "%")
-                            ->orWhere("students.student_id", "like", "%" . $term . "%")
-
                             ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
                     });
                 })
@@ -873,8 +862,8 @@ class StudentController extends Controller
                 ->when(!empty($request->date_of_birth), function ($query) use ($request) {
                     return $query->where('students.date_of_birth',$request->date_of_birth);
                 })
-                ->when(!empty($request->student_id), function ($query) use ($request) {
-                    return $query->whereRaw('BINARY students.student_id = ?', [$request->student_id]);
+                ->when(!empty($request->school_id), function ($query) use ($request) {
+                    return $query->whereRaw('BINARY students.school_id = ?', [$request->school_id]);
                 })
 
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
@@ -1111,7 +1100,7 @@ class StudentController extends Controller
                              ->orWhere("students.last_name", "like", "%" . $term . "%")
                              ->orWhere("students.nationality", "like", "%" . $term . "%")
                              ->orWhere("students.passport_number", "like", "%" . $term . "%")
-                             ->orWhere("students.student_id", "like", "%" . $term . "%")
+                             ->orWhere("students.school_id", "like", "%" . $term . "%")
                              ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
                      });
                  })
@@ -1133,8 +1122,8 @@ class StudentController extends Controller
                  ->when(!empty($request->date_of_birth), function ($query) use ($request) {
                      return $query->where('students.date_of_birth',$request->date_of_birth);
                  })
-                 ->when(!empty($request->student_id), function ($query) use ($request) {
-                    return $query->whereRaw('BINARY students.student_id = ?', [$request->student_id]);
+                 ->when(!empty($request->school_id), function ($query) use ($request) {
+                    return $query->whereRaw('BINARY students.school_id = ?', [$request->school_id]);
                 })
 
                  ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
@@ -1510,7 +1499,7 @@ class StudentController extends Controller
      * @OA\Get(
      *      path="/v1.0/students/validate/student-id/{student_id}/{business_id}",
      *      operationId="validateStudentIdV2",
-     *      tags={"students"},
+     *      tags={"user_management.employee"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
