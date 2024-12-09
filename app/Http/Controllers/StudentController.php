@@ -801,8 +801,7 @@ class StudentController extends Controller
             }
             $business_id =  $request->user()->business_id;
             $students = Student::
-            with("student_status")
-
+            with("student_status","course_title")
             ->where(
                 [
                     "students.business_id" => $business_id
@@ -861,11 +860,6 @@ class StudentController extends Controller
                         return $query->whereNotNull('students.student_status_id');
                     }
                 )
-
-
-
-
-
 
                 ->when(!empty($request->course_title_id), function ($query) use ($request) {
                     return $query->where('students.course_title_id',$request->course_title_id);
