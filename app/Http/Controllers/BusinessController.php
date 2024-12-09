@@ -929,16 +929,12 @@ class BusinessController extends Controller
      *  "logo":"https://images.unsplash.com/photo-1671410714831-969877d103b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
      *      *  *  "image":"https://images.unsplash.com/photo-1671410714831-969877d103b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
      *  "images":{"/a","/b","/c"},
-     *  "currency":"BDT"
-     *
+     *  "currency":"BDT",
+     *  "letter_template_header":"letter_template_header",
+     *  "letter_template_footer":"letter_template_footer"
      * }),
-     *
 
-     *
-     *
-
-     *
-     *         ),
+     *       ),
      *      ),
      *      @OA\Response(
      *          response=200,
@@ -1038,11 +1034,11 @@ class BusinessController extends Controller
         $request_data['user']['address_line_1'] = $request_data['business']['address_line_1']?? null;
         $request_data['user']['address_line_2'] = $request_data['business']['address_line_2'] ?? null;
 
-    $request_data['user']['country'] = $request_data['business']['country'] ?? null;
-    $request_data['user']['city'] = $request_data['business']['city'] ?? null;
-    $request_data['user']['postcode'] = $request_data['business']['postcode'] ?? null;
-    $request_data['user']['lat'] = $request_data['business']['lat'] ?? null;
-    $request_data['user']['long'] = $request_data['business']['long'] ?? null;
+        $request_data['user']['country'] = $request_data['business']['country'] ?? null;
+        $request_data['user']['city'] = $request_data['business']['city'] ?? null;
+        $request_data['user']['postcode'] = $request_data['business']['postcode'] ?? null;
+        $request_data['user']['lat'] = $request_data['business']['lat'] ?? null;
+        $request_data['user']['long'] = $request_data['business']['long'] ?? null;
         $user  =  tap(User::where([
             "id" => $request_data['user']["id"]
             ]))->update(collect($request_data['user'])->only([
@@ -1077,7 +1073,7 @@ class BusinessController extends Controller
 
 
 
-  //  business info ##############
+        //  business info ##############
         // $request_data['business']['status'] = "pending";
 
         $business  =  tap(Business::where([
@@ -1101,16 +1097,12 @@ class BusinessController extends Controller
                 "status",
                 "background_image",
                 // "is_active",
-
-
-
-
-                "currency"
-
+                "currency",
+                "letter_template_header",
+                "letter_template_footer"
         ])->toArray()
         )
             // ->with("somthing")
-
             ->first();
             if(!$business) {
                 return response()->json([
@@ -1125,11 +1117,6 @@ class BusinessController extends Controller
   if(!empty($request_data["times"])) {
 
     $timesArray = collect($request_data["times"])->unique("day");
-
-
-
-
-
     BusinessTime::where([
         "business_id" => $business->id
        ])
@@ -1733,9 +1720,6 @@ class BusinessController extends Controller
             ])
             ->first();
 
-
-
-
         return response()->json($business, 200);
         } catch(Exception $e){
 
@@ -1807,7 +1791,7 @@ class BusinessController extends Controller
             $business = Business::where([
                 "id" => $id
             ])
-            ->select("id","name","logo","web_page")
+            ->select("id","name","logo","web_page","email")
             ->first();
 
 

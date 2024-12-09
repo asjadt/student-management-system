@@ -277,7 +277,7 @@ class StudentLetterController extends Controller
                         }
                         else if ($item == "[QR_CODE]") {
                             // Get the URL from the environment variable
-                            $url = "https://app.smartcollegeportal.com/dev-blue-hrm" . "/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
+                            $url = "https://app.smartcollegeportal.com/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
 
                             // Generate the QR code image
                             $qrCode = new QrCode($url);
@@ -369,7 +369,6 @@ class StudentLetterController extends Controller
     public function downloadStudentLetter(DownloadStudentLetterPdfRequest $request)
     {
         try {
-
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             $this->isModuleEnabled("letter_template");
             $request_data = $request->validated();
@@ -378,12 +377,17 @@ class StudentLetterController extends Controller
                 "id" => $request_data["student_letter_id"]
             ])
                 ->first();
+            $business = auth()->user()->business;
 
-
-            $pdf = PDF::loadView('email.dynamic_mail', ["html_content" => $student_letter->letter_content]);
-
+            $pdf = PDF::loadView('email.dynamic_mail', [
+                "html_content" => $student_letter->letter_content,
+                "letter_template_header" => $business->letter_template_header,
+                "letter_template_footer" => $business->letter_template_footer,
+            ],
+            );
             return $pdf->download(("letter" . '.pdf'));
         } catch (Exception $e) {
+
             return $this->sendError($e, 500, $request);
         }
     }

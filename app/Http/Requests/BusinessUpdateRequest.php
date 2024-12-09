@@ -80,6 +80,8 @@ class BusinessUpdateRequest extends BaseFormRequest
             'business.student_optional_fields' => 'nullable|array',
             'business.student_optional_fields.*' => 'string',
 
+            'business.letter_template_header' => 'nullable|string',
+            'business.letter_template_footer' => 'nullable|string',
 
 
 

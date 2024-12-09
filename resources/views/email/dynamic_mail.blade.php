@@ -36,11 +36,11 @@
     </head>
     <body>
         <div class="header">
-            Header Content
+        {!! $letter_template_header !!}
         </div>
 
         <div class="footer">
-            Footer Content
+        {!! $letter_template_footer !!}
         </div>
         <div class="content">
             {!! $html_content !!}
