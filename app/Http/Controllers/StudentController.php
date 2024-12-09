@@ -815,8 +815,6 @@ class StudentController extends Controller
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
                         $term = $request->search_key;
-
-
                         $query->where("students.first_name", "like", "%" . $term . "%")
                             ->orWhere("students.middle_name", "like", "%" . $term . "%")
                             ->orWhere("students.last_name", "like", "%" . $term . "%")

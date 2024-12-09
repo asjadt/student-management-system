@@ -18,6 +18,7 @@ use App\Models\LetterTemplate;
 use App\Models\Student;
 use App\Models\StudentLetter;
 use App\Models\StudentLetterEmailHistory;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -293,6 +294,25 @@ class StudentLetterController extends Controller
                             // Replace [QR_CODE] with the image in the template
                             $template = str_replace($item, '<img src="' . $qrCodeImage . '" alt="QR Code" />', $template);
                         }
+
+                        else if (
+                            $item == "[DATE_OF_BIRTH]"
+                            || $item == "[COURSE_START_DATE]"
+                            || $item == "[COURSE_END_DATE]"
+                            || $item == "[LETTER_ISSUE_DATE]"
+                            || $item == "[PASSPORT_ISSUE_DATE]"
+                            || $item == "[PASSPORT_EXPIRY_DATE]"
+                        ) {
+                            $dateValue = $student[$variableName] ?? null;
+
+                            if ($dateValue && $dateValue !== '1970-01-01') {
+                                $formattedDate = Carbon::parse($dateValue)->format('d-m-Y');
+                                $template = str_replace($item, $formattedDate, $template);
+                            } else {
+                                $template = str_replace($item, '', $template);
+                            }
+                        }
+
                          else {
                             $template = str_replace($item, $student[$variableName], $template);
                         }
