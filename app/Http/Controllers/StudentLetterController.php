@@ -282,6 +282,7 @@ class StudentLetterController extends Controller
 
                             // Generate the QR code image
                             $qrCode = new QrCode($url);
+                            $qrCode->setSize(168);
                             $writer = new PngWriter();
 
                             // Generate the image as a string (binary data)

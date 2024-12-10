@@ -9,7 +9,7 @@
         "barryvdh/laravel-dompdf": "^2.0",
         "darkaonline/l5-swagger": "^8.4",
         "doctrine/dbal": "^3.0",
-        "endroid/qr-code": "^6.0",
+        "endroid/qr-code": "^4.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
