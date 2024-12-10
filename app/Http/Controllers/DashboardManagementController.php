@@ -2258,10 +2258,14 @@ class DashboardManagementController extends Controller
         $start_date_of_this_week,
         $end_date_of_this_week,
         $start_date_of_previous_week,
-        $end_date_of_previous_week
+        $end_date_of_previous_week,
+        $is_online_student = 0
     ) {
 
-        $data_query  = Student::where("business_id", auth()->user()->business_id);
+        $data_query  = Student::where("business_id", auth()->user()->business_id)
+        ->when($is_online_student,function($query) {
+             $query->whereNull("students.student_status_id");
+        });
 
         $data["total_data_count"] = $data_query->count();
 
@@ -2380,6 +2384,24 @@ class DashboardManagementController extends Controller
                 $end_date_of_this_week,
                 $start_date_of_previous_week,
                 $end_date_of_previous_week,
+
+            );
+
+            $data["online_students"] = $this->total_students(
+                $today,
+                $start_date_of_next_month,
+                $end_date_of_next_month,
+                $start_date_of_this_month,
+                $end_date_of_this_month,
+                $start_date_of_previous_month,
+                $end_date_of_previous_month,
+                $start_date_of_next_week,
+                $end_date_of_next_week,
+                $start_date_of_this_week,
+                $end_date_of_this_week,
+                $start_date_of_previous_week,
+                $end_date_of_previous_week,
+                1
 
             );
 
