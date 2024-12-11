@@ -142,7 +142,7 @@ class StudentController extends Controller
  * *     @OA\Property(property="course_fee", type="string", format="string", example="Country"),
  * *     @OA\Property(property="fee_paid", type="string", format="string", example="Country"),
  *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
- *     @OA\Property(property="school_id", type="string", format="string", example="School123"),
+ *     @OA\Property(property="student_id", type="string", format="string", example="School123"),
  *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
  *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
@@ -262,7 +262,7 @@ class StudentController extends Controller
  * *     @OA\Property(property="course_fee", type="string", format="string", example="Country"),
  * *     @OA\Property(property="fee_paid", type="string", format="string", example="Country"),
  *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
- *     @OA\Property(property="school_id", type="string", format="string", example="School123"),
+ *     @OA\Property(property="student_id", type="string", format="string", example="School123"),
  *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
  *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
@@ -394,7 +394,7 @@ class StudentController extends Controller
  * *     @OA\Property(property="fee_paid", type="string", format="string", example="Country"),
 
  *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
- *     @OA\Property(property="school_id", type="string", format="string", example="School123"),
+ *     @OA\Property(property="student_id", type="string", format="string", example="School123"),
  *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
  *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
@@ -496,7 +496,7 @@ class StudentController extends Controller
         "course_fee",
         "fee_paid",
         'passport_number',
-        'school_id',
+        'student_id',
         'date_of_birth',
         'course_start_date',
         'course_end_date',
@@ -548,7 +548,7 @@ class StudentController extends Controller
  /**
      *
      * @OA\Get(
-     *      path="/v1.0/students/validate/school-id/{school_id}",
+     *      path="/v1.0/students/validate/school-id/{student_id}",
      *      operationId="validateStudentId",
      *      tags={"students"},
      *       security={
@@ -556,9 +556,9 @@ class StudentController extends Controller
      *       },
 
      *              @OA\Parameter(
-     *         name="school_id",
+     *         name="student_id",
      *         in="path",
-     *         description="school_id",
+     *         description="student_id",
      *         required=true,
      *  example="1"
      *      ),
@@ -600,21 +600,21 @@ class StudentController extends Controller
      *      )
      *     )
      */
-    public function validateStudentId($school_id, Request $request)
+    public function validateStudentId($student_id, Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            $school_id_exists =  Student::where(
+            $student_id_exists =  Student::where(
                 [
-                    'school_id' => $school_id,
+                    'student_id' => $student_id,
                     "business_id" => $request->user()->business_id
                 ]
             )->exists();
 
 
 
-            return response()->json(["school_id_exists" => $school_id_exists], 200);
+            return response()->json(["student_id_exists" => $student_id_exists], 200);
         } catch (Exception $e) {
             error_log($e->getMessage());
             return $this->sendError($e, 500, $request);
@@ -632,114 +632,181 @@ class StudentController extends Controller
      *       security={
      *           {"bearerAuth": {}}
      *       },
-
-     *              @OA\Parameter(
-     *         name="per_page",
-     *         in="query",
-     *         description="per_page",
-     *         required=true,
-     *  example="6"
-     *      ),
-     *    *      * *  @OA\Parameter(
-     * name="student_status_id",
-     * in="query",
-     * description="student_status_id",
-     * required=true,
-     * example="1"
-     * ),
-     *  *    *      * *  @OA\Parameter(
-     * name="course_title_id",
-     * in="query",
-     * description="course_title_id",
-     * required=true,
-     * example="1"
-     * ),
-     * *   * *  @OA\Parameter(
-     * name="school_id",
-     * in="query",
-     * description="school_id",
-     * required=true,
-     * example="412cbhg"
-     * ),
-     *   * *  @OA\Parameter(
-     * name="date_of_birth",
-     * in="query",
-     * description="date_of_birth",
-     * required=true,
-     * example="ASC"
-     * ),
-     *      *   * *  @OA\Parameter(
-     * name="is_online_registered",
-     * in="query",
-     * description="is_online_registered",
-     * required=true,
-     * example=""
-     * ),
-     *
-
-     *      * *  @OA\Parameter(
-     * name="start_date",
-     * in="query",
-     * description="start_date",
-     * required=true,
-     * example="2019-06-29"
-     * ),
-     * *  @OA\Parameter(
-     * name="end_date",
-     * in="query",
-     * description="end_date",
-     * required=true,
-     * example="2019-06-29"
-     * ),
-     * *  @OA\Parameter(
-     * name="search_key",
-     * in="query",
-     * description="search_key",
-     * required=true,
-     * example="search_key"
-     * ),
-     * *  @OA\Parameter(
-     * name="order_by",
-     * in="query",
-     * description="order_by",
-     * required=true,
-     * example="ASC"
-     * ),
-     * * *  @OA\Parameter(
-     * name="is_single_search",
-     * in="query",
-     * description="is_single_search",
-     * required=true,
-     * example="ASC"
-     * ),
-     *    * * *  @OA\Parameter(
-     * name="id",
-     * in="query",
-     * description="id",
-     * required=true,
-     * example="id"
-     * ),
-     *     @OA\Parameter(
-     * name="first_name",
-     * in="query",
-     * description="first_name",
-     * required=true,
-     * example="first_name"
-     * ),
-     *    @OA\Parameter(
-     * name="middle_name",
-     * in="query",
-     * description="middle_name",
-     * required=true,
-     * example="middle_name"
-     * ),
-     *    *    @OA\Parameter(
-     * name="last_name",
-     * in="query",
-     * description="last_name",
-     * required=true,
-     * example="last_name"
-     * ),
+* @OA\Parameter(
+ *     name="id",
+ *     in="query",
+ *     description="Filter by student ID",
+ *     required=false,
+ *     example="123"
+ * ),
+ * @OA\Parameter(
+ *     name="nationality",
+ *     in="query",
+ *     description="Filter by student's nationality",
+ *     required=false,
+ *     example="Bangladeshi"
+ * ),
+ * @OA\Parameter(
+ *     name="letter_issue_start_date",
+ *     in="query",
+ *     description="Filter by letter issue start date (YYYY-MM-DD)",
+ *     required=false,
+ *     example="2024-01-01"
+ * ),
+ * @OA\Parameter(
+ *     name="letter_issue_end_date",
+ *     in="query",
+ *     description="Filter by letter issue end date (YYYY-MM-DD)",
+ *     required=false,
+ *     example="2024-12-31"
+ * ),
+ * @OA\Parameter(
+ *     name="fee_paid_min",
+ *     in="query",
+ *     description="Minimum fee paid",
+ *     required=false,
+ *     example="1000"
+ * ),
+ * @OA\Parameter(
+ *     name="fee_paid_max",
+ *     in="query",
+ *     description="Maximum fee paid",
+ *     required=false,
+ *     example="5000"
+ * ),
+ * @OA\Parameter(
+ *     name="course_start_date_start_date",
+ *     in="query",
+ *     description="Filter by course start date (start range, YYYY-MM-DD)",
+ *     required=false,
+ *     example="2024-01-01"
+ * ),
+ * @OA\Parameter(
+ *     name="course_start_date_end_date",
+ *     in="query",
+ *     description="Filter by course start date (end range, YYYY-MM-DD)",
+ *     required=false,
+ *     example="2024-12-31"
+ * ),
+ * @OA\Parameter(
+ *     name="course_end_date_start_date",
+ *     in="query",
+ *     description="Filter by course end date (start range, YYYY-MM-DD)",
+ *     required=false,
+ *     example="2024-01-01"
+ * ),
+ * @OA\Parameter(
+ *     name="course_end_date_end_date",
+ *     in="query",
+ *     description="Filter by course end date (end range, YYYY-MM-DD)",
+ *     required=false,
+ *     example="2024-12-31"
+ * ),
+ * @OA\Parameter(
+ *     name="first_name",
+ *     in="query",
+ *     description="Filter by student's first name",
+ *     required=false,
+ *     example="John"
+ * ),
+ * @OA\Parameter(
+ *     name="middle_name",
+ *     in="query",
+ *     description="Filter by student's middle name",
+ *     required=false,
+ *     example="Paul"
+ * ),
+ * @OA\Parameter(
+ *     name="last_name",
+ *     in="query",
+ *     description="Filter by student's last name",
+ *     required=false,
+ *     example="Doe"
+ * ),
+ * @OA\Parameter(
+ *     name="name",
+ *     in="query",
+ *     description="Filter by student's name (loose search)",
+ *     required=false,
+ *     example="John Paul"
+ * ),
+ * @OA\Parameter(
+ *     name="search_key",
+ *     in="query",
+ *     description="Global search across multiple fields",
+ *     required=false,
+ *     example="passport123"
+ * ),
+ * @OA\Parameter(
+ *     name="start_date",
+ *     in="query",
+ *     description="Filter by creation date (start range, YYYY-MM-DD)",
+ *     required=false,
+ *     example="2024-01-01"
+ * ),
+ * @OA\Parameter(
+ *     name="end_date",
+ *     in="query",
+ *     description="Filter by creation date (end range, YYYY-MM-DD)",
+ *     required=false,
+ *     example="2024-12-31"
+ * ),
+ * @OA\Parameter(
+ *     name="student_status_id",
+ *     in="query",
+ *     description="Filter by student status ID",
+ *     required=false,
+ *     example="5"
+ * ),
+ * @OA\Parameter(
+ *     name="is_online_registered",
+ *     in="query",
+ *     description="Filter by online or offline registration",
+ *     required=false,
+ *     example="true"
+ * ),
+ * @OA\Parameter(
+ *     name="course_title_id",
+ *     in="query",
+ *     description="Filter by course title ID",
+ *     required=false,
+ *     example="10"
+ * ),
+ * @OA\Parameter(
+ *     name="date_of_birth",
+ *     in="query",
+ *     description="Filter by date of birth (YYYY-MM-DD)",
+ *     required=false,
+ *     example="2000-01-01"
+ * ),
+ * @OA\Parameter(
+ *     name="student_id",
+ *     in="query",
+ *     description="Filter by school ID (case sensitive)",
+ *     required=false,
+ *     example="SCH123"
+ * ),
+ * @OA\Parameter(
+ *     name="order_by",
+ *     in="query",
+ *     description="Sort order by ID (ASC or DESC)",
+ *     required=false,
+ *     example="ASC"
+ * ),
+ * @OA\Parameter(
+ *     name="is_single_search",
+ *     in="query",
+ *     description="Return a single result instead of paginated results",
+ *     required=false,
+ *     example="true"
+ * ),
+ * @OA\Parameter(
+ *     name="per_page",
+ *     in="query",
+ *     description="Number of results per page",
+ *     required=false,
+ *     example="20"
+ * ),
 
 
 
@@ -802,15 +869,52 @@ class StudentController extends Controller
                 return $query->where('students.id',$request->id);
             })
 
+            ->when(!empty($request->nationality), function ($query) use ($request) {
+                return $query->where('students.nationality', $request->nationality);
+            })
+            ->when(!empty($request->letter_issue_start_date), function ($query) use ($request) {
+                return $query->where('students.letter_issue_date', '>=', $request->letter_issue_start_date);
+            })
+            ->when(!empty($request->letter_issue_end_date), function ($query) use ($request) {
+                return $query->where('students.letter_issue_date', '<=', $request->letter_issue_end_date . ' 23:59:59');
+            })
+            ->when(!empty($request->fee_paid_min), function ($query) use ($request) {
+                return $query->where('students.fee_paid', '>=', $request->fee_paid_min);
+            })
+            ->when(!empty($request->fee_paid_max), function ($query) use ($request) {
+                return $query->where('students.fee_paid', '<=', $request->fee_paid_max);
+            })
+
+            ->when(!empty($request->course_start_date_start_date), function ($query) use ($request) {
+                return $query->where('students.course_start_date', '>=', $request->course_start_date_start_date);
+            })
+            ->when(!empty($request->course_start_date_end_date), function ($query) use ($request) {
+                return $query->where('students.course_start_date', '<=', $request->course_start_date_end_date . ' 23:59:59');
+            })
+            ->when(!empty($request->course_end_date_start_date), function ($query) use ($request) {
+                return $query->where('students.course_end_date', '>=', $request->course_end_date_start_date);
+            })
+            ->when(!empty($request->course_end_date_end_date), function ($query) use ($request) {
+                return $query->where('students.course_end_date', '<=', $request->course_end_date_end_date . ' 23:59:59');
+            })
             ->when(!empty($request->first_name), function ($query) use ($request) {
                 return $query->where('students.first_name',$request->first_name);
             })
-
             ->when(!empty($request->middle_name), function ($query) use ($request) {
                 return $query->where('students.middle_name',$request->middle_name);
             })
             ->when(!empty($request->last_name), function ($query) use ($request) {
                 return $query->where('students.last_name',$request->last_name);
+            })
+            ->when(!empty($request->name), function ($query) use ($request) {
+                return $query->where(function ($query) use ($request) {
+                    $terms = explode(' ', $request->name); // Split the input into individual words
+                    foreach ($terms as $term) {
+                        $query->orWhere('students.first_name', 'like', '%' . $term . '%')
+                              ->orWhere('students.middle_name', 'like', '%' . $term . '%')
+                              ->orWhere('students.last_name', 'like', '%' . $term . '%');
+                    }
+                });
             })
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
@@ -820,7 +924,7 @@ class StudentController extends Controller
                             ->orWhere("students.last_name", "like", "%" . $term . "%")
                             ->orWhere("students.nationality", "like", "%" . $term . "%")
                             ->orWhere("students.passport_number", "like", "%" . $term . "%")
-                            ->orWhere("students.school_id", "like", "%" . $term . "%")
+                            ->orWhere("students.student_id", "like", "%" . $term . "%")
                             ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
                     });
                 })
@@ -854,8 +958,8 @@ class StudentController extends Controller
                 ->when(!empty($request->date_of_birth), function ($query) use ($request) {
                     return $query->where('students.date_of_birth',$request->date_of_birth);
                 })
-                ->when(!empty($request->school_id), function ($query) use ($request) {
-                    return $query->whereRaw('BINARY students.school_id = ?', [$request->school_id]);
+                ->when(!empty($request->student_id), function ($query) use ($request) {
+                    return $query->whereRaw('BINARY students.student_id = ?', [$request->student_id]);
                 })
 
                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
@@ -917,9 +1021,9 @@ class StudentController extends Controller
      * example="1"
      * ),
      * *   * *  @OA\Parameter(
-     * name="school_id",
+     * name="student_id",
      * in="query",
-     * description="school_id",
+     * description="student_id",
      * required=true,
      * example="412cbhg"
      * ),
@@ -1092,7 +1196,7 @@ class StudentController extends Controller
                              ->orWhere("students.last_name", "like", "%" . $term . "%")
                              ->orWhere("students.nationality", "like", "%" . $term . "%")
                              ->orWhere("students.passport_number", "like", "%" . $term . "%")
-                             ->orWhere("students.school_id", "like", "%" . $term . "%")
+                             ->orWhere("students.student_id", "like", "%" . $term . "%")
                              ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
                      });
                  })
@@ -1114,8 +1218,8 @@ class StudentController extends Controller
                  ->when(!empty($request->date_of_birth), function ($query) use ($request) {
                      return $query->where('students.date_of_birth',$request->date_of_birth);
                  })
-                 ->when(!empty($request->school_id), function ($query) use ($request) {
-                    return $query->whereRaw('BINARY students.school_id = ?', [$request->school_id]);
+                 ->when(!empty($request->student_id), function ($query) use ($request) {
+                    return $query->whereRaw('BINARY students.student_id = ?', [$request->student_id]);
                 })
 
                  ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {

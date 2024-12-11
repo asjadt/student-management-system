@@ -38,7 +38,7 @@ class CreateStudentsTable extends Migration
             $table->double('fee_paid');
 
             // School and Letter Information
-            $table->string('school_id')->nullable();
+
             $table->date('letter_issue_date')->nullable();
 
             // Status Information

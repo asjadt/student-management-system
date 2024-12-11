@@ -20,7 +20,7 @@ class CreateStudentsTable extends Migration
             $table->id();
 
             // Personal Information
-            $table->string('school_id')->nullable();
+
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
@@ -42,7 +42,7 @@ class CreateStudentsTable extends Migration
             $table->double('fee_paid');
 
             // School and Letter Information
-            $table->string('school_id')->nullable();
+
             $table->date('letter_issue_date')->nullable();
 
             // Status Information

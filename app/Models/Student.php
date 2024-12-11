@@ -19,7 +19,6 @@ class Student extends Model
         "course_fee",
         "fee_paid",
         'passport_number',
-        'school_id',
         'date_of_birth',
 
         'course_start_date',
