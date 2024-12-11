@@ -23,9 +23,12 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use PDF;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
+use Barryvdh\DomPDF\Facade as PDF;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+
 
 class StudentLetterController extends Controller
 {
@@ -282,7 +285,7 @@ class StudentLetterController extends Controller
 
                             // Generate the QR code image
                             $qrCode = new QrCode($url);
-                            $qrCode->setSize(168);
+                            $qrCode->setSize(150);
                             $writer = new PngWriter();
 
                             // Generate the image as a string (binary data)
@@ -350,6 +353,7 @@ class StudentLetterController extends Controller
      *            required={"first_Name"},
      *             @OA\Property(property="student_letter_id", type="string", format="string",example="student_letter_id"),
      *             @OA\Property(property="student_id", type="string", format="string",example="student_id"),
+     *             @OA\Property(property="type", type="string", format="string",example="word")
      *
      *         ),
      *      ),
@@ -400,13 +404,68 @@ class StudentLetterController extends Controller
                 ->first();
             $business = auth()->user()->business;
 
-            $pdf = PDF::loadView('email.dynamic_mail', [
-                "html_content" => $student_letter->letter_content,
-                "letter_template_header" => $business->letter_template_header,
-                "letter_template_footer" => $business->letter_template_footer,
-            ],
+
+            if(empty($request_data["type"])) {
+                $pdf = PDF::loadView('email.dynamic_mail', [
+                    "html_content" => $student_letter->letter_content,
+                    "letter_template_header" => $business->letter_template_header,
+                    "letter_template_footer" => $business->letter_template_footer,
+                ],
+                );
+                return $pdf->download(("letter" . '.pdf'));
+            }
+            if($request_data["type"] == "pdf") {
+                $pdf = PDF::loadView('email.dynamic_mail', [
+                    "html_content" => $student_letter->letter_content,
+                    "letter_template_header" => $business->letter_template_header,
+                    "letter_template_footer" => $business->letter_template_footer,
+                ],
+                );
+                return $pdf->download(("letter" . '.pdf'));
+            } else if($request_data["type"] == "word"){
+                $phpWord = new PhpWord();
+            $section = $phpWord->addSection();
+
+            // Set the HTML content with header, footer, and letter content
+            $htmlContent = "
+                <html>
+                    <head>
+                        <style>
+                            .header { text-align: center; font-size: 18px; }
+                            .footer { text-align: center; font-size: 12px; }
+                            .content { font-size: 14px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class='header'>{$business->letter_template_header}</div>
+                        <div class='footer'>{$business->letter_template_footer}</div>
+                        <div class='content'>{$student_letter->letter_content}</div>
+                    </body>
+                </html>
+            ";
+
+            // Add the HTML content to the Word document (convert HTML to Word format)
+            \PhpOffice\PhpWord\Shared\Html::addHtml($section, $htmlContent);
+
+            // Save the Word document to a string (in memory)
+            $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+
+            return response()->stream(
+                function () use ($phpWord, $objWriter) {
+                    $objWriter->save('php://output'); // Output directly to the browser
+                },
+                200,
+                [
+                    'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'Content-Disposition' => 'attachment; filename="letter.docx"',
+                ]
             );
-            return $pdf->download(("letter" . '.pdf'));
+            } else {
+                throw new Exception("some thing went wrong");
+            }
+
+
+
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);

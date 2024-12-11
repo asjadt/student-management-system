@@ -49,10 +49,22 @@ class DownloadStudentLetterPdfRequest extends FormRequest
                     'numeric',
 
                 ],
-
+                'type' => [
+                    'nullable', // Make this field optional
+                    'in:pdf,word', // Only allow 'pdf' or 'word'
+                ],
 
         ];
 
+
         return $rules;
     }
+
+    public function messages()
+{
+    return [
+        'type.in' => 'The type must be either "pdf" or "word".',
+    ];
+}
+
 }
