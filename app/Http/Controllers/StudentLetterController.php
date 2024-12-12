@@ -11,6 +11,7 @@ use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\EmailLogUtil;
 use App\Http\Utils\ErrorUtil;
+use App\Http\Utils\HTML_TO_DOC;
 use App\Http\Utils\ModuleUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Mail\StudentLetterMail;
@@ -28,6 +29,7 @@ use PhpOffice\PhpWord\IOFactory;
 use PDF;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use PhpOffice\PhpWord\Shared\Html;
 
 
 class StudentLetterController extends Controller
@@ -333,6 +335,65 @@ class StudentLetterController extends Controller
         }
     }
 
+    public function fixHtmlTags($html)
+{
+    // Ensure <img> tags are self-closed properly (e.g., <img /> instead of <img>)
+    // $html = preg_replace('/<img([^>]*)(\/?)>/i', '<img$1 />', $html);
+    $html = preg_replace('/<img([^>]*)(?<!\/)>/i', '<img$1 />', $html);
+
+    // Ensure there is no <br> tag directly inside <p> without proper closing
+    $html = preg_replace_callback('/<p[^>]*>.*?<\/p>/is', function($matches) {
+        // Handle <br> tags inside <p> by replacing <br> with a custom placeholder
+        $content = $matches[0];
+        $content = preg_replace('/<br\s*\/?>/', '<br class="fix_br_tag" />', $content);
+        return $content;
+    }, $html);
+
+    // Ensure all unclosed tags are closed
+    $this->closeUnclosedTags($html);
+
+    return $html;
+}
+
+public function closeUnclosedTags(&$html)
+{
+    // Define a list of self-closing and non-self-closing tags
+    $selfClosingTags = ['img', 'br', 'hr', 'input', 'meta', 'link', 'area', 'base', 'col', 'source', 'track'];
+    $nonSelfClosingTags = ['p', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'];
+
+    // Use a stack to track open tags
+    $openTags = [];
+
+    // Regular expression to match all opening and closing tags
+    preg_match_all('/<\/?([a-zA-Z0-9]+)([^>]*)(?=>|$)/', $html, $matches, PREG_OFFSET_CAPTURE);
+
+    foreach ($matches[1] as $index => $tagName) {
+        $tag = strtolower($tagName[0]);
+
+        // If it's a closing tag, check if it matches the most recent opening tag
+        if (substr($matches[0][$index][0], 0, 2) === '</') {
+            if (!empty($openTags) && end($openTags) === $tag) {
+                array_pop($openTags);
+            } else {
+                // Mismatch found, add closing tag to fix
+                $html = substr_replace($html, "</$tag>", $matches[0][$index][1], 0);
+            }
+        } elseif (!in_array($tag, $selfClosingTags)) {
+            // For opening tags, add them to the stack
+            $openTags[] = $tag;
+        }
+    }
+
+    // Append missing closing tags for all open tags
+    foreach (array_reverse($openTags) as $tag) {
+        $html .= "</$tag>";
+    }
+}
+
+
+
+
+
 
 
     /**
@@ -423,43 +484,84 @@ class StudentLetterController extends Controller
                 );
                 return $pdf->download(("letter" . '.pdf'));
             } else if($request_data["type"] == "word"){
-                $phpWord = new PhpWord();
-            $section = $phpWord->addSection();
 
-            // Set the HTML content with header, footer, and letter content
-            $htmlContent = "
-                <html>
-                    <head>
-                        <style>
-                            .header { text-align: center; font-size: 18px; }
-                            .footer { text-align: center; font-size: 12px; }
-                            .content { font-size: 14px; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class='header'>{$business->letter_template_header}</div>
-                        <div class='footer'>{$business->letter_template_footer}</div>
-                        <div class='content'>{$student_letter->letter_content}</div>
-                    </body>
-                </html>
-            ";
+    // Create a new PhpWord object
+    $phpWord = new PhpWord();
 
-            // Add the HTML content to the Word document (convert HTML to Word format)
-            \PhpOffice\PhpWord\Shared\Html::addHtml($section, $htmlContent);
+    // Set header and footer content
+    $header = $this->fixHtmlTags($business->letter_template_header);
+    $footer = $this->fixHtmlTags($business->letter_template_footer);
 
-            // Save the Word document to a string (in memory)
-            $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+    // Define HTML content to be added to the document
+    $htmlContent = $this->fixHtmlTags($student_letter->letter_content);
 
-            return response()->stream(
-                function () use ($phpWord, $objWriter) {
-                    $objWriter->save('php://output'); // Output directly to the browser
-                },
-                200,
-                [
-                    'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                    'Content-Disposition' => 'attachment; filename="letter.docx"',
-                ]
-            );
+    // Add a new section with a header and footer
+    $section = $phpWord->addSection();
+    $headerObj = $section->addHeader();
+    Html::addHtml($headerObj, $header);  // Add the header HTML
+    $footerObj = $section->addFooter();
+    Html::addHtml($footerObj, $footer);  // Add the footer HTML
+
+    // Add dynamic HTML content to the section
+    Html::addHtml($section, $htmlContent);
+
+    // Save the file to a storage path
+    $filename = 'DynamicHtmlDocument.docx';
+    $path = storage_path($filename);
+    $phpWord->save($path, 'Word2007');
+
+    // Return the file as a download response and delete after send
+    return response()->download($path)->deleteFileAfterSend(true);
+
+
+//                 $htd = new HTML_TO_DOC();
+// $htd->headerContent = $business->letter_template_header;
+// $htd->footerContent = $business->letter_template_footer;
+
+// $htmlContent = "
+//     <div class='content'>{$student_letter->letter_content}</div>
+// ";
+
+// $htd->createDoc($htmlContent, "my-document", 1);
+
+                // $phpWord = new PhpWord();
+                // $section = $phpWord->addSection();
+
+                // // Set the HTML content with header, footer, and letter content
+                // $htmlContent = "
+                // <html>
+                //     <head>
+                //         <style>
+                //             .header { text-align: center; font-size: 18px; }
+                //             .footer { text-align: center; font-size: 12px; }
+                //             .content { font-size: 14px; }
+                //         </style>
+                //     </head>
+                //     <body>
+                //         <div class='header'>" . ($business->letter_template_header) . "</div>
+                //         <div class='footer'>" . ($business->letter_template_footer) . "</div>
+                //         <div class='content'>" . ($student_letter->letter_content) . "</div>
+                //     </body>
+                // </html>
+                // ";
+
+                // // Add the HTML content to the Word document (convert HTML to Word format)
+                // \PhpOffice\PhpWord\Shared\Html::addHtml($section, $htmlContent);
+
+                // // Save the Word document to a string (in memory)
+                // $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+
+                // return response()->stream(
+                //     function () use ($phpWord, $objWriter) {
+                //         $objWriter->save('php://output'); // Output directly to the browser
+                //     },
+                //     200,
+                //     [
+                //         'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                //         'Content-Disposition' => 'attachment; filename="letter.docx"',
+                //     ]
+                // );
+
             } else {
                 throw new Exception("some thing went wrong");
             }
