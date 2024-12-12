@@ -38,7 +38,7 @@ class StudentApplicationSubmitted extends Mailable
         return $this->subject('New Student Application Reference: ' . $this->student->student_id)
             ->view('email.student_application')
             ->with([
-                'studentName' => $this->student->first_name . ' ' . $this->student->middle_name . " " . $this->student->last_name,
+                'studentName' => $this->student->title . " " . $this->student->first_name . ' ' . $this->student->middle_name . " " . $this->student->last_name,
                 'applicationDate' => now()->format('d-m-Y'),
                 'courseAppliedFor' => $this->student->course_title->name,  // Adjust if you have course relationships
                 'applicationId' => $this->student->student_id,

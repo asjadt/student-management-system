@@ -135,6 +135,7 @@ class StudentController extends Controller
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
+     * *     @OA\Property(property="title", type="string", format="string", example="title"),
 *     @OA\Property(property="first_name", type="string", format="string", example="John"),
  *     @OA\Property(property="middle_name", type="string", format="string", example=""),
  *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
@@ -255,6 +256,7 @@ class StudentController extends Controller
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
+     * *     @OA\Property(property="title", type="string", format="string", example="title"),
 *     @OA\Property(property="first_name", type="string", format="string", example="John"),
  *     @OA\Property(property="middle_name", type="string", format="string", example=""),
  *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
@@ -386,7 +388,9 @@ class StudentController extends Controller
      *         required=true,
      *         @OA\JsonContent(
 *      @OA\Property(property="id", type="number", format="number", example="Updated Christmas"),
+*     @OA\Property(property="title", type="string", format="string", example="title"),
 *     @OA\Property(property="first_name", type="string", format="string", example="John"),
+
  *     @OA\Property(property="middle_name", type="string", format="string", example=""),
  *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
  *     @OA\Property(property="nationality", type="string", format="string", example="Country"),
@@ -490,6 +494,7 @@ class StudentController extends Controller
                 $student  =  tap(Student::where($student_query_params))->update(
                     collect($request_data)->only([
                         'first_name',
+                        "title",
         'middle_name',
         'last_name',
         'nationality',
@@ -702,6 +707,14 @@ class StudentController extends Controller
  *     required=false,
  *     example="2024-12-31"
  * ),
+ *
+ *  * @OA\Parameter(
+ *     name="title",
+ *     in="query",
+ *     description="Filter by student's title",
+ *     required=false,
+ *     example="John"
+ * ),
  * @OA\Parameter(
  *     name="first_name",
  *     in="query",
@@ -897,6 +910,10 @@ class StudentController extends Controller
             ->when(!empty($request->course_end_date_end_date), function ($query) use ($request) {
                 return $query->where('students.course_end_date', '<=', $request->course_end_date_end_date . ' 23:59:59');
             })
+
+            ->when(!empty($request->title), function ($query) use ($request) {
+                return $query->where('students.title',$request->title);
+            })
             ->when(!empty($request->first_name), function ($query) use ($request) {
                 return $query->where('students.first_name',$request->first_name);
             })
@@ -910,7 +927,9 @@ class StudentController extends Controller
                 return $query->where(function ($query) use ($request) {
                     $terms = explode(' ', $request->name); // Split the input into individual words
                     foreach ($terms as $term) {
-                        $query->orWhere('students.first_name', 'like', '%' . $term . '%')
+                        $query
+                        ->orWhere('students.title', 'like', '%' . $term . '%')
+                        ->orWhere('students.first_name', 'like', '%' . $term . '%')
                               ->orWhere('students.middle_name', 'like', '%' . $term . '%')
                               ->orWhere('students.last_name', 'like', '%' . $term . '%');
                     }
@@ -919,7 +938,8 @@ class StudentController extends Controller
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
                         $term = $request->search_key;
-                        $query->where("students.first_name", "like", "%" . $term . "%")
+                        $query->where("students.title", "like", "%" . $term . "%")
+                            ->orWhere("students.first_name", "like", "%" . $term . "%")
                             ->orWhere("students.middle_name", "like", "%" . $term . "%")
                             ->orWhere("students.last_name", "like", "%" . $term . "%")
                             ->orWhere("students.nationality", "like", "%" . $term . "%")
@@ -1077,6 +1097,14 @@ class StudentController extends Controller
      * required=true,
      * example="id"
      * ),
+     *
+     *  *     @OA\Parameter(
+     * name="title",
+     * in="query",
+     * description="title",
+     * required=true,
+     * example="title"
+     * ),
      *     @OA\Parameter(
      * name="first_name",
      * in="query",
@@ -1175,6 +1203,10 @@ class StudentController extends Controller
                 return $query->where('students.id',$request->id);
             })
 
+
+            ->when(!empty($request->title), function ($query) use ($request) {
+                return $query->where('students.title',$request->title);
+            })
             ->when(!empty($request->first_name), function ($query) use ($request) {
                 return $query->where('students.first_name',$request->first_name);
             })
@@ -1191,7 +1223,8 @@ class StudentController extends Controller
                          $term = $request->search_key;
 
 
-                         $query->where("students.first_name", "like", "%" . $term . "%")
+                         $query->where("students.title", "like", "%" . $term . "%")
+                         ->orWhere("students.first_name", "like", "%" . $term . "%")
                              ->orWhere("students.middle_name", "like", "%" . $term . "%")
                              ->orWhere("students.last_name", "like", "%" . $term . "%")
                              ->orWhere("students.nationality", "like", "%" . $term . "%")

@@ -27,6 +27,8 @@ class StudentCreateRequest extends BaseFormRequest
     public function rules()
     {
         $rules = [
+
+            'title' => 'required|string',
             'first_name' => 'required|string',
             'middle_name' => 'nullable|string',
             'last_name' => 'required|string',

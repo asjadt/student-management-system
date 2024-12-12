@@ -242,7 +242,7 @@ class StudentLetterController extends Controller
 
                         // Replace [FULL_NAME] with the concatenated full name
                         if ($item == "[FULL_NAME]") {
-                            $fullName = trim(($student["first_name"] ?? '') . ' ' . ($student["middle_name"] ?? '') . ' ' . ($student["last_name"] ?? ''));
+                            $fullName = trim(($student["title"] ?? '') . ' ' ($student["first_name"] ?? '') . ' ' . ($student["middle_name"] ?? '') . ' ' . ($student["last_name"] ?? ''));
                             $template = str_replace($item, !empty($fullName) ? $fullName : '--', $template);
                         }
                         else if ($item == "[COURSE_TITLE]") {
