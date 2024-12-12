@@ -1,0 +1,329 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\BusinessSettingCreateRequest;
+use App\Http\Utils\BusinessUtil;
+use App\Http\Utils\ErrorUtil;
+use App\Http\Utils\UserActivityUtil;
+use App\Models\BusinessSetting;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class BusinessSettingController extends Controller
+{
+    use ErrorUtil, UserActivityUtil, BusinessUtil;
+    /**
+     *
+     * @OA\Post(
+     *      path="/v1.0/business-settings",
+     *      operationId="createBusinessSetting",
+     *      tags={"business_setting"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to store business setting",
+     *      description="This method is to store business setting",
+     *
+     *  @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+ *     @OA\Property(
+ *         property="online_student_status_id",
+ *         type="integer",
+ *         description="The ID of the online student status.",
+ *         example=1
+ *     ),
+ *     @OA\Property(
+ *         property="online_form_fields",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             required={"field_name", "is_display", "is_required"},
+ *             @OA\Property(
+ *                 property="field_name",
+ *                 type="string",
+ *                 description="The name of the field.",
+ *                 example="student_id"
+ *             ),
+ *             @OA\Property(
+ *                 property="is_display",
+ *                 type="boolean",
+ *                 description="Indicates if the field should be displayed.",
+ *                 example=true
+ *             ),
+ *             @OA\Property(
+ *                 property="is_required",
+ *                 type="boolean",
+ *                 description="Indicates if the field is required.",
+ *                 example=true
+ *             )
+ *         ),
+ *         description="An array of online form fields."
+ *     ),
+ *     @OA\Property(
+ *         property="online_verification_data",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             required={"field_name", "is_display"},
+ *             @OA\Property(
+ *                 property="field_name",
+ *                 type="string",
+ *                 description="The name of the verification field.",
+ *                 example="verification_code"
+ *             ),
+ *             @OA\Property(
+ *                 property="is_display",
+ *                 type="boolean",
+ *                 description="Indicates if the verification field should be displayed.",
+ *                 example=true
+ *             )
+ *         ),
+ *         description="An array of online verification data fields."
+ *     )
+     *
+     *
+     *         ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function createBusinessSetting(BusinessSettingCreateRequest $request)
+    {
+
+        try {
+            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            return DB::transaction(function () use ($request) {
+                if (!$request->user()->hasRole('business_admin')) {
+                    return response()->json([
+                        "message" => "You can not perform this action"
+                    ], 401);
+                }
+
+                $request_data = $request->validated();
+                $request_data["business_id"] = auth()->user()->business_id;
+
+
+                $business_setting =     BusinessSetting::updateOrCreate($request_data, $request_data);
+                $business_setting = BusinessSetting::where([
+                    "business_id" => $request_data["business_id"]
+                ])
+                ->first();
+
+                if ($business_setting) {
+                    // Update existing record
+                    $business_setting->update($request_data);
+
+
+
+                    // Fill the model with data except for the ID
+                    $business_setting->fill(collect($request_data)->only([
+
+                        'online_student_status_id',
+                        'online_form_fields',
+                        'online_verification_data'
+                    ])->toArray());
+                    $business_setting->save();
+                } else {
+                    // Create new record
+                    $business_setting = BusinessSetting::create($request_data);
+                }
+
+
+                return response($business_setting, 201);
+            });
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
+
+
+    /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/business-settings",
+     *      operationId="getBusinessSetting",
+     *      tags={"business_setting"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=false,
+     *  example=""
+     *      ),
+
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=false,
+     * example=""
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=false,
+     * example=""
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=false,
+     * example=""
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=false,
+     * example=""
+     * ),
+
+     *      summary="This method is to get business setting",
+     *      description="This method is to get business setting",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function getBusinessSetting(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            if (!$request->user()->hasRole('business_admin')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
+
+
+
+
+            $business_setting = BusinessSetting::
+            where('business_settings.business_id', auth()->user()->business_id)
+                ->when(!empty($request->search_key), function ($query) use ($request) {
+                    return $query->where(function ($query) use ($request) {
+                        $term = $request->search_key;
+                        $query->where("business_settings.name", "like", "%" . $term . "%");
+                    });
+                })
+
+                ->when(!empty($request->start_date), function ($query) use ($request) {
+                    return $query->where('business_settings.created_at', ">=", $request->start_date);
+                })
+                ->when(!empty($request->end_date), function ($query) use ($request) {
+                    return $query->where('business_settings.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                })
+                ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
+                    return $query->orderBy("business_settings.id", $request->order_by);
+                }, function ($query) {
+                    return $query->orderBy("business_settings.id", "DESC");
+                })
+                ->when(!empty($request->per_page), function ($query) use ($request) {
+                    return $query->paginate($request->per_page);
+                }, function ($query) {
+                    return $query->get();
+                });;
+
+
+
+            return response()->json($business_setting, 200);
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
