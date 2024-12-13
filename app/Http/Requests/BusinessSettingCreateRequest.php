@@ -28,6 +28,10 @@ class BusinessSettingCreateRequest extends FormRequest
             'online_verification_data' => 'present|array',
             'online_verification_data.*.field_name' => 'required|string',
             'online_verification_data.*.is_display' => 'required|boolean',
+
+            'online_verification_query_fields' => 'present|array',
+            'online_verification_query_fields.*.field_name' => 'required|string',
+
         ];
     }
 

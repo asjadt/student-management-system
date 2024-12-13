@@ -45,7 +45,7 @@ class BusinessSettingController extends Controller
  *             @OA\Property(
  *                 property="field_name",
  *                 type="string",
- *                 description="The name of the field.",
+ *                 description="The name of the field. 'middle_name', 'passport_number', 'student_id', 'course_end_date', 'level', 'letter_issue_date', 'course_duration', 'course_detail', 'email', 'contact_number', 'sex', 'address', 'country', 'city', 'postcode', 'lat', 'long', 'emergency_contact_details', 'previous_education_history', 'passport_issue_date', 'passport_expiry_date', 'place_of_issue'",
  *                 example="student_id"
  *             ),
  *             @OA\Property(
@@ -72,7 +72,7 @@ class BusinessSettingController extends Controller
  *             @OA\Property(
  *                 property="field_name",
  *                 type="string",
- *                 description="The name of the verification field.",
+ *                 description="'title', 'first_name', 'middle_name', 'last_name', 'nationality', 'course_fee', 'fee_paid', 'passport_number', 'student_id', 'date_of_birth', 'course_start_date', 'course_end_date', 'level', 'letter_issue_date', 'student_status_id', 'course_title_id', 'attachments', 'course_duration', 'course_detail', 'email', 'contact_number', 'sex', 'address', 'country', 'city', 'postcode', 'lat', 'long', 'emergency_contact_details', 'previous_education_history', 'passport_issue_date', 'passport_expiry_date', 'place_of_issue'",
  *                 example="verification_code"
  *             ),
  *             @OA\Property(
@@ -83,7 +83,24 @@ class BusinessSettingController extends Controller
  *             )
  *         ),
  *         description="An array of online verification data fields."
+ *     ),
+ *  *     @OA\Property(
+ *         property="online_verification_query_fields",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             required={"field_name"},
+ *             @OA\Property(
+ *                 property="field_name",
+ *                 type="string",
+ *                 description="The name of the online verification query field. 'title', 'first_name', 'middle_name', 'last_name', 'nationality', 'course_fee', 'fee_paid', 'passport_number', 'student_id', 'date_of_birth', 'course_start_date', 'course_end_date', 'level', 'letter_issue_date', 'student_status_id', 'course_title_id', 'attachments', 'course_duration', 'course_detail', 'email', 'contact_number', 'sex', 'address', 'country', 'city', 'postcode', 'lat', 'long', 'emergency_contact_details', 'previous_education_history', 'passport_issue_date', 'passport_expiry_date', 'place_of_issue'",
+ *                 example="verification_code"
+ *             )
+ *         ),
+ *         description="An array of online verification query data fields."
  *     )
+ *
+ *
      *
      *
      *         ),
@@ -155,7 +172,8 @@ class BusinessSettingController extends Controller
 
                         'online_student_status_id',
                         'online_form_fields',
-                        'online_verification_data'
+                        'online_verification_data',
+                        'online_verification_query_fields'
                     ])->toArray());
                     $business_setting->save();
                 } else {
