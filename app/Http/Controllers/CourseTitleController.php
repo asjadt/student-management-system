@@ -691,9 +691,17 @@ class CourseTitleController extends Controller
                 ], 401);
             }
 
-            $course_title =  CourseTitle::with("subjects")->where([
-                "id" => $id,
+            $course_title =  CourseTitle::with(
+                [
+                    "subjects",
+                    "awarding_body" => function($query) {
+                      $query->select("awarding_body.id","awarding_body.name");
+                    }
 
+                ]
+
+                )->where([
+                "id" => $id,
             ])
                 ->first();
                 if (!$course_title) {
