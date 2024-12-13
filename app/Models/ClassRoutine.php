@@ -22,11 +22,9 @@ class ClassRoutine extends Model
                     'semester_id',
                     'session_id',
                     'course_id',
-
                     "is_active",
-
-        "business_id",
-        "created_by"
+                    "business_id",
+                    "created_by"
     ];
 
     protected $casts = [
@@ -51,13 +49,10 @@ class ClassRoutine extends Model
   }
 
 
-
   public function semester()
   {
       return $this->belongsTo(Semester::class, 'semester_id','id');
   }
-
-
 
 
 

@@ -288,6 +288,12 @@ class StudentLetterController extends Controller
                             $sex = $student->sex=="Male"?"Her":"His";
                             $template = str_replace($item, $sex, $template);
                         }
+                        else if ($item == "[Mr/Mrs]") {
+                            $sex = $student->sex=="Male"?"Her":"His";
+                            $template = str_replace($item, $sex, $template);
+                        }
+
+
 
                         else if ($item == "[QR_CODE]") {
                             // Get the URL from the environment variable

@@ -120,6 +120,7 @@ trait BasicUtil
             '[QR_CODE]',
             '[She/He]',
             '[Her/His]',
+            '[Mr/Mrs]',
 
             'ADDRESS',
             '[ADDRESS]',
@@ -236,6 +237,8 @@ trait BasicUtil
                 '[QR_CODE]',
                 '[She/He]',
                 '[Her/His]',
+                '[Mr/Mrs]',
+
             ],
             'Address' => [
                 '[ADDRESS]',

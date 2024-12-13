@@ -360,6 +360,10 @@ class StudentController extends Controller
                   "id" => $student->id,
                   "student_id" => $student->student_id,
                   "business_name" => $business->name,
+                  "student_full_name" => trim(($student->title ?? '') . ' ' ($student->first_name ?? '') . ' ' . ($student->middle_name ?? '') . ' ' . ($student->last_name ?? '')),
+                  "business_email" => $business->email,
+
+
                 ];
 
                 return response($response, 201);
