@@ -8,6 +8,7 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\AwardingBody;
 use App\Models\Business;
+use App\Models\BusinessSetting;
 use App\Models\CourseTitle;
 use App\Models\Student;
 use App\Models\DashboardWidget;
@@ -2259,15 +2260,24 @@ class DashboardManagementController extends Controller
         $end_date_of_this_week,
         $start_date_of_previous_week,
         $end_date_of_previous_week,
+        $business_setting,
         $is_online_student = 0
     ) {
 
-        $data_query  = Student::where("business_id", auth()->user()->business_id)
-        ->when($is_online_student,function($query) {
-             $query->whereNull("students.student_status_id");
+        $data_query = Student::where("business_id", auth()->user()->business_id)
+        ->when($is_online_student, function($query) use ($business_setting) {
+            $query->where(function($query) use ($business_setting) {
+                // Check if student status ID is NULL
+                $query->whereNull("students.student_status_id")
+                    // If online student status ID is set in business settings, add that to the query
+                    ->when(!empty($business_setting) && !empty($business_setting->online_student_status_id), function($query) use ($business_setting) {
+                        $query->orWhere("students.student_status_id", $business_setting->online_student_status_id);
+                    });
+            });
         });
 
         $data["total_data_count"] = $data_query->count();
+
 
         $data["today_data_count"] = clone $data_query;
         $data["today_data_count"] = $data["today_data_count"]->whereBetween('created_at', [$today->copy()->startOfDay(), $today->copy()->endOfDay()])->count();
@@ -2351,6 +2361,12 @@ class DashboardManagementController extends Controller
                     "message" => "You are not a business user"
                 ], 401);
             }
+
+            $business_setting = BusinessSetting::where([
+                "business_id" => auth()->user()->business_id
+            ])
+            ->first();
+
             $today = today();
 
             $start_date_of_next_month = Carbon::now()->startOfMonth()->addMonth(1);
@@ -2366,7 +2382,6 @@ class DashboardManagementController extends Controller
             $end_date_of_this_week = Carbon::now()->endOfWeek();
             $start_date_of_previous_week = Carbon::now()->startOfWeek()->subWeek(1);
             $end_date_of_previous_week = Carbon::now()->endOfWeek()->subWeek(1);
-
 
             $data = [];
 
@@ -2384,6 +2399,7 @@ class DashboardManagementController extends Controller
                 $end_date_of_this_week,
                 $start_date_of_previous_week,
                 $end_date_of_previous_week,
+                $business_setting
 
             );
 
@@ -2401,6 +2417,7 @@ class DashboardManagementController extends Controller
                 $end_date_of_this_week,
                 $start_date_of_previous_week,
                 $end_date_of_previous_week,
+                $business_setting,
                 1
 
             );

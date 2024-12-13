@@ -11,6 +11,7 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\Business;
+use App\Models\BusinessSetting;
 use App\Models\Student;
 use Carbon\Carbon;
 use Exception;
@@ -341,7 +342,6 @@ class StudentController extends Controller
                 $request_data = $request->validated();
 
 
-
                 $request_data["is_active"] = true;
                 $request_data["course_fee"] = 0;
                 $request_data["fee_paid"] = 0;
@@ -350,6 +350,17 @@ class StudentController extends Controller
 
 
                 $request_data["student_id"] = $this->generateUniqueId(Business::class, $request_data["business_id"], Student::class, 'student_id');
+
+                $business_setting = BusinessSetting::where([
+                    "business_id" => auth()->user()->business_id
+                ])
+                ->first();
+
+                if(!empty($business_setting) && !empty($business_setting->online_student_status_id)) {
+                    $request_data["student_status_id"] = $business_setting->online_student_status_id;
+                } else {
+                    $request_data["student_status_id"] = NULL;
+                }
 
                 $student =  Student::create($request_data);
 
@@ -360,7 +371,8 @@ class StudentController extends Controller
                   "id" => $student->id,
                   "student_id" => $student->student_id,
                   "business_name" => $business->name,
-                  "student_full_name" => trim(($student->title ?? '') . ' ' ($student->first_name ?? '') . ' ' . ($student->middle_name ?? '') . ' ' . ($student->last_name ?? '')),
+                "student_full_name" => trim(($student->title ?? '') . ' ' . ($student->first_name ?? '') . ' ' . ($student->middle_name ?? '') . ' ' . ($student->last_name ?? '')),
+
                   "business_email" => $business->email,
 
 
@@ -875,6 +887,12 @@ class StudentController extends Controller
                 ], 401);
             }
             $business_id =  $request->user()->business_id;
+
+            $business_setting = BusinessSetting::where([
+                "business_id" => auth()->user()->business_id
+            ])
+            ->first();
+
             $students = Student::
             with("student_status","course_title")
             ->where(
@@ -966,13 +984,19 @@ class StudentController extends Controller
                 })
                 ->when(
                     request()->boolean("is_online_registered"),
-                    function ($query) {
-                        // Check if 'student_status_id' is NULL for online registration
-                        return $query->whereNull('students.student_status_id');
+                    function ($query) use ($business_setting) {
+                        // When online registration is requested, check if 'student_status_id' is NULL
+                        $query->where(function($query) use ($business_setting) {
+                            $query->whereNull('students.student_status_id')
+                                // Apply online status condition if business setting exists
+                                ->when(!empty($business_setting) && !empty($business_setting->online_student_status_id), function($query) use ($business_setting) {
+                                    $query->orWhere('students.student_status_id', $business_setting->online_student_status_id);
+                                });
+                        });
                     },
                     function ($query) {
-                        // Check if 'student_status_id' is NOT NULL for offline registration
-                        return $query->whereNotNull('students.student_status_id');
+                        // When offline registration is requested, check if 'student_status_id' is NOT NULL
+                        $query->whereNotNull('students.student_status_id');
                     }
                 )
 
