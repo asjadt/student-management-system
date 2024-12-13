@@ -695,7 +695,7 @@ class CourseTitleController extends Controller
                 [
                     "subjects",
                     "awarding_body" => function($query) {
-                      $query->select("awarding_body.id","awarding_body.name");
+                      $query->select("awarding_bodies.id","awarding_bodies.name");
                     }
 
                 ]

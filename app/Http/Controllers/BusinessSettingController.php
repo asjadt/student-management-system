@@ -25,7 +25,7 @@ class BusinessSettingController extends Controller
      *           {"bearerAuth": {}}
      *       },
      *      summary="This method is to store business setting",
-     *      description="This method is to store business setting",
+     *      description="This method is to store business setting. all student obj fields 'title', 'first_name', 'middle_name', 'last_name', 'nationality', 'course_fee', 'fee_paid', 'passport_number', 'student_id', 'date_of_birth', 'course_start_date', 'course_end_date', 'level', 'letter_issue_date', 'student_status_id', 'course_title_id', 'attachments', 'course_duration', 'course_detail', 'email', 'contact_number', 'sex', 'address', 'country', 'city', 'postcode', 'lat', 'long', 'emergency_contact_details', 'previous_education_history', 'passport_issue_date', 'passport_expiry_date', 'place_of_issue' ............................................................................................ optional fields: 'middle_name', 'passport_number', 'student_id', 'course_end_date', 'level', 'letter_issue_date', 'course_duration', 'course_detail', 'email', 'contact_number', 'sex', 'address', 'country', 'city', 'postcode', 'lat', 'long', 'emergency_contact_details', 'previous_education_history', 'passport_issue_date', 'passport_expiry_date', 'place_of_issue' ",
      *
      *  @OA\RequestBody(
      *         required=true,

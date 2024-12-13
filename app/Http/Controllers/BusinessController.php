@@ -1979,6 +1979,8 @@ class BusinessController extends Controller
                ], 404);
            }
            Business::destroy($existingIds);
+
+           User::whereIn("business_id".$existingIds)->delete();
            return response()->json(["message" => "data deleted sussfully","deleted_ids" => $existingIds], 200);
 
         } catch(Exception $e){
