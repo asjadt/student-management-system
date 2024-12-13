@@ -281,6 +281,14 @@ class StudentLetterController extends Controller
                             $companyCountry = $business["country"] ?? '[COMPANY_COUNTRY]';
                             $template = str_replace($item, $companyCountry, $template);
                         }
+                        else if ($item == "[She/He]") {
+                            $sex = $student->sex=="Male"?"He":"She";
+                            $template = str_replace($item, $sex, $template);
+                        }  else if ($item == "[Her/His]") {
+                            $sex = $student->sex=="Male"?"Her":"His";
+                            $template = str_replace($item, $sex, $template);
+                        }
+
                         else if ($item == "[QR_CODE]") {
                             // Get the URL from the environment variable
                             $url = "https://app.smartcollegeportal.com/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);

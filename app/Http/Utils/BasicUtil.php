@@ -118,6 +118,8 @@ trait BasicUtil
             '[CONTACT_NUMBER]',
             '[SEX]',
             '[QR_CODE]',
+            '[She/He]',
+            '[Her/His]',
 
             'ADDRESS',
             '[ADDRESS]',
@@ -232,6 +234,8 @@ trait BasicUtil
                 '[CONTACT_NUMBER]',
                 '[SEX]',
                 '[QR_CODE]',
+                '[She/He]',
+                '[Her/His]',
             ],
             'Address' => [
                 '[ADDRESS]',
