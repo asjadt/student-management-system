@@ -46,8 +46,7 @@ class Student extends Model
         'place_of_issue',
         'is_active',
         'business_id',
-        'created_by',
-
+        'created_by'
     ];
 
     protected $casts = [
