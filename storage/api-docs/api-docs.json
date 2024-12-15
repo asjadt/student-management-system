@@ -5698,36 +5698,36 @@
                         "name": "per_page",
                         "in": "query",
                         "description": "per_page",
-                        "required": true,
-                        "example": "6"
+                        "required": false,
+                        "example": ""
                     },
                     {
                         "name": "start_date",
                         "in": "query",
                         "description": "start_date",
-                        "required": true,
-                        "example": "2019-06-29"
+                        "required": false,
+                        "example": ""
                     },
                     {
                         "name": "end_date",
                         "in": "query",
                         "description": "end_date",
-                        "required": true,
-                        "example": "2019-06-29"
+                        "required": false,
+                        "example": ""
                     },
                     {
                         "name": "search_key",
                         "in": "query",
                         "description": "search_key",
-                        "required": true,
-                        "example": "search_key"
+                        "required": false,
+                        "example": ""
                     },
                     {
                         "name": "order_by",
                         "in": "query",
                         "description": "order_by",
-                        "required": true,
-                        "example": "ASC"
+                        "required": false,
+                        "example": ""
                     }
                 ],
                 "responses": {
@@ -5791,7 +5791,7 @@
                     "business_setting"
                 ],
                 "summary": "This method is to store business setting",
-                "description": "This method is to store business setting",
+                "description": "This method is to store business setting. all student obj fields 'title', 'first_name', 'middle_name', 'last_name', 'nationality', 'course_fee', 'fee_paid', 'passport_number', 'student_id', 'date_of_birth', 'course_start_date', 'course_end_date', 'level', 'letter_issue_date', 'student_status_id', 'course_title_id', 'attachments', 'course_duration', 'course_detail', 'email', 'contact_number', 'sex', 'address', 'country', 'city', 'postcode', 'lat', 'long', 'emergency_contact_details', 'previous_education_history', 'passport_issue_date', 'passport_expiry_date', 'place_of_issue' ............................................................................................ optional fields: 'middle_name', 'passport_number', 'student_id', 'course_end_date', 'level', 'letter_issue_date', 'course_duration', 'course_detail', 'email', 'contact_number', 'sex', 'address', 'country', 'city', 'postcode', 'lat', 'long', 'emergency_contact_details', 'previous_education_history', 'passport_issue_date', 'passport_expiry_date', 'place_of_issue' ",
                 "operationId": "createBusinessSetting",
                 "requestBody": {
                     "required": true,
@@ -5804,53 +5804,18 @@
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "online_form_fields": {
-                                        "description": "An array of online form fields.",
+                                    "student_data_fields": {
+                                        "description": "The ID of the online student status.",
                                         "type": "array",
                                         "items": {
                                             "required": [
-                                                "field_name",
-                                                "is_display",
-                                                "is_required"
+                                                "title"
                                             ],
                                             "properties": {
-                                                "field_name": {
-                                                    "description": "The name of the field.",
-                                                    "type": "string",
-                                                    "example": "student_id"
-                                                },
-                                                "is_display": {
-                                                    "description": "Indicates if the field should be displayed.",
-                                                    "type": "boolean",
-                                                    "example": true
-                                                },
-                                                "is_required": {
-                                                    "description": "Indicates if the field is required.",
-                                                    "type": "boolean",
-                                                    "example": true
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "online_verification_data": {
-                                        "description": "An array of online verification data fields.",
-                                        "type": "array",
-                                        "items": {
-                                            "required": [
-                                                "field_name",
-                                                "is_display"
-                                            ],
-                                            "properties": {
-                                                "field_name": {
-                                                    "description": "The name of the verification field.",
+                                                "title": {
+                                                    "description": "The name of the online verification query field. 'title', 'first_name', 'middle_name', 'last_name', 'nationality', 'course_fee', 'fee_paid', 'passport_number', 'student_id', 'date_of_birth', 'course_start_date', 'course_end_date', 'level', 'letter_issue_date', 'student_status_id', 'course_title_id', 'attachments', 'course_duration', 'course_detail', 'email', 'contact_number', 'sex', 'address', 'country', 'city', 'postcode', 'lat', 'long', 'emergency_contact_details', 'previous_education_history', 'passport_issue_date', 'passport_expiry_date', 'place_of_issue'",
                                                     "type": "string",
                                                     "example": "verification_code"
-                                                },
-                                                "is_display": {
-                                                    "description": "Indicates if the verification field should be displayed.",
-                                                    "type": "boolean",
-                                                    "example": true
                                                 }
                                             },
                                             "type": "object"

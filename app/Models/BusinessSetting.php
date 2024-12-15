@@ -13,16 +13,13 @@ class BusinessSetting extends Model
     protected $fillable = [
         'business_id',
         'online_student_status_id',
-        'online_form_fields',
-        'online_verification_data',
-        'online_verification_query_fields'
+        'student_data_fields',
     ];
 
     // Cast these attributes to arrays
     protected $casts = [
-        'online_form_fields' => 'array',
-        'online_verification_data' => 'array',
-        'online_verification_query_fields' => 'array',
+        'student_data_fields' => 'array',
+
 
     ];
 
