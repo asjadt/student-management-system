@@ -1276,11 +1276,7 @@ Route::get('/v1.0/business-owner-dashboard/winned-jobs-application/{business_id}
 
 Route::get('/v1.0/business-owner-dashboard/completed-bookings/{business_id}', [DashboardManagementController::class, "getBusinessOwnerDashboardDataCompletedBookings"]);
 
-
 Route::get('/v1.0/business-owner-dashboard/upcoming-jobs/{business_id}/{duration}', [DashboardManagementController::class, "getBusinessOwnerDashboardDataUpcomingJobs"]);
-
-
-
 
 
 
