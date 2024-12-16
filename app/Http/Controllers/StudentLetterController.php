@@ -356,33 +356,27 @@ class StudentLetterController extends Controller
     }
 
     public function fixHtmlTags($html)
-{
-    // Ensure <img> tags are self-closed properly (e.g., <img /> instead of <img>)
-    $html = preg_replace('/<img([^>]*)(?<!\/)>/i', '<img$1 />', $html);
+    {
+        $updatedHtml = $html;
 
-    // Ensure there is no <br> or <hr> tag directly inside <p> without proper closing
-    $html = preg_replace_callback('/<p[^>]*>.*?<\/p>/is', function($matches) {
-        $content = $matches[0];
+        // Ensure <img> tags are self-closed properly (e.g., <img /> instead of <img>)
+        $updatedHtml = preg_replace('/<img([^>]*)(?<!\/)>/i', '<img$1 />', $updatedHtml);
 
-        // Replace <hr> tags with a custom class for styling
-        $content = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $content);
+        // Replace all <br> tags globally with a custom class
+        $updatedHtml = preg_replace('/<br\s*\/?>/i', '<br class="fix_br_tag" />', $updatedHtml);
 
-        // Replace <br> tags with a custom class for styling
-        $content = preg_replace('/<br\s*\/?>/i', '<br class="fix_br_tag" />', $content);
+        // Replace all <hr> tags globally with a custom class
+        $updatedHtml = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $updatedHtml);
 
-        return $content;
-    }, $html);
+        // // Ensure all unclosed tags are closed
+        // $this->closeUnclosedTags($updatedHtml);
 
-    // Ensure <hr> tags outside <p> tags are also handled
-    $html = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $html);
+        Log::info('Content: ' . $updatedHtml);
+        Log::info('---------------------------------------');
+        Log::info('un altered Content: ' . $html);
 
-    Log::info('Content: ' . $html);
-
-    // Ensure all unclosed tags are closed
-    $this->closeUnclosedTags($html);
-
-    return $html;
-}
+        return $updatedHtml;
+    }
 
 
 public function closeUnclosedTags(&$html)
@@ -522,8 +516,10 @@ public function closeUnclosedTags(&$html)
     $header = $this->fixHtmlTags($business->letter_template_header);
     $footer = $this->fixHtmlTags($business->letter_template_footer);
 
-    // Define HTML content to be added to the document
-    $htmlContent = $this->fixHtmlTags($student_letter->letter_content);
+
+
+
+    $htmlContent = $this->fixHtmlTags($business->letter_content);
 
     Log::info('Header Content: ' . $header);
 
