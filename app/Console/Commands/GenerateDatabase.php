@@ -152,7 +152,8 @@ $user = User::first(); // ###############################
              "is_default" => 1,
              "is_default_for_business" => (in_array($role ,["business_admin",
              "business_admin",
-             "business_staff"
+             "business_staff",
+             "business_teacher"
 
              ])?1:0)
 

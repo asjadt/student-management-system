@@ -243,7 +243,12 @@ class StudentLetterController extends Controller
 
                         // Replace [FULL_NAME] with the concatenated full name
                         if ($item == "[FULL_NAME]") {
-                            $fullName = trim(($student["title"] ?? '') . ' ' ($student["first_name"] ?? '') . ' ' . ($student["middle_name"] ?? '') . ' ' . ($student["last_name"] ?? ''));
+                            $fullName = trim(
+                                ($student["title"] ?? '') . ' ' .
+                                ($student["first_name"] ?? '') . ' ' .
+                                ($student["middle_name"] ?? '') . ' ' .
+                                ($student["last_name"] ?? '')
+                            );
                             $template = str_replace($item, !empty($fullName) ? $fullName : '--', $template);
                         }
                         else if ($item == "[COURSE_TITLE]") {
@@ -286,11 +291,11 @@ class StudentLetterController extends Controller
                             $sex = $student->sex=="Male"?"He":"She";
                             $template = str_replace($item, $sex, $template);
                         }  else if ($item == "[Her/His]") {
-                            $sex = $student->sex=="Male"?"Her":"His";
+                            $sex = $student->sex=="Male"?"His":"Her";
                             $template = str_replace($item, $sex, $template);
                         }
                         else if ($item == "[Mr/Mrs]") {
-                            $sex = $student->sex=="Male"?"Her":"His";
+                            $sex = $student->sex=="Male"?"Mr":"Mrs";
                             $template = str_replace($item, $sex, $template);
                         }
 

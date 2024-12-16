@@ -352,7 +352,7 @@ class StudentController extends Controller
                 $request_data["student_id"] = $this->generateUniqueId(Business::class, $request_data["business_id"], Student::class, 'student_id');
 
                 $business_setting = BusinessSetting::where([
-                    "business_id" => auth()->user()->business_id
+                    "business_id" => $request_data["business_id"]
                 ])
                 ->first();
 

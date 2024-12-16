@@ -150,8 +150,8 @@ return "swagger generated";
              "is_default_for_business" => (in_array($role ,["business_admin",
              "business_admin",
              "business_staff",
-        "business_administrator",
-        "business_teacher"
+             "business_administrator",
+             "business_teacher"
 
              ])?1:0)
 
@@ -244,6 +244,7 @@ return "swagger generated";
         }
 
 
+
         // setup roles and permissions
         $role_permissions = config("setup-config.roles_permission");
         foreach ($role_permissions as $role_permission) {
@@ -270,55 +271,64 @@ return "swagger generated";
         }
 
 
-        // $business_ids = Business::get()->pluck("id");
+        $business_ids = Business::get()->pluck("id");
 
-        // foreach ($role_permissions as $role_permission) {
+        foreach ($role_permissions as $role_permission) {
 
-        //     if($role_permission["role"] == "business_employee"){
-        //         foreach($business_ids as $business_id){
+            if($role_permission["role"] == "business_teacher"){
+                // echo  "data". json_encode($role_permission) . "<br>" ;
+                // echo  "db". json_encode($role) . "<br>" ;
+                foreach($business_ids as $business_id){
 
-        //             $role = Role::where(["name" => $role_permission["role"] . "#" . $business_id])->first();
-
-        //            if(empty($role)){
-
-        //             continue;
-        //            }
-
-        //                 $permissions = $role_permission["permissions"];
-
-        //                 // Assign permissions from the configuration
-        //     $role->syncPermissions($permissions);
+                    $role = Role::where(["name" => $role_permission["role"] . "#" . $business_id])->first();
 
 
+                   if(empty($role)){
+                    $role = Role::create([
+                        'guard_name' => 'api',
+                        'name' => ($role_permission["role"] . "#" . $business_id),
+                        "is_system_default" => 1,
+                        "business_id" => $business_id,
+                        "is_default" => 1,
+                        "is_default_for_business" => 0
+                    ]);
+                   }
 
-        //         }
+                        $permissions = $role_permission["permissions"];
 
-        //     }
-
-        //     if($role_permission["role"] == "business_manager"){
-        //         foreach($business_ids as $business_id){
-
-        //             $role = Role::where(["name" => $role_permission["role"] . "#" . $business_id])->first();
-
-        //            if(empty($role)){
-
-        //             continue;
-        //            }
-
-        //                 $permissions = $role_permission["permissions"];
-
-        //                 // Assign permissions from the configuration
-        //     $role->syncPermissions($permissions);
+                        // Assign permissions from the configuration
+            $role->syncPermissions($permissions);
 
 
 
-        //         }
+                }
 
-        //     }
+            }
+
+            if($role_permission["role"] == "business_manager"){
+                foreach($business_ids as $business_id){
+
+                    $role = Role::where(["name" => $role_permission["role"] . "#" . $business_id])->first();
+
+                   if(empty($role)){
+
+                    continue;
+                   }
+
+                        $permissions = $role_permission["permissions"];
+
+                        // Assign permissions from the configuration
+            $role->syncPermissions($permissions);
 
 
 
-        // }
+                }
+
+            }
+
+
+
+        }
     }
 
     public function roleRefresh(Request $request)
