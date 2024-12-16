@@ -25,10 +25,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\IOFactory;
+
 use PDF;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpWord\Shared\Html;
 
 
@@ -352,22 +353,32 @@ class StudentLetterController extends Controller
     public function fixHtmlTags($html)
 {
     // Ensure <img> tags are self-closed properly (e.g., <img /> instead of <img>)
-    // $html = preg_replace('/<img([^>]*)(\/?)>/i', '<img$1 />', $html);
     $html = preg_replace('/<img([^>]*)(?<!\/)>/i', '<img$1 />', $html);
 
-    // Ensure there is no <br> tag directly inside <p> without proper closing
+    // Ensure there is no <br> or <hr> tag directly inside <p> without proper closing
     $html = preg_replace_callback('/<p[^>]*>.*?<\/p>/is', function($matches) {
-        // Handle <br> tags inside <p> by replacing <br> with a custom placeholder
         $content = $matches[0];
-        $content = preg_replace('/<br\s*\/?>/', '<br class="fix_br_tag" />', $content);
+
+        // Replace <hr> tags with a custom class for styling
+        $content = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $content);
+
+        // Replace <br> tags with a custom class for styling
+        $content = preg_replace('/<br\s*\/?>/i', '<br class="fix_br_tag" />', $content);
+
         return $content;
     }, $html);
+
+    // Ensure <hr> tags outside <p> tags are also handled
+    $html = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $html);
+
+    Log::info('Content: ' . $html);
 
     // Ensure all unclosed tags are closed
     $this->closeUnclosedTags($html);
 
     return $html;
 }
+
 
 public function closeUnclosedTags(&$html)
 {
@@ -508,6 +519,9 @@ public function closeUnclosedTags(&$html)
 
     // Define HTML content to be added to the document
     $htmlContent = $this->fixHtmlTags($student_letter->letter_content);
+
+    Log::info('Header Content: ' . $header);
+
 
     // Add a new section with a header and footer
     $section = $phpWord->addSection();

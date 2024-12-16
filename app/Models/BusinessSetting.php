@@ -16,7 +16,7 @@ class BusinessSetting extends Model
         'student_data_fields',
     ];
 
-    // Cast these attributes to arrays
+    // Cast these attributes to arrays test
     protected $casts = [
         'student_data_fields' => 'array',
 
