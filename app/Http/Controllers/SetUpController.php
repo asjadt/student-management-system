@@ -275,7 +275,7 @@ return "swagger generated";
 
         foreach ($role_permissions as $role_permission) {
 
-            if($role_permission["role"] == "business_teacher"){
+            if($role_permission["role"] == "business_administrator" || $role_permission["role"] == "business_teacher"){
                 // echo  "data". json_encode($role_permission) . "<br>" ;
                 // echo  "db". json_encode($role) . "<br>" ;
                 foreach($business_ids as $business_id){
