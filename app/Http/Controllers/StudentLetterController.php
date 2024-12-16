@@ -303,7 +303,7 @@ class StudentLetterController extends Controller
 
                         else if ($item == "[QR_CODE]") {
                             // Get the URL from the environment variable
-                            $url = "https://app.smartcollegeportal.com/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
+                            $url = (!empty($business->url)?$business->url:"https://app.smartcollegeportal.com")."/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
 
                             // Generate the QR code image
                             $qrCode = new QrCode($url);

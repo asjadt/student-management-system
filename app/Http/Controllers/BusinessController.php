@@ -1079,6 +1079,7 @@ class BusinessController extends Controller
         $business  =  tap(Business::where([
             "id" => $request_data['business']["id"]
             ]))->update(collect($request_data['business'])->only([
+                "url",
                 "name",
                 "about",
                 "web_page",
