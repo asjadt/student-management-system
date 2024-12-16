@@ -56,7 +56,7 @@ class BusinessUpdateRequest extends BaseFormRequest
             'business.email' => 'nullable|string|unique:businesses,email,' . $this->business["id"] . ',id',
             'business.additional_information' => 'nullable|string',
 
-
+            'business.url' => 'nullable|string',
             'business.lat' => 'nullable|string',
             'business.long' => 'nullable|string',
             'business.currency' => 'nullable|string',
