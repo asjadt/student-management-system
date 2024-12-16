@@ -9,7 +9,7 @@ class BusinessSetting extends Model
 {
     use HasFactory;
 
-    // Make the columns fillable
+    // Make the columns fillable test
     protected $fillable = [
         'business_id',
         'online_student_status_id',
