@@ -3,7 +3,7 @@ name: Update Files on cPanel
 on:
   push:
     branches:
-      - test  # Trigger the workflow on pushes to the 'main' branch
+      - development  # Trigger the workflow on pushes to the 'main' branch
 
 jobs:
   deploy:
