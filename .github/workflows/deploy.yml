@@ -3,7 +3,7 @@ name: Update Files on cPanel
 on:
   push:
     branches:
-      - development  # Trigger the workflow on pushes to the 'development' branch
+      - development  # Trigger the workflow on pushes to the 'main' branch
 
 jobs:
   deploy:
@@ -15,13 +15,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Upload Specific Folders to cPanel
+      # Step 2: Upload Files to cPanel via FTP
       - name: Upload Files to cPanel
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ftp.smartcollegeportal.com       # FTP Server (add in GitHub Secrets)
           username: dev-student@smartcollegeportal.com    # FTP Username (add in GitHub Secrets)
           password: "!Jgh(x3+Bao?"   # FTP Password (add in GitHub Secrets)
-          local-dir: ./                            # Upload files from the root directory
-          server-dir: /                            # Target directory on the cPanel server
-          
+          local-dir: ./                            # Upload all files from the root directory
+          server-dir: /           # Target directory on the cPanel server

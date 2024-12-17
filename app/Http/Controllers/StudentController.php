@@ -1249,9 +1249,6 @@ class StudentController extends Controller
             //  } test test
 
 
-
-
-
              $students = Student::
              with("student_status","course_title")
 
