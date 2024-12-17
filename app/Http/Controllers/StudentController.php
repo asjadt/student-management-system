@@ -1246,7 +1246,7 @@ class StudentController extends Controller
             //      return response()->json([
             //          "message" => "You can not perform this action"
             //      ], 401);
-            //  } test test
+            //  } test
 
 
              $students = Student::
