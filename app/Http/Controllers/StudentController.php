@@ -1434,7 +1434,7 @@ class StudentController extends Controller
                 // Ensure each student_doc_object has a file_name property
 
                     // Modify the file_name by prepending business name and student ID
-                    $student_doc_object["file_name"] = "/" . $student->business->name . "/" . base64_encode($student->id) . "/student_docs/".  $student_doc_object["file_name"];
+                    $student_doc_object["file_name"] = "/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/".  $student_doc_object["file_name"];
 
             }
 
