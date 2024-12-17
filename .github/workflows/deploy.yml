@@ -24,13 +24,4 @@ jobs:
           password: "!Jgh(x3+Bao?"   # FTP Password (add in GitHub Secrets)
           local-dir: ./                            # Upload files from the root directory
           server-dir: /                            # Target directory on the cPanel server
-          include: |
-            app/**                                 # Include app folder
-            bootstrap/**                           # Include bootstrap folder
-            config/**                              # Include config folder
-            database/**                            # Include database folder
-            resources/**                           # Include resources folder
-            routes/**                              # Include routes folder
-            tests/**                               # Include tests folder
-          exclude: |
-            **/*                                   # Exclude everything else
+          
