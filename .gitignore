@@ -1,14 +1,7 @@
 /node_modules
-/public/*
-!/public/.htaccess
-
-/storage/*
-!/storage/app/public
-!/storage/logs/.gitignore
-!/storage/framework/cache/.gitignore
-!/storage/framework/sessions/.gitignore
-!/storage/framework/views/.gitignore
-
+/public/hot
+/public/storage
+/storage/*.key
 /vendor
 .env
 .env.backup
