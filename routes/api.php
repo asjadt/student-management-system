@@ -113,6 +113,12 @@ Route::middleware(['custom.auth'])->group(function () {
 
     Route::post('/v2.0/files/single-file-upload', [FileManagementController::class, "createFileSingleV2"]);
     Route::post('/v2.0/files/multiple-file-upload', [FileManagementController::class, "createFileMultipleV2"]);
+
+    Route::post('/v1.0/files/multiple-student-file-upload', [FileManagementController::class, "createStudentFileMultiple"]);
+
+
+
+
     Route::get('/v1.0/file/{filename}', [FileManagementController::class, "getFile"]);
 
 
@@ -1144,6 +1150,7 @@ Route::delete('/v1.0/job-listings/{ids}', [JobListingController::class, "deleteJ
 
 
 Route::post('/v1.0/students/multiple-file-upload', [StudentController::class, "createStudentFileMultiple"]);
+
 Route::post('/v1.0/students', [StudentController::class, "createStudent"]);
 Route::put('/v1.0/students', [StudentController::class, "updateStudent"]);
 Route::get('/v1.0/students/validate/school-id/{student_id}', [StudentController::class, "validateStudentId"]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StudentCreateRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\MultipleFileUploadRequest;
+use App\Http\Requests\MultipleStudentFileUploadRequest;
 use App\Http\Requests\StudentCreateRequestClient;
 use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
@@ -89,28 +90,24 @@ class StudentController extends Controller
      *     )
      */
 
-     public function createStudentFileMultiple(MultipleFileUploadRequest $request)
+     public function createStudentFileMultiple(MultipleStudentFileUploadRequest $request)
      {
          try{
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
 
-             $insertableData = $request->validated();
+             $request_data = $request->validated();
 
-             $location =  config("setup-config.student_files_location");
+             $location =  config("setup-config.temporary_files_location");
 
              $files = [];
-             if(!empty($insertableData["files"])) {
-                 foreach($insertableData["files"] as $file){
+             if (!empty($request_data["files"])) {
+                 foreach ($request_data["files"] as $file) {
                      $new_file_name = time() . '_' . $file->getClientOriginalName();
                      $new_file_name = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
                      $file->move(public_path($location), $new_file_name);
-
-                     array_push($files,("/".$location."/".$new_file_name));
-
-
+                     array_push($files, ("/" . $location . "/" . $new_file_name));
                  }
              }
-
 
              return response()->json(["files" => $files], 201);
 
@@ -230,7 +227,13 @@ class StudentController extends Controller
                  $request_data["created_by"] = $request->user()->id;
 
 
+
+
                  $student =  Student::create($request_data);
+
+                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
+
+                 $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles($request_data["previous_education_history"]["student_docs"], "file_name", "student_docs",NULL,$student->id);
 
 
 
@@ -238,7 +241,11 @@ class StudentController extends Controller
                  return response($student, 201);
              });
          } catch (Exception $e) {
-             error_log($e->getMessage());
+            try {
+                $this->moveUploadedFilesBack($request_data["previous_education_history"]["student_docs"], "", "student_docs");
+            } catch (Exception $innerException) {
+                error_log("Failed to move leave files back: " . $innerException->getMessage());
+            }
              return $this->sendError($e, 500, $request);
          }
      }
@@ -366,6 +373,13 @@ class StudentController extends Controller
 
                 $business = $student->business;
 
+                $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
+
+                $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles($request_data["previous_education_history"]["student_docs"], "file_name", "student_docs",NULL,$student->id);
+
+                $student->previous_education_history = $request_data["previous_education_history"];
+                $student->save();
+
 
                 $response = [
                   "id" => $student->id,
@@ -381,7 +395,10 @@ class StudentController extends Controller
                 return response($response, 201);
             });
         } catch (Exception $e) {
-            error_log($e->getMessage());
+
+
+
+
             return $this->sendError($e, 500, $request);
         }
     }
@@ -558,10 +575,24 @@ class StudentController extends Controller
                     ], 500);
                 }
 
+                $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
+
+                $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles($request_data["previous_education_history"]["student_docs"], "file_name", "student_docs",NULL,$student->id);
+
+
+
+
+
+                $student->previous_education_history = $request_data["previous_education_history"];
+
+                $student->save();
+
                 return response($student, 201);
             });
         } catch (Exception $e) {
-            error_log($e->getMessage());
+
+
+
             return $this->sendError($e, 500, $request);
         }
     }
@@ -1377,6 +1408,7 @@ class StudentController extends Controller
                 ], 401);
             }
             $business_id =  $request->user()->business_id;
+
             $student =  Student:: with("student_status")
             ->where([
                 "id" => $id,
@@ -1395,6 +1427,22 @@ class StudentController extends Controller
                     "message" => "no data found"
                 ], 404);
             }
+
+            $previous_education_history = $student->previous_education_history;
+
+            foreach ($previous_education_history['student_docs'] as &$student_doc_object) {
+                // Ensure each student_doc_object has a file_name property
+
+                    // Modify the file_name by prepending business name and student ID
+                    $student_doc_object["file_name"] = "/" . $student->business->name . "/" . base64_encode($student->id) . "/student_docs/".  $student_doc_object["file_name"];
+
+            }
+
+            $student->previous_education_history = $previous_education_history;
+
+
+            $student->previous_education_history = $previous_education_history;
+
 
             return response()->json($student, 200);
         } catch (Exception $e) {

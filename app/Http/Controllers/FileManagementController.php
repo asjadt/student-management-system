@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MultipleFileUploadRequestV2;
+use App\Http\Requests\MultipleStudentFileUploadRequest;
 use App\Http\Requests\SingleFileUploadRequestV2;
 use App\Models\Student;
 use App\Models\UploadedFile;
@@ -83,8 +84,6 @@ class FileManagementController extends Controller
 
 
              $request_data = $request->validated();
-
-
 
              $folder = $request_data['folder_location'];
 
@@ -276,6 +275,143 @@ class FileManagementController extends Controller
          }
      }
 
+
+ /**
+      *
+      * @OA\Post(
+      *      path="/v1.0/files/multiple-student-file-upload",
+      *      operationId="createStudentFileMultiple",
+      *      tags={"files"},
+      *       security={
+      *           {"bearerAuth": {}}
+      *       },
+
+      *      summary="This method is to store multiple leave files",
+      *      description="This method is to store multiple leave files",
+      *
+      *  @OA\RequestBody(
+      *   * @OA\MediaType(
+      *     mediaType="multipart/form-data",
+      *     @OA\Schema(
+      *         required={"files[]"},
+      *         @OA\Property(
+      *             description="array of files to upload",
+      *             property="files[]",
+      *             type="array",
+      *             @OA\Items(
+      *                 type="file"
+      *             ),
+      *             collectionFormat="multi",
+      *         )
+      *     )
+      * )
+
+
+
+      *      ),
+      *      @OA\Response(
+      *          response=200,
+      *          description="Successful operation",
+      *       @OA\JsonContent(),
+      *       ),
+      *      @OA\Response(
+      *          response=401,
+      *          description="Unauthenticated",
+      * @OA\JsonContent(),
+      *      ),
+      *        @OA\Response(
+      *          response=422,
+      *          description="Unprocesseble Content",
+      *    @OA\JsonContent(),
+      *      ),
+      *      @OA\Response(
+      *          response=403,
+      *          description="Forbidden",
+      *   @OA\JsonContent()
+      * ),
+      *  * @OA\Response(
+      *      response=400,
+      *      description="Bad Request",
+      *   *@OA\JsonContent()
+      *   ),
+      * @OA\Response(
+      *      response=404,
+      *      description="not found",
+      *   *@OA\JsonContent()
+      *   )
+      *      )
+      *     )
+      */
+
+      public function createStudentFileMultiple(MultipleStudentFileUploadRequest $request)
+      {
+          try {
+              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+              $request_data = $request->validated();
+
+              $folder = $request_data["folder_location"];
+
+
+              $locations =  config("setup-config.folder_locations");
+
+              // Check if the folder is a valid location
+              if (!in_array($folder, $locations)) {
+                  $valid_locations = implode(", ", $locations);
+                  $hint_message = "Invalid Folder Location. Please choose one of the following valid locations: $valid_locations";
+                  throw new Exception($hint_message, 403);
+              }
+
+              $businessId = auth()->user()->business_id;
+              if(!empty($businessId)) {
+                 $folder = "business_{$businessId}/" . $request_data["folder_location"];
+              }
+
+
+
+              $createdBy = auth()->user()->id;
+              $studentId = !empty($request_data['student_id']) ? $request_data['student_id'] : 0;
+
+              // Ensure the folder exists or create it
+              if (!Storage::exists($folder)) {
+                  Storage::makeDirectory($folder);
+              }
+
+              $files = [];
+
+              foreach ($request_data["files"] as $file) {
+                  // Generate a unique file name
+                  $originalName = $file->getClientOriginalName();
+                  $extension = $file->getClientOriginalExtension();
+
+                  // Replace spaces in the original file name with underscores
+                  $fileNameWithoutSpaces = str_replace(' ', '_', $originalName);
+
+
+                  $newFileName = time() . '_' . $createdBy . '_' . $studentId . '_' . $fileNameWithoutSpaces . "_" . $request_data["is_public"];
+
+                  // Store the file in the specified folder
+                  $storedFilePath = $file->storeAs($folder, $newFileName . '.' . $extension);
+
+                 //  // Save the file path to the database if needed
+                 //  UploadedFile::create([
+                 //      'file_name' => $storedFilePath,
+
+                 //  ]);
+
+                  // Optionally, you can store the full path if needed
+                  // $storedFilePath = Storage::url($storedFilePath); // Example to get full URL
+
+                  // Push stored file path to array
+                  $files[] = $storedFilePath;
+              }
+
+              return response()->json(['files' => $files], 201);
+          } catch (Exception $e) {
+              error_log($e->getMessage());
+              return $this->sendError($e, 500, $request);
+          }
+      }
 
 
 
