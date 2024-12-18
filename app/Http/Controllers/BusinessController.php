@@ -11,6 +11,7 @@ use App\Http\Requests\CheckScheduleConflictRequest;
 use App\Http\Requests\ImageUploadRequest;
 use App\Http\Requests\MultipleImageUploadRequest;
 use App\Http\Requests\GetIdRequest;
+use App\Http\Utils\BasicUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\UserActivityUtil;
@@ -34,7 +35,7 @@ use Illuminate\Support\Str;
 
 class BusinessController extends Controller
 {
-    use ErrorUtil,BusinessUtil,UserActivityUtil;
+    use ErrorUtil,BusinessUtil,UserActivityUtil, BasicUtil;
 
 
        /**
@@ -1076,41 +1077,49 @@ class BusinessController extends Controller
         //  business info ##############
         // $request_data['business']['status'] = "pending";
 
-        $business  =  tap(Business::where([
-            "id" => $request_data['business']["id"]
-            ]))->update(collect($request_data['business'])->only([
-                "url",
-                "name",
-                "about",
-                "web_page",
-                "phone",
-                "email",
-                "additional_information",
-                "address_line_1",
-                "address_line_2",
-                "lat",
-                "long",
-                "country",
-                "city",
-                "postcode",
-                "logo",
-                "image",
-                "status",
-                "background_image",
-                // "is_active",
-                "currency",
-                "letter_template_header",
-                "letter_template_footer"
-        ])->toArray()
-        )
-            // ->with("somthing")
-            ->first();
-            if(!$business) {
-                return response()->json([
-                    "massage" => "something went wrong"
-                ],500);
+        $name_changed = 0;
 
-            }
+        $business = Business::where(["id"=>$request_data['business']["id"]])
+        ->first();
+
+        if (!$business) {
+            return response()->json([
+                "message" => "Business not found"
+            ], 404);
+        }
+
+        if($business->name != $request_data['business']["name"]) {
+            $this->renameOrCreateFolder(str_replace(' ', '_', $business->name), str_replace(' ', '_', $request_data['business']["name"]));
+        }
+
+
+
+        $business->fill(collect($request_data['business'])->only([
+            "url",
+            "name",
+            "about",
+            "web_page",
+            "phone",
+            "email",
+            "additional_information",
+            "address_line_1",
+            "address_line_2",
+            "lat",
+            "long",
+            "country",
+            "city",
+            "postcode",
+            "logo",
+            "image",
+            "status",
+            "background_image",
+            "currency",
+            "letter_template_header",
+            "letter_template_footer"
+        ])->toArray());
+
+        $business->save();
+
 
 
   // end business info ##############

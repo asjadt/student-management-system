@@ -395,4 +395,38 @@ trait BasicUtil
         })->toArray();
     }
 
+
+    public function renameOrCreateFolder($currentFolderPath, $newFolderName)
+{
+    // Get the full path of the current folder
+    $fullCurrentFolderPath = public_path($currentFolderPath);
+
+    // Define the new folder path
+    $newFolderPath = dirname($fullCurrentFolderPath) . '/' . $newFolderName;
+
+    // Check if the current folder exists
+    if (File::exists($fullCurrentFolderPath)) {
+        try {
+            // Rename the folder
+            File::move($fullCurrentFolderPath, $newFolderPath);
+            Log::info("Folder renamed successfully from {$fullCurrentFolderPath} to {$newFolderPath}");
+            return $newFolderPath;
+        } catch (\Exception $e) {
+            Log::error("Failed to rename folder: " . $e->getMessage());
+            throw new Exception("Failed to rename folder: " . $e->getMessage());
+        }
+    } else {
+        // If the folder doesn't exist, create it
+        try {
+            File::makeDirectory($newFolderPath, 0755, true); // Create the new folder
+            Log::info("Folder created successfully at {$newFolderPath}");
+            return $newFolderPath;
+        } catch (\Exception $e) {
+            Log::error("Failed to create folder: " . $e->getMessage());
+            throw new Exception("Failed to create folder: " . $e->getMessage());
+        }
+    }
+}
+
+
 }
