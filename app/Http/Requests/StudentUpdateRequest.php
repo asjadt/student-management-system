@@ -45,6 +45,7 @@ class StudentUpdateRequest extends BaseFormRequest
             'first_name' => 'required|string',
             'middle_name' => 'nullable|string',
             'last_name' => 'required|string',
+            'title' => 'required|string',
             'nationality' => 'required|string',
             "course_fee" => "required|numeric",
             "fee_paid" => "required|numeric",

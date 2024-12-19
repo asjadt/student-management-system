@@ -27,6 +27,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -1884,7 +1885,7 @@ class BusinessController extends Controller
             ->first();
 
         return response()->json($business, 200);
-        
+
         } catch(Exception $e){
 
         return $this->sendError($e,500,$request);
@@ -1955,49 +1956,55 @@ class BusinessController extends Controller
                    "message" => "You can not perform this action"
                 ],401);
            }
-           $business_id =  $request->user()->business_id;
-           $idsArray = explode(',', $ids);
-           $existingIds = Business::whereIn('id', $idsArray)
-           ->when(!$request->user()->hasRole('superadmin'), function ($query) use ($business_id) {
 
-              return   $query->where(function ($query) {
-                return  $query->where('id', auth()->user()->business_id)
+    $business = Business::when(!$request->user()->hasRole('superadmin'), function ($query) {
+            return $query->where(function ($query) {
+                return $query->where('id', auth()->user()->business_id)
                     ->orWhere('created_by', auth()->user()->id)
                     ->orWhere('owner_id', auth()->user()->id);
-                });
+            });
+        })
+        ->where([
+            "id" => $ids
+        ])
+        ->first();
 
-               })
-               ->select('id')
-               ->get()
-               ->pluck('id')
-               ->toArray();
-           $nonExistingIds = array_diff($idsArray, $existingIds);
+        if (!$business) {
+            $this->storeError("Business not found", 404, "Front-end error", "Front-end error");
+            return response()->json([
+                "message" => "The specified business does not exist."
+            ], 404);
+        }
 
-           if (!empty($nonExistingIds)) {
-            $this->storeError(
-                "no data found"
-                ,
-                404,
-                "front end error",
-                "front end error"
-               );
-               return response()->json([
-                   "message" => "Some or all of the specified data do not exist."
-               ], 404);
-           }
-           Business::destroy($existingIds);
 
-           User::whereIn("business_id".$existingIds)->delete();
-           return response()->json(["message" => "data deleted sussfully","deleted_ids" => $existingIds], 200);
+        $folderName = str_replace(' ', '_', $business->name);
+        $folderPath = public_path($folderName);
+
+        // Delete associated folder if it exists
+        if (File::exists($folderPath)) {
+            if (File::deleteDirectory($folderPath)) {
+                // Log or provide a success message for folder deletion
+                Log::info("Folder {$folderName} successfully deleted.");
+            } else {
+                // Handle the case where the folder couldn't be deleted
+                Log::warning("Failed to delete folder {$folderName}.");
+            }
+        }
+
+
+        $business->delete();
+
+        User::where('business_id', $ids)->delete();
+
+           return response()->json(["message" => "data deleted sussfully","deleted_ids" => $ids], 200);
 
         } catch(Exception $e){
 
         return $this->sendError($e,500,$request);
         }
 
-
-
     }
+
 
 
 

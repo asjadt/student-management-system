@@ -18,6 +18,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
@@ -527,7 +529,7 @@ class StudentController extends Controller
                 $student  =  tap(Student::where($student_query_params))->update(
                     collect($request_data)->only([
                         'first_name',
-                        "title",
+        "title",
         'middle_name',
         'last_name',
         'nationality',
@@ -577,11 +579,28 @@ class StudentController extends Controller
 
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
 
+                $newDocs = $request_data["previous_education_history"]["student_docs"];
+
+                $existing_previous_education_history = json_decode($student->previous_education_history,true);
+
+                // Compare and delete old files if necessary
+                $existingDocs = $existing_previous_education_history["student_docs"] ?? [];
+
+                foreach ($existingDocs as $existingDoc) {
+                    foreach ($newDocs as $newDoc) {
+                        if ($existingDoc["id"] == $newDoc["id"] && $existingDoc["file_name"] !== $newDoc["file_name"]) {
+                            $filePath = public_path($existingDoc["file_name"]);
+                            if (File::exists($filePath)) {
+                                File::delete($filePath);
+                            }
+                        }
+                    }
+                }
+
+
+
+
                 $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles($request_data["previous_education_history"]["student_docs"], "file_name", "student_docs",NULL,$student->id);
-
-
-
-
 
                 $student->previous_education_history = $request_data["previous_education_history"];
 
@@ -590,9 +609,6 @@ class StudentController extends Controller
                 return response($student, 201);
             });
         } catch (Exception $e) {
-
-
-
             return $this->sendError($e, 500, $request);
         }
     }
@@ -663,8 +679,6 @@ class StudentController extends Controller
                     "business_id" => $request->user()->business_id
                 ]
             )->exists();
-
-
 
             return response()->json(["student_id_exists" => $student_id_exists], 200);
         } catch (Exception $e) {
@@ -1425,21 +1439,15 @@ class StudentController extends Controller
                 ], 404);
             }
 
-            $previous_education_history = $student->previous_education_history;
 
+            $previous_education_history = $student->previous_education_history;
             foreach ($previous_education_history['student_docs'] as &$student_doc_object) {
                 // Ensure each student_doc_object has a file_name property
 
                     // Modify the file_name by prepending business name and student ID
                     $student_doc_object["file_name"] = "/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/".  $student_doc_object["file_name"];
-
             }
-
             $student->previous_education_history = $previous_education_history;
-
-
-            $student->previous_education_history = $previous_education_history;
-
 
             return response()->json($student, 200);
         } catch (Exception $e) {
@@ -1447,6 +1455,7 @@ class StudentController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
 
   /**
      *
@@ -1598,34 +1607,46 @@ class StudentController extends Controller
                     "message" => "You can not perform this action"
                 ], 401);
             }
-            $business_id =  $request->user()->business_id;
-            $idsArray = explode(',', $ids);
-            $existingIds = Student::where([
+            $business_id = $request->user()->business_id;
+
+
+        $student = Student::with("business")
+            ->where([
+                "id" => $ids,
                 "business_id" => $business_id
             ])
-                ->whereIn('id', $idsArray)
-                ->select('id')
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $nonExistingIds = array_diff($idsArray, $existingIds);
+            ->first();
 
-            if (!empty($nonExistingIds)) {
-                $this->storeError(
-                    "no data found"
-                    ,
-                    404,
-                    "front end error",
-                    "front end error"
-                   );
-                return response()->json([
-                    "message" => "Some or all of the specified data do not exist."
-                ], 404);
+        if (!$student) {
+            $this->storeError(
+                "no data found",
+                404,
+                "front end error",
+                "front end error"
+            );
+            return response()->json([
+                "message" => "No data found"
+            ], 404);
+        }
+
+             // Construct the folder path
+        $businessFolderName = str_replace(' ', '_', $student->business->name);
+        $studentFolderName = base64_encode($student->id); // Base64 encoding the student ID
+        $folderPath = public_path("{$businessFolderName}/{$studentFolderName}");
+
+        // Delete the student folder if it exists
+        if (File::exists($folderPath)) {
+            if (File::deleteDirectory($folderPath)) {
+                Log::info("Folder {$folderPath} successfully deleted.");
+            } else {
+                Log::warning("Failed to delete folder {$folderPath}.");
             }
-            Student::destroy($existingIds);
+        }
 
+       // Proceed with deleting the student record
+       $student->delete();
 
-            return response()->json(["message" => "data deleted sussfully","deleted_ids" => $existingIds], 200);
+            return response()->json(["message" => "data deleted sussfully"], 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
