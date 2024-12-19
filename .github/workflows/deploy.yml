@@ -32,5 +32,10 @@ jobs:
             resources/**                           # Include resources folder
             routes/**                              # Include routes folder
             tests/**                               # Include tests folder
+            *                                      # Include all files in the root directory
           exclude: |
-            **/*                                   # Exclude everything else
+            **/*                                   # Exclude everything else by default
+            public/**                              # Exclude the public folder
+            storage/**                             # Exclude the storage folder
+            vendor/**                              # Exclude the vendor folder
+            .env                                   # Exclude the .env file

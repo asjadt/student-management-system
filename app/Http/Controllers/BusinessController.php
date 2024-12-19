@@ -1880,14 +1880,11 @@ class BusinessController extends Controller
             $business = Business::where([
                 "url" => $url
             ])
-
             ->select("id","name","logo")
             ->first();
 
-
-
-
         return response()->json($business, 200);
+        
         } catch(Exception $e){
 
         return $this->sendError($e,500,$request);
