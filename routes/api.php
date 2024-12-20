@@ -411,6 +411,8 @@ Route::put('/v1.0/businesses/toggle-active', [BusinessController::class, "toggle
 Route::put('/v1.0/businesses', [BusinessController::class, "updateBusiness"]);
 Route::put('/v1.0/businesses/separate', [BusinessController::class, "updateBusinessSeparate"]);
 Route::get('/v1.0/businesses', [BusinessController::class, "getBusinesses"]);
+Route::get('/v2.0/businesses', [BusinessController::class, "getBusinessesV2"]);
+
 Route::get('/v1.0/businesses/{id}', [BusinessController::class, "getBusinessById"]);
 Route::delete('/v1.0/businesses/{ids}', [BusinessController::class, "deleteBusinessesByIds"]);
 Route::get('/v1.0/businesses/by-business-owner/all', [BusinessController::class, "getAllBusinessesByBusinessOwner"]);

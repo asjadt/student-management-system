@@ -316,7 +316,7 @@ class StudentStatusController extends Controller
         if(auth()->user()->business) {
             $created_by = auth()->user()->business->created_by;
         }
-     return   $query->when(empty(request()->user()->business_id), function ($query) use ( $created_by) {
+          return   $query->when(empty(request()->user()->business_id), function ($query) use ( $created_by) {
             if (auth()->user()->hasRole('superadmin')) {
                 return $query->where('student_statuses.business_id', NULL)
                     ->where('student_statuses.is_default', 1)

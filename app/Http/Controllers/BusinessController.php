@@ -1568,10 +1568,57 @@ class BusinessController extends Controller
         }
 
     }
-
-
-
-    /**
+    public function query_filters($query) {
+          return   $query->when(!request()->user()->hasRole('superadmin'), function ($query) {
+            return   $query->where(function ($query) {
+                return   $query->where('id', auth()->user()->business_id)
+                    ->orWhere('created_by', auth()->user()->id)
+                    ->orWhere('owner_id', auth()->user()->id);
+                });
+           })
+           ->when(!empty(request()->search_key), function ($query) {
+               $term = request()->search_key;
+               return $query->where(function ($query) use ($term) {
+                   $query->where("name", "like", "%" . $term . "%")
+                       ->orWhere("phone", "like", "%" . $term . "%")
+                       ->orWhere("email", "like", "%" . $term . "%")
+                       ->orWhere("city", "like", "%" . $term . "%")
+                       ->orWhere("postcode", "like", "%" . $term . "%");
+               });
+           })
+           ->when(!empty(request()->start_date), function ($query) {
+               return $query->where('created_at', ">=", request()->start_date);
+           })
+           ->when(!empty(request()->end_date), function ($query) {
+               return $query->where('created_at', "<=", (request()->end_date . ' 23:59:59'));
+           })
+           ->when(!empty(request()->start_lat), function ($query) {
+               return $query->where('lat', ">=", request()->start_lat);
+           })
+           ->when(!empty(request()->end_lat), function ($query)  {
+               return $query->where('lat', "<=", request()->end_lat);
+           })
+           ->when(!empty(request()->start_long), function ($query)  {
+               return $query->where('long', ">=", request()->start_long);
+           })
+           ->when(!empty(request()->end_long), function ($query)  {
+               return $query->where('long', "<=", request()->end_long);
+           })
+           ->when(!empty(request()->address), function ($query)  {
+               $term = request()->address;
+               return $query->where(function ($query) use ($term) {
+                   $query->where("country", "like", "%" . $term . "%")
+                       ->orWhere("city", "like", "%" . $term . "%");
+               });
+           })
+           ->when(!empty(request()->country_code), function ($query)  {
+               return $query->orWhere("country", "like", "%" . request()->country_code . "%");
+           })
+           ->when(!empty(request()->city), function ($query)  {
+               return $query->orWhere("city", "like", "%" . request()->city . "%");
+           });
+     }
+   /**
         *
      * @OA\Get(
      *      path="/v1.0/businesses",
@@ -1703,8 +1750,7 @@ class BusinessController extends Controller
      *     )
      */
 
-    public function getBusinesses(Request $request) {
-
+     public function getBusinesses(Request $request) {
         try{
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
             if(!$request->user()->hasPermissionTo('business_view')){
@@ -1713,65 +1759,198 @@ class BusinessController extends Controller
                 ],401);
            }
 
-           $businesses = Business::with("owner")
-           ->when(!$request->user()->hasRole('superadmin'), function ($query) use ($request) {
-            return   $query->where(function ($query) {
-                return   $query->where('id', auth()->user()->business_id)
-                    ->orWhere('created_by', auth()->user()->id)
-                    ->orWhere('owner_id', auth()->user()->id);
-                });
-           })
-           ->when(!empty($request->search_key), function ($query) use ($request) {
-               $term = $request->search_key;
-               return $query->where(function ($query) use ($term) {
-                   $query->where("name", "like", "%" . $term . "%")
-                       ->orWhere("phone", "like", "%" . $term . "%")
-                       ->orWhere("email", "like", "%" . $term . "%")
-                       ->orWhere("city", "like", "%" . $term . "%")
-                       ->orWhere("postcode", "like", "%" . $term . "%");
-               });
-           })
-           ->when(!empty($request->start_date), function ($query) use ($request) {
-               return $query->where('created_at', ">=", $request->start_date);
-           })
-           ->when(!empty($request->end_date), function ($query) use ($request) {
-               return $query->where('created_at', "<=", ($request->end_date . ' 23:59:59'));
-           })
-           ->when(!empty($request->start_lat), function ($query) use ($request) {
-               return $query->where('lat', ">=", $request->start_lat);
-           })
-           ->when(!empty($request->end_lat), function ($query) use ($request) {
-               return $query->where('lat', "<=", $request->end_lat);
-           })
-           ->when(!empty($request->start_long), function ($query) use ($request) {
-               return $query->where('long', ">=", $request->start_long);
-           })
-           ->when(!empty($request->end_long), function ($query) use ($request) {
-               return $query->where('long', "<=", $request->end_long);
-           })
-           ->when(!empty($request->address), function ($query) use ($request) {
-               $term = $request->address;
-               return $query->where(function ($query) use ($term) {
-                   $query->where("country", "like", "%" . $term . "%")
-                       ->orWhere("city", "like", "%" . $term . "%");
-               });
-           })
-           ->when(!empty($request->country_code), function ($query) use ($request) {
-               return $query->orWhere("country", "like", "%" . $request->country_code . "%");
-           })
-           ->when(!empty($request->city), function ($query) use ($request) {
-               return $query->orWhere("city", "like", "%" . $request->city . "%");
-           })
-           ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-               return $query->orderBy("businesses.id", $request->order_by);
-           }, function ($query) {
-               return $query->orderBy("businesses.id", "DESC");
-           })
-           ->when(!empty($request->per_page), function ($query) use ($request) {
-               return $query->paginate($request->per_page);
-           }, function ($query) {
-               return $query->get();
-           });
+
+           $query = Business::with("owner");
+           $query = $this->query_filters($query);
+           $businesses = $this->retrieveData($query, "businesses.id");
+
+
+       return response()->json($businesses, 200);
+            return response()->json($businesses, 200);
+        } catch(Exception $e){
+
+        return $this->sendError($e,500,$request);
+        }
+    }
+
+    /**
+        *
+     * @OA\Get(
+     *      path="/v2.0/businesses",
+     *      operationId="getBusinessesV2",
+     *      tags={"business_management"},
+     * *  @OA\Parameter(
+* name="start_date",
+* in="query",
+* description="start_date",
+* required=true,
+* example="2019-06-29"
+* ),
+     * *  @OA\Parameter(
+* name="end_date",
+* in="query",
+* description="end_date",
+* required=true,
+* example="2019-06-29"
+* ),
+     * *  @OA\Parameter(
+* name="search_key",
+* in="query",
+* description="search_key",
+* required=true,
+* example="search_key"
+* ),
+     * *  @OA\Parameter(
+* name="country_code",
+* in="query",
+* description="country_code",
+* required=true,
+* example="country_code"
+* ),
+    * *  @OA\Parameter(
+* name="address",
+* in="query",
+* description="address",
+* required=true,
+* example="address"
+* ),
+     * *  @OA\Parameter(
+* name="city",
+* in="query",
+* description="city",
+* required=true,
+* example="city"
+* ),
+    * *  @OA\Parameter(
+* name="start_lat",
+* in="query",
+* description="start_lat",
+* required=true,
+* example="3"
+* ),
+     * *  @OA\Parameter(
+* name="end_lat",
+* in="query",
+* description="end_lat",
+* required=true,
+* example="2"
+* ),
+     * *  @OA\Parameter(
+* name="start_long",
+* in="query",
+* description="start_long",
+* required=true,
+* example="1"
+* ),
+     * *  @OA\Parameter(
+* name="end_long",
+* in="query",
+* description="end_long",
+* required=true,
+* example="4"
+* ),
+     * *  @OA\Parameter(
+* name="per_page",
+* in="query",
+* description="per_page",
+* required=true,
+* example="10"
+* ),
+   * *  @OA\Parameter(
+  * name="order_by",
+  * in="query",
+  * description="order_by",
+  * required=true,
+  * example="ASC"
+  * ),
+    *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *
+     *      summary="This method is to get businesses",
+     *      description="This method is to get businesses",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function getBusinessesV2(Request $request) {
+        try{
+            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            if(!$request->user()->hasPermissionTo('business_view')){
+                return response()->json([
+                   "message" => "You can not perform this action"
+                ],401);
+           }
+
+           $query = Business::with(
+
+            [
+                "owner" => function($query) {
+                   $query->select(
+                    "users.id",
+                    'users.first_Name',
+                    'users.last_Name',
+                    'users.middle_Name',
+                    'users.phone',
+                    'users.image',
+                   );
+                }
+
+            ]
+
+        );
+           $query = $this->query_filters($query)
+           ->select(
+            "businesses.name",
+            "businesses.url",
+            "businesses.web_page",
+            "businesses.phone",
+            "businesses.email",
+            "businesses.address_line_1",
+            "businesses.lat",
+            "businesses.long",
+            "businesses.country",
+            "businesses.city",
+            "businesses.postcode",
+            "businesses.status",
+            "businesses.is_active",
+            "businesses.owner_id",
+            "businesses.created_by"
+           )
+           ;
+           $businesses = $this->retrieveData($query, "businesses.id");
 
        return response()->json($businesses, 200);
             return response()->json($businesses, 200);
@@ -1781,6 +1960,11 @@ class BusinessController extends Controller
         }
 
     }
+
+
+
+
+
      /**
         *
      * @OA\Get(
