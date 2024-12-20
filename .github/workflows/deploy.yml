@@ -39,3 +39,4 @@ jobs:
             storage/**                             # Exclude the storage folder
             vendor/**                              # Exclude the vendor folder
             .env                                   # Exclude the .env file
+            **/.env                                # Ensure any hidden .env files are

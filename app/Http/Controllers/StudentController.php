@@ -617,9 +617,8 @@ class StudentController extends Controller
                     }
                 }
 
-
+                
                 $request_data["previous_education_history"]["student_docs"] =
-
                 $student->previous_education_history = $request_data["previous_education_history"];
 
                 $student->save();
