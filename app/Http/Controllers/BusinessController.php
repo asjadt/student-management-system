@@ -1126,7 +1126,7 @@ class BusinessController extends Controller
   // end business info ##############
 
   if(!empty($request_data["times"])) {
-
+    
     $timesArray = collect($request_data["times"])->unique("day");
     BusinessTime::where([
         "business_id" => $business->id
