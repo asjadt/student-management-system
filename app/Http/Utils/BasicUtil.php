@@ -322,6 +322,7 @@ trait BasicUtil
                 Log::error("File does not exist at destination: {$destinationPath}");
             }
         });
+
     }
 
     public function storeUploadedFiles($filePaths, $fileKey, $location, $arrayOfString = NULL,$student_id=NULL)

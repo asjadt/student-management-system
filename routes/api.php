@@ -102,6 +102,8 @@ Route::post('/auth/check/email', [AuthController::class, "checkEmail"]);
 Route::post('/v1.0/user-image', [UserManagementController::class, "createUserImage"]);
 
 Route::post('/v1.0/business-image', [BusinessController::class, "createBusinessImage"]);
+Route::post('/v1.0/business-logo', [BusinessController::class, "createBusinessLogo"]);
+
 Route::post('/v1.0/business-image-multiple', [BusinessController::class, "createBusinessImageMultiple"]);
 
 

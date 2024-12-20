@@ -37,9 +37,7 @@ use Illuminate\Support\Str;
 class BusinessController extends Controller
 {
     use ErrorUtil,BusinessUtil,UserActivityUtil, BasicUtil;
-
-
-       /**
+    /**
         *
      * @OA\Post(
      *      path="/v1.0/business-image",
@@ -102,33 +100,159 @@ class BusinessController extends Controller
      *     )
      */
 
-    public function createBusinessImage(ImageUploadRequest $request)
-    {
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            // if(!$request->user()->hasPermissionTo('business_create')){
-            //      return response()->json([
-            //         "message" => "You can not perform this action"
-            //      ],401);
-            // }
+     public function createBusinessImage(ImageUploadRequest $request)
+     {
+         try{
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+             // if(!$request->user()->hasPermissionTo('business_create')){
+             //      return response()->json([
+             //         "message" => "You can not perform this action"
+             //      ],401);
+             // }
 
-            $request_data = $request->validated();
+             $request_data = $request->validated();
 
-            $location =  config("setup-config.business_gallery_location");
+             $location =  config("setup-config.business_gallery_location");
 
-            $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
+             $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
 
-            $request_data["image"]->move(public_path($location), $new_file_name);
-
-
-            return response()->json(["image" => $new_file_name,"location" => $location,"full_location"=>("/".$location."/".$new_file_name)], 200);
+             $request_data["image"]->move(public_path($location), $new_file_name);
 
 
-        } catch(Exception $e){
-            error_log($e->getMessage());
-        return $this->sendError($e,500,$request);
-        }
-    }
+             return response()->json(["image" => $new_file_name,"location" => $location,"full_location"=>("/".$location."/".$new_file_name)], 200);
+
+
+         } catch(Exception $e){
+             error_log($e->getMessage());
+         return $this->sendError($e,500,$request);
+         }
+     }
+
+       /**
+        *
+     * @OA\Post(
+     *      path="/v1.0/business-logo",
+     *      operationId="createBusinessLogo",
+     *      tags={"business_management"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to store business image ",
+     *      description="This method is to store business image",
+     *
+   *  @OA\RequestBody(
+        *   * @OA\MediaType(
+*     mediaType="multipart/form-data",
+*     @OA\Schema(
+*         required={"image"},
+*         @OA\Property(
+*             description="image to upload",
+*             property="image",
+*             type="file",
+*             collectionFormat="multi",
+*         )
+*     )
+* )
+
+
+
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function createBusinessLogo(ImageUploadRequest $request)
+     {
+         try {
+             // Log the activity
+             $this->storeActivity($request, "Upload Business Logo", "Uploading a new business logo");
+
+             // Validate the request data
+             $request_data = $request->validated();
+
+             // Get the authenticated user's business
+             $business = auth()->user()->business;
+
+             if (!$business) {
+                 return response()->json([
+                     "message" => "Business not found"
+                 ], 404);
+             }
+
+             // Define the storage location and file name
+             $location = str_replace(' ', '_', $business->name) . "/" . config("setup-config.business_gallery_location");
+             $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
+             $new_logo_path = "/" . $location . "/" . $new_file_name;
+
+             // Compare existing and new logo paths and delete the old logo if needed
+             if ($business->logo && $business->logo !== $new_logo_path) {
+                 $existingLogoPath = public_path($business->logo);
+
+                 if (File::exists($existingLogoPath)) {
+                     File::delete($existingLogoPath);
+                 }
+             }
+
+             // Store the new logo
+             $request_data["image"]->storeAs($location, $new_file_name, 'public');
+
+             // Update the business logo
+             $business->logo = $new_logo_path;
+             $business->save();
+
+             // Return a success response
+             return response()->json([
+                 "status" => "success",
+                 "data" => [
+                     "image" => $new_file_name,
+                     "location" => $location,
+                     "full_location" => $new_logo_path
+                 ]
+             ], 200);
+         } catch (Exception $e) {
+             // Log the error
+             error_log($e->getMessage());
+
+             // Return an error response
+             return response()->json([
+                 "message" => "An error occurred while uploading the business logo",
+                 "error" => $e->getMessage()
+             ], 500);
+         }
+     }
+
+
+
 
   /**
         *
@@ -1126,7 +1250,7 @@ class BusinessController extends Controller
   // end business info ##############
 
   if(!empty($request_data["times"])) {
-    
+
     $timesArray = collect($request_data["times"])->unique("day");
     BusinessTime::where([
         "business_id" => $business->id
