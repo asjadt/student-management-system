@@ -528,7 +528,7 @@ class StudentController extends Controller
 
                 $student  =  tap(Student::where($student_query_params))->update(
                     collect($request_data)->only([
-                        'first_name',
+        'first_name',
         "title",
         'middle_name',
         'last_name',
@@ -557,7 +557,7 @@ class StudentController extends Controller
         'lat',
         'long',
         'emergency_contact_details',
-        'previous_education_history',
+        // 'previous_education_history',
         'passport_issue_date',
         'passport_expiry_date',
         'place_of_issue',
@@ -576,31 +576,49 @@ class StudentController extends Controller
                         "message" => "something went wrong."
                     ], 500);
                 }
-
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
+
+
+                $request_data["previous_education_history"]["student_docs"] =     $this->storeUploadedFiles($request_data["previous_education_history"]["student_docs"], "file_name", "student_docs",NULL,$student->id);
+
 
                 $newDocs = $request_data["previous_education_history"]["student_docs"];
 
-                $existing_previous_education_history = json_decode($student->previous_education_history,true);
+                $existing_previous_education_history = $student->previous_education_history;
 
                 // Compare and delete old files if necessary
                 $existingDocs = $existing_previous_education_history["student_docs"] ?? [];
 
+
+
                 foreach ($existingDocs as $existingDoc) {
+                    $found=false;
                     foreach ($newDocs as $newDoc) {
-                        if ($existingDoc["id"] == $newDoc["id"] && $existingDoc["file_name"] !== $newDoc["file_name"]) {
-                            $filePath = public_path($existingDoc["file_name"]);
-                            if (File::exists($filePath)) {
-                                File::delete($filePath);
+                        if ($existingDoc["id"] == $newDoc["id"]) {
+                            $found=true;
+
+                            if($existingDoc["file_name"] !== $newDoc["file_name"]) {
+                                $filePath = public_path(("/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/".  $existingDoc["file_name"]));
+
+                                if (File::exists($filePath)) {
+                                    File::delete($filePath);
+                                }
                             }
+ break; // No need to check further once found
+                        }
+                    }
+
+                    if(!$found) {
+                        $filePath = public_path(("/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/".  $existingDoc["file_name"]));
+
+                        if (File::exists($filePath)) {
+                            File::delete($filePath);
                         }
                     }
                 }
 
 
-
-
-                $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles($request_data["previous_education_history"]["student_docs"], "file_name", "student_docs",NULL,$student->id);
+                $request_data["previous_education_history"]["student_docs"] =
 
                 $student->previous_education_history = $request_data["previous_education_history"];
 

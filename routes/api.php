@@ -102,7 +102,7 @@ Route::post('/auth/check/email', [AuthController::class, "checkEmail"]);
 Route::post('/v1.0/user-image', [UserManagementController::class, "createUserImage"]);
 
 Route::post('/v1.0/business-image', [BusinessController::class, "createBusinessImage"]);
-Route::post('/v1.0/business-logo', [BusinessController::class, "createBusinessLogo"]);
+
 
 Route::post('/v1.0/business-image-multiple', [BusinessController::class, "createBusinessImageMultiple"]);
 
@@ -116,7 +116,7 @@ Route::middleware(['custom.auth'])->group(function () {
     Route::post('/v2.0/files/single-file-upload', [FileManagementController::class, "createFileSingleV2"]);
     Route::post('/v2.0/files/multiple-file-upload', [FileManagementController::class, "createFileMultipleV2"]);
 
-    Route::post('/v1.0/files/multiple-student-file-upload', [FileManagementController::class, "createStudentFileMultiple"]);
+    Route::post('/v1.0/files/multiple-student-file-upload', [FileManagementController::class, "createStudentFileMultipleSecure"]);
 
 
 
@@ -404,6 +404,8 @@ Route::post('/v1.0/auth/check-schedule-conflict', [BusinessController::class, "c
 Route::post('/v1.0/auth/register-with-business', [BusinessController::class, "registerUserWithBusiness"]);
 Route::post('/v1.0/businesses', [BusinessController::class, "createBusiness"]);
 Route::post('/v1.0/businesses/generate-database', [BusinessController::class, "generateDatabaseForBusiness"]);
+
+Route::post('/v1.0/business-logo', [BusinessController::class, "createBusinessLogo"]);
 
 Route::put('/v1.0/businesses/toggle-active', [BusinessController::class, "toggleActiveBusiness"]);
 Route::put('/v1.0/businesses', [BusinessController::class, "updateBusiness"]);

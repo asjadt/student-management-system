@@ -280,7 +280,7 @@ class FileManagementController extends Controller
       *
       * @OA\Post(
       *      path="/v1.0/files/multiple-student-file-upload",
-      *      operationId="createStudentFileMultiple",
+      *      operationId="createStudentFileMultipleSecure",
       *      tags={"files"},
       *       security={
       *           {"bearerAuth": {}}
@@ -343,7 +343,7 @@ class FileManagementController extends Controller
       *     )
       */
 
-      public function createStudentFileMultiple(MultipleStudentFileUploadRequest $request)
+      public function createStudentFileMultipleSecure(MultipleStudentFileUploadRequest $request)
       {
           try {
               $this->storeActivity($request, "DUMMY activity", "DUMMY description");

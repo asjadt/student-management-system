@@ -363,8 +363,11 @@ trait BasicUtil
             // Check if the file exists at the temporary location
             if (File::exists($fullTemporaryPath)) {
                 try {
+
                     // Ensure the destination directory exists
                     $newDirectoryPath = dirname($newLocationPath);
+
+
                     if (!File::exists($newDirectoryPath)) {
                         File::makeDirectory($newDirectoryPath, 0755, true);
                     }

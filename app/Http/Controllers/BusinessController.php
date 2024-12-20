@@ -200,6 +200,7 @@ class BusinessController extends Controller
              // Validate the request data
              $request_data = $request->validated();
 
+
              // Get the authenticated user's business
              $business = auth()->user()->business;
 
@@ -211,8 +212,13 @@ class BusinessController extends Controller
 
              // Define the storage location and file name
              $location = str_replace(' ', '_', $business->name) . "/" . config("setup-config.business_gallery_location");
+
+
              $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
-             $new_logo_path = "/" . $location . "/" . $new_file_name;
+
+             $request_data["image"]->move(public_path($location), $new_file_name);
+
+             $new_logo_path = ("/" . $location . "/" . $new_file_name);
 
              // Compare existing and new logo paths and delete the old logo if needed
              if ($business->logo && $business->logo !== $new_logo_path) {
@@ -223,8 +229,7 @@ class BusinessController extends Controller
                  }
              }
 
-             // Store the new logo
-             $request_data["image"]->storeAs($location, $new_file_name, 'public');
+
 
              // Update the business logo
              $business->logo = $new_logo_path;
