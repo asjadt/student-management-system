@@ -6,6 +6,7 @@ use App\Models\EmailTemplate;
 use App\Models\EmailTemplateWrapper;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -90,3 +91,69 @@ Route::get("/test",function() {
 });
 
 
+
+Route::get("/delete-tables", function() {
+   // Disable foreign key checks
+DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+
+// Drop tables
+DB::statement('DROP TABLE IF EXISTS affiliations');
+DB::statement('DROP TABLE IF EXISTS automobile_categories');
+DB::statement('DROP TABLE IF EXISTS automobile_fuel_types');
+DB::statement('DROP TABLE IF EXISTS automobile_makes');
+DB::statement('DROP TABLE IF EXISTS automobile_model_variants');
+DB::statement('DROP TABLE IF EXISTS automobile_models');
+DB::statement('DROP TABLE IF EXISTS booking_packages');
+DB::statement('DROP TABLE IF EXISTS booking_sub_services');
+DB::statement('DROP TABLE IF EXISTS bookings');
+DB::statement('DROP TABLE IF EXISTS coupons');
+DB::statement('DROP TABLE IF EXISTS dashboard_widgets');
+DB::statement('DROP TABLE IF EXISTS disabled_awarding_bodies');
+DB::statement('DROP TABLE IF EXISTS disabled_course_titles');
+DB::statement('DROP TABLE IF EXISTS disabled_letter_templates');
+DB::statement('DROP TABLE IF EXISTS disabled_student_statuses');
+DB::statement('DROP TABLE IF EXISTS fuel_station_galleries');
+DB::statement('DROP TABLE IF EXISTS fuel_station_options');
+DB::statement('DROP TABLE IF EXISTS fuel_station_services');
+DB::statement('DROP TABLE IF EXISTS fuel_station_times');
+DB::statement('DROP TABLE IF EXISTS fuel_stations');
+DB::statement('DROP TABLE IF EXISTS garage_affiliations');
+DB::statement('DROP TABLE IF EXISTS garage_automobile_makes');
+DB::statement('DROP TABLE IF EXISTS garage_automobile_models');
+DB::statement('DROP TABLE IF EXISTS garage_package_sub_services');
+DB::statement('DROP TABLE IF EXISTS garage_packages');
+DB::statement('DROP TABLE IF EXISTS garage_rules');
+DB::statement('DROP TABLE IF EXISTS garage_services');
+DB::statement('DROP TABLE IF EXISTS garage_sub_service_prices');
+DB::statement('DROP TABLE IF EXISTS garage_sub_services');
+DB::statement('DROP TABLE IF EXISTS job_bids');
+DB::statement('DROP TABLE IF EXISTS job_packages');
+DB::statement('DROP TABLE IF EXISTS job_payments');
+DB::statement('DROP TABLE IF EXISTS job_sub_services');
+DB::statement('DROP TABLE IF EXISTS jobs');
+DB::statement('DROP TABLE IF EXISTS pre_booking_sub_services');
+DB::statement('DROP TABLE IF EXISTS pre_bookings');
+DB::statement('DROP TABLE IF EXISTS product_categories');
+DB::statement('DROP TABLE IF EXISTS product_galleries');
+DB::statement('DROP TABLE IF EXISTS product_variations');
+DB::statement('DROP TABLE IF EXISTS products');
+DB::statement('DROP TABLE IF EXISTS questions');
+DB::statement('DROP TABLE IF EXISTS qusetion_stars');
+DB::statement('DROP TABLE IF EXISTS review_news');
+DB::statement('DROP TABLE IF EXISTS review_value_news');
+DB::statement('DROP TABLE IF EXISTS services');
+DB::statement('DROP TABLE IF EXISTS shop_galleries');
+DB::statement('DROP TABLE IF EXISTS shops');
+DB::statement('DROP TABLE IF EXISTS star_tags');
+DB::statement('DROP TABLE IF EXISTS stars');
+DB::statement('DROP TABLE IF EXISTS sub_services');
+DB::statement('DROP TABLE IF EXISTS tags');
+DB::statement('DROP TABLE IF EXISTS garages');
+DB::statement('DROP TABLE IF EXISTS garage_galleries');
+DB::statement('DROP TABLE IF EXISTS garage_times');
+// Re-enable foreign key checks
+DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
+return "ok";
+
+});
