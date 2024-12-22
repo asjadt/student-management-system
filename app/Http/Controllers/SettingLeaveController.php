@@ -20,7 +20,7 @@ class SettingLeaveController extends Controller
      * @OA\Post(
      *      path="/v1.0/setting-leave",
      *      operationId="createSettingLeave",
-     *      tags={"settings.setting_leave"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -141,7 +141,7 @@ class SettingLeaveController extends Controller
      * @OA\Get(
      *      path="/v1.0/setting-leave",
      *      operationId="getSettingLeave",
-     *      tags={"settings.setting_leave"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

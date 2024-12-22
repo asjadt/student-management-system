@@ -28,7 +28,7 @@ class UserSponsorshipHistoryController extends Controller
      * @OA\Post(
      *      path="/v1.0/user-sponsorship-histories",
      *      operationId="createUserSponsorshipHistory",
-     *      tags={"user_sponsorship_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -122,7 +122,7 @@ class UserSponsorshipHistoryController extends Controller
      * @OA\Put(
      *      path="/v1.0/user-sponsorship-histories",
      *      operationId="updateUserSponsorshipHistory",
-     *      tags={"user_sponsorship_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -255,7 +255,7 @@ class UserSponsorshipHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-sponsorship-histories",
      *      operationId="getUserSponsorshipHistories",
-     *      tags={"user_sponsorship_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -416,7 +416,7 @@ class UserSponsorshipHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-sponsorship-histories/{id}",
      *      operationId="getUserSponsorshipHistoryById",
-     *      tags={"user_sponsorship_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -518,7 +518,7 @@ class UserSponsorshipHistoryController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/user-sponsorship-histories/{ids}",
      *      operationId="deleteUserSponsorshipHistoriesByIds",
-     *      tags={"user_sponsorship_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

@@ -27,7 +27,7 @@ class UserAssetController extends Controller
        * @OA\Post(
        *      path="/v1.0/user-assets/single-file-upload",
        *      operationId="createUserAssetFileSingle",
-       *      tags={"user_assets"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -120,7 +120,7 @@ class UserAssetController extends Controller
        * @OA\Post(
        *      path="/v1.0/user-assets",
        *      operationId="createUserAsset",
-       *      tags={"user_assets"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -243,7 +243,7 @@ class UserAssetController extends Controller
        * @OA\Put(
        *      path="/v1.0/user-assets/add-existing",
        *      operationId="addExistingUserAsset",
-       *      tags={"user_assets"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -392,7 +392,7 @@ class UserAssetController extends Controller
        * @OA\Put(
        *      path="/v1.0/user-assets",
        *      operationId="updateUserAsset",
-       *      tags={"user_assets"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -560,7 +560,7 @@ class UserAssetController extends Controller
        * @OA\Get(
        *      path="/v1.0/user-assets",
        *      operationId="get",
-       *      tags={"user_assets"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -759,7 +759,7 @@ class UserAssetController extends Controller
        * @OA\Get(
        *      path="/v1.0/user-assets/{id}",
        *      operationId="getUserAssetById",
-       *      tags={"user_assets"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -884,7 +884,7 @@ class UserAssetController extends Controller
        *     @OA\Delete(
        *      path="/v1.0/user-assets/{ids}",
        *      operationId="deleteUserAssetsByIds",
-       *      tags={"user_assets"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },

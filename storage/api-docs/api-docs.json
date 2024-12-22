@@ -22,7 +22,7 @@
         "/v1.0/announcements": {
             "get": {
                 "tags": [
-                    "administrator.announcements"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get announcements  ",
                 "description": "This method is to get announcements ",
@@ -122,7 +122,7 @@
             },
             "put": {
                 "tags": [
-                    "administrator.announcements"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update announcement ",
                 "description": "This method is to update announcement",
@@ -231,7 +231,7 @@
             },
             "post": {
                 "tags": [
-                    "administrator.announcements"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store announcement",
                 "description": "This method is to store announcement",
@@ -337,7 +337,7 @@
         "/v1.0/announcements/{id}": {
             "get": {
                 "tags": [
-                    "administrator.announcements"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get announcement by id",
                 "description": "This method is to get announcement by id",
@@ -411,7 +411,7 @@
         "/v1.0/announcements/{ids}": {
             "delete": {
                 "tags": [
-                    "administrator.announcements"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete announcement by id",
                 "description": "This method is to delete announcement by id",
@@ -485,7 +485,7 @@
         "/v1.0/asset-types": {
             "get": {
                 "tags": [
-                    "administrator.asset_type"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get asset types  ",
                 "description": "This method is to get asset types ",
@@ -585,7 +585,7 @@
             },
             "put": {
                 "tags": [
-                    "administrator.asset_type"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update asset type ",
                 "description": "This method is to update asset type",
@@ -670,7 +670,7 @@
             },
             "post": {
                 "tags": [
-                    "administrator.asset_type"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store asset type",
                 "description": "This method is to store asset type",
@@ -752,7 +752,7 @@
         "/v1.0/asset-types/{id}": {
             "get": {
                 "tags": [
-                    "administrator.asset_type"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get asset type by id",
                 "description": "This method is to get asset type by id",
@@ -826,7 +826,7 @@
         "/v1.0/asset-types/{ids}": {
             "delete": {
                 "tags": [
-                    "administrator.asset_type"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete asset type by id",
                 "description": "This method is to delete asset type by id",
@@ -900,7 +900,7 @@
         "/v1.0/attendances": {
             "get": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get attendances  ",
                 "description": "This method is to get attendances ",
@@ -1056,7 +1056,7 @@
             },
             "put": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update attendance ",
                 "description": "This method is to update attendance",
@@ -1186,7 +1186,7 @@
             },
             "post": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store attendance",
                 "description": "This method is to store attendance",
@@ -1313,7 +1313,7 @@
         "/v1.0/attendances/multiple": {
             "post": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store attendance",
                 "description": "This method is to store attendance",
@@ -1412,7 +1412,7 @@
         "/v1.0/attendances/approve": {
             "put": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to approve attendances ",
                 "description": "This method is to approve attendances",
@@ -1499,7 +1499,7 @@
         "/v2.0/attendances": {
             "get": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get attendances  ",
                 "description": "This method is to get attendances ",
@@ -1608,7 +1608,7 @@
         "/v3.0/attendances": {
             "get": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get attendances  ",
                 "description": "This method is to get attendances ",
@@ -1717,7 +1717,7 @@
         "/v1.0/attendances/{id}": {
             "get": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get attendance by id",
                 "description": "This method is to get attendance by id",
@@ -1791,7 +1791,7 @@
         "/v1.0/attendances/{ids}": {
             "delete": {
                 "tags": [
-                    "attendances"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete attendance by id",
                 "description": "This method is to delete attendance by id",
@@ -3359,6 +3359,157 @@
                 ]
             }
         },
+        "/v2.0/awarding-bodies": {
+            "get": {
+                "tags": [
+                    "awarding_bodies"
+                ],
+                "summary": "This method is to get awarding bodies  ",
+                "description": "This method is to get awarding bodies ",
+                "operationId": "getAwardingBodiesV2",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_accreditation_start_date",
+                        "in": "query",
+                        "description": "start_accreditation_start_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "end_accreditation_start_date",
+                        "in": "query",
+                        "description": "end_accreditation_start_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_accreditation_expiry_date",
+                        "in": "query",
+                        "description": "start_accreditation_expiry_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "end_accreditation_expiry_date",
+                        "in": "query",
+                        "description": "end_accreditation_expiry_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/awarding-bodies/{ids}": {
             "delete": {
                 "tags": [
@@ -3436,7 +3587,7 @@
         "/v1.0/banks": {
             "get": {
                 "tags": [
-                    "banks"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get banks  ",
                 "description": "This method is to get banks ",
@@ -3543,7 +3694,7 @@
             },
             "put": {
                 "tags": [
-                    "banks"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update bank ",
                 "description": "This method is to update bank",
@@ -3633,7 +3784,7 @@
             },
             "post": {
                 "tags": [
-                    "banks"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store bank",
                 "description": "This method is to store bank",
@@ -3720,7 +3871,7 @@
         "/v1.0/banks/toggle-active": {
             "put": {
                 "tags": [
-                    "banks"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle designatation",
                 "description": "This method is to toggle designatation",
@@ -3802,7 +3953,7 @@
         "/v1.0/banks/{id}": {
             "get": {
                 "tags": [
-                    "banks"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get bank by id",
                 "description": "This method is to get bank by id",
@@ -3876,7 +4027,7 @@
         "/v1.0/banks/{ids}": {
             "delete": {
                 "tags": [
-                    "banks"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete bank by id",
                 "description": "This method is to delete bank by id",
@@ -6122,7 +6273,7 @@
         "/v1.0/business-tiers": {
             "get": {
                 "tags": [
-                    "business_tiers"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get business tiers  ",
                 "description": "This method is to get business tiers ",
@@ -6222,7 +6373,7 @@
             },
             "put": {
                 "tags": [
-                    "business_tiers"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update business tier ",
                 "description": "This method is to update business tier",
@@ -6312,7 +6463,7 @@
             },
             "post": {
                 "tags": [
-                    "business_tiers"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store business tier",
                 "description": "This method is to store business tier",
@@ -6399,7 +6550,7 @@
         "/v1.0/business-tiers/{id}": {
             "get": {
                 "tags": [
-                    "business_tiers"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get business tier by id",
                 "description": "This method is to get business tier by id",
@@ -6473,7 +6624,7 @@
         "/v1.0/business-tiers/{ids}": {
             "delete": {
                 "tags": [
-                    "business_tiers"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete business tier by id",
                 "description": "This method is to delete business tier by id",
@@ -7948,6 +8099,115 @@
                 ]
             }
         },
+        "/v2.0/course-titles": {
+            "get": {
+                "tags": [
+                    "student.course_titles"
+                ],
+                "summary": "This method is to get course titles  ",
+                "description": "This method is to get course titles ",
+                "operationId": "getCourseTitlesV2",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/client/course-titles": {
             "get": {
                 "tags": [
@@ -7956,6 +8216,122 @@
                 "summary": "This method is to get course statuses  ",
                 "description": "This method is to get course statuses ",
                 "operationId": "getCourseTitlesClient",
+                "parameters": [
+                    {
+                        "name": "business_id",
+                        "in": "query",
+                        "description": "business_id",
+                        "required": true,
+                        "example": "2"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v2.0/client/course-titles": {
+            "get": {
+                "tags": [
+                    "student.course_titles"
+                ],
+                "summary": "This method is to get course statuses  ",
+                "description": "This method is to get course statuses ",
+                "operationId": "getCourseTitlesClientV2",
                 "parameters": [
                     {
                         "name": "business_id",
@@ -8817,7 +9193,7 @@
         "/v1.0/dashboard-widgets": {
             "post": {
                 "tags": [
-                    "dashboard_management.dashboard_widgets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store dashboard widgets",
                 "description": "This method is to store dashboard widgets",
@@ -8905,7 +9281,7 @@
         "/v1.0/dashboard-widgets/{ids}": {
             "delete": {
                 "tags": [
-                    "dashboard_management.dashboard_widgets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete widget by id",
                 "description": "This method is to delete widget by id",
@@ -9109,7 +9485,7 @@
         "/v1.0/departments": {
             "get": {
                 "tags": [
-                    "administrator.department"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get departments  ",
                 "description": "This method is to get departments ",
@@ -9230,7 +9606,7 @@
             },
             "put": {
                 "tags": [
-                    "administrator.department"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update department ",
                 "description": "This method is to update department",
@@ -9335,7 +9711,7 @@
             },
             "post": {
                 "tags": [
-                    "administrator.department"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store department",
                 "description": "This method is to store department",
@@ -9437,7 +9813,7 @@
         "/v1.0/departments/toggle-active": {
             "put": {
                 "tags": [
-                    "administrator.department"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle department activity",
                 "description": "This method is to toggle department activity",
@@ -9534,7 +9910,7 @@
         "/v2.0/departments": {
             "get": {
                 "tags": [
-                    "administrator.department"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get departments  ",
                 "description": "This method is to get departments ",
@@ -9599,7 +9975,7 @@
         "/v3.0/departments": {
             "get": {
                 "tags": [
-                    "administrator.department"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get departments  ",
                 "description": "This method is to get departments ",
@@ -9664,7 +10040,7 @@
         "/v1.0/departments/{id}": {
             "get": {
                 "tags": [
-                    "administrator.department"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get department by id",
                 "description": "This method is to get department by id",
@@ -9738,7 +10114,7 @@
         "/v1.0/departments/{ids}": {
             "delete": {
                 "tags": [
-                    "administrator.department"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete department by id",
                 "description": "This method is to delete department by id",
@@ -9812,7 +10188,7 @@
         "/v1.0/designations": {
             "get": {
                 "tags": [
-                    "designations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get designations  ",
                 "description": "This method is to get designations ",
@@ -9919,7 +10295,7 @@
             },
             "put": {
                 "tags": [
-                    "designations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update designation ",
                 "description": "This method is to update designation",
@@ -10009,7 +10385,7 @@
             },
             "post": {
                 "tags": [
-                    "designations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store designation",
                 "description": "This method is to store designation",
@@ -10096,7 +10472,7 @@
         "/v1.0/designations/toggle-active": {
             "put": {
                 "tags": [
-                    "designations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle designatation",
                 "description": "This method is to toggle designatation",
@@ -10178,7 +10554,7 @@
         "/v1.0/designations/{id}": {
             "get": {
                 "tags": [
-                    "designations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get designation by id",
                 "description": "This method is to get designation by id",
@@ -10252,7 +10628,7 @@
         "/v1.0/designations/{ids}": {
             "delete": {
                 "tags": [
-                    "designations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete designation by id",
                 "description": "This method is to delete designation by id",
@@ -10843,7 +11219,7 @@
         "/v1.0/email-template-wrappers": {
             "put": {
                 "tags": [
-                    "template_management.wrapper.email"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update email template wrapper",
                 "description": "This method is to update email template wrapper",
@@ -10946,7 +11322,7 @@
         "/v1.0/email-template-wrappers/{perPage}": {
             "get": {
                 "tags": [
-                    "template_management.wrapper.email"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get email template  wrappers ",
                 "description": "This method is to get email template wrappers",
@@ -11041,7 +11417,7 @@
         "/v1.0/email-template-wrappers/single/{id}": {
             "get": {
                 "tags": [
-                    "template_management.wrapper.email"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get email template wrapper by id",
                 "description": "This method is to get email template wrapper by id",
@@ -11447,7 +11823,7 @@
         "/v1.0/histories/user-assets": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get asset history",
                 "description": "This method is to get asset history",
@@ -11563,7 +11939,7 @@
         "/v1.0/histories/user-passport-details": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get employee passport history",
                 "description": "This method is to get passport history",
@@ -11672,7 +12048,7 @@
         "/v1.0/histories/user-visa-details": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get employee visa history",
                 "description": "This method is to get visa history",
@@ -11781,7 +12157,7 @@
         "/v1.0/histories/user-sponsorship-details": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get employee sponsorship history",
                 "description": "This method is to get sponsorship history",
@@ -11890,7 +12266,7 @@
         "/v1.0/histories/user-address-details": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get employee address history",
                 "description": "This method is to get address history",
@@ -11999,7 +12375,7 @@
         "/v1.0/histories/user-attendance-details": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get employee attendance history",
                 "description": "This method is to get attendance history",
@@ -12115,7 +12491,7 @@
         "/v1.0/histories/user-leave-details": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get employee leave history",
                 "description": "This method is to get leave history",
@@ -12231,7 +12607,7 @@
         "/v1.0/histories/user-work-shift": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get employee work shift history",
                 "description": "This method is to get work shift history",
@@ -12347,7 +12723,7 @@
         "/v1.0/histories/user-project": {
             "get": {
                 "tags": [
-                    "histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get employee work shift history",
                 "description": "This method is to get work shift history",
@@ -12463,7 +12839,7 @@
         "/v1.0/holidays": {
             "get": {
                 "tags": [
-                    "administrator.holiday"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get holidays  ",
                 "description": "This method is to get holidays ",
@@ -12563,7 +12939,7 @@
             },
             "put": {
                 "tags": [
-                    "administrator.holiday"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update holiday ",
                 "description": "This method is to update holiday",
@@ -12686,7 +13062,7 @@
             },
             "post": {
                 "tags": [
-                    "administrator.holiday"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store holiday",
                 "description": "This method is to store holiday",
@@ -12806,7 +13182,7 @@
         "/v1.0/holidays/{id}": {
             "get": {
                 "tags": [
-                    "administrator.holiday"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get holiday by id",
                 "description": "This method is to get holiday by id",
@@ -12880,7 +13256,7 @@
         "/v1.0/holidays/{ids}": {
             "delete": {
                 "tags": [
-                    "administrator.holiday"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete holiday by id",
                 "description": "This method is to delete holiday by id",
@@ -13939,7 +14315,7 @@
         "/v1.0/job-listings": {
             "get": {
                 "tags": [
-                    "job_listing"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get job listings  ",
                 "description": "This method is to get job listings ",
@@ -14039,7 +14415,7 @@
             },
             "put": {
                 "tags": [
-                    "job_listing"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update job listing ",
                 "description": "This method is to update job listing",
@@ -14183,7 +14559,7 @@
             },
             "post": {
                 "tags": [
-                    "job_listing"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store job listing",
                 "description": "This method is to store job listing",
@@ -14323,7 +14699,7 @@
         "/v1.0/client/job-listings": {
             "get": {
                 "tags": [
-                    "job_listing"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get job listings  ",
                 "description": "This method is to get job listings ",
@@ -14432,7 +14808,7 @@
         "/v1.0/job-listings/{id}": {
             "get": {
                 "tags": [
-                    "job_listing"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get job listing by id",
                 "description": "This method is to get job listing by id",
@@ -14506,7 +14882,7 @@
         "/v1.0/client/job-listings/{id}": {
             "get": {
                 "tags": [
-                    "job_listing"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get job listing by id",
                 "description": "This method is to get job listing by id",
@@ -14587,7 +14963,7 @@
         "/v1.0/job-listings/{ids}": {
             "delete": {
                 "tags": [
-                    "job_listing"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete job listing by id",
                 "description": "This method is to delete job listing by id",
@@ -14661,7 +15037,7 @@
         "/v1.0/job-platforms": {
             "get": {
                 "tags": [
-                    "job_platforms"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get job platforms  ",
                 "description": "This method is to get job platforms ",
@@ -14761,7 +15137,7 @@
             },
             "put": {
                 "tags": [
-                    "job_platforms"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update job platform ",
                 "description": "This method is to update job platform",
@@ -14851,7 +15227,7 @@
             },
             "post": {
                 "tags": [
-                    "job_platforms"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store job platform",
                 "description": "This method is to store job platform",
@@ -14938,7 +15314,7 @@
         "/v1.0/job-platforms/toggle-active": {
             "put": {
                 "tags": [
-                    "job_platforms"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle job platform",
                 "description": "This method is to toggle job platform",
@@ -15020,7 +15396,7 @@
         "/v1.0/job-platforms/{id}": {
             "get": {
                 "tags": [
-                    "job_platforms"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get job platform by id",
                 "description": "This method is to get job platform by id",
@@ -15094,7 +15470,7 @@
         "/v1.0/job-platforms/{ids}": {
             "delete": {
                 "tags": [
-                    "job_platforms"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete job platform by id",
                 "description": "This method is to delete job platform by id",
@@ -15168,7 +15544,7 @@
         "/v1.0/job-types": {
             "get": {
                 "tags": [
-                    "job_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get job types  ",
                 "description": "This method is to get job types ",
@@ -15275,7 +15651,7 @@
             },
             "put": {
                 "tags": [
-                    "job_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update job type ",
                 "description": "This method is to update job type",
@@ -15365,7 +15741,7 @@
             },
             "post": {
                 "tags": [
-                    "job_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store job type",
                 "description": "This method is to store job type",
@@ -15452,7 +15828,7 @@
         "/v1.0/job-types/toggle-active": {
             "put": {
                 "tags": [
-                    "job_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle job type",
                 "description": "This method is to toggle job type",
@@ -15534,7 +15910,7 @@
         "/v1.0/job-types/{id}": {
             "get": {
                 "tags": [
-                    "job_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get job type by id",
                 "description": "This method is to get job type by id",
@@ -15608,7 +15984,7 @@
         "/v1.0/job-types/{ids}": {
             "delete": {
                 "tags": [
-                    "job_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete job type by id",
                 "description": "This method is to delete job type by id",
@@ -15682,7 +16058,7 @@
         "/v1.0/leaves/multiple-file-upload": {
             "post": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store multiple leave files",
                 "description": "This method is to store multiple leave files",
@@ -15769,7 +16145,7 @@
         "/v1.0/leaves": {
             "get": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get leaves  ",
                 "description": "This method is to get leaves ",
@@ -15904,7 +16280,7 @@
             },
             "put": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update leave ",
                 "description": "This method is to update leave",
@@ -16042,7 +16418,7 @@
             },
             "post": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store leave",
                 "description": "This method is to store leave",
@@ -16177,7 +16553,7 @@
         "/v1.0/leaves/approve": {
             "put": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to approve leave ",
                 "description": "This method is to approve leave",
@@ -16264,7 +16640,7 @@
         "/v1.0/leaves/bypass": {
             "put": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to approve leave ",
                 "description": "This method is to approve leave",
@@ -16346,7 +16722,7 @@
         "/v2.0/leaves": {
             "get": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get leaves  ",
                 "description": "This method is to get leaves ",
@@ -16455,7 +16831,7 @@
         "/v3.0/leaves": {
             "get": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get leaves  ",
                 "description": "This method is to get leaves ",
@@ -16564,7 +16940,7 @@
         "/v4.0/leaves": {
             "get": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get leaves  ",
                 "description": "This method is to get leaves ",
@@ -16673,7 +17049,7 @@
         "/v1.0/leaves/{id}": {
             "get": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get leave by id",
                 "description": "This method is to get leave by id",
@@ -16747,7 +17123,7 @@
         "/v1.0/leaves/{ids}": {
             "delete": {
                 "tags": [
-                    "leaves"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete leave by id",
                 "description": "This method is to delete leave by id",
@@ -17151,6 +17527,129 @@
                         }
                     }
                 },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v2.0/letter-templates": {
+            "get": {
+                "tags": [
+                    "letter_templates"
+                ],
+                "summary": "This method is to get letter templates  ",
+                "description": "This method is to get letter templates ",
+                "operationId": "getLetterTemplatesV2",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "is_single_search",
+                        "in": "query",
+                        "description": "is_single_search",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -17897,7 +18396,7 @@
         "/v1.0/notification-templates": {
             "put": {
                 "tags": [
-                    "template_management.notification"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update notification template",
                 "description": "This method is to update notification template",
@@ -18005,7 +18504,7 @@
         "/v1.0/notification-templates/{perPage}": {
             "get": {
                 "tags": [
-                    "template_management.notification"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get notification templates ",
                 "description": "This method is to get notification templates",
@@ -18100,7 +18599,7 @@
         "/v1.0/notification-templates/single/{id}": {
             "get": {
                 "tags": [
-                    "template_management.notification"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get notification template by id",
                 "description": "This method is to get notification template by id",
@@ -18174,7 +18673,7 @@
         "/v1.0/notification-template-types": {
             "get": {
                 "tags": [
-                    "template_management.notification"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get notification template types ",
                 "description": "This method is to get notification template types",
@@ -18606,7 +19105,7 @@
         "/v1.0/payruns": {
             "get": {
                 "tags": [
-                    "administrator.payruns"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get payruns  ",
                 "description": "This method is to get payruns ",
@@ -18713,7 +19212,7 @@
             },
             "put": {
                 "tags": [
-                    "administrator.payruns"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update payrun ",
                 "description": "This method is to update payrun",
@@ -18841,7 +19340,7 @@
             },
             "post": {
                 "tags": [
-                    "administrator.payruns"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store payrun",
                 "description": "This method is to store payrun",
@@ -19063,7 +19562,7 @@
         "/v1.0/payruns/{id}": {
             "get": {
                 "tags": [
-                    "administrator.payruns"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get payrun by id",
                 "description": "This method is to get payrun by id",
@@ -19137,7 +19636,7 @@
         "/v1.0/payruns/{ids}": {
             "delete": {
                 "tags": [
-                    "administrator.payruns"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete payrun by id",
                 "description": "This method is to delete payrun by id",
@@ -19211,7 +19710,7 @@
         "/v1.0/product-categories": {
             "put": {
                 "tags": [
-                    "shop_section.product_category_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update Product Category",
                 "description": "This method is to update Product Category",
@@ -19312,7 +19811,7 @@
             },
             "post": {
                 "tags": [
-                    "shop_section.product_category_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store product category",
                 "description": "This method is to store product category",
@@ -19409,7 +19908,7 @@
         "/v1.0/product-categories/{perPage}": {
             "get": {
                 "tags": [
-                    "shop_section.product_category_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get  Product Categories ",
                 "description": "This method is to get Product Categories",
@@ -19504,7 +20003,7 @@
         "/v1.0/product-categories/single/get/{id}": {
             "get": {
                 "tags": [
-                    "shop_section.product_category_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get Product Category by id",
                 "description": "This method is to get Product Category by id",
@@ -19578,7 +20077,7 @@
         "/v1.0/product-categories/get/all": {
             "get": {
                 "tags": [
-                    "basics"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get all product categories ",
                 "description": "This method is to get all product categories",
@@ -19666,7 +20165,7 @@
         "/v1.0/product-categories/{id}": {
             "delete": {
                 "tags": [
-                    "shop_section.product_category_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete product category by id",
                 "description": "This method is to delete product category by id",
@@ -19740,7 +20239,7 @@
         "/v1.0/products": {
             "put": {
                 "tags": [
-                    "shop_section.product_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update Product ",
                 "description": "This method is to update Product",
@@ -19910,7 +20409,7 @@
             },
             "post": {
                 "tags": [
-                    "shop_section.product_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store product",
                 "description": "This method is to store product",
@@ -20071,7 +20570,7 @@
         "/v1.0/products/link-product-to-shop": {
             "patch": {
                 "tags": [
-                    "shop_section.product_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to link Product To Shop ",
                 "description": "This method is to link Product To Shop",
@@ -20230,7 +20729,7 @@
         "/v1.0/products/{perPage}": {
             "get": {
                 "tags": [
-                    "shop_section.product_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get  Product  ",
                 "description": "This method is to get Product ",
@@ -20332,7 +20831,7 @@
         "/v1.0/products/single/get/{id}": {
             "get": {
                 "tags": [
-                    "shop_section.product_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get Product by id",
                 "description": "This method is to get Product by id",
@@ -20406,7 +20905,7 @@
         "/v1.0/products/{id}": {
             "delete": {
                 "tags": [
-                    "shop_section.product_management"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete product by id",
                 "description": "This method is to delete product by id",
@@ -20480,7 +20979,7 @@
         "/v1.0/projects": {
             "get": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get project listings  ",
                 "description": "This method is to get project listings ",
@@ -20587,7 +21086,7 @@
             },
             "put": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update project listing ",
                 "description": "This method is to update project listing",
@@ -20701,7 +21200,7 @@
             },
             "post": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store project listing",
                 "description": "This method is to store project listing",
@@ -20812,7 +21311,7 @@
         "/v1.0/projects/assign-user": {
             "put": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update project listing ",
                 "description": "This method is to update project listing",
@@ -20903,7 +21402,7 @@
         "/v1.0/projects/discharge-user": {
             "put": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update project listing ",
                 "description": "This method is to update project listing",
@@ -20994,7 +21493,7 @@
         "/v1.0/projects/assign-project": {
             "put": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update project listing ",
                 "description": "This method is to update project listing",
@@ -21085,7 +21584,7 @@
         "/v1.0/projects/discharge-project": {
             "put": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update project listing ",
                 "description": "This method is to update project listing",
@@ -21176,7 +21675,7 @@
         "/v1.0/projects/{id}": {
             "get": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get project listing by id",
                 "description": "This method is to get project listing by id",
@@ -21250,7 +21749,7 @@
         "/v1.0/projects/{ids}": {
             "delete": {
                 "tags": [
-                    "project"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete project listing by id",
                 "description": "This method is to delete project listing by id",
@@ -21324,7 +21823,7 @@
         "/v1.0/recruitment-processes": {
             "get": {
                 "tags": [
-                    "recruitment_processes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get recruitment process s  ",
                 "description": "This method is to get recruitment process s ",
@@ -21431,7 +21930,7 @@
             },
             "put": {
                 "tags": [
-                    "recruitment_processes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update recruitment process  ",
                 "description": "This method is to update recruitment process ",
@@ -21521,7 +22020,7 @@
             },
             "post": {
                 "tags": [
-                    "recruitment_processes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store recruitment process ",
                 "description": "This method is to store recruitment process ",
@@ -21608,7 +22107,7 @@
         "/v1.0/recruitment-processes/toggle-active": {
             "put": {
                 "tags": [
-                    "recruitment_processes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle recruitment process ",
                 "description": "This method is to toggle recruitment process ",
@@ -21690,7 +22189,7 @@
         "/v1.0/recruitment-processes/{id}": {
             "get": {
                 "tags": [
-                    "recruitment_processes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get recruitment process  by id",
                 "description": "This method is to get recruitment process  by id",
@@ -21764,7 +22263,7 @@
         "/v1.0/recruitment-processes/{ids}": {
             "delete": {
                 "tags": [
-                    "recruitment_processes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete recruitment process  by id",
                 "description": "This method is to delete recruitment process  by id",
@@ -21838,7 +22337,7 @@
         "/v1.0/reminders": {
             "get": {
                 "tags": [
-                    "reminders"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get reminders  ",
                 "description": "This method is to get reminders ",
@@ -21938,7 +22437,7 @@
             },
             "put": {
                 "tags": [
-                    "reminders"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update reminder ",
                 "description": "This method is to update reminder",
@@ -22062,7 +22561,7 @@
             },
             "post": {
                 "tags": [
-                    "reminders"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store reminder",
                 "description": "This method is to store reminder",
@@ -22183,7 +22682,7 @@
         "/v1.0/reminders-entity-names": {
             "get": {
                 "tags": [
-                    "reminders"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get reminders  ",
                 "description": "This method is to get reminders ",
@@ -22285,7 +22784,7 @@
         "/v1.0/reminders/{id}": {
             "get": {
                 "tags": [
-                    "reminders"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get reminder by id",
                 "description": "This method is to get reminder by id",
@@ -22359,7 +22858,7 @@
         "/v1.0/reminders/{ids}": {
             "delete": {
                 "tags": [
-                    "reminders"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete reminder by id",
                 "description": "This method is to delete reminder by id",
@@ -23719,8 +24218,8 @@
                                     },
                                     "holiday_dates": {
                                         "type": "string",
-                                        "format": "string",
-                                        "example": "holiday_dates"
+                                        "format": "array",
+                                        "example": []
                                     }
                                 },
                                 "type": "object"
@@ -23814,8 +24313,8 @@
                                     },
                                     "holiday_dates": {
                                         "type": "string",
-                                        "format": "string",
-                                        "example": "holiday_dates"
+                                        "format": "array",
+                                        "example": []
                                     }
                                 },
                                 "type": "object"
@@ -23962,6 +24461,150 @@
                 ]
             }
         },
+        "/v2.0/sessions": {
+            "get": {
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "This method is to get sessions  ",
+                "description": "This method is to get sessions ",
+                "operationId": "getSessionsV2",
+                "parameters": [
+                    {
+                        "name": "start_start_date",
+                        "in": "query",
+                        "description": "start_start_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "end_start_date",
+                        "in": "query",
+                        "description": "end_start_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_end_date",
+                        "in": "query",
+                        "description": "start_end_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "end_end_date",
+                        "in": "query",
+                        "description": "end_end_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/sessions/{ids}": {
             "delete": {
                 "tags": [
@@ -24039,7 +24682,7 @@
         "/v1.0/setting-attendance": {
             "get": {
                 "tags": [
-                    "settings.setting_attendance"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get setting attendance  ",
                 "description": "This method is to get setting attendance ",
@@ -24139,7 +24782,7 @@
             },
             "post": {
                 "tags": [
-                    "settings.setting_attendance"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store setting attendance",
                 "description": "This method is to store setting attendance",
@@ -24277,7 +24920,7 @@
         "/v1.0/setting-leave": {
             "get": {
                 "tags": [
-                    "settings.setting_leave"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get setting leave  ",
                 "description": "This method is to get setting leave ",
@@ -24377,7 +25020,7 @@
             },
             "post": {
                 "tags": [
-                    "settings.setting_leave"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store setting leave",
                 "description": "This method is to store setting leave",
@@ -24503,7 +25146,7 @@
         "/v1.0/setting-leave-types": {
             "get": {
                 "tags": [
-                    "settings.setting_leave_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get setting leave types  ",
                 "description": "This method is to get setting leave types ",
@@ -24610,7 +25253,7 @@
             },
             "put": {
                 "tags": [
-                    "settings.setting_leave_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update setting leave type ",
                 "description": "This method is to update setting leave type",
@@ -24705,7 +25348,7 @@
             },
             "post": {
                 "tags": [
-                    "settings.setting_leave_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store setting leave type",
                 "description": "This method is to store setting leave type",
@@ -24805,7 +25448,7 @@
         "/v1.0/setting-leave-types/toggle-active": {
             "put": {
                 "tags": [
-                    "settings.setting_leave_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle user leave type",
                 "description": "This method is to toggle user leave type",
@@ -24887,7 +25530,7 @@
         "/v1.0/setting-leave-types/toggle-earning-enabled": {
             "put": {
                 "tags": [
-                    "settings.setting_leave_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle Earning Enabled ",
                 "description": "This method is to toggle Earning Enabled",
@@ -24969,7 +25612,7 @@
         "/v1.0/setting-leave-types/{id}": {
             "get": {
                 "tags": [
-                    "settings.setting_leave_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get setting leave type by id",
                 "description": "This method is to get setting leave type by id",
@@ -25043,7 +25686,7 @@
         "/v1.0/setting-leave-types/{ids}": {
             "delete": {
                 "tags": [
-                    "settings.setting_leave_types"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete setting leave type by id",
                 "description": "This method is to delete setting leave type by id",
@@ -25117,7 +25760,7 @@
         "/v1.0/setting-payrun": {
             "get": {
                 "tags": [
-                    "settings.setting_payroll.payrun"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get setting payrun  ",
                 "description": "This method is to get setting payrun ",
@@ -25217,7 +25860,7 @@
             },
             "post": {
                 "tags": [
-                    "settings.setting_payroll.payrun"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store setting payrun",
                 "description": "This method is to store setting payrun",
@@ -25324,7 +25967,7 @@
         "/v1.0/setting-payslip/upload-logo": {
             "post": {
                 "tags": [
-                    "settings.setting_payroll.payslip"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store payslip logo",
                 "description": "This method is to store payslip logo",
@@ -25408,7 +26051,7 @@
         "/v1.0/setting-payslip": {
             "get": {
                 "tags": [
-                    "settings.setting_payroll.payslip"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get setting payslip  ",
                 "description": "This method is to get setting payslip ",
@@ -25508,7 +26151,7 @@
             },
             "post": {
                 "tags": [
-                    "settings.setting_payroll.payslip"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store setting payslip",
                 "description": "This method is to store setting payslip",
@@ -25600,7 +26243,7 @@
         "/v1.0/social-sites": {
             "get": {
                 "tags": [
-                    "social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get social sites  ",
                 "description": "This method is to get social sites ",
@@ -25700,7 +26343,7 @@
             },
             "put": {
                 "tags": [
-                    "social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update social site  ",
                 "description": "This method is to update social site ",
@@ -25795,7 +26438,7 @@
             },
             "post": {
                 "tags": [
-                    "social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store social site",
                 "description": "This method is to store social site ",
@@ -25887,7 +26530,7 @@
         "/v1.0/social-sites/{id}": {
             "get": {
                 "tags": [
-                    "social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get social site by id",
                 "description": "This method is to get social site by id",
@@ -25961,7 +26604,7 @@
         "/v1.0/social-sites/{ids}": {
             "delete": {
                 "tags": [
-                    "social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete social site by id",
                 "description": "This method is to delete social site by id",
@@ -26789,23 +27432,16 @@
                                     },
                                     "emergency_contact_details": {
                                         "description": "Emergency contact details of the student",
-                                        "type": "object",
-                                        "example": {
-                                            "name": "John Doe",
-                                            "relation": "Father",
-                                            "contact": "+1234567890"
-                                        }
+                                        "type": "string",
+                                        "example": "John Doe, Father, +1234567890"
                                     },
                                     "previous_education_history": {
                                         "description": "Previous education history of the student",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "example": {
-                                                "institution": "High School",
-                                                "year": "2019",
-                                                "grade": "A"
-                                            }
+                                        "type": "string",
+                                        "example": {
+                                            "institution": "High School",
+                                            "year": "2019",
+                                            "grade": "A"
                                         }
                                     },
                                     "passport_issue_date": {
@@ -27400,6 +28036,434 @@
                 ]
             }
         },
+        "/v2.0/students": {
+            "get": {
+                "tags": [
+                    "students"
+                ],
+                "summary": "This method is to get students  ",
+                "description": "This method is to get students ",
+                "operationId": "getStudentsV2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Filter by student ID",
+                        "required": false,
+                        "example": "123"
+                    },
+                    {
+                        "name": "nationality",
+                        "in": "query",
+                        "description": "Filter by student's nationality",
+                        "required": false,
+                        "example": "Bangladeshi"
+                    },
+                    {
+                        "name": "letter_issue_start_date",
+                        "in": "query",
+                        "description": "Filter by letter issue start date (YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2024-01-01"
+                    },
+                    {
+                        "name": "letter_issue_end_date",
+                        "in": "query",
+                        "description": "Filter by letter issue end date (YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2024-12-31"
+                    },
+                    {
+                        "name": "fee_paid_min",
+                        "in": "query",
+                        "description": "Minimum fee paid",
+                        "required": false,
+                        "example": "1000"
+                    },
+                    {
+                        "name": "fee_paid_max",
+                        "in": "query",
+                        "description": "Maximum fee paid",
+                        "required": false,
+                        "example": "5000"
+                    },
+                    {
+                        "name": "course_start_date_start_date",
+                        "in": "query",
+                        "description": "Filter by course start date (start range, YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2024-01-01"
+                    },
+                    {
+                        "name": "course_start_date_end_date",
+                        "in": "query",
+                        "description": "Filter by course start date (end range, YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2024-12-31"
+                    },
+                    {
+                        "name": "course_end_date_start_date",
+                        "in": "query",
+                        "description": "Filter by course end date (start range, YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2024-01-01"
+                    },
+                    {
+                        "name": "course_end_date_end_date",
+                        "in": "query",
+                        "description": "Filter by course end date (end range, YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2024-12-31"
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Filter by student's title",
+                        "required": false,
+                        "example": "John"
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "description": "Filter by student's first name",
+                        "required": false,
+                        "example": "John"
+                    },
+                    {
+                        "name": "middle_name",
+                        "in": "query",
+                        "description": "Filter by student's middle name",
+                        "required": false,
+                        "example": "Paul"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "Filter by student's last name",
+                        "required": false,
+                        "example": "Doe"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Filter by student's name (loose search)",
+                        "required": false,
+                        "example": "John Paul"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "Global search across multiple fields",
+                        "required": false,
+                        "example": "passport123"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Filter by creation date (start range, YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2024-01-01"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "Filter by creation date (end range, YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2024-12-31"
+                    },
+                    {
+                        "name": "student_status_id",
+                        "in": "query",
+                        "description": "Filter by student status ID",
+                        "required": false,
+                        "example": "5"
+                    },
+                    {
+                        "name": "is_online_registered",
+                        "in": "query",
+                        "description": "Filter by online or offline registration",
+                        "required": false,
+                        "example": "true"
+                    },
+                    {
+                        "name": "course_title_id",
+                        "in": "query",
+                        "description": "Filter by course title ID",
+                        "required": false,
+                        "example": "10"
+                    },
+                    {
+                        "name": "date_of_birth",
+                        "in": "query",
+                        "description": "Filter by date of birth (YYYY-MM-DD)",
+                        "required": false,
+                        "example": "2000-01-01"
+                    },
+                    {
+                        "name": "student_id",
+                        "in": "query",
+                        "description": "Filter by school ID (case sensitive)",
+                        "required": false,
+                        "example": "SCH123"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "Sort order by ID (ASC or DESC)",
+                        "required": false,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "is_single_search",
+                        "in": "query",
+                        "description": "Return a single result instead of paginated results",
+                        "required": false,
+                        "example": "true"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "required": false,
+                        "example": "20"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v2.0/client/students": {
+            "get": {
+                "tags": [
+                    "students"
+                ],
+                "summary": "This method is to get students  ",
+                "description": "This method is to get students ",
+                "operationId": "getStudentsClientV2",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "student_status_id",
+                        "in": "query",
+                        "description": "student_status_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "course_title_id",
+                        "in": "query",
+                        "description": "course_title_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "student_id",
+                        "in": "query",
+                        "description": "student_id",
+                        "required": true,
+                        "example": "412cbhg"
+                    },
+                    {
+                        "name": "date_of_birth",
+                        "in": "query",
+                        "description": "date_of_birth",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "is_single_search",
+                        "in": "query",
+                        "description": "is_single_search",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "id"
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "title",
+                        "required": true,
+                        "example": "title"
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "description": "first_name",
+                        "required": true,
+                        "example": "first_name"
+                    },
+                    {
+                        "name": "middle_name",
+                        "in": "query",
+                        "description": "middle_name",
+                        "required": true,
+                        "example": "middle_name"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "last_name",
+                        "required": true,
+                        "example": "last_name"
+                    },
+                    {
+                        "name": "business_id",
+                        "in": "query",
+                        "description": "business_id",
+                        "required": true,
+                        "example": "business_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/students/{id}": {
             "get": {
                 "tags": [
@@ -27699,7 +28763,7 @@
         "/v1.0/students/validate/student-id/{student_id}/{business_id}": {
             "get": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to validate student id",
                 "description": "This method is to validate student id",
@@ -28383,6 +29447,164 @@
                 "summary": "This method is to get student letters  ",
                 "description": "This method is to get student letters ",
                 "operationId": "getStudentLetters",
+                "parameters": [
+                    {
+                        "name": "start_issue_date",
+                        "in": "query",
+                        "description": "start_issue_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "end_issue_date",
+                        "in": "query",
+                        "description": "end_issue_date",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "letter_content",
+                        "in": "query",
+                        "description": "letter_content",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "is_single_search",
+                        "in": "query",
+                        "description": "is_single_search",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "student_id",
+                        "in": "query",
+                        "description": "student_id",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v2.0/student-letters-get": {
+            "get": {
+                "tags": [
+                    "student_letters"
+                ],
+                "summary": "This method is to get student letters  ",
+                "description": "This method is to get student letters ",
+                "operationId": "getStudentLettersV2",
                 "parameters": [
                     {
                         "name": "start_issue_date",
@@ -29378,6 +30600,122 @@
                 ]
             }
         },
+        "/v2.0/client/student-statuses": {
+            "get": {
+                "tags": [
+                    "student.student_statuses"
+                ],
+                "summary": "This method is to get student statuses  ",
+                "description": "This method is to get student statuses ",
+                "operationId": "getStudentStatusesClientV2",
+                "parameters": [
+                    {
+                        "name": "business_id",
+                        "in": "query",
+                        "description": "business_id",
+                        "required": true,
+                        "example": "2"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/student-statuses/{id}": {
             "get": {
                 "tags": [
@@ -29938,6 +31276,143 @@
                 ]
             }
         },
+        "/v2.0/subjects": {
+            "get": {
+                "tags": [
+                    "subjects"
+                ],
+                "summary": "This method is to get subjects  ",
+                "description": "This method is to get subjects ",
+                "operationId": "getSubjectsV2",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "description",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "description": "course_id",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/subjects/{ids}": {
             "delete": {
                 "tags": [
@@ -30015,7 +31490,7 @@
         "/v1.0/tasks": {
             "get": {
                 "tags": [
-                    "task"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get task listings  ",
                 "description": "This method is to get task listings ",
@@ -30129,7 +31604,7 @@
             },
             "put": {
                 "tags": [
-                    "task"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update task listing ",
                 "description": "This method is to update task listing",
@@ -30249,7 +31724,7 @@
             },
             "post": {
                 "tags": [
-                    "task"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store task listing",
                 "description": "This method is to store task listing",
@@ -30375,7 +31850,7 @@
         "/v1.0/tasks/{id}": {
             "get": {
                 "tags": [
-                    "task"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get task listing by id",
                 "description": "This method is to get task listing by id",
@@ -30449,7 +31924,7 @@
         "/v1.0/tasks/{ids}": {
             "delete": {
                 "tags": [
-                    "task"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete task listing by id",
                 "description": "This method is to delete task listing by id",
@@ -31076,7 +32551,7 @@
         "/v1.0/user-address-histories": {
             "get": {
                 "tags": [
-                    "user_address_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user address histories  ",
                 "description": "This method is to get user address histories ",
@@ -31183,7 +32658,7 @@
             },
             "put": {
                 "tags": [
-                    "user_address_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user address history ",
                 "description": "This method is to update user address history",
@@ -31318,7 +32793,7 @@
             },
             "post": {
                 "tags": [
-                    "user_address_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user address history",
                 "description": "This method is to store user address history",
@@ -31450,7 +32925,7 @@
         "/v1.0/user-address-histories/{id}": {
             "get": {
                 "tags": [
-                    "user_address_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user address history by id",
                 "description": "This method is to get user address history by id",
@@ -31524,7 +32999,7 @@
         "/v1.0/user-address-histories/{ids}": {
             "delete": {
                 "tags": [
-                    "user_address_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user address history by id",
                 "description": "This method is to delete user address history by id",
@@ -31598,7 +33073,7 @@
         "/v1.0/user-assets/single-file-upload": {
             "post": {
                 "tags": [
-                    "user_assets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user asset file ",
                 "description": "This method is to store user asset file",
@@ -31682,7 +33157,7 @@
         "/v1.0/user-assets": {
             "get": {
                 "tags": [
-                    "user_assets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user assets  ",
                 "description": "This method is to get user assets ",
@@ -31803,7 +33278,7 @@
             },
             "put": {
                 "tags": [
-                    "user_assets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user document ",
                 "description": "This method is to update user document",
@@ -31933,7 +33408,7 @@
             },
             "post": {
                 "tags": [
-                    "user_assets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user document",
                 "description": "This method is to store user document",
@@ -32060,7 +33535,7 @@
         "/v1.0/user-assets/add-existing": {
             "put": {
                 "tags": [
-                    "user_assets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to add existing  user asset ",
                 "description": "This method is to add existing  user asset",
@@ -32147,7 +33622,7 @@
         "/v1.0/user-assets/{id}": {
             "get": {
                 "tags": [
-                    "user_assets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user document by id",
                 "description": "This method is to get user document by id",
@@ -32221,7 +33696,7 @@
         "/v1.0/user-assets/{ids}": {
             "delete": {
                 "tags": [
-                    "user_assets"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user document by id",
                 "description": "This method is to delete user document by id",
@@ -32295,7 +33770,7 @@
         "/v1.0/user-documents/single-file-upload": {
             "post": {
                 "tags": [
-                    "user_documents"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user doc file ",
                 "description": "This method is to store user doc file",
@@ -32379,7 +33854,7 @@
         "/v1.0/user-documents": {
             "get": {
                 "tags": [
-                    "user_documents"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user documents  ",
                 "description": "This method is to get user documents ",
@@ -32486,7 +33961,7 @@
             },
             "put": {
                 "tags": [
-                    "user_documents"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user document ",
                 "description": "This method is to update user document",
@@ -32581,7 +34056,7 @@
             },
             "post": {
                 "tags": [
-                    "user_documents"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user document",
                 "description": "This method is to store user document",
@@ -32673,7 +34148,7 @@
         "/v1.0/user-documents/{id}": {
             "get": {
                 "tags": [
-                    "user_documents"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user document by id",
                 "description": "This method is to get user document by id",
@@ -32747,7 +34222,7 @@
         "/v1.0/user-documents/{ids}": {
             "delete": {
                 "tags": [
-                    "user_documents"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user document by id",
                 "description": "This method is to delete user document by id",
@@ -32821,7 +34296,7 @@
         "/v1.0/user-education-histories": {
             "get": {
                 "tags": [
-                    "user_education_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user education histories  ",
                 "description": "This method is to get user education histories ",
@@ -32928,7 +34403,7 @@
             },
             "put": {
                 "tags": [
-                    "user_education_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user education history ",
                 "description": "This method is to update user education history",
@@ -33081,7 +34556,7 @@
             },
             "post": {
                 "tags": [
-                    "user_education_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user education history",
                 "description": "This method is to store user education history",
@@ -33231,7 +34706,7 @@
         "/v1.0/user-education-histories/{id}": {
             "get": {
                 "tags": [
-                    "user_education_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user education history by id",
                 "description": "This method is to get user education history by id",
@@ -33305,7 +34780,7 @@
         "/v1.0/user-education-histories/{ids}": {
             "delete": {
                 "tags": [
-                    "user_education_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user education history by id",
                 "description": "This method is to delete user education history by id",
@@ -33379,7 +34854,7 @@
         "/v1.0/user-job-histories": {
             "get": {
                 "tags": [
-                    "user_job_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user job histories  ",
                 "description": "This method is to get user job histories ",
@@ -33486,7 +34961,7 @@
             },
             "put": {
                 "tags": [
-                    "user_job_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user job history ",
                 "description": "This method is to update user job history",
@@ -33616,7 +35091,7 @@
             },
             "post": {
                 "tags": [
-                    "user_job_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user job history",
                 "description": "This method is to store user job history",
@@ -33743,7 +35218,7 @@
         "/v1.0/user-job-histories/{id}": {
             "get": {
                 "tags": [
-                    "user_job_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user job history by id",
                 "description": "This method is to get user job history by id",
@@ -33817,7 +35292,7 @@
         "/v1.0/user-job-histories/{ids}": {
             "delete": {
                 "tags": [
-                    "user_job_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user job history by id",
                 "description": "This method is to delete user job history by id",
@@ -34874,7 +36349,7 @@
             },
             "put": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update user",
                 "description": "This method is to update user",
@@ -35155,7 +36630,7 @@
             },
             "post": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user",
                 "description": "This method is to store user",
@@ -35585,7 +37060,7 @@
         "/v1.0/users/update-address": {
             "put": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update user address",
                 "description": "This method is to update user address",
@@ -35707,7 +37182,7 @@
         "/v1.0/users/update-bank-details": {
             "put": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update user address",
                 "description": "This method is to update user address",
@@ -35809,7 +37284,7 @@
         "/v1.0/users/update-joining-date": {
             "put": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update user address",
                 "description": "This method is to update user address",
@@ -35896,7 +37371,7 @@
         "/v1.0/users/update-emergency-contact": {
             "put": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update user contact",
                 "description": "This method is to update contact",
@@ -35983,7 +37458,7 @@
         "/v1.0/users/store-details": {
             "put": {
                 "tags": [
-                    "user_management.dont_use_now"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user details",
                 "description": "This method is to store user details",
@@ -36381,7 +37856,7 @@
         "/v3.0/users": {
             "get": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user",
                 "description": "This method is to get user",
@@ -36592,7 +38067,7 @@
         "/v2.0/users/{id}": {
             "get": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user by id",
                 "description": "This method is to get user by id",
@@ -36666,7 +38141,7 @@
         "/v1.0/users/get-leave-details/{id}": {
             "get": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user by id",
                 "description": "This method is to get user by id",
@@ -36740,7 +38215,7 @@
         "/v1.0/users/get-holiday-details/{id}": {
             "get": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user by id",
                 "description": "This method is to get user by id",
@@ -36814,7 +38289,7 @@
         "/v1.0/users/get-schedule-information/{id}": {
             "get": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user by id",
                 "description": "This method is to get user by id",
@@ -36976,7 +38451,7 @@
         "/v1.0/users/generate/employee-id": {
             "get": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to generate employee id",
                 "description": "This method is to generate employee id",
@@ -37041,7 +38516,7 @@
         "/v1.0/users/validate/employee-id/{user_id}": {
             "get": {
                 "tags": [
-                    "user_management.employee"
+                    "unused_apis"
                 ],
                 "summary": "This method is to validate employee id",
                 "description": "This method is to validate employee id",
@@ -37224,7 +38699,7 @@
         "/v1.0/user-notes": {
             "get": {
                 "tags": [
-                    "user_notes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user notes  ",
                 "description": "This method is to get user notes ",
@@ -37331,7 +38806,7 @@
             },
             "put": {
                 "tags": [
-                    "user_notes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user note ",
                 "description": "This method is to update user note",
@@ -37426,7 +38901,7 @@
             },
             "post": {
                 "tags": [
-                    "user_notes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user note",
                 "description": "This method is to store user note",
@@ -37518,7 +38993,7 @@
         "/v1.0/user-notes/by-business-owner": {
             "put": {
                 "tags": [
-                    "user_notes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user note ",
                 "description": "This method is to update user note",
@@ -37625,7 +39100,7 @@
         "/v1.0/user-notes/{id}": {
             "get": {
                 "tags": [
-                    "user_notes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user note by id",
                 "description": "This method is to get user note by id",
@@ -37699,7 +39174,7 @@
         "/v1.0/user-notes/{ids}": {
             "delete": {
                 "tags": [
-                    "user_notes"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user note by id",
                 "description": "This method is to delete user note by id",
@@ -37773,7 +39248,7 @@
         "/v1.0/user-passport-histories": {
             "get": {
                 "tags": [
-                    "user_passport_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user passport histories  ",
                 "description": "This method is to get user passport histories ",
@@ -37880,7 +39355,7 @@
             },
             "put": {
                 "tags": [
-                    "user_passport_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user passport history ",
                 "description": "This method is to update user passport history",
@@ -37995,7 +39470,7 @@
             },
             "post": {
                 "tags": [
-                    "user_passport_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user passport history",
                 "description": "This method is to store user passport history",
@@ -38107,7 +39582,7 @@
         "/v1.0/user-passport-histories/{id}": {
             "get": {
                 "tags": [
-                    "user_passport_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user passport history by id",
                 "description": "This method is to get user passport history by id",
@@ -38181,7 +39656,7 @@
         "/v1.0/user-passport-histories/{ids}": {
             "delete": {
                 "tags": [
-                    "user_passport_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user passport history by id",
                 "description": "This method is to delete user passport history by id",
@@ -38255,7 +39730,7 @@
         "/v1.0/user-social-sites": {
             "get": {
                 "tags": [
-                    "user_social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user social sites  ",
                 "description": "This method is to get user social sites ",
@@ -38362,7 +39837,7 @@
             },
             "put": {
                 "tags": [
-                    "user_social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user social site ",
                 "description": "This method is to update user social site",
@@ -38457,7 +39932,7 @@
             },
             "post": {
                 "tags": [
-                    "user_social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user social site",
                 "description": "This method is to store user social site",
@@ -38549,7 +40024,7 @@
         "/v1.0/user-social-sites/{id}": {
             "get": {
                 "tags": [
-                    "user_social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user social site by id",
                 "description": "This method is to get user social site by id",
@@ -38623,7 +40098,7 @@
         "/v1.0/user-social-sites/{ids}": {
             "delete": {
                 "tags": [
-                    "user_social_sites"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user social site by id",
                 "description": "This method is to delete user social site by id",
@@ -38697,7 +40172,7 @@
         "/v1.0/user-sponsorship-histories": {
             "get": {
                 "tags": [
-                    "user_sponsorship_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user sponsorship histories  ",
                 "description": "This method is to get user sponsorship histories ",
@@ -38804,7 +40279,7 @@
             },
             "put": {
                 "tags": [
-                    "user_sponsorship_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user sponsorship history ",
                 "description": "This method is to update user sponsorship history",
@@ -38939,7 +40414,7 @@
             },
             "post": {
                 "tags": [
-                    "user_sponsorship_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user sponsorship history",
                 "description": "This method is to store user sponsorship history",
@@ -39066,7 +40541,7 @@
         "/v1.0/user-sponsorship-histories/{id}": {
             "get": {
                 "tags": [
-                    "user_sponsorship_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user sponsorship history by id",
                 "description": "This method is to get user sponsorship history by id",
@@ -39140,7 +40615,7 @@
         "/v1.0/user-sponsorship-histories/{ids}": {
             "delete": {
                 "tags": [
-                    "user_sponsorship_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user sponsorship history by id",
                 "description": "This method is to delete user sponsorship history by id",
@@ -39214,7 +40689,7 @@
         "/v1.0/user-visa-histories": {
             "get": {
                 "tags": [
-                    "user_visa_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user visa histories  ",
                 "description": "This method is to get user visa histories ",
@@ -39321,7 +40796,7 @@
             },
             "put": {
                 "tags": [
-                    "user_visa_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update  user visa history ",
                 "description": "This method is to update user visa history",
@@ -39441,7 +40916,7 @@
             },
             "post": {
                 "tags": [
-                    "user_visa_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store user visa history",
                 "description": "This method is to store user visa history",
@@ -39558,7 +41033,7 @@
         "/v1.0/user-visa-histories/{id}": {
             "get": {
                 "tags": [
-                    "user_visa_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get user visa history by id",
                 "description": "This method is to get user visa history by id",
@@ -39632,7 +41107,7 @@
         "/v1.0/user-visa-histories/{ids}": {
             "delete": {
                 "tags": [
-                    "user_visa_histories"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete user visa history by id",
                 "description": "This method is to delete user visa history by id",
@@ -39706,7 +41181,7 @@
         "/v1.0/work-locations": {
             "get": {
                 "tags": [
-                    "work_locations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get work locations  ",
                 "description": "This method is to get work locations ",
@@ -39813,7 +41288,7 @@
             },
             "put": {
                 "tags": [
-                    "work_locations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update work location ",
                 "description": "This method is to update work location",
@@ -39903,7 +41378,7 @@
             },
             "post": {
                 "tags": [
-                    "work_locations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store work location",
                 "description": "This method is to store work location",
@@ -39990,7 +41465,7 @@
         "/v1.0/work-locations/toggle-active": {
             "put": {
                 "tags": [
-                    "work_locations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle work location",
                 "description": "This method is to toggle work location",
@@ -40072,7 +41547,7 @@
         "/v1.0/work-locations/{id}": {
             "get": {
                 "tags": [
-                    "work_locations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get work location by id",
                 "description": "This method is to get work location by id",
@@ -40146,7 +41621,7 @@
         "/v1.0/work-locations/{ids}": {
             "delete": {
                 "tags": [
-                    "work_locations"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete work location by id",
                 "description": "This method is to delete work location by id",
@@ -40220,7 +41695,7 @@
         "/v1.0/work-shifts": {
             "get": {
                 "tags": [
-                    "administrator.work_shift"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get work shifts  ",
                 "description": "This method is to get work shifts ",
@@ -40327,7 +41802,7 @@
             },
             "put": {
                 "tags": [
-                    "administrator.work_shift"
+                    "unused_apis"
                 ],
                 "summary": "This method is to update work shift ",
                 "description": "This method is to update work_shift",
@@ -40514,7 +41989,7 @@
             },
             "post": {
                 "tags": [
-                    "administrator.work_shift"
+                    "unused_apis"
                 ],
                 "summary": "This method is to store work shift",
                 "description": "This method is to store work shift",
@@ -40697,7 +42172,7 @@
         "/v1.0/work-shifts/toggle-active": {
             "put": {
                 "tags": [
-                    "administrator.work_shift"
+                    "unused_apis"
                 ],
                 "summary": "This method is to toggle work shift activity",
                 "description": "This method is to toggle work shift activity",
@@ -40794,7 +42269,7 @@
         "/v1.0/work-shifts/{id}": {
             "get": {
                 "tags": [
-                    "administrator.work_shift"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get work shift by id",
                 "description": "This method is to get work shift by id",
@@ -40868,7 +42343,7 @@
         "/v1.0/work-shifts/get-by-user-id/{user_id}": {
             "get": {
                 "tags": [
-                    "administrator.work_shift"
+                    "unused_apis"
                 ],
                 "summary": "This method is to get work shift by user id",
                 "description": "This method is to get work shift by user id",
@@ -40942,7 +42417,7 @@
         "/v1.0/work-shifts/{ids}": {
             "delete": {
                 "tags": [
-                    "administrator.work_shift"
+                    "unused_apis"
                 ],
                 "summary": "This method is to delete work shift by id",
                 "description": "This method is to delete work shift by id",
@@ -41027,16 +42502,8 @@
     },
     "tags": [
         {
-            "name": "administrator.announcements",
-            "description": "administrator.announcements"
-        },
-        {
-            "name": "administrator.asset_type",
-            "description": "administrator.asset_type"
-        },
-        {
-            "name": "attendances",
-            "description": "attendances"
+            "name": "unused_apis",
+            "description": "unused_apis"
         },
         {
             "name": "auth",
@@ -41045,10 +42512,6 @@
         {
             "name": "awarding_bodies",
             "description": "awarding_bodies"
-        },
-        {
-            "name": "banks",
-            "description": "banks"
         },
         {
             "name": "business_background_image",
@@ -41061,10 +42524,6 @@
         {
             "name": "business_setting",
             "description": "business_setting"
-        },
-        {
-            "name": "business_tiers",
-            "description": "business_tiers"
         },
         {
             "name": "business_times_management",
@@ -41087,24 +42546,12 @@
             "description": "dashboard_management.business_user"
         },
         {
-            "name": "dashboard_management.dashboard_widgets",
-            "description": "dashboard_management.dashboard_widgets"
-        },
-        {
             "name": "dashboard_management.superadmin",
             "description": "dashboard_management.superadmin"
         },
         {
             "name": "dashboard_management.data_collector",
             "description": "dashboard_management.data_collector"
-        },
-        {
-            "name": "administrator.department",
-            "description": "administrator.department"
-        },
-        {
-            "name": "designations",
-            "description": "designations"
         },
         {
             "name": "z.unused",
@@ -41115,20 +42562,8 @@
             "description": "template_management.email"
         },
         {
-            "name": "template_management.wrapper.email",
-            "description": "template_management.wrapper.email"
-        },
-        {
             "name": "files",
             "description": "files"
-        },
-        {
-            "name": "histories",
-            "description": "histories"
-        },
-        {
-            "name": "administrator.holiday",
-            "description": "administrator.holiday"
         },
         {
             "name": "installment_payments",
@@ -41137,22 +42572,6 @@
         {
             "name": "installment_plans",
             "description": "installment_plans"
-        },
-        {
-            "name": "job_listing",
-            "description": "job_listing"
-        },
-        {
-            "name": "job_platforms",
-            "description": "job_platforms"
-        },
-        {
-            "name": "job_types",
-            "description": "job_types"
-        },
-        {
-            "name": "leaves",
-            "description": "leaves"
         },
         {
             "name": "letter_templates",
@@ -41167,44 +42586,12 @@
             "description": "notification_management"
         },
         {
-            "name": "template_management.notification",
-            "description": "template_management.notification"
-        },
-        {
             "name": "payment_type_management",
             "description": "payment_type_management"
         },
         {
-            "name": "administrator.payruns",
-            "description": "administrator.payruns"
-        },
-        {
             "name": "user_management",
             "description": "user_management"
-        },
-        {
-            "name": "shop_section.product_category_management",
-            "description": "shop_section.product_category_management"
-        },
-        {
-            "name": "basics",
-            "description": "basics"
-        },
-        {
-            "name": "shop_section.product_management",
-            "description": "shop_section.product_management"
-        },
-        {
-            "name": "project",
-            "description": "project"
-        },
-        {
-            "name": "recruitment_processes",
-            "description": "recruitment_processes"
-        },
-        {
-            "name": "reminders",
-            "description": "reminders"
         },
         {
             "name": "user_management.role",
@@ -41219,36 +42606,8 @@
             "description": "sessions"
         },
         {
-            "name": "settings.setting_attendance",
-            "description": "settings.setting_attendance"
-        },
-        {
-            "name": "settings.setting_leave",
-            "description": "settings.setting_leave"
-        },
-        {
-            "name": "settings.setting_leave_types",
-            "description": "settings.setting_leave_types"
-        },
-        {
-            "name": "settings.setting_payroll.payrun",
-            "description": "settings.setting_payroll.payrun"
-        },
-        {
-            "name": "settings.setting_payroll.payslip",
-            "description": "settings.setting_payroll.payslip"
-        },
-        {
-            "name": "social_sites",
-            "description": "social_sites"
-        },
-        {
             "name": "students",
             "description": "students"
-        },
-        {
-            "name": "user_management.employee",
-            "description": "user_management.employee"
         },
         {
             "name": "student_letters",
@@ -41261,62 +42620,6 @@
         {
             "name": "subjects",
             "description": "subjects"
-        },
-        {
-            "name": "task",
-            "description": "task"
-        },
-        {
-            "name": "user_address_histories",
-            "description": "user_address_histories"
-        },
-        {
-            "name": "user_assets",
-            "description": "user_assets"
-        },
-        {
-            "name": "user_documents",
-            "description": "user_documents"
-        },
-        {
-            "name": "user_education_histories",
-            "description": "user_education_histories"
-        },
-        {
-            "name": "user_job_histories",
-            "description": "user_job_histories"
-        },
-        {
-            "name": "user_management.dont_use_now",
-            "description": "user_management.dont_use_now"
-        },
-        {
-            "name": "user_notes",
-            "description": "user_notes"
-        },
-        {
-            "name": "user_passport_histories",
-            "description": "user_passport_histories"
-        },
-        {
-            "name": "user_social_sites",
-            "description": "user_social_sites"
-        },
-        {
-            "name": "user_sponsorship_histories",
-            "description": "user_sponsorship_histories"
-        },
-        {
-            "name": "user_visa_histories",
-            "description": "user_visa_histories"
-        },
-        {
-            "name": "work_locations",
-            "description": "work_locations"
-        },
-        {
-            "name": "administrator.work_shift",
-            "description": "administrator.work_shift"
         }
     ]
 }

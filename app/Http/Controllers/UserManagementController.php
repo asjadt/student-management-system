@@ -521,7 +521,7 @@ class UserManagementController extends Controller
      * @OA\Post(
      *      path="/v2.0/users",
      *      operationId="createUserV2",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1172,7 +1172,7 @@ class UserManagementController extends Controller
      * @OA\Put(
      *      path="/v2.0/users",
      *      operationId="updateUserV2",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1865,7 +1865,7 @@ class UserManagementController extends Controller
      * @OA\Put(
      *      path="/v1.0/users/update-address",
      *      operationId="updateUserAddress",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2062,7 +2062,7 @@ class UserManagementController extends Controller
      * @OA\Put(
      *      path="/v1.0/users/update-bank-details",
      *      operationId="updateUserBankDetails",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2193,7 +2193,7 @@ class UserManagementController extends Controller
      * @OA\Put(
      *      path="/v1.0/users/update-joining-date",
      *      operationId="updateUserJoiningDate",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2315,7 +2315,7 @@ class UserManagementController extends Controller
      * @OA\Put(
      *      path="/v1.0/users/update-emergency-contact",
      *      operationId="updateEmergencyContact",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2438,7 +2438,7 @@ class UserManagementController extends Controller
      * @OA\Put(
      *      path="/v1.0/users/store-details",
      *      operationId="storeUserDetails",
-     *      tags={"user_management.dont_use_now"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -3427,7 +3427,7 @@ class UserManagementController extends Controller
      * @OA\Get(
      *      path="/v3.0/users",
      *      operationId="getUsersV3",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -3774,7 +3774,7 @@ class UserManagementController extends Controller
      * @OA\Get(
      *      path="/v2.0/users/{id}",
      *      operationId="getUserByIdV2",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -3903,7 +3903,7 @@ class UserManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/users/get-leave-details/{id}",
      *      operationId="getLeaveDetailsByUserId",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -4081,7 +4081,7 @@ class UserManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/users/get-holiday-details/{id}",
      *      operationId="getholidayDetailsByUserId",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -4333,7 +4333,7 @@ class UserManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/users/get-schedule-information/{id}",
      *      operationId="getScheduleInformationByUserId",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -4791,7 +4791,7 @@ class UserManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/users/generate/employee-id",
      *      operationId="generateEmployeeId",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -4874,7 +4874,7 @@ class UserManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/users/validate/employee-id/{user_id}",
      *      operationId="validateEmployeeId",
-     *      tags={"user_management.employee"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

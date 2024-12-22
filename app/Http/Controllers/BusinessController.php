@@ -36,9 +36,9 @@ use Illuminate\Support\Str;
 
 class BusinessController extends Controller
 {
-    use ErrorUtil,BusinessUtil,UserActivityUtil, BasicUtil;
+    use ErrorUtil, BusinessUtil, UserActivityUtil, BasicUtil;
     /**
-        *
+     *
      * @OA\Post(
      *      path="/v1.0/business-image",
      *      operationId="createBusinessImage",
@@ -49,19 +49,19 @@ class BusinessController extends Controller
      *      summary="This method is to store business image ",
      *      description="This method is to store business image",
      *
-   *  @OA\RequestBody(
-        *   * @OA\MediaType(
-*     mediaType="multipart/form-data",
-*     @OA\Schema(
-*         required={"image"},
-*         @OA\Property(
-*             description="image to upload",
-*             property="image",
-*             type="file",
-*             collectionFormat="multi",
-*         )
-*     )
-* )
+     *  @OA\RequestBody(
+     *   * @OA\MediaType(
+     *     mediaType="multipart/form-data",
+     *     @OA\Schema(
+     *         required={"image"},
+     *         @OA\Property(
+     *             description="image to upload",
+     *             property="image",
+     *             type="file",
+     *             collectionFormat="multi",
+     *         )
+     *     )
+     * )
 
 
 
@@ -100,36 +100,34 @@ class BusinessController extends Controller
      *     )
      */
 
-     public function createBusinessImage(ImageUploadRequest $request)
-     {
-         try{
-             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-             // if(!$request->user()->hasPermissionTo('business_create')){
-             //      return response()->json([
-             //         "message" => "You can not perform this action"
-             //      ],401);
-             // }
+    public function createBusinessImage(ImageUploadRequest $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            // if(!$request->user()->hasPermissionTo('business_create')){
+            //      return response()->json([
+            //         "message" => "You can not perform this action"
+            //      ],401);
+            // }
 
-             $request_data = $request->validated();
+            $request_data = $request->validated();
 
-             $location =  config("setup-config.business_gallery_location");
+            $location =  config("setup-config.business_gallery_location");
 
-             $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
+            $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
 
-             $request_data["image"]->move(public_path($location), $new_file_name);
-
-
-             return response()->json(["image" => $new_file_name,"location" => $location,"full_location"=>("/".$location."/".$new_file_name)], 200);
+            $request_data["image"]->move(public_path($location), $new_file_name);
 
 
-         } catch(Exception $e){
-             error_log($e->getMessage());
-         return $this->sendError($e,500,$request);
-         }
-     }
+            return response()->json(["image" => $new_file_name, "location" => $location, "full_location" => ("/" . $location . "/" . $new_file_name)], 200);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
-       /**
-        *
+    /**
+     *
      * @OA\Post(
      *      path="/v1.0/business-logo",
      *      operationId="createBusinessLogo",
@@ -140,19 +138,19 @@ class BusinessController extends Controller
      *      summary="This method is to store business image ",
      *      description="This method is to store business image",
      *
-   *  @OA\RequestBody(
-        *   * @OA\MediaType(
-*     mediaType="multipart/form-data",
-*     @OA\Schema(
-*         required={"image"},
-*         @OA\Property(
-*             description="image to upload",
-*             property="image",
-*             type="file",
-*             collectionFormat="multi",
-*         )
-*     )
-* )
+     *  @OA\RequestBody(
+     *   * @OA\MediaType(
+     *     mediaType="multipart/form-data",
+     *     @OA\Schema(
+     *         required={"image"},
+     *         @OA\Property(
+     *             description="image to upload",
+     *             property="image",
+     *             type="file",
+     *             collectionFormat="multi",
+     *         )
+     *     )
+     * )
 
 
 
@@ -191,76 +189,76 @@ class BusinessController extends Controller
      *     )
      */
 
-     public function createBusinessLogo(ImageUploadRequest $request)
-     {
-         try {
-             // Log the activity
-             $this->storeActivity($request, "Upload Business Logo", "Uploading a new business logo");
+    public function createBusinessLogo(ImageUploadRequest $request)
+    {
+        try {
+            // Log the activity
+            $this->storeActivity($request, "Upload Business Logo", "Uploading a new business logo");
 
-             // Validate the request data
-             $request_data = $request->validated();
-
-
-             // Get the authenticated user's business
-             $business = auth()->user()->business;
-
-             if (!$business) {
-                 return response()->json([
-                     "message" => "Business not found"
-                 ], 404);
-             }
-
-             // Define the storage location and file name
-             $location = str_replace(' ', '_', $business->name) . "/" . config("setup-config.business_gallery_location");
+            // Validate the request data
+            $request_data = $request->validated();
 
 
-             $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
+            // Get the authenticated user's business
+            $business = auth()->user()->business;
 
-             $request_data["image"]->move(public_path($location), $new_file_name);
+            if (!$business) {
+                return response()->json([
+                    "message" => "Business not found"
+                ], 404);
+            }
 
-             $new_logo_path = ("/" . $location . "/" . $new_file_name);
-
-             // Compare existing and new logo paths and delete the old logo if needed
-             if ($business->logo && $business->logo !== $new_logo_path) {
-                 $existingLogoPath = public_path($business->logo);
-
-                 if (File::exists($existingLogoPath)) {
-                     File::delete($existingLogoPath);
-                 }
-             }
+            // Define the storage location and file name
+            $location = str_replace(' ', '_', $business->name) . "/" . config("setup-config.business_gallery_location");
 
 
+            $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
 
-             // Update the business logo
-             $business->logo = $new_logo_path;
-             $business->save();
+            $request_data["image"]->move(public_path($location), $new_file_name);
 
-             // Return a success response
-             return response()->json([
-                 "status" => "success",
-                 "data" => [
-                     "image" => $new_file_name,
-                     "location" => $location,
-                     "full_location" => $new_logo_path
-                 ]
-             ], 200);
-         } catch (Exception $e) {
-             // Log the error
-             error_log($e->getMessage());
+            $new_logo_path = ("/" . $location . "/" . $new_file_name);
 
-             // Return an error response
-             return response()->json([
-                 "message" => "An error occurred while uploading the business logo",
-                 "error" => $e->getMessage()
-             ], 500);
-         }
-     }
+            // Compare existing and new logo paths and delete the old logo if needed
+            if ($business->logo && $business->logo !== $new_logo_path) {
+                $existingLogoPath = public_path($business->logo);
+
+                if (File::exists($existingLogoPath)) {
+                    File::delete($existingLogoPath);
+                }
+            }
 
 
 
+            // Update the business logo
+            $business->logo = $new_logo_path;
+            $business->save();
 
-  /**
-        *
+            // Return a success response
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "image" => $new_file_name,
+                    "location" => $location,
+                    "full_location" => $new_logo_path
+                ]
+            ], 200);
+        } catch (Exception $e) {
+            // Log the error
+            error_log($e->getMessage());
+
+            // Return an error response
+            return response()->json([
+                "message" => "An error occurred while uploading the business logo",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+
+
+    /**
+     *
      * @OA\Post(
      *      path="/v1.0/business-image-multiple",
      *      operationId="createBusinessImageMultiple",
@@ -272,22 +270,22 @@ class BusinessController extends Controller
      *      summary="This method is to store business gallery",
      *      description="This method is to store business gallery",
      *
-   *  @OA\RequestBody(
-        *   * @OA\MediaType(
-*     mediaType="multipart/form-data",
-*     @OA\Schema(
-*         required={"images[]"},
-*         @OA\Property(
-*             description="array of images to upload",
-*             property="images[]",
-*             type="array",
-*             @OA\Items(
-*                 type="file"
-*             ),
-*             collectionFormat="multi",
-*         )
-*     )
-* )
+     *  @OA\RequestBody(
+     *   * @OA\MediaType(
+     *     mediaType="multipart/form-data",
+     *     @OA\Schema(
+     *         required={"images[]"},
+     *         @OA\Property(
+     *             description="array of images to upload",
+     *             property="images[]",
+     *             type="array",
+     *             @OA\Items(
+     *                 type="file"
+     *             ),
+     *             collectionFormat="multi",
+     *         )
+     *     )
+     * )
 
 
 
@@ -328,43 +326,37 @@ class BusinessController extends Controller
 
     public function createBusinessImageMultiple(MultipleImageUploadRequest $request)
     {
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
             $request_data = $request->validated();
 
             $location =  config("setup-config.business_gallery_location");
 
             $images = [];
-            if(!empty($request_data["images"])) {
-                foreach($request_data["images"] as $image){
+            if (!empty($request_data["images"])) {
+                foreach ($request_data["images"] as $image) {
                     $new_file_name = time() . '_' . str_replace(' ', '_', $image->getClientOriginalName());
                     $image->move(public_path($location), $new_file_name);
 
-                    array_push($images,("/".$location."/".$new_file_name));
-
-
-
-
+                    array_push($images, ("/" . $location . "/" . $new_file_name));
                 }
             }
 
 
             return response()->json(["images" => $images], 201);
-
-
-        } catch(Exception $e){
+        } catch (Exception $e) {
             error_log($e->getMessage());
-        return $this->sendError($e,500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
-  /**
-        *
+    /**
+     *
      * @OA\Post(
      *      path="/v1.0/businesses",
      *      operationId="createBusiness",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *      summary="This method is to store business",
@@ -444,41 +436,42 @@ class BusinessController extends Controller
      *      )
      *     )
      */
-    public function createBusiness(BusinessCreateRequest $request) {
+    public function createBusiness(BusinessCreateRequest $request)
+    {
         // this is business create by super admin
-                try{
-                    $this->storeActivity($request, "DUMMY activity","DUMMY description");
-             return  DB::transaction(function ()use (&$request) {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            return  DB::transaction(function () use (&$request) {
 
-                if(!$request->user()->hasPermissionTo('business_create')){
+                if (!$request->user()->hasPermissionTo('business_create')) {
                     return response()->json([
-                       "message" => "You can not perform this action"
-                    ],401);
-               }
+                        "message" => "You can not perform this action"
+                    ], 401);
+                }
                 $request_data = $request->validated();
 
 
 
-        $user = User::where([
-            "id" =>  $request_data['business']['owner_id']
-        ])
-        ->first();
+                $user = User::where([
+                    "id" =>  $request_data['business']['owner_id']
+                ])
+                    ->first();
 
-        if(!$user) {
-            $error =  [
-                "message" => "The given data was invalid.",
-                "errors" => ["owner_id"=>["No User Found"]]
-         ];
-            throw new Exception(json_encode($error),422);
-        }
+                if (!$user) {
+                    $error =  [
+                        "message" => "The given data was invalid.",
+                        "errors" => ["owner_id" => ["No User Found"]]
+                    ];
+                    throw new Exception(json_encode($error), 422);
+                }
 
-        if(!$user->hasRole('business_admin')) {
-            $error =  [
-                "message" => "The given data was invalid.",
-                "errors" => ["owner_id"=>["The user is not a businesses Owner"]]
-         ];
-            throw new Exception(json_encode($error),422);
-        }
+                if (!$user->hasRole('business_admin')) {
+                    $error =  [
+                        "message" => "The given data was invalid.",
+                        "errors" => ["owner_id" => ["The user is not a businesses Owner"]]
+                    ];
+                    throw new Exception(json_encode($error), 422);
+                }
 
 
 
@@ -505,21 +498,20 @@ class BusinessController extends Controller
 
                     "business" => $business
                 ], 201);
-                });
-                } catch(Exception $e){
+            });
+        } catch (Exception $e) {
 
-                return $this->sendError($e,500,$request);
-                }
-
-            }
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
     /**
-        *
+     *
      * @OA\Post(
      *      path="/v1.0/businesses/generate-database",
      *      operationId="generateDatabaseForBusiness",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *      summary="This method is to store business",
@@ -572,49 +564,48 @@ class BusinessController extends Controller
      *      )
      *     )
      */
-    public function generateDatabaseForBusiness(Request $request) {
-// this is business create by super admin
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+    public function generateDatabaseForBusiness(Request $request)
+    {
+        // this is business create by super admin
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            if(!$request->user()->hasPermissionTo('business_create')){
+            if (!$request->user()->hasPermissionTo('business_create')) {
                 return response()->json([
-                   "message" => "You can not perform this action"
-                ],401);
-           }
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
-           $request->validate([
-            'business_id' => 'required|integer|exists:businesses,id', // Ensure business_id is required, is an integer, and exists in the businesses table
-        ]);
+            $request->validate([
+                'business_id' => 'required|integer|exists:businesses,id', // Ensure business_id is required, is an integer, and exists in the businesses table
+            ]);
 
 
-        Log::info("test1..");
-        if(env("SELF_DB") == true) {
-            Log::info("test");
-            Artisan::call(('generate:database '. $request->business_id));
+            Log::info("test1..");
+            if (env("SELF_DB") == true) {
+                Log::info("test");
+                Artisan::call(('generate:database ' . $request->business_id));
             }
 
 
-        return response([
-            "ok" => true
-        ], 201);
+            return response([
+                "ok" => true
+            ], 201);
+        } catch (Exception $e) {
 
-        } catch(Exception $e){
-
-        return $this->sendError($e,500,$request);
+            return $this->sendError($e, 500, $request);
         }
-
     }
 
 
 
-     /**
-        *
+    /**
+     *
      * @OA\Post(
      *      path="/v1.0/auth/check-schedule-conflict",
      *      operationId="checkScheduleConflict",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *      summary="This method is to store user with business",
@@ -625,15 +616,15 @@ class BusinessController extends Controller
      *         @OA\JsonContent(
      *            required={"user","business"},
      *
-      *      @OA\Property(property="times", type="string", format="array",example={
+     *      @OA\Property(property="times", type="string", format="array",example={
      *
-    *{"day":0,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":1,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":2,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":0,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":1,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":2,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
      *{"day":3,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":4,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":5,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":6,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true}
+     *{"day":4,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":5,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":6,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true}
      *
      * }),
      *
@@ -679,55 +670,53 @@ class BusinessController extends Controller
      *      )
      *     )
      */
-    public function checkScheduleConflict(CheckScheduleConflictRequest $request) {
+    public function checkScheduleConflict(CheckScheduleConflictRequest $request)
+    {
 
 
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-     return  DB::transaction(function ()use (&$request) {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            return  DB::transaction(function () use (&$request) {
 
-    //     if(!$request->user()->hasPermissionTo('business_create')){
-    //         return response()->json([
-    //            "message" => "You can not perform this action"
-    //         ],401);
-    //    }
-        $request_data = $request->validated();
+                //     if(!$request->user()->hasPermissionTo('business_create')){
+                //         return response()->json([
+                //            "message" => "You can not perform this action"
+                //         ],401);
+                //    }
+                $request_data = $request->validated();
 
-        $conflicted_work_shift_ids = collect();
+                $conflicted_work_shift_ids = collect();
 
-        $timesArray = collect($request_data["times"])->unique("day");
-        foreach($timesArray as $business_time) {
-            $work_shift_ids = WorkShift::where([
-                "business_id" => auth()->user()->business_id
-            ])
-            ->whereHas('details', function ($query) use ($business_time) {
-                $query->where('work_shift_details.day',($business_time["day"]))
-                ->when(!empty($time["is_weekend"]), function($query) {
-                    $query->where('work_shift_details.is_weekend',1);
-                })
-                ->where(function($query) use($business_time) {
-                    $query->whereTime('work_shift_details.start_at', '<=', ($business_time["start_at"]))
-                          ->orWhereTime('work_shift_details.end_at', '>=', ($business_time["end_at"]));
+                $timesArray = collect($request_data["times"])->unique("day");
+                foreach ($timesArray as $business_time) {
+                    $work_shift_ids = WorkShift::where([
+                        "business_id" => auth()->user()->business_id
+                    ])
+                        ->whereHas('details', function ($query) use ($business_time) {
+                            $query->where('work_shift_details.day', ($business_time["day"]))
+                                ->when(!empty($time["is_weekend"]), function ($query) {
+                                    $query->where('work_shift_details.is_weekend', 1);
+                                })
+                                ->where(function ($query) use ($business_time) {
+                                    $query->whereTime('work_shift_details.start_at', '<=', ($business_time["start_at"]))
+                                        ->orWhereTime('work_shift_details.end_at', '>=', ($business_time["end_at"]));
+                                });
+                        })
+                        ->pluck("id");
+                    $conflicted_work_shift_ids = $conflicted_work_shift_ids->merge($work_shift_ids);
+                }
+                $conflicted_work_shift_ids = $conflicted_work_shift_ids->unique()->values()->all();
 
-                });
-            })
-            ->pluck("id");
-            $conflicted_work_shift_ids = $conflicted_work_shift_ids->merge($work_shift_ids);
+                $conflicted_work_shifts =   WorkShift::whereIn("id", $conflicted_work_shift_ids)->get();
 
+                return response([
+                    "conflicted_work_shifts" => $conflicted_work_shifts
+                ], 200);
+            });
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
         }
-        $conflicted_work_shift_ids = $conflicted_work_shift_ids->unique()->values()->all();
-
-     $conflicted_work_shifts =   WorkShift::whereIn("id",$conflicted_work_shift_ids)->get();
-
-        return response([
-            "conflicted_work_shifts" => $conflicted_work_shifts
-        ], 200);
-        });
-        } catch(Exception $e){
-
-        return $this->sendError($e,500,$request);
-        }
-
     }
 
 
@@ -736,13 +725,13 @@ class BusinessController extends Controller
 
 
 
-     /**
-        *
+    /**
+     *
      * @OA\Post(
      *      path="/v1.0/auth/register-with-business",
      *      operationId="registerUserWithBusiness",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *      summary="This method is to store user with business",
@@ -767,15 +756,15 @@ class BusinessController extends Controller
      *
      * }),
      *
-      *   *      *    @OA\Property(property="times", type="string", format="array",example={
+     *   *      *    @OA\Property(property="times", type="string", format="array",example={
      *
-    *{"day":0,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":1,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":2,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":0,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":1,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":2,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
      *{"day":3,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":4,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":5,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
-    *{"day":6,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true}
+     *{"day":4,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":5,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true},
+     *{"day":6,"start_at":"10:10:00","end_at":"10:15:00","is_weekend":true}
      *
      * }),
      *
@@ -845,175 +834,174 @@ class BusinessController extends Controller
      *      )
      *     )
      */
-    public function registerUserWithBusiness(AuthRegisterBusinessRequest $request) {
+    public function registerUserWithBusiness(AuthRegisterBusinessRequest $request)
+    {
 
-        try{
+        try {
 
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-
-
-        if(!$request->user()->hasPermissionTo('business_create')){
-            return response()->json([
-               "message" => "You can not perform this action"
-            ],401);
-       }
-        $request_data = $request->validated();
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
 
-
-   // user info starts ##############
-
-   $password = $request_data['user']['password'];
-   $request_data['user']['password'] = Hash::make($password);
-
-
-//    if(!$request->user()->hasRole('superadmin') || empty($request_data['user']['password'])) {
-//     $password = Str::random(10);
-//     $request_data['user']['password'] = Hash::make($password);
-//     }
+            if (!$request->user()->hasPermissionTo('business_create')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
+            $request_data = $request->validated();
 
 
 
+            // user info starts ##############
 
-    $request_data['user']['remember_token'] = Str::random(10);
-    $request_data['user']['is_active'] = true;
-    $request_data['user']['created_by'] = $request->user()->id;
-
-    $request_data['user']['address_line_1'] = $request_data['business']['address_line_1'];
-    $request_data['user']['address_line_2'] = (!empty($request_data['business']['address_line_2'])?$request_data['business']['address_line_2']:"") ;
-    $request_data['user']['country'] = $request_data['business']['country'];
-    $request_data['user']['city'] = $request_data['business']['city'];
-    $request_data['user']['postcode'] = $request_data['business']['postcode']?? null;
-    $request_data['user']['lat'] = $request_data['business']['lat'];
-    $request_data['user']['long'] = $request_data['business']['long'];
-
-    $user =  User::create($request_data['user']);
-
-    $user->assignRole('business_admin');
-   // end user info ##############
+            $password = $request_data['user']['password'];
+            $request_data['user']['password'] = Hash::make($password);
 
 
-  //  business info ##############
-
-        $request_data['business']['status'] = "pending";
-        $request_data['business']['owner_id'] = $user->id;
-        $request_data['business']['created_by'] = $request->user()->id;
-        $request_data['business']['is_active'] = true;
-        $business =  Business::create($request_data['business']);
+            //    if(!$request->user()->hasRole('superadmin') || empty($request_data['user']['password'])) {
+            //     $password = Str::random(10);
+            //     $request_data['user']['password'] = Hash::make($password);
+            //     }
 
 
 
 
+            $request_data['user']['remember_token'] = Str::random(10);
+            $request_data['user']['is_active'] = true;
+            $request_data['user']['created_by'] = $request->user()->id;
 
-        $user->email_verified_at = now();
-        $user->business_id = $business->id;
+            $request_data['user']['address_line_1'] = $request_data['business']['address_line_1'];
+            $request_data['user']['address_line_2'] = (!empty($request_data['business']['address_line_2']) ? $request_data['business']['address_line_2'] : "");
+            $request_data['user']['country'] = $request_data['business']['country'];
+            $request_data['user']['city'] = $request_data['business']['city'];
+            $request_data['user']['postcode'] = $request_data['business']['postcode'] ?? null;
+            $request_data['user']['lat'] = $request_data['business']['lat'];
+            $request_data['user']['long'] = $request_data['business']['long'];
 
+            $user =  User::create($request_data['user']);
 
-
-        $token = Str::random(30);
-        $user->resetPasswordToken = $token;
-        $user->resetPasswordExpires = Carbon::now()->subDays(-1);
-
-        $user->save();
-
-
-
-        BusinessTime::where([
-            "business_id" => $business->id
-           ])
-           ->delete();
-           $timesArray = collect($request_data["times"])->unique("day");
-           foreach($timesArray as $business_time) {
-            BusinessTime::create([
-                "business_id" => $business->id,
-                "day"=> $business_time["day"],
-                "start_at"=> $business_time["start_at"],
-                "end_at"=> $business_time["end_at"],
-                "is_weekend"=> $business_time["is_weekend"],
-            ]);
-           }
+            $user->assignRole('business_admin');
+            // end user info ##############
 
 
-           $defaultRoles = Role::where([
-            "business_id" => NULL,
-            "is_default" => 1,
-            "is_default_for_business" => 1,
-            "guard_name" => "api",
-        ])->get();
+            //  business info ##############
 
-        foreach ($defaultRoles as $defaultRole) {
-            $insertableData = [
-                'name'  => ($defaultRole->name . "#" . $business->id),
+            $request_data['business']['status'] = "pending";
+            $request_data['business']['owner_id'] = $user->id;
+            $request_data['business']['created_by'] = $request->user()->id;
+            $request_data['business']['is_active'] = true;
+            $business =  Business::create($request_data['business']);
+
+
+
+
+
+            $user->email_verified_at = now();
+            $user->business_id = $business->id;
+
+
+
+            $token = Str::random(30);
+            $user->resetPasswordToken = $token;
+            $user->resetPasswordExpires = Carbon::now()->subDays(-1);
+
+            $user->save();
+
+
+
+            BusinessTime::where([
+                "business_id" => $business->id
+            ])
+                ->delete();
+            $timesArray = collect($request_data["times"])->unique("day");
+            foreach ($timesArray as $business_time) {
+                BusinessTime::create([
+                    "business_id" => $business->id,
+                    "day" => $business_time["day"],
+                    "start_at" => $business_time["start_at"],
+                    "end_at" => $business_time["end_at"],
+                    "is_weekend" => $business_time["is_weekend"],
+                ]);
+            }
+
+
+            $defaultRoles = Role::where([
+                "business_id" => NULL,
                 "is_default" => 1,
-                "business_id" => $business->id,
-                "is_default_for_business" => 0,
+                "is_default_for_business" => 1,
                 "guard_name" => "api",
-            ];
-            $role  = Role::create($insertableData);
+            ])->get();
 
-            $permissions = $defaultRole->permissions;
-            foreach ($permissions as $permission) {
-                if (!$role->hasPermissionTo($permission)) {
-                    $role->givePermissionTo($permission);
+            foreach ($defaultRoles as $defaultRole) {
+                $insertableData = [
+                    'name'  => ($defaultRole->name . "#" . $business->id),
+                    "is_default" => 1,
+                    "business_id" => $business->id,
+                    "is_default_for_business" => 0,
+                    "guard_name" => "api",
+                ];
+                $role  = Role::create($insertableData);
+
+                $permissions = $defaultRole->permissions;
+                foreach ($permissions as $permission) {
+                    if (!$role->hasPermissionTo($permission)) {
+                        $role->givePermissionTo($permission);
+                    }
                 }
             }
+
+
+
+            // $request_data["work_shift"]["business_id"] = $user->business_id;
+            // $request_data["work_shift"]["is_active"] = true;
+            // $request_data["work_shift"]["created_by"] = $user->id;
+            // $request_data["work_shift"]["is_business_default"] = 1;
+
+            // $request_data["work_shift"]["attendances_count"] = 0;
+            // $work_shift =  WorkShift::create($request_data["work_shift"]);
+
+
+
+            // $work_shift->details()->createMany($request_data["work_shift"]['details']);
+
+
+
+
+
+            // end business info ##############
+
+
+            //  if($request_data['user']['send_password']) {
+            if (env("SEND_EMAIL") == true) {
+                Mail::to($request_data['user']['email'])->send(new SendPassword($user, $password));
+            }
+            if (env("SELF_DB") == true) {
+                Artisan::call(('generate:database ' . $business->id));
+            }
+            Log::info("Business created");
+
+            // }
+
+
+            return response()->json([
+                "user" => $user,
+                "business" => $business
+            ], 201);
+        } catch (Exception $e) {
+
+
+            return $this->sendError($e, 500, $request);
         }
-
-
-
-        // $request_data["work_shift"]["business_id"] = $user->business_id;
-        // $request_data["work_shift"]["is_active"] = true;
-        // $request_data["work_shift"]["created_by"] = $user->id;
-        // $request_data["work_shift"]["is_business_default"] = 1;
-
-        // $request_data["work_shift"]["attendances_count"] = 0;
-        // $work_shift =  WorkShift::create($request_data["work_shift"]);
-
-
-
-        // $work_shift->details()->createMany($request_data["work_shift"]['details']);
-
-
-
-
-
-  // end business info ##############
-
-
-    //  if($request_data['user']['send_password']) {
-        if(env("SEND_EMAIL") == true) {
-            Mail::to($request_data['user']['email'])->send(new SendPassword($user,$password));
-        }
-        if(env("SELF_DB") == true) {
-        Artisan::call(('generate:database '. $business->id));
-        }
-        Log::info("Business created");
-
-    // }
-
-
-        return response()->json([
-            "user" => $user,
-            "business" => $business
-        ], 201);
-
-        } catch(Exception $e){
-
-
-        return $this->sendError($e,500,$request);
-        }
-
     }
 
 
 
-     /**
-        *
+    /**
+     *
      * @OA\Put(
      *      path="/v1.0/businesses",
      *      operationId="updateBusiness",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *      summary="This method is to update user with business",
@@ -1100,206 +1088,203 @@ class BusinessController extends Controller
      *      )
      *     )
      */
-    public function updateBusiness(BusinessUpdateRequest $request) {
+    public function updateBusiness(BusinessUpdateRequest $request)
+    {
 
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-     return  DB::transaction(function ()use (&$request) {
-        if(!$request->user()->hasPermissionTo('business_update')){
-            return response()->json([
-               "message" => "You can not perform this action"
-            ],401);
-       }
-       if (!$this->businessOwnerCheck($request["business"]["id"])) {
-        return response()->json([
-            "message" => "you are not the owner of the business or the requested business does not exist."
-        ], 401);
-    }
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            return  DB::transaction(function () use (&$request) {
+                if (!$request->user()->hasPermissionTo('business_update')) {
+                    return response()->json([
+                        "message" => "You can not perform this action"
+                    ], 401);
+                }
+                if (!$this->businessOwnerCheck($request["business"]["id"])) {
+                    return response()->json([
+                        "message" => "you are not the owner of the business or the requested business does not exist."
+                    ], 401);
+                }
 
-       $request_data = $request->validated();
-    //    user email check
-       $userPrev = User::where([
-        "id" => $request_data["user"]["id"]
-       ]);
-       if(!$request->user()->hasRole('superadmin')) {
-        $userPrev  = $userPrev->where(function ($query) {
-          return  $query->where('created_by', auth()->user()->id)
-                  ->orWhere('id', auth()->user()->id);
-        });
-    }
-    $userPrev = $userPrev->first();
-     if(!$userPrev) {
-        $this->storeError(
-            "no data found"
-            ,
-            404,
-            "front end error",
-            "front end error"
-           );
-            return response()->json([
-               "message" => "no user found with this id"
-            ],404);
-     }
-
-
+                $request_data = $request->validated();
+                //    user email check
+                $userPrev = User::where([
+                    "id" => $request_data["user"]["id"]
+                ]);
+                if (!$request->user()->hasRole('superadmin')) {
+                    $userPrev  = $userPrev->where(function ($query) {
+                        return  $query->where('created_by', auth()->user()->id)
+                            ->orWhere('id', auth()->user()->id);
+                    });
+                }
+                $userPrev = $userPrev->first();
+                if (!$userPrev) {
+                    $this->storeError(
+                        "no data found",
+                        404,
+                        "front end error",
+                        "front end error"
+                    );
+                    return response()->json([
+                        "message" => "no user found with this id"
+                    ], 404);
+                }
 
 
-    //  $businessPrev = Business::where([
-    //     "id" => $request_data["business"]["id"]
-    //  ]);
 
-    // $businessPrev = $businessPrev->first();
-    // if(!$businessPrev) {
-    //     return response()->json([
-    //        "message" => "no business found with this id"
-    //     ],404);
-    //   }
 
-        if(!empty($request_data['user']['password'])) {
-            $request_data['user']['password'] = Hash::make($request_data['user']['password']);
-        } else {
-            unset($request_data['user']['password']);
+                //  $businessPrev = Business::where([
+                //     "id" => $request_data["business"]["id"]
+                //  ]);
+
+                // $businessPrev = $businessPrev->first();
+                // if(!$businessPrev) {
+                //     return response()->json([
+                //        "message" => "no business found with this id"
+                //     ],404);
+                //   }
+
+                if (!empty($request_data['user']['password'])) {
+                    $request_data['user']['password'] = Hash::make($request_data['user']['password']);
+                } else {
+                    unset($request_data['user']['password']);
+                }
+                $request_data['user']['is_active'] = true;
+                $request_data['user']['remember_token'] = Str::random(10);
+                $request_data['user']['address_line_1'] = $request_data['business']['address_line_1'] ?? null;
+                $request_data['user']['address_line_2'] = $request_data['business']['address_line_2'] ?? null;
+
+                $request_data['user']['country'] = $request_data['business']['country'] ?? null;
+                $request_data['user']['city'] = $request_data['business']['city'] ?? null;
+                $request_data['user']['postcode'] = $request_data['business']['postcode'] ?? null;
+                $request_data['user']['lat'] = $request_data['business']['lat'] ?? null;
+                $request_data['user']['long'] = $request_data['business']['long'] ?? null;
+                $user  =  tap(User::where([
+                    "id" => $request_data['user']["id"]
+                ]))->update(
+                    collect($request_data['user'])->only([
+                        'first_Name',
+                        'middle_Name',
+                        'last_Name',
+                        'phone',
+                        'image',
+                        'address_line_1',
+                        'address_line_2',
+                        'country',
+                        'city',
+                        'postcode',
+                        'email',
+                        'password',
+                        "lat",
+                        "long",
+                        "gender"
+                    ])->toArray()
+                )
+                    // ->with("somthing")
+
+                    ->first();
+                if (!$user) {
+                    return response()->json([
+                        "message" => "something went wrong."
+                    ], 500);
+                }
+
+                // $user->syncRoles(["business_admin"]);
+
+
+
+                //  business info ##############
+                // $request_data['business']['status'] = "pending";
+
+                $name_changed = 0;
+
+                $business = Business::where(["id" => $request_data['business']["id"]])
+                    ->first();
+
+                if (!$business) {
+                    return response()->json([
+                        "message" => "Business not found"
+                    ], 404);
+                }
+
+                if ($business->name != $request_data['business']["name"]) {
+                    $this->renameOrCreateFolder(str_replace(' ', '_', $business->name), str_replace(' ', '_', $request_data['business']["name"]));
+                }
+
+
+
+                $business->fill(collect($request_data['business'])->only([
+                    "url",
+                    "name",
+                    "about",
+                    "web_page",
+                    "phone",
+                    "email",
+                    "additional_information",
+                    "address_line_1",
+                    "address_line_2",
+                    "lat",
+                    "long",
+                    "country",
+                    "city",
+                    "postcode",
+                    "logo",
+                    "image",
+                    "status",
+                    "background_image",
+                    "currency",
+                    "letter_template_header",
+                    "letter_template_footer"
+                ])->toArray());
+
+                $business->save();
+
+
+
+                // end business info ##############
+
+                if (!empty($request_data["times"])) {
+
+                    $timesArray = collect($request_data["times"])->unique("day");
+                    BusinessTime::where([
+                        "business_id" => $business->id
+                    ])
+                        ->delete();
+
+                    $timesArray = collect($request_data["times"])->unique("day");
+                    foreach ($timesArray as $business_time) {
+                        BusinessTime::create([
+                            "business_id" => $business->id,
+                            "day" => $business_time["day"],
+                            "start_at" => $business_time["start_at"],
+                            "end_at" => $business_time["end_at"],
+                            "is_weekend" => $business_time["is_weekend"],
+                        ]);
+                    }
+                }
+
+
+
+
+                return response([
+                    "user" => $user,
+                    "business" => $business
+                ], 201);
+            });
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
         }
-        $request_data['user']['is_active'] = true;
-        $request_data['user']['remember_token'] = Str::random(10);
-        $request_data['user']['address_line_1'] = $request_data['business']['address_line_1']?? null;
-        $request_data['user']['address_line_2'] = $request_data['business']['address_line_2'] ?? null;
-
-        $request_data['user']['country'] = $request_data['business']['country'] ?? null;
-        $request_data['user']['city'] = $request_data['business']['city'] ?? null;
-        $request_data['user']['postcode'] = $request_data['business']['postcode'] ?? null;
-        $request_data['user']['lat'] = $request_data['business']['lat'] ?? null;
-        $request_data['user']['long'] = $request_data['business']['long'] ?? null;
-        $user  =  tap(User::where([
-            "id" => $request_data['user']["id"]
-            ]))->update(collect($request_data['user'])->only([
-            'first_Name',
-            'middle_Name',
-            'last_Name',
-            'phone',
-            'image',
-            'address_line_1',
-            'address_line_2',
-            'country',
-            'city',
-            'postcode',
-            'email',
-            'password',
-            "lat",
-            "long",
-            "gender"
-        ])->toArray()
-        )
-            // ->with("somthing")
-
-            ->first();
-            if(!$user) {
-                return response()->json([
-                    "message" => "something went wrong."
-                    ],500);
-
-        }
-
-        // $user->syncRoles(["business_admin"]);
-
-
-
-        //  business info ##############
-        // $request_data['business']['status'] = "pending";
-
-        $name_changed = 0;
-
-        $business = Business::where(["id"=>$request_data['business']["id"]])
-        ->first();
-
-        if (!$business) {
-            return response()->json([
-                "message" => "Business not found"
-            ], 404);
-        }
-
-        if($business->name != $request_data['business']["name"]) {
-            $this->renameOrCreateFolder(str_replace(' ', '_', $business->name), str_replace(' ', '_', $request_data['business']["name"]));
-        }
-
-
-
-        $business->fill(collect($request_data['business'])->only([
-            "url",
-            "name",
-            "about",
-            "web_page",
-            "phone",
-            "email",
-            "additional_information",
-            "address_line_1",
-            "address_line_2",
-            "lat",
-            "long",
-            "country",
-            "city",
-            "postcode",
-            "logo",
-            "image",
-            "status",
-            "background_image",
-            "currency",
-            "letter_template_header",
-            "letter_template_footer"
-        ])->toArray());
-
-        $business->save();
-
-
-
-  // end business info ##############
-
-  if(!empty($request_data["times"])) {
-
-    $timesArray = collect($request_data["times"])->unique("day");
-    BusinessTime::where([
-        "business_id" => $business->id
-       ])
-       ->delete();
-
-       $timesArray = collect($request_data["times"])->unique("day");
-       foreach($timesArray as $business_time) {
-        BusinessTime::create([
-            "business_id" => $business->id,
-            "day"=> $business_time["day"],
-            "start_at"=> $business_time["start_at"],
-            "end_at"=> $business_time["end_at"],
-            "is_weekend"=> $business_time["is_weekend"],
-        ]);
-       }
-
-
-  }
-
-
-
-
-        return response([
-            "user" => $user,
-            "business" => $business
-        ], 201);
-        });
-        } catch(Exception $e){
-
-        return $this->sendError($e,500,$request);
-        }
-
     }
 
 
 
-     /**
-        *
+    /**
+     *
      * @OA\Put(
      *      path="/v1.0/businesses/toggle-active",
      *      operationId="toggleActiveBusiness",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *      summary="This method is to toggle business",
@@ -1347,24 +1332,24 @@ class BusinessController extends Controller
      *     )
      */
 
-     public function toggleActiveBusiness(GetIdRequest $request)
-     {
+    public function toggleActiveBusiness(GetIdRequest $request)
+    {
 
-         try{
-             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-             if(!$request->user()->hasPermissionTo('business_update')){
-                 return response()->json([
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('business_update')) {
+                return response()->json([
                     "message" => "You can not perform this action"
-                 ],401);
+                ], 401);
             }
             $request_data = $request->validated();
 
             $businessQuery  = Business::where(["id" => $request_data["id"]]);
-            if(!auth()->user()->hasRole('superadmin')) {
+            if (!auth()->user()->hasRole('superadmin')) {
                 $businessQuery = $businessQuery->where(function ($query) {
-                return   $query->where('id', auth()->user()->business_id)
-                    ->orWhere('created_by', auth()->user()->id)
-                    ->orWhere('owner_id', auth()->user()->id);
+                    return   $query->where('id', auth()->user()->business_id)
+                        ->orWhere('created_by', auth()->user()->id)
+                        ->orWhere('owner_id', auth()->user()->id);
                 });
             }
 
@@ -1373,12 +1358,11 @@ class BusinessController extends Controller
 
             if (!$business) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no business found"
                 ], 404);
@@ -1390,25 +1374,23 @@ class BusinessController extends Controller
             ]);
 
             return response()->json(['message' => 'business status updated successfully'], 200);
-
-
-         } catch(Exception $e){
-             error_log($e->getMessage());
-         return $this->sendError($e,500,$request);
-         }
-     }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
 
 
 
 
-      /**
-        *
+    /**
+     *
      * @OA\Put(
      *      path="/v1.0/businesses/separate",
      *      operationId="updateBusinessSeparate",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *      summary="This method is to update business",
@@ -1484,231 +1466,231 @@ class BusinessController extends Controller
      *      )
      *     )
      */
-    public function updateBusinessSeparate(BusinessUpdateSeparateRequest $request) {
+    public function updateBusinessSeparate(BusinessUpdateSeparateRequest $request)
+    {
 
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-     return  DB::transaction(function ()use (&$request) {
-        if(!$request->user()->hasPermissionTo('business_update')){
-            return response()->json([
-               "message" => "You can not perform this action"
-            ],401);
-       }
-       if (!$this->businessOwnerCheck($request["business"]["id"])) {
-        return response()->json([
-            "message" => "you are not the owner of the business or the requested business does not exist."
-        ], 401);
-    }
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            return  DB::transaction(function () use (&$request) {
+                if (!$request->user()->hasPermissionTo('business_update')) {
+                    return response()->json([
+                        "message" => "You can not perform this action"
+                    ], 401);
+                }
+                if (!$this->businessOwnerCheck($request["business"]["id"])) {
+                    return response()->json([
+                        "message" => "you are not the owner of the business or the requested business does not exist."
+                    ], 401);
+                }
 
-       $request_data = $request->validated();
-
-
-  //  business info ##############
-        // $request_data['business']['status'] = "pending";
-
-        $business  =  tap(Business::where([
-            "id" => $request_data['business']["id"]
-            ]))->update(collect($request_data['business'])->only([
-                "name",
-                "about",
-                "web_page",
-                "phone",
-                "email",
-                "additional_information",
-                "address_line_1",
-                "address_line_2",
-                "lat",
-                "long",
-                "country",
-                "city",
-                "postcode",
-                "logo",
-                "image",
-                "background_image",
-                "status",
-                // "is_active",
+                $request_data = $request->validated();
 
 
+                //  business info ##############
+                // $request_data['business']['status'] = "pending";
 
-             "currency",
+                $business  =  tap(Business::where([
+                    "id" => $request_data['business']["id"]
+                ]))->update(
+                    collect($request_data['business'])->only([
+                        "name",
+                        "about",
+                        "web_page",
+                        "phone",
+                        "email",
+                        "additional_information",
+                        "address_line_1",
+                        "address_line_2",
+                        "lat",
+                        "long",
+                        "country",
+                        "city",
+                        "postcode",
+                        "logo",
+                        "image",
+                        "background_image",
+                        "status",
+                        // "is_active",
 
-        ])->toArray()
-        )
-            // ->with("somthing")
-
-            ->first();
-            if(!$business) {
-                $this->storeError(
-                    "no data found"
-                    ,
-                    404,
-                    "front end error",
-                    "front end error"
-                   );
-                return response()->json([
-                    "massage" => "no business found"
-                ],404);
-
-            }
 
 
+                        "currency",
+
+                    ])->toArray()
+                )
+                    // ->with("somthing")
+
+                    ->first();
+                if (!$business) {
+                    $this->storeError(
+                        "no data found",
+                        404,
+                        "front end error",
+                        "front end error"
+                    );
+                    return response()->json([
+                        "massage" => "no business found"
+                    ], 404);
+                }
 
 
 
 
 
 
-        return response([
-            "business" => $business
-        ], 201);
-        });
-        } catch(Exception $e){
 
-        return $this->sendError($e,500,$request);
+
+                return response([
+                    "business" => $business
+                ], 201);
+            });
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
         }
-
     }
-    public function query_filters($query) {
-          return   $query->when(!request()->user()->hasRole('superadmin'), function ($query) {
+    public function query_filters($query)
+    {
+        return   $query->when(!request()->user()->hasRole('superadmin'), function ($query) {
             return   $query->where(function ($query) {
                 return   $query->where('id', auth()->user()->business_id)
                     ->orWhere('created_by', auth()->user()->id)
                     ->orWhere('owner_id', auth()->user()->id);
+            });
+        })
+            ->when(!empty(request()->search_key), function ($query) {
+                $term = request()->search_key;
+                return $query->where(function ($query) use ($term) {
+                    $query->where("name", "like", "%" . $term . "%")
+                        ->orWhere("phone", "like", "%" . $term . "%")
+                        ->orWhere("email", "like", "%" . $term . "%")
+                        ->orWhere("city", "like", "%" . $term . "%")
+                        ->orWhere("postcode", "like", "%" . $term . "%");
                 });
-           })
-           ->when(!empty(request()->search_key), function ($query) {
-               $term = request()->search_key;
-               return $query->where(function ($query) use ($term) {
-                   $query->where("name", "like", "%" . $term . "%")
-                       ->orWhere("phone", "like", "%" . $term . "%")
-                       ->orWhere("email", "like", "%" . $term . "%")
-                       ->orWhere("city", "like", "%" . $term . "%")
-                       ->orWhere("postcode", "like", "%" . $term . "%");
-               });
-           })
-           ->when(!empty(request()->start_date), function ($query) {
-               return $query->where('created_at', ">=", request()->start_date);
-           })
-           ->when(!empty(request()->end_date), function ($query) {
-               return $query->where('created_at', "<=", (request()->end_date . ' 23:59:59'));
-           })
-           ->when(!empty(request()->start_lat), function ($query) {
-               return $query->where('lat', ">=", request()->start_lat);
-           })
-           ->when(!empty(request()->end_lat), function ($query)  {
-               return $query->where('lat', "<=", request()->end_lat);
-           })
-           ->when(!empty(request()->start_long), function ($query)  {
-               return $query->where('long', ">=", request()->start_long);
-           })
-           ->when(!empty(request()->end_long), function ($query)  {
-               return $query->where('long', "<=", request()->end_long);
-           })
-           ->when(!empty(request()->address), function ($query)  {
-               $term = request()->address;
-               return $query->where(function ($query) use ($term) {
-                   $query->where("country", "like", "%" . $term . "%")
-                       ->orWhere("city", "like", "%" . $term . "%");
-               });
-           })
-           ->when(!empty(request()->country_code), function ($query)  {
-               return $query->orWhere("country", "like", "%" . request()->country_code . "%");
-           })
-           ->when(!empty(request()->city), function ($query)  {
-               return $query->orWhere("city", "like", "%" . request()->city . "%");
-           });
-     }
-   /**
-        *
+            })
+            ->when(!empty(request()->start_date), function ($query) {
+                return $query->where('created_at', ">=", request()->start_date);
+            })
+            ->when(!empty(request()->end_date), function ($query) {
+                return $query->where('created_at', "<=", (request()->end_date . ' 23:59:59'));
+            })
+            ->when(!empty(request()->start_lat), function ($query) {
+                return $query->where('lat', ">=", request()->start_lat);
+            })
+            ->when(!empty(request()->end_lat), function ($query) {
+                return $query->where('lat', "<=", request()->end_lat);
+            })
+            ->when(!empty(request()->start_long), function ($query) {
+                return $query->where('long', ">=", request()->start_long);
+            })
+            ->when(!empty(request()->end_long), function ($query) {
+                return $query->where('long', "<=", request()->end_long);
+            })
+            ->when(!empty(request()->address), function ($query) {
+                $term = request()->address;
+                return $query->where(function ($query) use ($term) {
+                    $query->where("country", "like", "%" . $term . "%")
+                        ->orWhere("city", "like", "%" . $term . "%");
+                });
+            })
+            ->when(!empty(request()->country_code), function ($query) {
+                return $query->orWhere("country", "like", "%" . request()->country_code . "%");
+            })
+            ->when(!empty(request()->city), function ($query) {
+                return $query->orWhere("city", "like", "%" . request()->city . "%");
+            });
+    }
+    /**
+     *
      * @OA\Get(
      *      path="/v1.0/businesses",
      *      operationId="getBusinesses",
      *      tags={"business_management"},
      * *  @OA\Parameter(
-* name="start_date",
-* in="query",
-* description="start_date",
-* required=true,
-* example="2019-06-29"
-* ),
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
      * *  @OA\Parameter(
-* name="end_date",
-* in="query",
-* description="end_date",
-* required=true,
-* example="2019-06-29"
-* ),
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
      * *  @OA\Parameter(
-* name="search_key",
-* in="query",
-* description="search_key",
-* required=true,
-* example="search_key"
-* ),
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
      * *  @OA\Parameter(
-* name="country_code",
-* in="query",
-* description="country_code",
-* required=true,
-* example="country_code"
-* ),
-    * *  @OA\Parameter(
-* name="address",
-* in="query",
-* description="address",
-* required=true,
-* example="address"
-* ),
+     * name="country_code",
+     * in="query",
+     * description="country_code",
+     * required=true,
+     * example="country_code"
+     * ),
      * *  @OA\Parameter(
-* name="city",
-* in="query",
-* description="city",
-* required=true,
-* example="city"
-* ),
-    * *  @OA\Parameter(
-* name="start_lat",
-* in="query",
-* description="start_lat",
-* required=true,
-* example="3"
-* ),
+     * name="address",
+     * in="query",
+     * description="address",
+     * required=true,
+     * example="address"
+     * ),
      * *  @OA\Parameter(
-* name="end_lat",
-* in="query",
-* description="end_lat",
-* required=true,
-* example="2"
-* ),
+     * name="city",
+     * in="query",
+     * description="city",
+     * required=true,
+     * example="city"
+     * ),
      * *  @OA\Parameter(
-* name="start_long",
-* in="query",
-* description="start_long",
-* required=true,
-* example="1"
-* ),
+     * name="start_lat",
+     * in="query",
+     * description="start_lat",
+     * required=true,
+     * example="3"
+     * ),
      * *  @OA\Parameter(
-* name="end_long",
-* in="query",
-* description="end_long",
-* required=true,
-* example="4"
-* ),
+     * name="end_lat",
+     * in="query",
+     * description="end_lat",
+     * required=true,
+     * example="2"
+     * ),
      * *  @OA\Parameter(
-* name="per_page",
-* in="query",
-* description="per_page",
-* required=true,
-* example="10"
-* ),
-   * *  @OA\Parameter(
-  * name="order_by",
-  * in="query",
-  * description="order_by",
-  * required=true,
-  * example="ASC"
-  * ),
-    *       security={
+     * name="start_long",
+     * in="query",
+     * description="start_long",
+     * required=true,
+     * example="1"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_long",
+     * in="query",
+     * description="end_long",
+     * required=true,
+     * example="4"
+     * ),
+     * *  @OA\Parameter(
+     * name="per_page",
+     * in="query",
+     * description="per_page",
+     * required=true,
+     * example="10"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *
@@ -1750,120 +1732,121 @@ class BusinessController extends Controller
      *     )
      */
 
-     public function getBusinesses(Request $request) {
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if(!$request->user()->hasPermissionTo('business_view')){
+    public function getBusinesses(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('business_view')) {
                 return response()->json([
-                   "message" => "You can not perform this action"
-                ],401);
-           }
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
 
-           $query = Business::with("owner");
-           $query = $this->query_filters($query);
-           $businesses = $this->retrieveData($query, "businesses.id");
+            $query = Business::with("owner");
+            $query = $this->query_filters($query);
+            $businesses = $this->retrieveData($query, "id","businesses");
 
 
-       return response()->json($businesses, 200);
             return response()->json($businesses, 200);
-        } catch(Exception $e){
+            return response()->json($businesses, 200);
+        } catch (Exception $e) {
 
-        return $this->sendError($e,500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
 
     /**
-        *
+     *
      * @OA\Get(
      *      path="/v2.0/businesses",
      *      operationId="getBusinessesV2",
      *      tags={"business_management"},
      * *  @OA\Parameter(
-* name="start_date",
-* in="query",
-* description="start_date",
-* required=true,
-* example="2019-06-29"
-* ),
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
      * *  @OA\Parameter(
-* name="end_date",
-* in="query",
-* description="end_date",
-* required=true,
-* example="2019-06-29"
-* ),
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
      * *  @OA\Parameter(
-* name="search_key",
-* in="query",
-* description="search_key",
-* required=true,
-* example="search_key"
-* ),
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
      * *  @OA\Parameter(
-* name="country_code",
-* in="query",
-* description="country_code",
-* required=true,
-* example="country_code"
-* ),
-    * *  @OA\Parameter(
-* name="address",
-* in="query",
-* description="address",
-* required=true,
-* example="address"
-* ),
+     * name="country_code",
+     * in="query",
+     * description="country_code",
+     * required=true,
+     * example="country_code"
+     * ),
      * *  @OA\Parameter(
-* name="city",
-* in="query",
-* description="city",
-* required=true,
-* example="city"
-* ),
-    * *  @OA\Parameter(
-* name="start_lat",
-* in="query",
-* description="start_lat",
-* required=true,
-* example="3"
-* ),
+     * name="address",
+     * in="query",
+     * description="address",
+     * required=true,
+     * example="address"
+     * ),
      * *  @OA\Parameter(
-* name="end_lat",
-* in="query",
-* description="end_lat",
-* required=true,
-* example="2"
-* ),
+     * name="city",
+     * in="query",
+     * description="city",
+     * required=true,
+     * example="city"
+     * ),
      * *  @OA\Parameter(
-* name="start_long",
-* in="query",
-* description="start_long",
-* required=true,
-* example="1"
-* ),
+     * name="start_lat",
+     * in="query",
+     * description="start_lat",
+     * required=true,
+     * example="3"
+     * ),
      * *  @OA\Parameter(
-* name="end_long",
-* in="query",
-* description="end_long",
-* required=true,
-* example="4"
-* ),
+     * name="end_lat",
+     * in="query",
+     * description="end_lat",
+     * required=true,
+     * example="2"
+     * ),
      * *  @OA\Parameter(
-* name="per_page",
-* in="query",
-* description="per_page",
-* required=true,
-* example="10"
-* ),
-   * *  @OA\Parameter(
-  * name="order_by",
-  * in="query",
-  * description="order_by",
-  * required=true,
-  * example="ASC"
-  * ),
-    *       security={
+     * name="start_long",
+     * in="query",
+     * description="start_long",
+     * required=true,
+     * example="1"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_long",
+     * in="query",
+     * description="end_long",
+     * required=true,
+     * example="4"
+     * ),
+     * *  @OA\Parameter(
+     * name="per_page",
+     * in="query",
+     * description="per_page",
+     * required=true,
+     * example="10"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *
@@ -1905,73 +1888,73 @@ class BusinessController extends Controller
      *     )
      */
 
-    public function getBusinessesV2(Request $request) {
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if(!$request->user()->hasPermissionTo('business_view')){
+    public function getBusinessesV2(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('business_view')) {
                 return response()->json([
-                   "message" => "You can not perform this action"
-                ],401);
-           }
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
-           $query = Business::with(
+            $query = Business::with(
 
-            [
-                "owner" => function($query) {
-                   $query->select(
-                    "users.id",
-                    'users.first_Name',
-                    'users.last_Name',
-                    'users.middle_Name',
-                    'users.phone',
-                    'users.image',
-                   );
-                }
+                [
+                    "owner" => function ($query) {
+                        $query->select(
+                            "users.id",
+                            'users.first_Name',
+                            'users.last_Name',
+                            'users.middle_Name',
+                            'users.phone',
+                            'users.image',
+                        );
+                    }
 
-            ]
+                ]
 
-        );
-           $query = $this->query_filters($query)
-           ->select(
-            "businesses.name",
-            "businesses.url",
-            "businesses.web_page",
-            "businesses.phone",
-            "businesses.email",
-            "businesses.address_line_1",
-            "businesses.lat",
-            "businesses.long",
-            "businesses.country",
-            "businesses.city",
-            "businesses.postcode",
-            "businesses.status",
-            "businesses.is_active",
-            "businesses.owner_id",
-            "businesses.created_by"
-           )
-           ;
-           $businesses = $this->retrieveData($query, "businesses.id");
+            );
+            $query = $this->query_filters($query)
+                ->select(
+                    "businesses.id",
+                    "businesses.name",
+                    "businesses.url",
+                    "businesses.web_page",
+                    "businesses.phone",
+                    "businesses.email",
+                    "businesses.address_line_1",
+                    "businesses.lat",
+                    "businesses.long",
+                    "businesses.country",
+                    "businesses.city",
+                    "businesses.postcode",
+                    "businesses.status",
+                    "businesses.is_active",
+                    "businesses.owner_id",
+                    "businesses.created_by"
+                );
+            $businesses = $this->retrieveData($query, "id","businesses");
 
-       return response()->json($businesses, 200);
             return response()->json($businesses, 200);
-        } catch(Exception $e){
+            return response()->json($businesses, 200);
+        } catch (Exception $e) {
 
-        return $this->sendError($e,500,$request);
+            return $this->sendError($e, 500, $request);
         }
-
     }
 
 
 
 
 
-     /**
-        *
+    /**
+     *
      * @OA\Get(
      *      path="/v1.0/businesses/{id}",
      *      operationId="getBusinessById",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *              @OA\Parameter(
@@ -2019,20 +2002,21 @@ class BusinessController extends Controller
      *     )
      */
 
-     public function getBusinessById($id,Request $request) {
+    public function getBusinessById($id, Request $request)
+    {
 
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if(!$request->user()->hasPermissionTo('business_view')){
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('business_view')) {
                 return response()->json([
-                   "message" => "You can not perform this action"
-                ],401);
-           }
-           if (!$this->businessOwnerCheck($id)) {
-            return response()->json([
-                "message" => "you are not the owner of the business or the requested business does not exist."
-            ], 401);
-        }
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
+            if (!$this->businessOwnerCheck($id)) {
+                return response()->json([
+                    "message" => "you are not the owner of the business or the requested business does not exist."
+                ], 401);
+            }
 
             $business = Business::with(
                 "owner",
@@ -2042,23 +2026,22 @@ class BusinessController extends Controller
             )->where([
                 "id" => $id
             ])
-            ->first();
+                ->first();
 
-        return response()->json($business, 200);
-        } catch(Exception $e){
+            return response()->json($business, 200);
+        } catch (Exception $e) {
 
-        return $this->sendError($e,500,$request);
-
+            return $this->sendError($e, 500, $request);
         }
     }
 
-         /**
-        *
+    /**
+     *
      * @OA\Get(
      *      path="/v1.0/client/businesses/{id}",
      *      operationId="getBusinessByIdClient",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *              @OA\Parameter(
@@ -2106,36 +2089,36 @@ class BusinessController extends Controller
      *     )
      */
 
-     public function getBusinessByIdClient($id,Request $request) {
+    public function getBusinessByIdClient($id, Request $request)
+    {
 
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
 
             $business = Business::where([
                 "id" => $id
             ])
-            ->select("id","name","logo","web_page","email")
-            ->first();
+                ->select("id", "name", "logo", "web_page", "email")
+                ->first();
 
 
 
 
-        return response()->json($business, 200);
-        } catch(Exception $e){
+            return response()->json($business, 200);
+        } catch (Exception $e) {
 
-        return $this->sendError($e,500,$request);
-
+            return $this->sendError($e, 500, $request);
         }
     }
 
-     /**
-        *
+    /**
+     *
      * @OA\Get(
      *      path="/v1.0/client/businesses-get-by-url/{url}",
      *      operationId="getByUrlClient",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *              @OA\Parameter(
@@ -2183,36 +2166,35 @@ class BusinessController extends Controller
      *     )
      */
 
-    public function getByUrlClient($url,Request $request) {
+    public function getByUrlClient($url, Request $request)
+    {
 
-        try{
+        try {
 
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
 
 
             $business = Business::where([
                 "url" => $url
             ])
-            ->select("id","name","logo")
-            ->first();
+                ->select("id", "name", "logo")
+                ->first();
 
-        return response()->json($business, 200);
+            return response()->json($business, 200);
+        } catch (Exception $e) {
 
-        } catch(Exception $e){
-
-        return $this->sendError($e,500,$request);
+            return $this->sendError($e, 500, $request);
         }
-
     }
 
-/**
-        *
+    /**
+     *
      * @OA\Delete(
      *      path="/v1.0/businesses/{ids}",
      *      operationId="deleteBusinessesByIds",
      *      tags={"business_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *              @OA\Parameter(
@@ -2260,62 +2242,61 @@ class BusinessController extends Controller
      *     )
      */
 
-    public function deleteBusinessesByIds(Request $request,$ids) {
+    public function deleteBusinessesByIds(Request $request, $ids)
+    {
 
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if(!$request->user()->hasPermissionTo('business_delete')){
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('business_delete')) {
                 return response()->json([
-                   "message" => "You can not perform this action"
-                ],401);
-           }
-
-    $business = Business::when(!$request->user()->hasRole('superadmin'), function ($query) {
-            return $query->where(function ($query) {
-                return $query->where('id', auth()->user()->business_id)
-                    ->orWhere('created_by', auth()->user()->id)
-                    ->orWhere('owner_id', auth()->user()->id);
-            });
-        })
-        ->where([
-            "id" => $ids
-        ])
-        ->first();
-
-        if (!$business) {
-            $this->storeError("Business not found", 404, "Front-end error", "Front-end error");
-            return response()->json([
-                "message" => "The specified business does not exist."
-            ], 404);
-        }
-
-
-        $folderName = str_replace(' ', '_', $business->name);
-        $folderPath = public_path($folderName);
-
-        // Delete associated folder if it exists
-        if (File::exists($folderPath)) {
-            if (File::deleteDirectory($folderPath)) {
-                // Log or provide a success message for folder deletion
-                Log::info("Folder {$folderName} successfully deleted.");
-            } else {
-                // Handle the case where the folder couldn't be deleted
-                Log::warning("Failed to delete folder {$folderName}.");
+                    "message" => "You can not perform this action"
+                ], 401);
             }
+
+            $business = Business::when(!$request->user()->hasRole('superadmin'), function ($query) {
+                return $query->where(function ($query) {
+                    return $query->where('id', auth()->user()->business_id)
+                        ->orWhere('created_by', auth()->user()->id)
+                        ->orWhere('owner_id', auth()->user()->id);
+                });
+            })
+                ->where([
+                    "id" => $ids
+                ])
+                ->first();
+
+            if (!$business) {
+                $this->storeError("Business not found", 404, "Front-end error", "Front-end error");
+                return response()->json([
+                    "message" => "The specified business does not exist."
+                ], 404);
+            }
+
+
+            $folderName = str_replace(' ', '_', $business->name);
+            $folderPath = public_path($folderName);
+
+            // Delete associated folder if it exists
+            if (File::exists($folderPath)) {
+                if (File::deleteDirectory($folderPath)) {
+                    // Log or provide a success message for folder deletion
+                    Log::info("Folder {$folderName} successfully deleted.");
+                } else {
+                    // Handle the case where the folder couldn't be deleted
+                    Log::warning("Failed to delete folder {$folderName}.");
+                }
+            }
+
+
+            $business->delete();
+
+            User::where('business_id', $ids)->delete();
+
+            return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $ids], 200);
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
         }
-
-
-        $business->delete();
-
-        User::where('business_id', $ids)->delete();
-
-           return response()->json(["message" => "data deleted sussfully","deleted_ids" => $ids], 200);
-
-        } catch(Exception $e){
-
-        return $this->sendError($e,500,$request);
-        }
-
     }
 
 
@@ -2326,13 +2307,13 @@ class BusinessController extends Controller
 
 
     /**
-        *
+     *
      * @OA\Get(
      *      path="/v1.0/businesses/by-business-owner/all",
      *      operationId="getAllBusinessesByBusinessOwner",
      *      tags={"business_management"},
 
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
 
@@ -2374,15 +2355,16 @@ class BusinessController extends Controller
      *     )
      */
 
-    public function getAllBusinessesByBusinessOwner(Request $request) {
+    public function getAllBusinessesByBusinessOwner(Request $request)
+    {
 
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if(!$request->user()->hasRole('business_admin')){
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasRole('business_admin')) {
                 return response()->json([
-                   "message" => "You can not perform this action"
-                ],401);
-           }
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
             $businessesQuery = Business::where([
                 "owner_id" => $request->user()->id
@@ -2392,12 +2374,9 @@ class BusinessController extends Controller
 
             $businesses = $businessesQuery->orderByDesc("id")->get();
             return response()->json($businesses, 200);
-        } catch(Exception $e){
+        } catch (Exception $e) {
 
-        return $this->sendError($e,500,$request);
+            return $this->sendError($e, 500, $request);
         }
-
     }
-
-
 }

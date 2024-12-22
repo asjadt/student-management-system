@@ -24,7 +24,7 @@ class ProductController extends Controller
   * @OA\Post(
   *      path="/v1.0/products",
   *      operationId="createProduct",
-  *      tags={"shop_section.product_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -192,7 +192,7 @@ class ProductController extends Controller
   * @OA\Put(
   *      path="/v1.0/products",
   *      operationId="updateProduct",
-  *      tags={"shop_section.product_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -436,7 +436,7 @@ class ProductController extends Controller
   * @OA\Patch(
   *      path="/v1.0/products/link-product-to-shop",
   *      operationId="linkProductToShop",
-  *      tags={"shop_section.product_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -612,7 +612,7 @@ class ProductController extends Controller
   * @OA\Get(
   *      path="/v1.0/products/{perPage}",
   *      operationId="getProducts",
-  *      tags={"shop_section.product_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -740,7 +740,7 @@ class ProductController extends Controller
   * @OA\Get(
   *      path="/v1.0/products/single/get/{id}",
   *      operationId="getProductById",
-  *      tags={"shop_section.product_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -831,7 +831,7 @@ return response()->json([
      *     @OA\Delete(
      *      path="/v1.0/products/{id}",
      *      operationId="deleteProductById",
-     *      tags={"shop_section.product_management"},
+     *      tags={"unused_apis"},
     *       security={
      *           {"bearerAuth": {}}
      *       },

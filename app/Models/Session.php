@@ -19,7 +19,6 @@ class Session extends Model
                     'end_date',
                     'holiday_dates',
                   "is_active",
-
         "business_id",
         "created_by"
     ];

@@ -25,7 +25,7 @@ class UserDocumentController extends Controller
      * @OA\Post(
      *      path="/v1.0/user-documents/single-file-upload",
      *      operationId="createUserDocumentFileSingle",
-     *      tags={"user_documents"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -118,7 +118,7 @@ class UserDocumentController extends Controller
      * @OA\Post(
      *      path="/v1.0/user-documents",
      *      operationId="createUserDocument",
-     *      tags={"user_documents"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -211,7 +211,7 @@ class UserDocumentController extends Controller
      * @OA\Put(
      *      path="/v1.0/user-documents",
      *      operationId="updateUserDocument",
-     *      tags={"user_documents"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -324,7 +324,7 @@ class UserDocumentController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-documents",
      *      operationId="getUserDocuments",
-     *      tags={"user_documents"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -484,7 +484,7 @@ class UserDocumentController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-documents/{id}",
      *      operationId="getUserDocumentById",
-     *      tags={"user_documents"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -585,7 +585,7 @@ class UserDocumentController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/user-documents/{ids}",
      *      operationId="deleteUserDocumentsByIds",
-     *      tags={"user_documents"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

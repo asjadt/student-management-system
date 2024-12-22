@@ -27,7 +27,7 @@ class UserPassportHistoryController extends Controller
      * @OA\Post(
      *      path="/v1.0/user-passport-histories",
      *      operationId="createUserPassportHistory",
-     *      tags={"user_passport_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -120,7 +120,7 @@ class UserPassportHistoryController extends Controller
      * @OA\Put(
      *      path="/v1.0/user-passport-histories",
      *      operationId="updateUserPassportHistory",
-     *      tags={"user_passport_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -244,7 +244,7 @@ class UserPassportHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-passport-histories",
      *      operationId="getUserPassportHistories",
-     *      tags={"user_passport_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -404,7 +404,7 @@ class UserPassportHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-passport-histories/{id}",
      *      operationId="getUserPassportHistoryById",
-     *      tags={"user_passport_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -506,7 +506,7 @@ class UserPassportHistoryController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/user-passport-histories/{ids}",
      *      operationId="deleteUserPassportHistoriesByIds",
-     *      tags={"user_passport_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

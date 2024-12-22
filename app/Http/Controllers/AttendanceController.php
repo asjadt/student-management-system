@@ -39,7 +39,7 @@ class AttendanceController extends Controller
      * @OA\Post(
      *      path="/v1.0/attendances",
      *      operationId="createAttendance",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -349,7 +349,7 @@ class AttendanceController extends Controller
      * @OA\Post(
      *      path="/v1.0/attendances/multiple",
      *      operationId="createMultipleAttendance",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -702,7 +702,7 @@ class AttendanceController extends Controller
      * @OA\Put(
      *      path="/v1.0/attendances",
      *      operationId="updateAttendance",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1030,7 +1030,7 @@ class AttendanceController extends Controller
      * @OA\Put(
      *      path="/v1.0/attendances/approve",
      *      operationId="approveAttendance",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1180,7 +1180,7 @@ class AttendanceController extends Controller
      * @OA\Get(
      *      path="/v1.0/attendances",
      *      operationId="getAttendances",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1431,7 +1431,7 @@ class AttendanceController extends Controller
      * @OA\Get(
      *      path="/v2.0/attendances",
      *      operationId="getAttendancesV2",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1721,7 +1721,7 @@ class AttendanceController extends Controller
      * @OA\Get(
      *      path="/v3.0/attendances",
      *      operationId="getAttendancesV3",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2117,7 +2117,7 @@ class AttendanceController extends Controller
      * @OA\Get(
      *      path="/v1.0/attendances/{id}",
      *      operationId="getAttendanceById",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2218,7 +2218,7 @@ class AttendanceController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/attendances/{ids}",
      *      operationId="deleteAttendancesByIds",
-     *      tags={"attendances"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

@@ -25,7 +25,7 @@ class PayrunController extends Controller
      * @OA\Post(
      *      path="/v1.0/payruns",
      *      operationId="createPayrun",
-     *      tags={"administrator.payruns"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -124,7 +124,7 @@ class PayrunController extends Controller
      * @OA\Put(
      *      path="/v1.0/payruns",
      *      operationId="updatePayrun",
-     *      tags={"administrator.payruns"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -376,7 +376,7 @@ class PayrunController extends Controller
      * @OA\Get(
      *      path="/v1.0/payruns",
      *      operationId="getPayruns",
-     *      tags={"administrator.payruns"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -538,7 +538,7 @@ class PayrunController extends Controller
      * @OA\Get(
      *      path="/v1.0/payruns/{id}",
      *      operationId="getPayrunById",
-     *      tags={"administrator.payruns"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -673,7 +673,7 @@ class PayrunController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/payruns/{ids}",
      *      operationId="deletePayrunsByIds",
-     *      tags={"administrator.payruns"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

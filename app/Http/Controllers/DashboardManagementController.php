@@ -2463,7 +2463,7 @@ class DashboardManagementController extends Controller
      * @OA\Post(
      *      path="/v1.0/dashboard-widgets",
      *      operationId="createDashboardWidget",
-     *      tags={"dashboard_management.dashboard_widgets"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2559,7 +2559,7 @@ class DashboardManagementController extends Controller
      *     @OA\Delete(
     *      path="/v1.0/dashboard-widgets/{ids}",
      *      operationId="deleteDashboardWidgetsByIds",
-     *      tags={"dashboard_management.dashboard_widgets"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

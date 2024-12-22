@@ -22,7 +22,7 @@ class SocialSiteController extends Controller
      * @OA\Post(
      *      path="/v1.0/social-sites",
      *      operationId="createSocialSite",
-     *      tags={"social_sites"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -129,7 +129,7 @@ class SocialSiteController extends Controller
      * @OA\Put(
      *      path="/v1.0/social-sites",
      *      operationId="updateSocialSite",
-     *      tags={"social_sites"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -268,7 +268,7 @@ class SocialSiteController extends Controller
      * @OA\Get(
      *      path="/v1.0/social-sites",
      *      operationId="getSocialSites",
-     *      tags={"social_sites"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -410,7 +410,7 @@ class SocialSiteController extends Controller
      * @OA\Get(
      *      path="/v1.0/social-sites/{id}",
      *      operationId="getSocialSiteById",
-     *      tags={"social_sites"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -507,7 +507,7 @@ class SocialSiteController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/social-sites/{ids}",
      *      operationId="deleteSocialSitesByIds",
-     *      tags={"social_sites"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

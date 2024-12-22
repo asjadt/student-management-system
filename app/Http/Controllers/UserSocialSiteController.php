@@ -27,7 +27,7 @@ class UserSocialSiteController extends Controller
        * @OA\Post(
        *      path="/v1.0/user-social-sites",
        *      operationId="createUserSocialSite",
-       *      tags={"user_social_sites"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -125,7 +125,7 @@ UserSocialSite::where([
        * @OA\Put(
        *      path="/v1.0/user-social-sites",
        *      operationId="updateUserSocialSite",
-       *      tags={"user_social_sites"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -243,7 +243,7 @@ UserSocialSite::where([
        * @OA\Get(
        *      path="/v1.0/user-social-sites",
        *      operationId="getUserSocialSites",
-       *      tags={"user_social_sites"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -404,7 +404,7 @@ UserSocialSite::where([
        * @OA\Get(
        *      path="/v1.0/user-social-sites/{id}",
        *      operationId="getUserSocialSiteById",
-       *      tags={"user_social_sites"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -508,7 +508,7 @@ UserSocialSite::where([
        *     @OA\Delete(
        *      path="/v1.0/user-social-sites/{ids}",
        *      operationId="deleteUserSocialSitesByIds",
-       *      tags={"user_social_sites"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },

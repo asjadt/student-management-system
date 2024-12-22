@@ -28,7 +28,7 @@ class UserNoteController extends Controller
      * @OA\Post(
      *      path="/v1.0/user-notes",
      *      operationId="createUserNote",
-     *      tags={"user_notes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -119,7 +119,7 @@ class UserNoteController extends Controller
      * @OA\Put(
      *      path="/v1.0/user-notes",
      *      operationId="updateUserNote",
-     *      tags={"user_notes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -234,7 +234,7 @@ class UserNoteController extends Controller
      * @OA\Put(
      *      path="/v1.0/user-notes/by-business-owner",
      *      operationId="updateUserNoteByBusinessOwner",
-     *      tags={"user_notes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -359,7 +359,7 @@ class UserNoteController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-notes",
      *      operationId="getUserNotes",
-     *      tags={"user_notes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -524,7 +524,7 @@ class UserNoteController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-notes/{id}",
      *      operationId="getUserNoteById",
-     *      tags={"user_notes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -636,7 +636,7 @@ class UserNoteController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/user-notes/{ids}",
      *      operationId="deleteUserNotesByIds",
-     *      tags={"user_notes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

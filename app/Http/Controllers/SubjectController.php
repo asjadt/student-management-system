@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SubjectCreateRequest;
 use App\Http\Requests\SubjectUpdateRequest;
 use App\Http\Requests\GetIdRequest;
+use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\DB;
 class SubjectController extends Controller
 {
 
-    use ErrorUtil, UserActivityUtil, BusinessUtil;
+    use ErrorUtil, UserActivityUtil, BusinessUtil, BasicUtil;
 
 
     /**
@@ -330,9 +331,49 @@ class SubjectController extends Controller
         }
     }
 
+    public function query_filters($query)
+    {
 
+        return   $query->where('subjects.business_id', auth()->user()->business_id)
+        ->when(!empty(request()->id), function ($query) {
+            return $query->where('subjects.id', request()->id);
+        })
+        ->when(!empty(request()->course_id), function ($query) {
+            return $query->whereHas('courses', function ($query) {
+                $query->where("course_titles.id", request()->course_id);
+            });
+        })
+        ->when(!empty(request()->name), function ($query) {
+            return $query->where('subjects.id', request()->string);
+        })
+        ->when(!empty(request()->description), function ($query) {
+            return $query->where('subjects.id', request()->string);
+        })
 
-    /**
+        ->when(!empty(request()->description), function ($query) {
+            return $query->where('subjects.id', request()->string);
+        })
+
+        ->when(!empty(request()->search_key), function ($query) {
+            return $query->where(function ($query) {
+                $term = request()->search_key;
+                $query
+
+                    ->orWhere("subjects.name", "like", "%" . $term . "%")
+                    ->where("subjects.description", "like", "%" . $term . "%")
+                ;
+            });
+        })
+
+        ->when(!empty(request()->start_date), function ($query) {
+            return $query->where('subjects.created_at', ">=", request()->start_date);
+        })
+        ->when(!empty(request()->end_date), function ($query) {
+            return $query->where('subjects.created_at', "<=", (request()->end_date . ' 23:59:59'));
+        });
+    }
+
+ /**
      *
      * @OA\Get(
      *      path="/v1.0/subjects",
@@ -349,9 +390,6 @@ class SubjectController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
-
-
      *         @OA\Parameter(
      *         name="description",
      *         in="query",
@@ -421,10 +459,6 @@ class SubjectController extends Controller
      * ),
      *
      *
-
-
-
-
      *      summary="This method is to get subjects  ",
      *      description="This method is to get subjects ",
      *
@@ -463,7 +497,153 @@ class SubjectController extends Controller
      *     )
      */
 
-    public function getSubjects(Request $request)
+     public function getSubjects(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+             if (!$request->user()->hasPermissionTo('subject_view')) {
+                 return response()->json([
+                     "message" => "You can not perform this action"
+                 ], 401);
+             }
+
+             $query = Subject::with("teachers","courses");
+             $query = $this->query_filters($query);
+             $subjects = $this->retrieveData($query, "id","subjects");
+
+
+             return response()->json($subjects, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
+    /**
+     *
+     * @OA\Get(
+     *      path="/v2.0/subjects",
+     *      operationId="getSubjectsV2",
+     *      tags={"subjects"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *         @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="name",
+     *         required=true,
+     *  example="6"
+     *      ),
+     *         @OA\Parameter(
+     *         name="description",
+     *         in="query",
+     *         description="description",
+     *         required=true,
+     *  example="6"
+     *      ),
+
+
+
+     *         @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=true,
+     *  example="6"
+     *      ),
+
+     *     @OA\Parameter(
+     * name="is_active",
+     * in="query",
+     * description="is_active",
+     * required=true,
+     * example="1"
+     * ),
+     *     @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+     * *  @OA\Parameter(
+     * name="id",
+     * in="query",
+     * description="id",
+     * required=true,
+     * example="ASC"
+     * ),
+     * * *  @OA\Parameter(
+     * name="course_id",
+     * in="query",
+     * description="course_id",
+     * required=true,
+     * example="ASC"
+     * ),
+     *
+     *
+     *      summary="This method is to get subjects  ",
+     *      description="This method is to get subjects ",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function getSubjectsV2(Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
@@ -473,77 +653,27 @@ class SubjectController extends Controller
                 ], 401);
             }
 
+            $query = Subject::with(
+                [
+                    "courses"=> function($query) {
+                    $query->select(
+                       "course_titles.id",
+                       "course_titles.name",
+                    );
+                }
+                ]
+            );
+            $query = $this->query_filters($query)
+            ->select(
+                "subjects.id",
+                'subjects.name',
+                'subjects.description'
+            );
+            $subjects = $this->retrieveData($query, "id","subjects");
 
-
-            $subjects = Subject::
-            with("teachers","courses")
-            ->where('subjects.business_id', auth()->user()->business_id)
-
-
-                ->when(!empty($request->id), function ($query) use ($request) {
-                    return $query->where('subjects.id', $request->id);
-                })
-                ->when(!empty($request->course_id), function ($query) use ($request) {
-                    return $query->whereHas('courses', function ($query) use ($request) {
-                        $query->where("course_titles.id", $request->course_id);
-                    });
-                })
-                ->when(!empty($request->name), function ($query) use ($request) {
-                    return $query->where('subjects.id', $request->string);
-                })
-                ->when(!empty($request->description), function ($query) use ($request) {
-                    return $query->where('subjects.id', $request->string);
-                })
-
-
-
-                ->when(!empty($request->description), function ($query) use ($request) {
-                    return $query->where('subjects.id', $request->string);
-                })
-
-
-
-
-
-                ->when(!empty($request->search_key), function ($query) use ($request) {
-                    return $query->where(function ($query) use ($request) {
-                        $term = $request->search_key;
-                        $query
-
-                            ->orWhere("subjects.name", "like", "%" . $term . "%")
-                            ->where("subjects.description", "like", "%" . $term . "%")
-                        ;
-                    });
-                })
-
-
-                ->when(!empty($request->start_date), function ($query) use ($request) {
-                    return $query->where('subjects.created_at', ">=", $request->start_date);
-                })
-                ->when(!empty($request->end_date), function ($query) use ($request) {
-                    return $query->where('subjects.created_at', "<=", ($request->end_date . ' 23:59:59'));
-                })
-                ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("subjects.id", $request->order_by);
-                }, function ($query) {
-                    return $query->orderBy("subjects.id", "DESC");
-                })
-                ->when($request->filled("id"), function ($query) use ($request) {
-                    return $query
-                        ->where("subjects.id", $request->input("id"))
-                        ->first();
-                }, function ($query) {
-                    return $query->when(!empty(request()->per_page), function ($query) {
-                        return $query->paginate(request()->per_page);
-                    }, function ($query) {
-                        return $query->get();
-                    });
-                });
-
-            if ($request->filled("id") && empty($subjects)) {
-                throw new Exception("No data found", 404);
-            }
-
+            $subjects->each(function ($subject) {
+                $subject->courses->each->makeHidden('pivot');
+            });
 
             return response()->json($subjects, 200);
         } catch (Exception $e) {
@@ -551,6 +681,10 @@ class SubjectController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
+
+
+
 
     /**
      *

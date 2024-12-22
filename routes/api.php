@@ -724,6 +724,7 @@ Route::delete('/v1.0/recruitment-processes/{ids}', [RecruitmentProcessController
     Route::put('/v1.0/letter-templates', [LetterTemplateController::class, "updateLetterTemplate"]);
     Route::put('/v1.0/letter-templates/toggle-active', [LetterTemplateController::class, "toggleActiveLetterTemplate"]);
     Route::get('/v1.0/letter-templates', [LetterTemplateController::class, "getLetterTemplates"]);
+    Route::get('/v2.0/letter-templates', [LetterTemplateController::class, "getLetterTemplatesV2"]);
 
     Route::delete('/v1.0/letter-templates/{ids}', [LetterTemplateController::class, "deleteLetterTemplatesByIds"]);
 
@@ -751,6 +752,8 @@ Route::delete('/v1.0/recruitment-processes/{ids}', [RecruitmentProcessController
 
 
     Route::get('/v1.0/student-letters-get', [StudentLetterController::class, "getStudentLetters"]);
+
+    Route::get('/v2.0/student-letters-get', [StudentLetterController::class, "getStudentLettersV2"]);
 
     Route::get('/v1.0/student-letters-histories', [StudentLetterController::class, "getStudentLetterHistories"]);
 
@@ -795,6 +798,7 @@ Route::put('/v1.0/sessions', [SessionController::class, "updateSession"]);
 Route::put('/v1.0/sessions/toggle-active', [SessionController::class, "toggleActiveSession"]);
 
 Route::get('/v1.0/sessions', [SessionController::class, "getSessions"]);
+Route::get('/v2.0/sessions', [SessionController::class, "getSessionsV2"]);
 Route::delete('/v1.0/sessions/{ids}', [SessionController::class, "deleteSessionsByIds"]);
 
 
@@ -858,6 +862,7 @@ Route::put('/v1.0/awarding-bodies', [AwardingBodyController::class, "updateAward
 Route::put('/v1.0/awarding-bodies/toggle-active', [AwardingBodyController::class, "toggleActiveAwardingBody"]);
 
 Route::get('/v1.0/awarding-bodies', [AwardingBodyController::class, "getAwardingBodies"]);
+Route::get('/v2.0/awarding-bodies', [AwardingBodyController::class, "getAwardingBodiesV2"]);
 Route::delete('/v1.0/awarding-bodies/{ids}', [AwardingBodyController::class, "deleteAwardingBodiesByIds"]);
 
 
@@ -926,6 +931,7 @@ Route::put('/v1.0/subjects', [SubjectController::class, "updateSubject"]);
 Route::put('/v1.0/subjects/toggle-active', [SubjectController::class, "toggleActiveSubject"]);
 
 Route::get('/v1.0/subjects', [SubjectController::class, "getSubjects"]);
+Route::get('/v2.0/subjects', [SubjectController::class, "getSubjectsV2"]);
 Route::delete('/v1.0/subjects/{ids}', [SubjectController::class, "deleteSubjectsByIds"]);
 
 
@@ -965,6 +971,7 @@ Route::post('/v1.0/course-titles', [CourseTitleController::class, "createCourseT
 Route::put('/v1.0/course-titles-update', [CourseTitleController::class, "updateCourseTitle"]);
 Route::put('/v1.0/course-titles/toggle-active', [CourseTitleController::class, "toggleActiveCourseTitle"]);
 Route::get('/v1.0/course-titles', [CourseTitleController::class, "getCourseTitles"]);
+Route::get('/v2.0/course-titles', [CourseTitleController::class, "getCourseTitlesV2"]);
 Route::get('/v1.0/course-titles/{id}', [CourseTitleController::class, "getCourseTitleById"]);
 Route::delete('/v1.0/course-titles/{ids}', [CourseTitleController::class, "deleteCourseTitlesByIds"]);
 
@@ -1163,6 +1170,7 @@ Route::post('/v1.0/students', [StudentController::class, "createStudent"]);
 Route::put('/v1.0/students', [StudentController::class, "updateStudent"]);
 Route::get('/v1.0/students/validate/school-id/{student_id}', [StudentController::class, "validateStudentId"]);
 Route::get('/v1.0/students', [StudentController::class, "getStudents"]);
+Route::get('/v2.0/students', [StudentController::class, "getStudentsV2"]);
 Route::get('/v1.0/students/{id}', [StudentController::class, "getStudentById"]);
 Route::delete('/v1.0/students/{ids}', [StudentController::class, "deleteStudentsByIds"]);
 
@@ -1327,9 +1335,15 @@ Route::post('/v1.0/client/students', [StudentController::class, "createStudentCl
 
 
 Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentByIdClient"]);
+
 Route::get('/v1.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClient"]);
+Route::get('/v2.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClientV2"]);
+
 Route::get('/v1.0/client/students', [StudentController::class, "getStudentsClient"]);
+Route::get('/v2.0/client/students', [StudentController::class, "getStudentsClientV2"]);
+
 Route::get('/v1.0/client/course-titles', [CourseTitleController::class, "getCourseTitlesClient"]);
+Route::get('/v2.0/client/course-titles', [CourseTitleController::class, "getCourseTitlesClientV2"]);
 
 
 Route::get('/v1.0/client/businesses-get-by-url/{url}', [BusinessController::class, "getByUrlClient"]);

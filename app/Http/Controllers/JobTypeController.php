@@ -24,7 +24,7 @@ class JobTypeController extends Controller
      * @OA\Post(
      *      path="/v1.0/job-types",
      *      operationId="createJobType",
-     *      tags={"job_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -122,7 +122,7 @@ class JobTypeController extends Controller
      * @OA\Put(
      *      path="/v1.0/job-types",
      *      operationId="updateJobType",
-     *      tags={"job_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -228,7 +228,7 @@ class JobTypeController extends Controller
      * @OA\Put(
      *      path="/v1.0/job-types/toggle-active",
      *      operationId="toggleActiveJobType",
-     *      tags={"job_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -434,7 +434,7 @@ class JobTypeController extends Controller
      * @OA\Get(
      *      path="/v1.0/job-types",
      *      operationId="getJobTypes",
-     *      tags={"job_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -661,7 +661,7 @@ class JobTypeController extends Controller
      * @OA\Get(
      *      path="/v1.0/job-types/{id}",
      *      operationId="getJobTypeById",
-     *      tags={"job_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -823,7 +823,7 @@ class JobTypeController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/job-types/{ids}",
      *      operationId="deleteJobTypesByIds",
-     *      tags={"job_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

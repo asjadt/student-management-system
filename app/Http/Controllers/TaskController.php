@@ -22,7 +22,7 @@ class TaskController extends Controller
      * @OA\Post(
      *      path="/v1.0/tasks",
      *      operationId="createTask",
-     *      tags={"task"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -126,7 +126,7 @@ class TaskController extends Controller
      * @OA\Put(
      *      path="/v1.0/tasks",
      *      operationId="updateTask",
-     *      tags={"task"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -264,7 +264,7 @@ class TaskController extends Controller
      * @OA\Get(
      *      path="/v1.0/tasks",
      *      operationId="getTasks",
-     *      tags={"task"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -438,7 +438,7 @@ class TaskController extends Controller
      * @OA\Get(
      *      path="/v1.0/tasks/{id}",
      *      operationId="getTaskById",
-     *      tags={"task"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -542,7 +542,7 @@ class TaskController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/tasks/{ids}",
      *      operationId="deleteTasksByIds",
-     *      tags={"task"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

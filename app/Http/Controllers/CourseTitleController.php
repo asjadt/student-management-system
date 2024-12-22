@@ -310,6 +310,47 @@ class CourseTitleController extends Controller
              return $this->sendError($e, 500, $request);
          }
      }
+
+     public function query_filters_v2($query)
+    {
+        $created_by  = NULL;
+        if(auth()->user()->business) {
+            $created_by = auth()->user()->business->created_by;
+        }
+
+        return   $query->when(empty(auth()->user()->business_id), function ($query) use ($created_by) {
+            $query->when(auth()->user()->hasRole('superadmin'), function ($query) {
+                $query->forSuperAdmin('course_titles');
+            }, function ($query) use ($created_by) {
+                $query->forNonSuperAdmin('course_titles', 'disabled_letter_templates', $created_by);
+            });
+        })
+
+        ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by) {
+            $query->forBusiness('course_titles', "disabled_letter_templates", $created_by);
+        })
+
+            ->when(!empty(request()->search_key), function ($query) {
+                return $query->where(function ($query) {
+                    $term = request()->search_key;
+                    $query->where("course_titles.name", "like", "%" . $term . "%")
+                        ->orWhere("course_titles.description", "like", "%" . $term . "%");
+                });
+            })
+            //    ->when(!empty(request()->product_category_id), function ($query) {
+            //        return $query->where('product_category_id', request()->product_category_id);
+            //    })
+            ->when(!empty(request()->awarding_body_id), function ($query) {
+                return $query->where('course_titles.awarding_body_id', request()->awarding_body_id);
+            })
+            ->when(!empty(request()->start_date), function ($query) {
+                return $query->where('course_titles.created_at', ">=", request()->start_date);
+            })
+            ->when(!empty(request()->end_date), function ($query) {
+                return $query->where('course_titles.created_at', "<=", (request()->end_date . ' 23:59:59'));
+            });
+    }
+
     /**
      *
      * @OA\Get(
@@ -412,57 +453,9 @@ class CourseTitleController extends Controller
                 ], 401);
             }
 
-            $created_by  = NULL;
-            if(auth()->user()->business) {
-                $created_by = auth()->user()->business->created_by;
-            }
-
-
-            $course_titles = CourseTitle::
-               with("awarding_body","subjects")
-               ->when(empty(auth()->user()->business_id), function ($query) use ($request, $created_by) {
-                $query->when(auth()->user()->hasRole('superadmin'), function ($query) use ($request) {
-                    $query->forSuperAdmin('course_titles');
-                }, function ($query) use ($request, $created_by) {
-                    $query->forNonSuperAdmin('course_titles', 'disabled_letter_templates', $created_by);
-                });
-            })
-
-            ->when(!empty(auth()->user()->business_id), function ($query) use ( $created_by) {
-                $query->forBusiness('course_titles', "disabled_letter_templates", $created_by);
-            })
-
-                ->when(!empty($request->search_key), function ($query) use ($request) {
-                    return $query->where(function ($query) use ($request) {
-                        $term = $request->search_key;
-                        $query->where("course_titles.name", "like", "%" . $term . "%")
-                            ->orWhere("course_titles.description", "like", "%" . $term . "%");
-                    });
-                })
-                //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
-                //        return $query->where('product_category_id', $request->product_category_id);
-                //    })
-                ->when(!empty($request->awarding_body_id), function ($query) use ($request) {
-                    return $query->where('course_titles.awarding_body_id', $request->awarding_body_id);
-                })
-                ->when(!empty($request->start_date), function ($query) use ($request) {
-                    return $query->where('course_titles.created_at', ">=", $request->start_date);
-                })
-                ->when(!empty($request->end_date), function ($query) use ($request) {
-                    return $query->where('course_titles.created_at', "<=", ($request->end_date . ' 23:59:59'));
-                })
-                ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("course_titles.id", $request->order_by);
-                }, function ($query) {
-                    return $query->orderBy("course_titles.id", "DESC");
-                })
-                ->when(!empty($request->per_page), function ($query) use ($request) {
-                    return $query->paginate($request->per_page);
-                }, function ($query) {
-                    return $query->get();
-                });;
-
-
+            $query = CourseTitle::with("awarding_body","subjects");
+            $query = $this->query_filters_v2($query);
+            $course_titles = $this->retrieveData($query, "id","course_titles");
 
             return response()->json($course_titles, 200);
         } catch (Exception $e) {
@@ -470,6 +463,169 @@ class CourseTitleController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
+     /**
+     *
+     * @OA\Get(
+     *      path="/v2.0/course-titles",
+     *      operationId="getCourseTitlesV2",
+     *      tags={"student.course_titles"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=true,
+     *  example="6"
+     *      ),
+
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
+     * *      * *  @OA\Parameter(
+     * name="is_active",
+     * in="query",
+     * description="is_active",
+     * required=true,
+     * example="1"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+
+     *      summary="This method is to get course titles  ",
+     *      description="This method is to get course titles ",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function getCourseTitlesV2(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+             if (!$request->user()->hasPermissionTo('course_title_view')) {
+                 return response()->json([
+                     "message" => "You can not perform this action"
+                 ], 401);
+             }
+
+
+             $query = CourseTitle::with(
+                [
+                    "awarding_body" => function($query) {
+                       $query->select(
+                        "awarding_bodies.id",
+                        "awarding_bodies.name",
+                       );
+                    }
+
+                ]
+            );
+             $query = $this->query_filters_v2($query)
+             ->select(
+        "course_titles.id",
+        'course_titles.name',
+        'course_titles.level',
+        'course_titles.description',
+        "course_titles.awarding_body_id"
+             );
+             $course_titles = $this->retrieveData($query, "id","course_titles");
+
+             return response()->json($course_titles, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
+
+    public function query_filters($query)
+    {
+        $business_id =  request()->business_id;
+        if(!$business_id) {
+           $error = [ "message" => "The given data was invalid.",
+           "errors" => ["business_id"=>["The business id field is required."]]
+           ];
+               throw new Exception(json_encode($error),422);
+        }
+
+        return   $query->where('course_titles.business_id', $business_id)
+        ->where('course_titles.is_active', 1)
+            ->when(!empty(request()->search_key), function ($query)  {
+                return $query->where(function ($query) {
+                    $term = request()->search_key;
+                    $query->where("course_titles.name", "like", "%" . $term . "%")
+                        ->orWhere("course_titles.description", "like", "%" . $term . "%");
+                });
+            })
+            //    ->when(!empty(request()->product_category_id), function ($query) use (request()) {
+            //        return $query->where('product_category_id', request()->product_category_id);
+            //    })
+            ->when(!empty(request()->start_date), function ($query) {
+                return $query->where('course_titles.created_at', ">=", request()->start_date);
+            })
+            ->when(!empty(request()->end_date), function ($query) {
+                return $query->where('course_titles.created_at', "<=", (request()->end_date . ' 23:59:59'));
+            });
+    }
+
  /**
      *
      * @OA\Get(
@@ -575,48 +731,129 @@ class CourseTitleController extends Controller
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
 
 
+             $query = CourseTitle::query();
+             $query = $this->query_filters($query);
+             $course_titles = $this->retrieveData($query, "id","course_titles");
+
+             return response()->json($course_titles, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
+ /**
+     *
+     * @OA\Get(
+     *      path="/v2.0/client/course-titles",
+     *      operationId="getCourseTitlesClientV2",
+     *      tags={"student.course_titles"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *     *              @OA\Parameter(
+     *         name="business_id",
+     *         in="query",
+     *         description="business_id",
+     *         required=true,
+     *  example="2"
+     *      ),
+
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=true,
+     *  example="6"
+     *      ),
+
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
+     * *      * *  @OA\Parameter(
+     * name="is_active",
+     * in="query",
+     * description="is_active",
+     * required=true,
+     * example="1"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+
+     *      summary="This method is to get course statuses  ",
+     *      description="This method is to get course statuses ",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function getCourseTitlesClientV2(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
 
 
-             $business_id =  $request->business_id;
-             if(!$business_id) {
-                $error = [ "message" => "The given data was invalid.",
-                "errors" => ["business_id"=>["The business id field is required."]]
-                ];
-                    throw new Exception(json_encode($error),422);
-             }
-
-
-             $course_titles = CourseTitle::
-             where('course_titles.business_id', $business_id)
-             ->where('course_titles.is_active', 1)
-                 ->when(!empty($request->search_key), function ($query) use ($request) {
-                     return $query->where(function ($query) use ($request) {
-                         $term = $request->search_key;
-                         $query->where("course_titles.name", "like", "%" . $term . "%")
-                             ->orWhere("course_titles.description", "like", "%" . $term . "%");
-                     });
-                 })
-                 //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
-                 //        return $query->where('product_category_id', $request->product_category_id);
-                 //    })
-                 ->when(!empty($request->start_date), function ($query) use ($request) {
-                     return $query->where('course_titles.created_at', ">=", $request->start_date);
-                 })
-                 ->when(!empty($request->end_date), function ($query) use ($request) {
-                     return $query->where('course_titles.created_at', "<=", ($request->end_date . ' 23:59:59'));
-                 })
-                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                     return $query->orderBy("course_titles.id", $request->order_by);
-                 }, function ($query) {
-                     return $query->orderBy("course_titles.id", "DESC");
-                 })
-                 ->when(!empty($request->per_page), function ($query) use ($request) {
-                     return $query->paginate($request->per_page);
-                 }, function ($query) {
-                     return $query->get();
-                 });;
-
-
+             $query = CourseTitle::query();
+             $query = $this->query_filters($query)
+             ->select(
+                'course_titles.id',
+                'course_titles.name'
+             );
+             $course_titles = $this->retrieveData($query, "id","course_titles");
 
              return response()->json($course_titles, 200);
          } catch (Exception $e) {

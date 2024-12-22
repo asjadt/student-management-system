@@ -20,7 +20,7 @@ class NotificationTemplateController extends Controller
      * @OA\Put(
      *      path="/v1.0/notification-templates",
      *      operationId="updateNotificationTemplate",
-     *      tags={"template_management.notification"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -139,7 +139,7 @@ class NotificationTemplateController extends Controller
      * @OA\Get(
      *      path="/v1.0/notification-templates/{perPage}",
      *      operationId="getNotificationTemplates",
-     *      tags={"template_management.notification"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -252,7 +252,7 @@ class NotificationTemplateController extends Controller
      * @OA\Get(
      *      path="/v1.0/notification-templates/single/{id}",
      *      operationId="getNotificationTemplateById",
-     *      tags={"template_management.notification"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -342,7 +342,7 @@ class NotificationTemplateController extends Controller
      * @OA\Get(
      *      path="/v1.0/notification-template-types",
      *      operationId="getNotificationTemplateTypes",
-     *      tags={"template_management.notification"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

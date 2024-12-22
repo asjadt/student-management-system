@@ -24,7 +24,7 @@ class DepartmentController extends Controller
      * @OA\Post(
      *      path="/v1.0/departments",
      *      operationId="createDepartment",
-     *      tags={"administrator.department"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -123,7 +123,7 @@ class DepartmentController extends Controller
      * @OA\Put(
      *      path="/v1.0/departments",
      *      operationId="updateDepartment",
-     *      tags={"administrator.department"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -313,7 +313,7 @@ class DepartmentController extends Controller
      * @OA\Put(
      *      path="/v1.0/departments/toggle-active",
      *      operationId="toggleActiveDepartment",
-     *      tags={"administrator.department"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -436,7 +436,7 @@ class DepartmentController extends Controller
      * @OA\Get(
      *      path="/v1.0/departments",
      *      operationId="getDepartments",
-     *      tags={"administrator.department"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -634,7 +634,7 @@ class DepartmentController extends Controller
      * @OA\Get(
      *      path="/v2.0/departments",
      *      operationId="getDepartmentsV2",
-     *      tags={"administrator.department"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -741,7 +741,7 @@ class DepartmentController extends Controller
      * @OA\Get(
      *      path="/v3.0/departments",
      *      operationId="getDepartmentsV3",
-     *      tags={"administrator.department"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -823,7 +823,7 @@ class DepartmentController extends Controller
      * @OA\Get(
      *      path="/v1.0/departments/{id}",
      *      operationId="getDepartmentById",
-     *      tags={"administrator.department"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -943,7 +943,7 @@ class DepartmentController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/departments/{ids}",
      *      operationId="deleteDepartmentsByIds",
-     *      tags={"administrator.department"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

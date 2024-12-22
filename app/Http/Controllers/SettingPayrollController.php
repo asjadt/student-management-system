@@ -23,7 +23,7 @@ class SettingPayrollController extends Controller
      * @OA\Post(
      *      path="/v1.0/setting-payrun",
      *      operationId="createSettingPayrun",
-     *      tags={"settings.setting_payroll.payrun"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -138,7 +138,7 @@ class SettingPayrollController extends Controller
      * @OA\Get(
      *      path="/v1.0/setting-payrun",
      *      operationId="getSettingPayrun",
-     *      tags={"settings.setting_payroll.payrun"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -288,7 +288,7 @@ class SettingPayrollController extends Controller
      * @OA\Post(
      *      path="/v1.0/setting-payslip/upload-logo",
      *      operationId="createSettingPayslipUploadLogo",
-     *      tags={"settings.setting_payroll.payslip"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -377,7 +377,7 @@ class SettingPayrollController extends Controller
      * @OA\Post(
      *      path="/v1.0/setting-payslip",
      *      operationId="createSettingPayslip",
-     *      tags={"settings.setting_payroll.payslip"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -488,7 +488,7 @@ class SettingPayrollController extends Controller
      * @OA\Get(
      *      path="/v1.0/setting-payslip",
      *      operationId="getSettingPayslip",
-     *      tags={"settings.setting_payroll.payslip"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

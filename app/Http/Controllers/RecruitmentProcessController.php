@@ -24,7 +24,7 @@ class RecruitmentProcessController extends Controller
      * @OA\Post(
      *      path="/v1.0/recruitment-processes",
      *      operationId="createRecruitmentProcess",
-     *      tags={"recruitment_processes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -122,7 +122,7 @@ class RecruitmentProcessController extends Controller
      * @OA\Put(
      *      path="/v1.0/recruitment-processes",
      *      operationId="updateRecruitmentProcess",
-     *      tags={"recruitment_processes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -227,7 +227,7 @@ class RecruitmentProcessController extends Controller
      * @OA\Put(
      *      path="/v1.0/recruitment-processes/toggle-active",
      *      operationId="toggleActiveRecruitmentProcess",
-     *      tags={"recruitment_processes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -433,7 +433,7 @@ class RecruitmentProcessController extends Controller
      * @OA\Get(
      *      path="/v1.0/recruitment-processes",
      *      operationId="getRecruitmentProcesses",
-     *      tags={"recruitment_processes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -660,7 +660,7 @@ class RecruitmentProcessController extends Controller
      * @OA\Get(
      *      path="/v1.0/recruitment-processes/{id}",
      *      operationId="getRecruitmentProcessById",
-     *      tags={"recruitment_processes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -822,7 +822,7 @@ class RecruitmentProcessController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/recruitment-processes/{ids}",
      *      operationId="deleteRecruitmentProcessesByIds",
-     *      tags={"recruitment_processes"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

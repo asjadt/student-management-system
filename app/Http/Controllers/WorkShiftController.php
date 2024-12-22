@@ -28,7 +28,7 @@ class WorkShiftController extends Controller
      * @OA\Post(
      *      path="/v1.0/work-shifts",
      *      operationId="createWorkShift",
-     *      tags={"administrator.work_shift"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -190,7 +190,7 @@ class WorkShiftController extends Controller
      * @OA\Put(
      *      path="/v1.0/work-shifts",
      *      operationId="updateWorkShift",
-     *      tags={"administrator.work_shift"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -483,7 +483,7 @@ if(!$fields_changed){
      * @OA\Put(
      *      path="/v1.0/work-shifts/toggle-active",
      *      operationId="toggleActiveWorkShift",
-     *      tags={"administrator.work_shift"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -615,7 +615,7 @@ if(!$check_work_shift_details["ok"]) {
      * @OA\Get(
      *      path="/v1.0/work-shifts",
      *      operationId="getWorkShifts",
-     *      tags={"administrator.work_shift"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -821,7 +821,7 @@ if(!$check_work_shift_details["ok"]) {
      * @OA\Get(
      *      path="/v1.0/work-shifts/{id}",
      *      operationId="getWorkShiftById",
-     *      tags={"administrator.work_shift"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -914,7 +914,7 @@ if(!$check_work_shift_details["ok"]) {
      * @OA\Get(
      *      path="/v1.0/work-shifts/get-by-user-id/{user_id}",
      *      operationId="getWorkShiftByUserId",
-     *      tags={"administrator.work_shift"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1046,7 +1046,7 @@ if(!$check_work_shift_details["ok"]) {
      *     @OA\Delete(
      *      path="/v1.0/work-shifts/{ids}",
      *      operationId="deleteWorkShiftsByIds",
-     *      tags={"administrator.work_shift"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

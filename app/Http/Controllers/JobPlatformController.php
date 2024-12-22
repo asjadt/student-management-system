@@ -25,7 +25,7 @@ class JobPlatformController extends Controller
      * @OA\Post(
      *      path="/v1.0/job-platforms",
      *      operationId="createJobPlatform",
-     *      tags={"job_platforms"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -143,7 +143,7 @@ class JobPlatformController extends Controller
      * @OA\Put(
      *      path="/v1.0/job-platforms",
      *      operationId="updateJobPlatform",
-     *      tags={"job_platforms"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -264,7 +264,7 @@ class JobPlatformController extends Controller
      * @OA\Put(
      *      path="/v1.0/job-platforms/toggle-active",
      *      operationId="toggleActiveJobPlatform",
-     *      tags={"job_platforms"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -468,7 +468,7 @@ class JobPlatformController extends Controller
      * @OA\Get(
      *      path="/v1.0/job-platforms",
      *      operationId="getJobPlatforms",
-     *      tags={"job_platforms"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -699,7 +699,7 @@ class JobPlatformController extends Controller
      * @OA\Get(
      *      path="/v1.0/job-platforms/{id}",
      *      operationId="getJobPlatformById",
-     *      tags={"job_platforms"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -864,7 +864,7 @@ class JobPlatformController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/job-platforms/{ids}",
      *      operationId="deleteJobPlatformsByIds",
-     *      tags={"job_platforms"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

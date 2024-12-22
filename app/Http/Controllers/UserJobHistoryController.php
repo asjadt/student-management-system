@@ -28,7 +28,7 @@ class UserJobHistoryController extends Controller
        * @OA\Post(
        *      path="/v1.0/user-job-histories",
        *      operationId="createUserJobHistory",
-       *      tags={"user_job_histories"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -128,7 +128,7 @@ class UserJobHistoryController extends Controller
        * @OA\Put(
        *      path="/v1.0/user-job-histories",
        *      operationId="updateUserJobHistory",
-       *      tags={"user_job_histories"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -257,7 +257,7 @@ class UserJobHistoryController extends Controller
        * @OA\Get(
        *      path="/v1.0/user-job-histories",
        *      operationId="getUserJobHistories",
-       *      tags={"user_job_histories"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -417,7 +417,7 @@ class UserJobHistoryController extends Controller
        * @OA\Get(
        *      path="/v1.0/user-job-histories/{id}",
        *      operationId="getUserJobHistoryById",
-       *      tags={"user_job_histories"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },
@@ -517,7 +517,7 @@ class UserJobHistoryController extends Controller
        *     @OA\Delete(
        *      path="/v1.0/user-job-histories/{ids}",
        *      operationId="deleteUserJobHistoriesByIds",
-       *      tags={"user_job_histories"},
+       *      tags={"unused_apis"},
        *       security={
        *           {"bearerAuth": {}}
        *       },

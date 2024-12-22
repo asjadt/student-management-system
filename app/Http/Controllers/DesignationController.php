@@ -24,7 +24,7 @@ class DesignationController extends Controller
      * @OA\Post(
      *      path="/v1.0/designations",
      *      operationId="createDesignation",
-     *      tags={"designations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -122,7 +122,7 @@ class DesignationController extends Controller
      * @OA\Put(
      *      path="/v1.0/designations",
      *      operationId="updateDesignation",
-     *      tags={"designations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -228,7 +228,7 @@ class DesignationController extends Controller
      * @OA\Put(
      *      path="/v1.0/designations/toggle-active",
      *      operationId="toggleActiveDesignation",
-     *      tags={"designations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -434,7 +434,7 @@ class DesignationController extends Controller
      * @OA\Get(
      *      path="/v1.0/designations",
      *      operationId="getDesignations",
-     *      tags={"designations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -661,7 +661,7 @@ class DesignationController extends Controller
      * @OA\Get(
      *      path="/v1.0/designations/{id}",
      *      operationId="getDesignationById",
-     *      tags={"designations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -824,7 +824,7 @@ class DesignationController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/designations/{ids}",
      *      operationId="deleteDesignationsByIds",
-     *      tags={"designations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

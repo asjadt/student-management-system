@@ -22,7 +22,7 @@ class SettingAttendanceController extends Controller
      * @OA\Post(
      *      path="/v1.0/setting-attendance",
      *      operationId="createSettingAttendance",
-     *      tags={"settings.setting_attendance"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -180,7 +180,7 @@ class SettingAttendanceController extends Controller
      * @OA\Get(
      *      path="/v1.0/setting-attendance",
      *      operationId="getSettingAttendance",
-     *      tags={"settings.setting_attendance"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

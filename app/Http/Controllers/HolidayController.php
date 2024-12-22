@@ -16,12 +16,13 @@ use Illuminate\Support\Facades\DB;
 class HolidayController extends Controller
 {
     use ErrorUtil, UserActivityUtil, BusinessUtil;
+
     /**
      *
      * @OA\Post(
      *      path="/v1.0/holidays",
      *      operationId="createHoliday",
-     *      tags={"administrator.holiday"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -98,13 +99,8 @@ class HolidayController extends Controller
                     $request_data["created_by"] = $request->user()->id;
 
                 $holiday =  Holiday::create($request_data);
-
-
                  $holiday->departments()->sync($request_data['departments'],[]);
                  $holiday->users()->sync($request_data['users'],[]);
-
-
-
 
 
                 return response($holiday, 201);
@@ -120,7 +116,7 @@ class HolidayController extends Controller
      * @OA\Put(
      *      path="/v1.0/holidays",
      *      operationId="updateHoliday",
-     *      tags={"administrator.holiday"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -247,7 +243,7 @@ class HolidayController extends Controller
      * @OA\Get(
      *      path="/v1.0/holidays",
      *      operationId="getHolidays",
-     *      tags={"administrator.holiday"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -393,7 +389,7 @@ class HolidayController extends Controller
      * @OA\Get(
      *      path="/v1.0/holidays/{id}",
      *      operationId="getHolidayById",
-     *      tags={"administrator.holiday"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -494,7 +490,7 @@ class HolidayController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/holidays/{ids}",
      *      operationId="deleteHolidaysByIds",
-     *      tags={"administrator.holiday"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

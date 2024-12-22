@@ -27,7 +27,7 @@ class UserAddressHistoryController extends Controller
      * @OA\Post(
      *      path="/v1.0/user-address-histories",
      *      operationId="createUserAddressHistory",
-     *      tags={"user_address_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -122,7 +122,7 @@ class UserAddressHistoryController extends Controller
      * @OA\Put(
      *      path="/v1.0/user-address-histories",
      *      operationId="updateUserAddressHistory",
-     *      tags={"user_address_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -251,7 +251,7 @@ class UserAddressHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-address-histories",
      *      operationId="getUserAddressHistories",
-     *      tags={"user_address_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -412,7 +412,7 @@ class UserAddressHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-address-histories/{id}",
      *      operationId="getUserAddressHistoryById",
-     *      tags={"user_address_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -514,7 +514,7 @@ class UserAddressHistoryController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/user-address-histories/{ids}",
      *      operationId="deleteUserAddressHistoriesByIds",
-     *      tags={"user_address_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

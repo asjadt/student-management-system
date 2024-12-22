@@ -39,7 +39,7 @@ class LeaveController extends Controller
      * @OA\Post(
      *      path="/v1.0/leaves/multiple-file-upload",
      *      operationId="createLeaveFileMultiple",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -134,7 +134,7 @@ class LeaveController extends Controller
      * @OA\Post(
      *      path="/v1.0/leaves",
      *      operationId="createLeave",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -678,7 +678,7 @@ foreach ($assigned_departments as $assigned_department) {
      * @OA\Put(
      *      path="/v1.0/leaves/approve",
      *      operationId="approveLeave",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -799,7 +799,7 @@ foreach ($assigned_departments as $assigned_department) {
      * @OA\Put(
      *      path="/v1.0/leaves/bypass",
      *      operationId="bypassLeave",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -928,7 +928,7 @@ foreach ($assigned_departments as $assigned_department) {
      * @OA\Put(
      *      path="/v1.0/leaves",
      *      operationId="updateLeave",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1483,7 +1483,7 @@ foreach ($assigned_departments as $assigned_department) {
      * @OA\Get(
      *      path="/v1.0/leaves",
      *      operationId="getLeaves",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1703,7 +1703,7 @@ foreach ($assigned_departments as $assigned_department) {
      * @OA\Get(
      *      path="/v2.0/leaves",
      *      operationId="getLeavesV2",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1925,7 +1925,7 @@ foreach ($assigned_departments as $assigned_department) {
      * @OA\Get(
      *      path="/v3.0/leaves",
      *      operationId="getLeavesV3",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2190,7 +2190,7 @@ return $employee;
      * @OA\Get(
      *      path="/v4.0/leaves",
      *      operationId="getLeavesV4",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2450,7 +2450,7 @@ return $employee;
      * @OA\Get(
      *      path="/v1.0/leaves/{id}",
      *      operationId="getLeaveById",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2551,7 +2551,7 @@ return $employee;
      *     @OA\Delete(
      *      path="/v1.0/leaves/{ids}",
      *      operationId="deleteLeavesByIds",
-     *      tags={"leaves"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

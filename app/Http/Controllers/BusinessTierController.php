@@ -22,7 +22,7 @@ class BusinessTierController extends Controller
      * @OA\Post(
      *      path="/v1.0/business-tiers",
      *      operationId="createBusinessTier",
-     *      tags={"business_tiers"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -129,7 +129,7 @@ class BusinessTierController extends Controller
      * @OA\Put(
      *      path="/v1.0/business-tiers",
      *      operationId="updateBusinessTier",
-     *      tags={"business_tiers"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -233,7 +233,7 @@ class BusinessTierController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-tiers",
      *      operationId="getBusinessTiers",
-     *      tags={"business_tiers"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -375,7 +375,7 @@ class BusinessTierController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-tiers/{id}",
      *      operationId="getBusinessTierById",
-     *      tags={"business_tiers"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -472,7 +472,7 @@ class BusinessTierController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/business-tiers/{ids}",
      *      operationId="deleteBusinessTiersByIds",
-     *      tags={"business_tiers"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

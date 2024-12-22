@@ -27,7 +27,7 @@ class UserEducationHistoryController extends Controller
      * @OA\Post(
      *      path="/v1.0/user-education-histories",
      *      operationId="createUserEducationHistory",
-     *      tags={"user_education_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -129,7 +129,7 @@ class UserEducationHistoryController extends Controller
      * @OA\Put(
      *      path="/v1.0/user-education-histories",
      *      operationId="updateUserEducationHistory",
-     *      tags={"user_education_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -265,7 +265,7 @@ class UserEducationHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-education-histories",
      *      operationId="getUserEducationHistories",
-     *      tags={"user_education_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -425,7 +425,7 @@ class UserEducationHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-education-histories/{id}",
      *      operationId="getUserEducationHistoryById",
-     *      tags={"user_education_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -525,7 +525,7 @@ class UserEducationHistoryController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/user-education-histories/{ids}",
      *      operationId="deleteUserEducationHistoriesByIds",
-     *      tags={"user_education_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

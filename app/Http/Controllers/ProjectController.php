@@ -29,7 +29,7 @@ class ProjectController extends Controller
      * @OA\Post(
      *      path="/v1.0/projects",
      *      operationId="createProject",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -127,7 +127,7 @@ class ProjectController extends Controller
      * @OA\Put(
      *      path="/v1.0/projects/assign-user",
      *      operationId="assignUser",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -313,7 +313,7 @@ class ProjectController extends Controller
      * @OA\Put(
      *      path="/v1.0/projects/discharge-user",
      *      operationId="dischargeUser",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -473,7 +473,7 @@ class ProjectController extends Controller
      * @OA\Put(
      *      path="/v1.0/projects/assign-project",
      *      operationId="assignProject",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -650,7 +650,7 @@ class ProjectController extends Controller
      * @OA\Put(
      *      path="/v1.0/projects/discharge-project",
      *      operationId="dischargeProject",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -796,7 +796,7 @@ class ProjectController extends Controller
      * @OA\Put(
      *      path="/v1.0/projects",
      *      operationId="updateProject",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -929,7 +929,7 @@ class ProjectController extends Controller
      * @OA\Get(
      *      path="/v1.0/projects",
      *      operationId="getProjects",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1105,7 +1105,7 @@ class ProjectController extends Controller
      * @OA\Get(
      *      path="/v1.0/projects/{id}",
      *      operationId="getProjectById",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1219,7 +1219,7 @@ class ProjectController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/projects/{ids}",
      *      operationId="deleteProjectsByIds",
-     *      tags={"project"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

@@ -23,7 +23,7 @@ class BankController extends Controller
      * @OA\Post(
      *      path="/v1.0/banks",
      *      operationId="createBank",
-     *      tags={"banks"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -121,7 +121,7 @@ class BankController extends Controller
      * @OA\Put(
      *      path="/v1.0/banks",
      *      operationId="updateBank",
-     *      tags={"banks"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -227,7 +227,7 @@ class BankController extends Controller
      * @OA\Put(
      *      path="/v1.0/banks/toggle-active",
      *      operationId="toggleActiveBank",
-     *      tags={"banks"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -433,7 +433,7 @@ class BankController extends Controller
      * @OA\Get(
      *      path="/v1.0/banks",
      *      operationId="getBanks",
-     *      tags={"banks"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -660,7 +660,7 @@ class BankController extends Controller
      * @OA\Get(
      *      path="/v1.0/banks/{id}",
      *      operationId="getBankById",
-     *      tags={"banks"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -822,7 +822,7 @@ class BankController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/banks/{ids}",
      *      operationId="deleteBanksByIds",
-     *      tags={"banks"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

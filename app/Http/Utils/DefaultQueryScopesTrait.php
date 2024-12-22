@@ -11,6 +11,7 @@ trait DefaultQueryScopesTrait
 {
     public function getIsActiveAttribute($value)
     {
+        return $value;
         $is_active = $value;
         $user = auth()->user();
 
@@ -52,6 +53,7 @@ trait DefaultQueryScopesTrait
     public function getIsDefaultAttribute($value)
     {
 
+        return $value;
         $is_default = $value;
         $user = auth()->user();
 

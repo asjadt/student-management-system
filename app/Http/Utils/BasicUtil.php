@@ -206,13 +206,13 @@ trait BasicUtil
         do {
             $uniqueIdentifier = $prefix . '-' . str_pad($currentNumber, 4, '0', STR_PAD_LEFT);
             $currentNumber++;
-        } while ($this->identifierExists($mainModel, $uniqueIdentifierColumn, $uniqueIdentifier,$relationModelId));
+        } while ($this->identifierExists($mainModel, $uniqueIdentifierColumn, $uniqueIdentifier, $relationModelId));
 
         return $uniqueIdentifier;
     }
 
 
-    protected function identifierExists(string $modelClass, string $column, string $value,$relationModelId): bool
+    protected function identifierExists(string $modelClass, string $column, string $value, $relationModelId): bool
     {
         return $modelClass::where($column, $value)
             ->where('business_id', $relationModelId)
@@ -322,21 +322,20 @@ trait BasicUtil
                 Log::error("File does not exist at destination: {$destinationPath}");
             }
         });
-
     }
 
-    public function storeUploadedFiles($filePaths, $fileKey, $location, $arrayOfString = NULL,$student_id=NULL)
+    public function storeUploadedFiles($filePaths, $fileKey, $location, $arrayOfString = NULL, $student_id = NULL)
     {
 
 
-       // Step 1: Retrieve the business of the authenticated user
+        // Step 1: Retrieve the business of the authenticated user
         $business = auth()->user()->business;
 
         // Add the business name to the location path
-        $location = str_replace(' ', '_', $business->name) . "/" .(!empty($student_id)?("/". base64_encode($student_id) . "/"):""). $location;
+        $location = str_replace(' ', '_', $business->name) . "/" . (!empty($student_id) ? ("/" . base64_encode($student_id) . "/") : "") . $location;
 
 
-      // Step 3: Handle nested arrays of file paths
+        // Step 3: Handle nested arrays of file paths
         if (is_array($arrayOfString)) {
             return collect($filePaths)->map(function ($filePathItem) use ($fileKey, $location) {
                 $filePathItem[$fileKey] = $this->storeUploadedFiles($filePathItem[$fileKey], "", $location);
@@ -392,7 +391,6 @@ trait BasicUtil
             } else {
                 // Otherwise, update the item with the new location
                 $filePathItem = basename($newLocation);
-
             }
 
             return $filePathItem;
@@ -401,55 +399,59 @@ trait BasicUtil
 
 
     public function renameOrCreateFolder($currentFolderPath, $newFolderName)
-{
-    // Get the full path of the current folder
-    $fullCurrentFolderPath = public_path($currentFolderPath);
+    {
+        // Get the full path of the current folder
+        $fullCurrentFolderPath = public_path($currentFolderPath);
 
-    // Define the new folder path
-    $newFolderPath = dirname($fullCurrentFolderPath) . '/' . $newFolderName;
+        // Define the new folder path
+        $newFolderPath = dirname($fullCurrentFolderPath) . '/' . $newFolderName;
 
-    // Check if the current folder exists
-    if (File::exists($fullCurrentFolderPath)) {
-        try {
-            // Rename the folder
-            File::move($fullCurrentFolderPath, $newFolderPath);
-            Log::info("Folder renamed successfully from {$fullCurrentFolderPath} to {$newFolderPath}");
-            return $newFolderPath;
-        } catch (\Exception $e) {
-            Log::error("Failed to rename folder: " . $e->getMessage());
-            throw new Exception("Failed to rename folder: " . $e->getMessage());
-        }
-    } else {
-        // If the folder doesn't exist, create it
-        try {
-            File::makeDirectory($newFolderPath, 0755, true); // Create the new folder
-            Log::info("Folder created successfully at {$newFolderPath}");
-            return $newFolderPath;
-        } catch (\Exception $e) {
-            Log::error("Failed to create folder: " . $e->getMessage());
-            throw new Exception("Failed to create folder: " . $e->getMessage());
+        // Check if the current folder exists
+        if (File::exists($fullCurrentFolderPath)) {
+            try {
+                // Rename the folder
+                File::move($fullCurrentFolderPath, $newFolderPath);
+                Log::info("Folder renamed successfully from {$fullCurrentFolderPath} to {$newFolderPath}");
+                return $newFolderPath;
+            } catch (\Exception $e) {
+                Log::error("Failed to rename folder: " . $e->getMessage());
+                throw new Exception("Failed to rename folder: " . $e->getMessage());
+            }
+        } else {
+            // If the folder doesn't exist, create it
+            try {
+                File::makeDirectory($newFolderPath, 0755, true); // Create the new folder
+                Log::info("Folder created successfully at {$newFolderPath}");
+                return $newFolderPath;
+            } catch (\Exception $e) {
+                Log::error("Failed to create folder: " . $e->getMessage());
+                throw new Exception("Failed to create folder: " . $e->getMessage());
+            }
         }
     }
-}
 
-public function retrieveData($query, $orderByField)
-{
-    ;
-    $data =  $query->when(!empty(request()->order_by) && in_array(strtoupper(request()->order_by), ['ASC', 'DESC']), function ($query) use ($orderByField) {
-        return $query->orderBy($orderByField, request()->order_by);
-    }, function ($query) use ($orderByField) {
-        return $query->orderBy($orderByField, "DESC");
-    })
-    ->when(request()->filled("id"), function ($query)  {
-        return $query->where('id', request()->input("id"))->first();
-}, function($query) {
- return $query->when(!empty(request()->per_page), function ($query) {
-      return $query->paginate(request()->per_page);
-  }, function ($query) {
-      return $query->get();
-  });
-});
-    return $data;
-}
+    public function retrieveData($query, $orderByField, $tableName)
+    {
 
+        $data =  $query->when(!empty(request()->order_by) && in_array(strtoupper(request()->order_by), ['ASC', 'DESC']), function ($query) use ($orderByField, $tableName) {
+            return $query->orderBy($tableName . "." . $orderByField, request()->order_by);
+        }, function ($query) use ($orderByField, $tableName) {
+            return $query->orderBy($tableName . "." . $orderByField, "DESC");
+        })
+            ->when(request()->filled("id"), function ($query) use ($tableName) {
+                return $query->where($tableName . "." . 'id', request()->input("id"))->first();
+            }, function ($query) {
+                return $query->when(!empty(request()->per_page), function ($query) {
+                    return $query->paginate(request()->per_page);
+                }, function ($query) {
+                    return $query->get();
+                });
+            });
+
+            if(request()->filled("id") && empty($data)) {
+                throw new Exception("No data found",404);
+            }
+        return $data;
+
+    }
 }

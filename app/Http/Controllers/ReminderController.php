@@ -23,7 +23,7 @@ class ReminderController extends Controller
      * @OA\Post(
      *      path="/v1.0/reminders",
      *      operationId="createReminder",
-     *      tags={"reminders"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -138,7 +138,7 @@ class ReminderController extends Controller
      * @OA\Put(
      *      path="/v1.0/reminders",
      *      operationId="updateReminder",
-     *      tags={"reminders"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -274,7 +274,7 @@ class ReminderController extends Controller
      * @OA\Get(
      *      path="/v1.0/reminders-entity-names",
      *      operationId="getReminderEntityNames",
-     *      tags={"reminders"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -383,7 +383,7 @@ class ReminderController extends Controller
      * @OA\Get(
      *      path="/v1.0/reminders",
      *      operationId="getReminders",
-     *      tags={"reminders"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -519,7 +519,7 @@ class ReminderController extends Controller
      * @OA\Get(
      *      path="/v1.0/reminders/{id}",
      *      operationId="getReminderById",
-     *      tags={"reminders"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -611,7 +611,7 @@ class ReminderController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/reminders/{ids}",
      *      operationId="deleteRemindersByIds",
-     *      tags={"reminders"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

@@ -323,7 +323,45 @@ $letter_template->save();
         }
     }
 
-    /**
+    public function query_filters($query)
+    {
+        $created_by  = NULL;
+        if(auth()->user()->business) {
+            $created_by = auth()->user()->business->created_by;
+        }
+        return   $query->when(empty(auth()->user()->business_id), function ($query) use ( $created_by) {
+            $query->when(auth()->user()->hasRole('superadmin'), function ($query)  {
+                $query->forSuperAdmin('letter_templates');
+            }, function ($query) use ($created_by) {
+                $query->forNonSuperAdmin('letter_templates', 'disabled_letter_templates', $created_by);
+            });
+        })
+        ->when(!empty(auth()->user()->business_id), function ($query) use ( $created_by) {
+            $query->forBusiness('letter_templates', "disabled_letter_templates", $created_by);
+        })
+
+            ->when(!empty(request()->id), function ($query) {
+              return $query->where('letter_templates.id', request()->id);
+          })
+            ->when(!empty(request()->search_key), function ($query)  {
+                return $query->where(function ($query)  {
+                    $term = request()->search_key;
+                    $query->where("letter_templates.name", "like", "%" . $term . "%")
+                        ->orWhere("letter_templates.description", "like", "%" . $term . "%");
+                });
+            })
+
+            ->when(!empty(request()->start_date), function ($query)  {
+                return $query->where('letter_templates.created_at', ">=", request()->start_date);
+            })
+            ->when(!empty(request()->end_date), function ($query)  {
+                return $query->where('letter_templates.created_at', "<=", (request()->end_date . ' 23:59:59'));
+            });
+    }
+
+
+
+  /**
      *
      * @OA\Get(
      *      path="/v1.0/letter-templates",
@@ -431,7 +469,138 @@ $letter_template->save();
      *     )
      */
 
-    public function getLetterTemplates(Request $request)
+     public function getLetterTemplates(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+             $this->isModuleEnabled("letter_template");
+             if (!$request->user()->hasPermissionTo('letter_template_view')) {
+                 return response()->json([
+                     "message" => "You can not perform this action"
+                 ], 401);
+             }
+
+
+             $query = LetterTemplate::query();
+             $query = $this->query_filters($query);
+             $letter_templates = $this->retrieveData($query, "id","letter_templates");
+
+
+             return response()->json($letter_templates, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+    /**
+     *
+     * @OA\Get(
+     *      path="/v2.0/letter-templates",
+     *      operationId="getLetterTemplatesV2",
+     *      tags={"letter_templates"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=true,
+     *  example="6"
+     *      ),
+*      * *  @OA\Parameter(
+     * name="is_active",
+     * in="query",
+     * description="is_active",
+     * required=true,
+     * example="1"
+     * ),
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+     * *  @OA\Parameter(
+      * name="id",
+      * in="query",
+      * description="id",
+      * required=true,
+      * example="ASC"
+      * ),
+      * *  @OA\Parameter(
+        * name="is_single_search",
+        * in="query",
+        * description="is_single_search",
+        * required=true,
+        * example="ASC"
+        * ),
+
+
+
+
+     *      summary="This method is to get letter templates  ",
+     *      description="This method is to get letter templates ",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function getLetterTemplatesV2(Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
@@ -441,60 +610,18 @@ $letter_template->save();
                     "message" => "You can not perform this action"
                 ], 401);
             }
-            $created_by  = NULL;
-            if(auth()->user()->business) {
-                $created_by = auth()->user()->business->created_by;
-            }
 
 
 
-            $letter_templates = LetterTemplate::when(empty(auth()->user()->business_id), function ($query) use ($request, $created_by) {
-                $query->when(auth()->user()->hasRole('superadmin'), function ($query) use ($request) {
-                    $query->forSuperAdmin('letter_templates');
-                }, function ($query) use ($request, $created_by) {
-                    $query->forNonSuperAdmin('letter_templates', 'disabled_letter_templates', $created_by);
-                });
-            })
-            ->when(!empty(auth()->user()->business_id), function ($query) use ( $created_by) {
-                $query->forBusiness('letter_templates', "disabled_letter_templates", $created_by);
-            })
 
-                ->when(!empty($request->id), function ($query) use ($request) {
-                  return $query->where('letter_templates.id', $request->id);
-              })
-                ->when(!empty($request->search_key), function ($query) use ($request) {
-                    return $query->where(function ($query) use ($request) {
-                        $term = $request->search_key;
-                        $query->where("letter_templates.name", "like", "%" . $term . "%")
-                            ->orWhere("letter_templates.description", "like", "%" . $term . "%");
-                    });
-                })
-
-                ->when(!empty($request->start_date), function ($query) use ($request) {
-                    return $query->where('letter_templates.created_at', ">=", $request->start_date);
-                })
-                ->when(!empty($request->end_date), function ($query) use ($request) {
-                    return $query->where('letter_templates.created_at', "<=", ($request->end_date . ' 23:59:59'));
-                })
-                ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("letter_templates.id", $request->order_by);
-                }, function ($query) {
-                    return $query->orderBy("letter_templates.id", "DESC");
-                })
-                ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
-                  return $query->first();
-          }, function($query) {
-             return $query->when(!empty(request()->per_page), function ($query) {
-                  return $query->paginate(request()->per_page);
-              }, function ($query) {
-                  return $query->get();
-              });
-          });
-
-          if($request->filled("is_single_search") && empty($letter_templates)){
-     throw new Exception("No data found",404);
-          }
-
+            $query = LetterTemplate::query();
+            $query = $this->query_filters($query)
+            ->select(
+                'letter_templates.id',
+                'letter_templates.name',
+                'letter_templates.template',
+            );
+            $letter_templates = $this->retrieveData($query, "id","letter_templates");
 
             return response()->json($letter_templates, 200);
         } catch (Exception $e) {
@@ -502,6 +629,11 @@ $letter_template->save();
             return $this->sendError($e, 500, $request);
         }
     }
+
+
+
+
+
 
   /**
      *

@@ -21,7 +21,7 @@ class JobListingController extends Controller
      * @OA\Post(
      *      path="/v1.0/job-listings",
      *      operationId="createJobListing",
-     *      tags={"job_listing"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -120,7 +120,7 @@ class JobListingController extends Controller
      * @OA\Put(
      *      path="/v1.0/job-listings",
      *      operationId="updateJobListing",
-     *      tags={"job_listing"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -256,7 +256,7 @@ class JobListingController extends Controller
      * @OA\Get(
      *      path="/v1.0/job-listings",
      *      operationId="getJobListings",
-     *      tags={"job_listing"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -398,7 +398,7 @@ class JobListingController extends Controller
      * @OA\Get(
      *      path="/v1.0/client/job-listings",
      *      operationId="getJobListingsClient",
-     *      tags={"job_listing"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -553,7 +553,7 @@ class JobListingController extends Controller
      * @OA\Get(
      *      path="/v1.0/job-listings/{id}",
      *      operationId="getJobListingById",
-     *      tags={"job_listing"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -646,7 +646,7 @@ class JobListingController extends Controller
      * @OA\Get(
      *      path="/v1.0/client/job-listings/{id}",
      *      operationId="getJobListingByIdClient",
-     *      tags={"job_listing"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -750,7 +750,7 @@ class JobListingController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/job-listings/{ids}",
      *      operationId="deleteJobListingsByIds",
-     *      tags={"job_listing"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

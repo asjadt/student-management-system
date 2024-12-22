@@ -23,7 +23,7 @@ class AssetTypeController extends Controller
      * @OA\Post(
      *      path="/v1.0/asset-types",
      *      operationId="createAssetType",
-     *      tags={"administrator.asset_type"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -106,7 +106,7 @@ class AssetTypeController extends Controller
      * @OA\Put(
      *      path="/v1.0/asset-types",
      *      operationId="updateAssetType",
-     *      tags={"administrator.asset_type"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -206,7 +206,7 @@ class AssetTypeController extends Controller
      * @OA\Get(
      *      path="/v1.0/asset-types",
      *      operationId="getAssetTypes",
-     *      tags={"administrator.asset_type"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -342,7 +342,7 @@ class AssetTypeController extends Controller
      * @OA\Get(
      *      path="/v1.0/asset-types/{id}",
      *      operationId="getAssetTypeById",
-     *      tags={"administrator.asset_type"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -435,7 +435,7 @@ class AssetTypeController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/asset-types/{ids}",
      *      operationId="deleteAssetTypesByIds",
-     *      tags={"administrator.asset_type"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

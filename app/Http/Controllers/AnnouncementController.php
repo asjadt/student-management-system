@@ -21,7 +21,7 @@ class AnnouncementController extends Controller
      * @OA\Post(
      *      path="/v1.0/announcements",
      *      operationId="createAnnouncement",
-     *      tags={"administrator.announcements"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -113,7 +113,7 @@ class AnnouncementController extends Controller
      * @OA\Put(
      *      path="/v1.0/announcements",
      *      operationId="updateAnnouncement",
-     *      tags={"administrator.announcements"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -238,7 +238,7 @@ class AnnouncementController extends Controller
      * @OA\Get(
      *      path="/v1.0/announcements",
      *      operationId="getAnnouncements",
-     *      tags={"administrator.announcements"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -383,7 +383,7 @@ class AnnouncementController extends Controller
      * @OA\Get(
      *      path="/v1.0/announcements/{id}",
      *      operationId="getAnnouncementById",
-     *      tags={"administrator.announcements"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -475,7 +475,7 @@ class AnnouncementController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/announcements/{ids}",
      *      operationId="deleteAnnouncementsByIds",
-     *      tags={"administrator.announcements"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

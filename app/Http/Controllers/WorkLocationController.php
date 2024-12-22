@@ -23,7 +23,7 @@ class WorkLocationController extends Controller
      * @OA\Post(
      *      path="/v1.0/work-locations",
      *      operationId="createWorkLocation",
-     *      tags={"work_locations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -121,7 +121,7 @@ class WorkLocationController extends Controller
      * @OA\Put(
      *      path="/v1.0/work-locations",
      *      operationId="updateWorkLocation",
-     *      tags={"work_locations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -226,7 +226,7 @@ class WorkLocationController extends Controller
      * @OA\Put(
      *      path="/v1.0/work-locations/toggle-active",
      *      operationId="toggleActiveWorkLocation",
-     *      tags={"work_locations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -432,7 +432,7 @@ class WorkLocationController extends Controller
      * @OA\Get(
      *      path="/v1.0/work-locations",
      *      operationId="getWorkLocations",
-     *      tags={"work_locations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -659,7 +659,7 @@ class WorkLocationController extends Controller
      * @OA\Get(
      *      path="/v1.0/work-locations/{id}",
      *      operationId="getWorkLocationById",
-     *      tags={"work_locations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -821,7 +821,7 @@ class WorkLocationController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/work-locations/{ids}",
      *      operationId="deleteWorkLocationsByIds",
-     *      tags={"work_locations"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

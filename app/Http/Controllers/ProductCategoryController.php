@@ -19,7 +19,7 @@ class ProductCategoryController extends Controller
   * @OA\Post(
   *      path="/v1.0/product-categories",
   *      operationId="createProductCategory",
-  *      tags={"shop_section.product_category_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -101,7 +101,7 @@ class ProductCategoryController extends Controller
   * @OA\Put(
   *      path="/v1.0/product-categories",
   *      operationId="updateProductCategory",
-  *      tags={"shop_section.product_category_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -203,7 +203,7 @@ class ProductCategoryController extends Controller
   * @OA\Get(
   *      path="/v1.0/product-categories/{perPage}",
   *      operationId="getProductCategories",
-  *      tags={"shop_section.product_category_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -319,7 +319,7 @@ class ProductCategoryController extends Controller
   * @OA\Get(
   *      path="/v1.0/product-categories/single/get/{id}",
   *      operationId="getProductCategoryById",
-  *      tags={"shop_section.product_category_management"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -411,7 +411,7 @@ return response()->json([
   * @OA\Get(
   *      path="/v1.0/product-categories/get/all",
   *      operationId="getAllProductCategory",
-  *      tags={"basics"},
+  *      tags={"unused_apis"},
  *       security={
   *           {"bearerAuth": {}}
   *       },
@@ -511,7 +511,7 @@ return response()->json([
      *     @OA\Delete(
      *      path="/v1.0/product-categories/{id}",
      *      operationId="deleteProductCategoryById",
-     *      tags={"shop_section.product_category_management"},
+     *      tags={"unused_apis"},
     *       security={
      *           {"bearerAuth": {}}
      *       },

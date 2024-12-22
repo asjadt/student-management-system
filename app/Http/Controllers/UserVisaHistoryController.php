@@ -27,7 +27,7 @@ class UserVisaHistoryController extends Controller
      * @OA\Post(
      *      path="/v1.0/user-visa-histories",
      *      operationId="createUserVisaHistory",
-     *      tags={"user_visa_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -117,7 +117,7 @@ class UserVisaHistoryController extends Controller
      * @OA\Put(
      *      path="/v1.0/user-visa-histories",
      *      operationId="updateUserVisaHistory",
-     *      tags={"user_visa_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -249,7 +249,7 @@ class UserVisaHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-visa-histories",
      *      operationId="getUserVisaHistories",
-     *      tags={"user_visa_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -410,7 +410,7 @@ class UserVisaHistoryController extends Controller
      * @OA\Get(
      *      path="/v1.0/user-visa-histories/{id}",
      *      operationId="getUserVisaHistoryById",
-     *      tags={"user_visa_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -512,7 +512,7 @@ class UserVisaHistoryController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/user-visa-histories/{ids}",
      *      operationId="deleteUserVisaHistoriesByIds",
-     *      tags={"user_visa_histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

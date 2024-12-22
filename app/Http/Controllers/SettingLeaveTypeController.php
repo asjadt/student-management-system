@@ -24,7 +24,7 @@ class SettingLeaveTypeController extends Controller
      * @OA\Post(
      *      path="/v1.0/setting-leave-types",
      *      operationId="createSettingLeaveType",
-     *      tags={"settings.setting_leave_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -128,7 +128,7 @@ class SettingLeaveTypeController extends Controller
      * @OA\Put(
      *      path="/v1.0/setting-leave-types",
      *      operationId="updateSettingLeaveType",
-     *      tags={"settings.setting_leave_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -241,7 +241,7 @@ class SettingLeaveTypeController extends Controller
      * @OA\Put(
      *      path="/v1.0/setting-leave-types/toggle-active",
      *      operationId="toggleActiveSettingLeaveType",
-     *      tags={"settings.setting_leave_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -446,7 +446,7 @@ class SettingLeaveTypeController extends Controller
      * @OA\Put(
      *      path="/v1.0/setting-leave-types/toggle-earning-enabled",
      *      operationId="toggleEarningEnabledSettingLeaveType",
-     *      tags={"settings.setting_leave_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -548,7 +548,7 @@ class SettingLeaveTypeController extends Controller
      * @OA\Get(
      *      path="/v1.0/setting-leave-types",
      *      operationId="getSettingLeaveTypes",
-     *      tags={"settings.setting_leave_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -776,7 +776,7 @@ class SettingLeaveTypeController extends Controller
      * @OA\Get(
      *      path="/v1.0/setting-leave-types/{id}",
      *      operationId="getSettingLeaveTypeById",
-     *      tags={"settings.setting_leave_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -936,7 +936,7 @@ class SettingLeaveTypeController extends Controller
      *     @OA\Delete(
      *      path="/v1.0/setting-leave-types/{ids}",
      *      operationId="deleteSettingLeaveTypesByIds",
-     *      tags={"settings.setting_leave_types"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },

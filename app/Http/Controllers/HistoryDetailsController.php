@@ -29,7 +29,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-assets",
      *      operationId="getUserAssetHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -204,7 +204,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-passport-details",
      *      operationId="getUserPassportDetailsHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -359,7 +359,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-visa-details",
      *      operationId="getUserVisaDetailsHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -513,7 +513,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-sponsorship-details",
      *      operationId="getUserSponsorshipDetailsHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -664,7 +664,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-address-details",
      *      operationId="getUserAddressDetailsHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -819,7 +819,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-attendance-details",
      *      operationId="getUserAttendanceDetailsHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -985,7 +985,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-leave-details",
      *      operationId="getUserLeaveDetailsHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1152,7 +1152,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-work-shift",
      *      operationId="getUserWorkShiftHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -1322,7 +1322,7 @@ class HistoryDetailsController extends Controller
      * @OA\Get(
      *      path="/v1.0/histories/user-project",
      *      operationId="getUserProjectHistory",
-     *      tags={"histories"},
+     *      tags={"unused_apis"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
