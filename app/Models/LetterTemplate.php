@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class LetterTemplate extends Model
 {
     use HasFactory, DefaultQueryScopesTrait;
+
     protected $fillable = [
         'name',
         'description',

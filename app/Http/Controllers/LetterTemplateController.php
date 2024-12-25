@@ -620,6 +620,7 @@ $letter_template->save();
                 'letter_templates.id',
                 'letter_templates.name',
                 'letter_templates.template',
+                'letter_templates.is_active'
             );
             $letter_templates = $this->retrieveData($query, "id","letter_templates");
 

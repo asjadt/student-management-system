@@ -327,7 +327,6 @@ trait BasicUtil
     public function storeUploadedFiles($filePaths, $fileKey, $location, $arrayOfString = NULL, $student_id = NULL)
     {
 
-
         // Step 1: Retrieve the business of the authenticated user
         $business = auth()->user()->business;
 
@@ -430,6 +429,7 @@ trait BasicUtil
         }
     }
 
+
     public function retrieveData($query, $orderByField, $tableName)
     {
 
@@ -454,5 +454,5 @@ trait BasicUtil
         return $data;
 
     }
-    
+
 }
