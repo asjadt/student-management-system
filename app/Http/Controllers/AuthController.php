@@ -12,6 +12,7 @@ use App\Http\Requests\ForgetPasswordRequest;
 use App\Http\Requests\ForgetPasswordV2Request;
 use App\Http\Requests\PasswordChangeRequest;
 use App\Http\Requests\UserInfoUpdateRequest;
+use App\Http\Utils\BasicUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\UserActivityUtil;
@@ -33,7 +34,7 @@ use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
-    use ErrorUtil, BusinessUtil, UserActivityUtil;
+    use ErrorUtil, BusinessUtil, UserActivityUtil, BasicUtil;
     /**
      *
      * @OA\Post(
@@ -357,7 +358,16 @@ class AuthController extends Controller
             $user->token = auth()->user()->createToken('authToken')->accessToken;
             $user->permissions = $user->getAllPermissions()->pluck('name');
             $user->roles = $user->roles->pluck('name');
-            $user->business = $user->business;
+
+            $business = $user->business;
+            if(!empty($business)){
+                $business = $this->getUrlLink($business,"logo",config("setup-config.business_gallery_location"),$business->name);
+            }
+
+
+            $user->business = $business;
+
+
 
             Auth::login($user);
             $this->storeActivity($request, "logged in", "User successfully logged into the system.");
