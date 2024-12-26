@@ -456,10 +456,15 @@ trait BasicUtil
     }
 
 
-    public function getUrlLink($data,$propertyName,$folderName){
+    public function getUrlLink($data,$propertyName,$folderName,$business_name=NULL){
+
+        if(empty($business_name)){
+            $business_name = auth()->user()?->business?->name ?? "no business";
+        }
 
 
-        $data[$propertyName] = "/" . str_replace(' ', '_', auth()->user()->business->name) . "/". $folderName."/".  $data[$propertyName];
+
+        $data[$propertyName] = "/" . str_replace(' ', '_', $business_name) . "/". $folderName."/".  $data[$propertyName];
 
         return $data;
     }

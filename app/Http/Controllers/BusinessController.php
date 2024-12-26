@@ -226,7 +226,7 @@ class BusinessController extends Controller
             if (!empty($business->logo) && $business->logo !== $new_file_name) {
 
 
-                    $existingLogoPath = public_path($this->getUrlLink($business,"logo",config("setup-config.business_gallery_location"))["logo"]);
+                    $existingLogoPath = public_path($this->getUrlLink($business,"logo",config("setup-config.business_gallery_location"))["logo"],$business->name);
 
 
 
@@ -2041,7 +2041,7 @@ class BusinessController extends Controller
                 ->first();
 
             if(!empty($business)){
-$business = $this->getUrlLink($business,"logo",config("setup-config.business_gallery_location"));
+$business = $this->getUrlLink($business,"logo",config("setup-config.business_gallery_location"),$business->name);
             }
 
 
