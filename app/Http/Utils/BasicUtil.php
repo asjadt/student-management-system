@@ -455,4 +455,13 @@ trait BasicUtil
 
     }
 
+
+    public function getUrlLink($data,$propertyName,$folderName){
+
+
+        $data[$propertyName] = "/" . str_replace(' ', '_', auth()->user()->business->name) . "/". $folderName."/".  $data[$propertyName];
+
+        return $data;
+    }
+
 }

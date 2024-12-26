@@ -216,21 +216,31 @@ class BusinessController extends Controller
 
             $request_data["image"]->move(public_path($location), $new_file_name);
 
+
+
             $new_logo_path = ("/" . $location . "/" . $new_file_name);
 
+
+
             // Compare existing and new logo paths and delete the old logo if needed
-            if ($business->logo && $business->logo !== $new_logo_path) {
-                $existingLogoPath = public_path($business->logo);
+            if (!empty($business->logo) && $business->logo !== $new_file_name) {
+
+
+                    $existingLogoPath = public_path($this->getUrlLink($business,"logo",config("setup-config.business_gallery_location"))["logo"]);
+
+
 
                 if (File::exists($existingLogoPath)) {
                     File::delete($existingLogoPath);
                 }
+
+
+
             }
 
 
-
             // Update the business logo
-            $business->logo = $new_logo_path;
+            $business->logo = $new_file_name;
             $business->save();
 
             // Return a success response
@@ -240,6 +250,8 @@ class BusinessController extends Controller
                     "image" => $new_file_name,
                     "location" => $location,
                     "full_location" => $new_logo_path
+
+
                 ]
             ], 200);
         } catch (Exception $e) {
@@ -2027,6 +2039,11 @@ class BusinessController extends Controller
                 "id" => $id
             ])
                 ->first();
+
+            if(!empty($business)){
+$business = $this->getUrlLink($business,"logo",config("setup-config.business_gallery_location"));
+            }
+
 
             return response()->json($business, 200);
         } catch (Exception $e) {
