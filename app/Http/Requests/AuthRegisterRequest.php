@@ -29,7 +29,7 @@ class AuthRegisterRequest extends BaseFormRequest
             // 'email' => 'required|string|email|indisposable|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|confirmed|string|min:6',
-            'phone' => 'required|string|unique:users,phone',
+            'phone' => 'nullable|string|unique:users,phone',
             'image' => 'nullable|string',
             'address_line_1' => 'nullable|string',
             'address_line_2' => 'nullable|string',

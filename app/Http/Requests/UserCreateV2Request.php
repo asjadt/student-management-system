@@ -70,7 +70,7 @@ class UserCreateV2Request extends BaseFormRequest
         'email' => 'required|string|email|max:255|unique:users',
 
         'password' => 'required|string|min:6',
-        'phone' => 'required|string',
+        'phone' => 'nullable|string',
         'image' => 'nullable|string',
         'address_line_1' => 'nullable|string',
         'address_line_2' => 'nullable',

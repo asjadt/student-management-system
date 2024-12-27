@@ -30,7 +30,7 @@ class UserInfoUpdateRequest extends BaseFormRequest
             'last_Name' => 'required|string|max:255',
             'email' => 'required|string|email|indisposable|max:255|unique:users',
             'password' => 'nullable|confirmed|string|min:6',
-            'phone' => 'required|string',
+            'phone' => 'nullable|string',
             'image' => 'nullable|string',
             'address_line_1' => 'nullable',
             'address_line_2' => 'nullable',

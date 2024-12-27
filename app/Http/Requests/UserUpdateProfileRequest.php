@@ -32,7 +32,7 @@ class UserUpdateProfileRequest extends BaseFormRequest
             'email' => 'required|string|unique:users,email,' . auth()->user()->id . ',id',
 
             'password' => 'nullable|confirmed|string|min:6',
-            'phone' => 'required|string',
+            'phone' => 'nullable|string',
             'image' => 'nullable|string',
             'address_line_1' => 'nullable',
             'address_line_2' => 'nullable',
