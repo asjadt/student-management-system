@@ -68,13 +68,13 @@ class AuthRegisterBusinessRequest extends BaseFormRequest
 
             'business.lat' => 'nullable|string',
             'business.long' => 'nullable|string',
-            'business.country' => 'required|string',
-            'business.city' => 'required|string',
+            'business.country' => 'nullable|string',
+            'business.city' => 'nullable|string',
 
             'business.currency' => 'nullable|string',
 
-            'business.postcode' => 'required|string',
-            'business.address_line_1' => 'required|string',
+            'business.postcode' => 'nullable|string',
+            'business.address_line_1' => 'nullable|string',
             'business.address_line_2' => 'nullable|string',
 
 

@@ -72,10 +72,10 @@ class UserCreateV2Request extends BaseFormRequest
         'password' => 'required|string|min:6',
         'phone' => 'required|string',
         'image' => 'nullable|string',
-        'address_line_1' => 'required|string',
+        'address_line_1' => 'nullable|string',
         'address_line_2' => 'nullable',
-        'country' => 'required|string',
-        'city' => 'required|string',
+        'country' => 'nullable|string',
+        'city' => 'nullable|string',
         'postcode' => 'nullable|string',
         'lat' => 'nullable|string',
         'long' => 'nullable|string',
@@ -298,7 +298,7 @@ class UserCreateV2Request extends BaseFormRequest
                 }
 
                 $exists = CourseTitle::where("course_titles.id",$value)
-             
+
                 ->exists();
 
             if (!$exists) {
