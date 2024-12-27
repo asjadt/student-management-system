@@ -1984,10 +1984,10 @@ class StudentController extends Controller
             }
 
             if(!is_array($student->previous_education_history)) {
-                json_decode($student->previous_education_history,true);
+                $previous_education_history =   json_decode($student->previous_education_history,true);
             }
 
-            $previous_education_history = $student->previous_education_history;
+         
             foreach ($previous_education_history['student_docs'] as &$student_doc_object) {
                 // Ensure each student_doc_object has a file_name property
 
