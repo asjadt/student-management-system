@@ -351,11 +351,11 @@ class AwardingBodyController extends Controller
             $query->when(auth()->user()->hasRole('superadmin'), function ($query) {
                 $query->forSuperAdmin('awarding_bodies');
             }, function ($query) use ($created_by) {
-                $query->forNonSuperAdmin('awarding_bodies', 'disabled_awarding_bodies', $created_by);
+                $query->forNonSuperAdmin('awarding_bodies', 'remove_awarding_bodies', $created_by);
             });
         })
         ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by) {
-            $query->forBusiness('awarding_bodies', "disabled_awarding_bodies", $created_by);
+            $query->forBusiness('awarding_bodies', "remove_awarding_bodies", $created_by);
         })
         ->when(!empty(request()->name), function ($query) {
             return $query->where('awarding_bodies.name', request()->name);

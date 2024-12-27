@@ -409,6 +409,7 @@ class BankController extends Controller
                     'business_id' => auth()->user()->business_id,
                     'created_by' => auth()->user()->id,
                 ])->first();
+
                 if(!$disabled_bank) {
                     DisabledBank::create([
                         'bank_id' => $bank->id,
@@ -549,14 +550,7 @@ class BankController extends Controller
                         $query->where('banks.business_id', NULL)
                         ->where('banks.is_default', 1)
                         ->where('banks.is_active', 1)
-                        ->when(isset($request->is_active), function ($query) use ($request) {
-                            if(intval($request->is_active)) {
-                                return $query->whereDoesntHave("disabled", function($q) {
-                                    $q->whereIn("disabled_banks.created_by", [auth()->user()->id]);
-                                });
-                            }
 
-                        })
                         ->orWhere(function ($query) use ($request) {
                             $query->where('banks.business_id', NULL)
                                 ->where('banks.is_default', 0)
@@ -577,17 +571,8 @@ class BankController extends Controller
                         $query->where('banks.business_id', NULL)
                         ->where('banks.is_default', 1)
                         ->where('banks.is_active', 1)
-                        ->whereDoesntHave("disabled", function($q) use($created_by) {
-                            $q->whereIn("disabled_banks.created_by", [$created_by]);
-                        })
-                        ->when(isset($request->is_active), function ($query) use ($request, $created_by)  {
-                            if(intval($request->is_active)) {
-                                return $query->whereDoesntHave("disabled", function($q) use($created_by) {
-                                    $q->whereIn("disabled_banks.business_id",[auth()->user()->business_id]);
-                                });
-                            }
 
-                        })
+
 
 
                         ->orWhere(function ($query) use($request, $created_by){
@@ -596,14 +581,7 @@ class BankController extends Controller
                                 ->where('banks.created_by', $created_by)
                                 ->where('banks.is_active', 1)
 
-                                ->when(isset($request->is_active), function ($query) use ($request) {
-                                    if(intval($request->is_active)) {
-                                        return $query->whereDoesntHave("disabled", function($q) {
-                                            $q->whereIn("disabled_banks.business_id",[auth()->user()->business_id]);
-                                        });
-                                    }
-
-                                })
+                               
 
 
                                 ;

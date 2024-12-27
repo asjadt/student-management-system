@@ -197,6 +197,8 @@ class StudentStatusController extends Controller
 
                 $student_status_query_params = [
                     "id" => $request_data["id"],
+                    "business_id" =>auth()->user()->business_id
+
                 ];
 
 
@@ -316,90 +318,10 @@ class StudentStatusController extends Controller
         if(auth()->user()->business) {
             $created_by = auth()->user()->business->created_by;
         }
-          return   $query->when(empty(request()->user()->business_id), function ($query) use ( $created_by) {
-            if (auth()->user()->hasRole('superadmin')) {
-                return $query->where('student_statuses.business_id', NULL)
-                    ->where('student_statuses.is_default', 1)
-                    ->when(isset(request()->is_active), function ($query) {
-                        return $query->where('student_statuses.is_active', intval(request()->is_active));
-                    });
-            } else {
-                return $query
-
-                ->where(function($query)  {
-                    $query->where('student_statuses.business_id', NULL)
-                    ->where('student_statuses.is_default', 1)
-                    ->where('student_statuses.is_active', 1)
-                    ->when(isset(request()->is_active), function ($query)  {
-                        if(intval(request()->is_active)) {
-                            return $query->whereDoesntHave("disabled", function($q) {
-                                $q->whereIn("disabled_student_statuses.created_by", [auth()->user()->id]);
-                            });
-                        }
-
-                    })
-                    ->orWhere(function ($query)  {
-                        $query->where('student_statuses.business_id', NULL)
-                            ->where('student_statuses.is_default', 0)
-                            ->where('student_statuses.created_by', auth()->user()->id)
-                            ->when(isset(request()->is_active), function ($query)  {
-                                return $query->where('student_statuses.is_active', intval(request()->is_active));
-                            });
-                    });
-
-                });
-            }
-        })
-            ->when(!empty(request()->user()->business_id), function ($query) use ( $created_by) {
-                return $query
-                ->where(function($query) use( $created_by) {
-
-
-                    $query->where('student_statuses.business_id', NULL)
-                    ->where('student_statuses.is_default', 1)
-                    ->where('student_statuses.is_active', 1)
-                    ->whereDoesntHave("disabled", function($q) use($created_by) {
-                        $q->whereIn("disabled_student_statuses.created_by", [$created_by]);
-                    })
-                    ->when(isset(request()->is_active), function ($query) use ( $created_by)  {
-                        if(intval(request()->is_active)) {
-                            return $query->whereDoesntHave("disabled", function($q) use($created_by) {
-                                $q->whereIn("disabled_student_statuses.business_id",[auth()->user()->business_id]);
-                            });
-                        }
-
-                    })
-
-
-                    ->orWhere(function ($query) use($created_by){
-                        $query->where('student_statuses.business_id', NULL)
-                            ->where('student_statuses.is_default', 0)
-                            ->where('student_statuses.created_by', $created_by)
-                            ->where('student_statuses.is_active', 1)
-
-                            ->when(isset(request()->is_active), function ($query)  {
-                                if(intval(request()->is_active)) {
-                                    return $query->whereDoesntHave("disabled", function($q) {
-                                        $q->whereIn("disabled_student_statuses.business_id",[auth()->user()->business_id]);
-                                    });
-                                }
-
-                            })
-
-
-                            ;
-                    })
-                    ->orWhere(function ($query) {
-                        $query->where('student_statuses.business_id', auth()->user()->business_id)
-                            ->where('student_statuses.is_default', 0)
-                            ->when(isset(request()->is_active), function ($query)  {
-                                return $query->where('student_statuses.is_active', intval(request()->is_active));
-                            });;
-                    });
-                });
-
-
-            })
+          return   $query
+          ->where([
+            "business_id" =>auth()->user()->business_id
+         ])
             ->when(!empty(request()->search_key), function ($query) {
                 return $query->where(function ($query)  {
                     $term = request()->search_key;
@@ -1005,6 +927,9 @@ class StudentStatusController extends Controller
                 "id" => $id,
 
             ])
+            ->where([
+                "business_id" =>auth()->user()->business_id
+             ])
                 ->first();
                 if (!$student_status) {
                     $this->storeError(
@@ -1164,20 +1089,9 @@ class StudentStatusController extends Controller
 
             $idsArray = explode(',', $ids);
             $existingIds = StudentStatus::whereIn('id', $idsArray)
-            ->when(empty($request->user()->business_id), function ($query) use ($request) {
-                if ($request->user()->hasRole("superadmin")) {
-                    return $query->where('student_statuses.business_id', NULL)
-                        ->where('student_statuses.is_default', 1);
-                } else {
-                    return $query->where('student_statuses.business_id', NULL)
-                        ->where('student_statuses.is_default', 0)
-                        ->where('student_statuses.created_by', $request->user()->id);
-                }
-            })
-            ->when(!empty($request->user()->business_id), function ($query) use ($request) {
-                return $query->where('student_statuses.business_id', $request->user()->business_id)
-                    ->where('student_statuses.is_default', 0);
-            })
+            ->where([
+                "business_id" =>auth()->user()->business_id
+             ])
                 ->select('id')
                 ->get()
                 ->pluck('id')

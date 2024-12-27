@@ -550,14 +550,7 @@ class DesignationController extends Controller
                         $query->where('designations.business_id', NULL)
                         ->where('designations.is_default', 1)
                         ->where('designations.is_active', 1)
-                        ->when(isset($request->is_active), function ($query) use ($request) {
-                            if(intval($request->is_active)) {
-                                return $query->whereDoesntHave("disabled", function($q) {
-                                    $q->whereIn("disabled_designations.created_by", [auth()->user()->id]);
-                                });
-                            }
 
-                        })
                         ->orWhere(function ($query) use ($request) {
                             $query->where('designations.business_id', NULL)
                                 ->where('designations.is_default', 0)
@@ -578,17 +571,8 @@ class DesignationController extends Controller
                         $query->where('designations.business_id', NULL)
                         ->where('designations.is_default', 1)
                         ->where('designations.is_active', 1)
-                        ->whereDoesntHave("disabled", function($q) use($created_by) {
-                            $q->whereIn("disabled_designations.created_by", [$created_by]);
-                        })
-                        ->when(isset($request->is_active), function ($query) use ($request, $created_by)  {
-                            if(intval($request->is_active)) {
-                                return $query->whereDoesntHave("disabled", function($q) use($created_by) {
-                                    $q->whereIn("disabled_designations.business_id",[auth()->user()->business_id]);
-                                });
-                            }
 
-                        })
+
 
 
                         ->orWhere(function ($query) use($request, $created_by){
@@ -597,14 +581,7 @@ class DesignationController extends Controller
                                 ->where('designations.created_by', $created_by)
                                 ->where('designations.is_active', 1)
 
-                                ->when(isset($request->is_active), function ($query) use ($request) {
-                                    if(intval($request->is_active)) {
-                                        return $query->whereDoesntHave("disabled", function($q) {
-                                            $q->whereIn("disabled_designations.business_id",[auth()->user()->business_id]);
-                                        });
-                                    }
-
-                                })
+                               
 
 
                                 ;

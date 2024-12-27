@@ -99,9 +99,7 @@ class WorkLocationUpdateRequest extends BaseFormRequest
                                 return $query->where('work_locations.business_id', NULL)
                                     ->where('work_locations.is_default', 1)
                                     ->where('work_locations.is_active', 1)
-                                    ->whereDoesntHave("disabled", function($q) {
-                                        $q->whereIn("disabled_work_locations.created_by", [auth()->user()->id]);
-                                    })
+                                  
 
                                     ->orWhere(function ($query) use($value)  {
                                         $query->where("work_locations.id",$value)->where('work_locations.business_id', NULL)

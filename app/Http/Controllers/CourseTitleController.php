@@ -318,16 +318,12 @@ class CourseTitleController extends Controller
             $created_by = auth()->user()->business->created_by;
         }
 
-        return   $query->when(empty(auth()->user()->business_id), function ($query) use ($created_by) {
-            $query->when(auth()->user()->hasRole('superadmin'), function ($query) {
-                $query->forSuperAdmin('course_titles');
-            }, function ($query) use ($created_by) {
-                $query->forNonSuperAdmin('course_titles', 'disabled_letter_templates', $created_by);
-            });
-        })
+        return   $query->where([
+            "business_id" =>auth()->user()->business_id
+         ])
 
         ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by) {
-            $query->forBusiness('course_titles', "disabled_letter_templates", $created_by);
+            $query->forBusiness('course_titles', "remove_letter_templates", $created_by);
         })
 
             ->when(!empty(request()->search_key), function ($query) {

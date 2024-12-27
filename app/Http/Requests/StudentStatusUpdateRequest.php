@@ -44,29 +44,6 @@ class StudentStatusUpdateRequest extends BaseFormRequest
                             return 0;
 
                     }
-                    if (empty(auth()->user()->business_id)) {
-
-                        if(auth()->user()->hasRole('superadmin')) {
-                            if(($student_status->business_id != NULL || $student_status->is_default != 1)) {
-                                // $fail("$attribute is invalid.");
-                                $fail("You do not have permission to update this student statuses due to role restrictions.");
-
-                          }
-
-                        } else {
-                            if(($student_status->business_id != NULL || $student_status->is_default != 0 || $student_status->created_by != auth()->user()->id)) {
-                                // $fail("$attribute is invalid.");
-                                $fail("You do not have permission to update this student statuses due to role restrictions.");
-
-                          }
-                        }
-
-                    } else {
-                        if(($student_status->business_id != auth()->user()->business_id || $student_status->is_default != 0)) {
-                               // $fail("$attribute is invalid.");
-                            $fail("You do not have permission to update this student status due to role restrictions.");
-                        }
-                    }
 
 
 
@@ -79,7 +56,7 @@ class StudentStatusUpdateRequest extends BaseFormRequest
                 'string',
                 function ($attribute, $value, $fail) {
 
-                    
+
 
                         $exists = StudentStatus::where("student_statuses.name",$value)
                         ->whereNotIn("id",[$this->id])
