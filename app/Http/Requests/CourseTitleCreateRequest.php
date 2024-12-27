@@ -31,12 +31,15 @@ class CourseTitleCreateRequest extends FormRequest
                 'string',
                 function ($attribute, $value, $fail) {
 
-                        $created_by  = NULL;
-                        if(auth()->user()->business) {
-                            $created_by = auth()->user()->business->created_by;
-                        }
+
 
                         $exists = CourseTitle::where("course_titles.name",$value)
+                        ->where(
+                            [
+                                "business_id" => auth()->user()->business_id
+                            ]
+                        )
+
 
 
 

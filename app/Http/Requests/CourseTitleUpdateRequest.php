@@ -62,6 +62,11 @@ class CourseTitleUpdateRequest extends FormRequest
                         }
 
                         $exists = CourseTitle::where("course_titles.name",$value)
+                        ->where(
+                            [
+                                "business_id" => auth()->user()->business_id
+                            ]
+                        )
                         ->whereNotIn("id",[$this->id])
 
                         ->exists();
