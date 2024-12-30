@@ -94,15 +94,9 @@ Route::patch('/forgetpassword/reset/{token}', [AuthController::class, "changePas
 Route::post('/auth/check/email', [AuthController::class, "checkEmail"]);
 
 
-
-
-
-
-
 Route::post('/v1.0/user-image', [UserManagementController::class, "createUserImage"]);
 
 Route::post('/v1.0/business-image', [BusinessController::class, "createBusinessImage"]);
-
 
 Route::post('/v1.0/business-image-multiple', [BusinessController::class, "createBusinessImageMultiple"]);
 
@@ -116,17 +110,14 @@ Route::middleware(['custom.auth'])->group(function () {
     Route::post('/v2.0/files/single-file-upload', [FileManagementController::class, "createFileSingleV2"]);
     Route::post('/v2.0/files/multiple-file-upload', [FileManagementController::class, "createFileMultipleV2"]);
 
+
+
+
+
+
     Route::post('/v1.0/files/multiple-student-file-upload', [FileManagementController::class, "createStudentFileMultipleSecure"]);
 
-
-
-
     Route::get('/v1.0/file/{filename}', [FileManagementController::class, "getFile"]);
-
-
-
-
-
 
 
     Route::post('/v1.0/logout', [AuthController::class, "logout"]);

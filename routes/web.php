@@ -30,22 +30,12 @@ Route::get('/error-log', [SetUpController::class, "getErrorLogs"])->name("error-
 
 Route::get('/activity-log', [SetUpController::class, "getActivityLogs"])->name("activity-log");
 
-
-
 Route::get('/setup', [SetUpController::class, "setUp"])->name("setup");
-
-
 Route::get('/backup', [SetUpController::class, "backup"])->name("backup");
 
-
 Route::get('/roleRefresh', [SetUpController::class, "roleRefresh"])->name("roleRefresh");
-
 Route::get('/swagger-refresh', [SetUpController::class, "swaggerRefresh"]);
 Route::get('/migrate', [SetUpController::class, "migrate"]);
-
-
-
-
 
 Route::get("/swagger-login",[SwaggerLoginController::class,"login"])->name("login.view");
 Route::post("/swagger-login",[SwaggerLoginController::class,"passUser"]);

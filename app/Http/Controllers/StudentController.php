@@ -1987,13 +1987,14 @@ class StudentController extends Controller
                 $previous_education_history =   json_decode($student->previous_education_history,true);
             }
 
-         
+         if(is_array($previous_education_history['student_docs'])) {
             foreach ($previous_education_history['student_docs'] as &$student_doc_object) {
                 // Ensure each student_doc_object has a file_name property
-
                     // Modify the file_name by prepending business name and student ID
                     $student_doc_object["file_name"] = "/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/".  $student_doc_object["file_name"];
             }
+         }
+
             $student->previous_education_history = $previous_education_history;
 
             return response()->json($student, 200);
