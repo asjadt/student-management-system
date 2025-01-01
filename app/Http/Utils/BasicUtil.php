@@ -327,11 +327,7 @@ trait BasicUtil
     public function storeUploadedFiles($filePaths, $fileKey, $location, $arrayOfString = NULL, $student_id = NULL)
     {
 
-        // Step 1: Retrieve the business of the authenticated user
-        $business = auth()->user()->business;
 
-        // Add the business name to the location path
-        $location = str_replace(' ', '_', $business->name) . "/" . (!empty($student_id) ? ("/" . base64_encode($student_id) . "/") : "") . $location;
 
 
         // Step 3: Handle nested arrays of file paths
@@ -348,6 +344,12 @@ trait BasicUtil
 
         // Iterate over each file path in the array and perform necessary operations
         return collect($filePaths)->map(function ($filePathItem) use ($temporaryFilesLocation, $fileKey, $location) {
+
+ // Step 1: Retrieve the business of the authenticated user
+ $business = auth()->user()->business;
+ // Add the business name to the location path
+ $location = str_replace(' ', '_', $business->name) . "/" . (!empty($student_id) ? ("/" . base64_encode($student_id) . "/") : "") . $location;
+
 
             $file = !empty($fileKey) ? $filePathItem[$fileKey] : $filePathItem;
 
