@@ -1207,7 +1207,7 @@ class BusinessController extends Controller
                 //  business info ##############
                 // $request_data['business']['status'] = "pending";
 
-                $name_changed = 0;
+
 
                 $business = Business::where(["id" => $request_data['business']["id"]])
                     ->first();

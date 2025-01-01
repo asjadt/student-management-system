@@ -425,7 +425,9 @@ trait BasicUtil
                 throw new Exception("Failed to rename folder: " . $e->getMessage());
             }
         } else {
-            // If the folder doesn't exist, create it
+           // If the folder doesn't exist, create it
+        $fullNewFolderPath = public_path($newFolderName);
+        if (!File::exists($fullNewFolderPath)) {
             try {
                 File::makeDirectory($newFolderPath, 0755, true); // Create the new folder
                 Log::info("Folder created successfully at {$newFolderPath}");
@@ -434,6 +436,7 @@ trait BasicUtil
                 Log::error("Failed to create folder: " . $e->getMessage());
                 throw new Exception("Failed to create folder: " . $e->getMessage());
             }
+    }
         }
     }
 
@@ -469,8 +472,6 @@ trait BasicUtil
         if(empty($business_name)){
             $business_name = auth()->user()?->business?->name ?? "no business";
         }
-
-
 
         $data[$propertyName] = "/" . str_replace(' ', '_', $business_name) . "/". $folderName."/".  $data[$propertyName];
 
