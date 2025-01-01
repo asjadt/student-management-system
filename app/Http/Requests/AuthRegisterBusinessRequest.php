@@ -56,7 +56,7 @@ class AuthRegisterBusinessRequest extends BaseFormRequest
             // 'user.lat' => 'nullable|string',
             // 'user.long' => 'nullable|string',
 
-            'business.name' => 'required|string|max:255',
+            'business.name' => 'required|string|unique:businesses,name',
             'business.url' => 'nullable|string|max:255',
 
             'business.about' => 'nullable|string',

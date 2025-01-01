@@ -32,7 +32,7 @@ class BusinessCreateRequest extends BaseFormRequest
         return [
 
             'business.owner_id' => 'required|numeric',
-            'business.name' => 'required|string|max:255',
+            'business.name' => 'required|string|unique:businesses,name',
             'business.url' => 'nullable|string|max:255',
             'business.about' => 'nullable|string',
             'business.web_page' => 'nullable|string',

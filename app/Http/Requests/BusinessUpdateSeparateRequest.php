@@ -27,7 +27,7 @@ class BusinessUpdateSeparateRequest extends BaseFormRequest
         return [
 
             'business.id' => 'required|numeric|required|exists:businesses,id',
-            'business.name' => 'required|string|max:255',
+            'business.name' => 'required|string|unique:businesses,name,' . $this->business["id"] . ',id',
             'business.about' => 'nullable|string',
             'business.web_page' => 'nullable|string',
             'business.phone' => 'nullable|string',
