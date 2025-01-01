@@ -332,8 +332,14 @@ trait BasicUtil
 
         // Step 3: Handle nested arrays of file paths
         if (is_array($arrayOfString)) {
-            return collect($filePaths)->map(function ($filePathItem) use ($fileKey, $location) {
-                $filePathItem[$fileKey] = $this->storeUploadedFiles($filePathItem[$fileKey], "", $location);
+            return collect($filePaths)->map(function ($filePathItem) use ($fileKey, $location, $student_id) {
+                $filePathItem[$fileKey] = $this->storeUploadedFiles(
+                    $filePathItem[$fileKey],
+                     "",
+                    $location,
+                    NULL,
+                    $student_id
+                    );
                 return $filePathItem;
             });
         }
