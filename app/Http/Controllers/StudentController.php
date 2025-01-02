@@ -616,8 +616,8 @@ class StudentController extends Controller
                         "message" => "something went wrong."
                     ], 500);
                 }
-                $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
 
+                $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
 
                 if (isset($request_data["previous_education_history"]["student_docs"])) {
                     $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles(
@@ -627,12 +627,13 @@ class StudentController extends Controller
                         NULL,
                         $student->id
                     );
-                    $newDocs = $request_data["previous_education_history"]["student_docs"];
 
-                    $existing_previous_education_history = $student->previous_education_history;
+         $newDocs = $request_data["previous_education_history"]["student_docs"];
+
+         $existing_previous_education_history = $student->previous_education_history;
 
                     // Compare and delete old files if necessary
-                    $existingDocs = $existing_previous_education_history["student_docs"] ?? [];
+         $existingDocs = $existing_previous_education_history["student_docs"] ?? [];
 
                     foreach ($existingDocs as $existingDoc) {
                         $found=false;
