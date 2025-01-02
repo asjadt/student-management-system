@@ -349,7 +349,7 @@ trait BasicUtil
 
 
         // Iterate over each file path in the array and perform necessary operations
-        return collect($filePaths)->map(function ($filePathItem) use ($temporaryFilesLocation, $fileKey, $location) {
+        return collect($filePaths)->map(function ($filePathItem) use ($temporaryFilesLocation, $fileKey, $location, $student_id) {
 
  // Step 1: Retrieve the business of the authenticated user
  $business = auth()->user()->business;
@@ -357,7 +357,7 @@ trait BasicUtil
  $location = str_replace(' ', '_', $business->name) . "/" . (!empty($student_id) ? ("/" . base64_encode($student_id) . "/") : "") . $location;
 
 
-            $file = !empty($fileKey) ? $filePathItem[$fileKey] : $filePathItem;
+    $file = !empty($fileKey) ? $filePathItem[$fileKey] : $filePathItem;
 
 
             // Construct the full temporary file path and the new location path

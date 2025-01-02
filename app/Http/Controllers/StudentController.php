@@ -243,20 +243,25 @@ class StudentController extends Controller
 
                  $student =  Student::create($request_data);
 
+
                  $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
 
                  if (isset($request_data["previous_education_history"]["student_docs"])) {
                     $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles(
-                        $request_data["previous_education_history"]["student_docs"],
-                        "file_name",
-                        "student_docs",
-                        NULL,
-                        $student->id
-                    );
-                } else {
-                    $request_data["previous_education_history"]["student_docs"] = [];
-                }
+                         $request_data["previous_education_history"]["student_docs"],
+                         "file_name",
+                         "student_docs",
+                         NULL,
+                         $student->id
+                     );
+                 } else {
+                     $request_data["previous_education_history"]["student_docs"] = [];
+                 }
 
+
+
+                 $student->previous_education_history = $request_data["previous_education_history"];
+                 $student->save();
 
 
 
@@ -1985,6 +1990,8 @@ class StudentController extends Controller
 
             if(!is_array($student->previous_education_history)) {
                 $previous_education_history =   json_decode($student->previous_education_history,true);
+            } else {
+                $previous_education_history =   $student->previous_education_history;
             }
 
          if(is_array($previous_education_history['student_docs'])) {
