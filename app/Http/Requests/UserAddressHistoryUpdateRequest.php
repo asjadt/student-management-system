@@ -78,8 +78,8 @@ class UserAddressHistoryUpdateRequest extends BaseFormRequest
             'country' => 'nullable|string',
             'city' => 'nullable|string',
             'postcode' => 'nullable|string',
-            'lat' => 'nullable|string',
-            'long' => 'nullable|string',
+            'lat' => 'nullable|numeric',
+            'long' => 'nullable|numeric',
             'from_date' => 'required|date',
             'to_date' => 'nullable|date|after_or_equal:from_date',
         ];

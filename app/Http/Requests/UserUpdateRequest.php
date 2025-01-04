@@ -48,8 +48,8 @@ class UserUpdateRequest extends BaseFormRequest
         'country' => 'nullable|string',
         'city' => 'nullable|string',
         'postcode' => 'nullable|string',
-        'lat' => 'nullable|string',
-        'long' => 'nullable|string',
+        'lat' => 'nullable|numeric',
+        'long' => 'nullable|numeric',
         'role' => [
             "required",
             'string',

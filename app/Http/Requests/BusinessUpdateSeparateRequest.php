@@ -36,8 +36,8 @@ class BusinessUpdateSeparateRequest extends BaseFormRequest
             'business.additional_information' => 'nullable|string',
 
 
-            'business.lat' => 'nullable|string',
-            'business.long' => 'nullable|string',
+            'business.lat' => 'nullable|numeric',
+            'business.long' => 'nullable|numeric',
             'business.country' => 'nullable|string',
             'business.currency' => 'nullable|string',
 

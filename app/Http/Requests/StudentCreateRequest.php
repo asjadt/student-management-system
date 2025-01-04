@@ -75,7 +75,7 @@ class StudentCreateRequest extends BaseFormRequest
                     }
 
                     $exists = CourseTitle::where("course_titles.id",$value)
-                   
+
                     ->exists();
 
                 if (!$exists) {
@@ -98,8 +98,8 @@ class StudentCreateRequest extends BaseFormRequest
             'country' => 'nullable|string|max:100',
             'city' => 'nullable|string|max:100',
             'postcode' => 'nullable|string|max:10',
-            'lat' => 'nullable|string|regex:/^-?\d{1,3}\.\d+$/', // Validates latitude format
-            'long' => 'nullable|string|regex:/^-?\d{1,3}\.\d+$/', // Validates longitude format
+            'lat' => 'nullable|numeric', // Validates latitude format
+            'long' => 'nullable|numeric', // Validates longitude format
             'emergency_contact_details' => 'nullable|json',
             'previous_education_history' => 'nullable|json',
             'passport_issue_date' => 'nullable|date',
