@@ -163,6 +163,8 @@ class StudentLetterController extends Controller
      * @OA\Property(property="letter_template_id", type="string", format="string", example="sign_required"),
      * @OA\Property(property="letter_view_required", type="string", format="string", example="letter_view_required"),
      * @OA\Property(property="student_id", type="string", format="string", example="student_id"),
+     *     * @OA\Property(property="letter_issue_date", type="string", format="string", example="date"),
+     *
 
      *
      *
@@ -325,7 +327,6 @@ class StudentLetterController extends Controller
                             $item == "[DATE_OF_BIRTH]"
                             || $item == "[COURSE_START_DATE]"
                             || $item == "[COURSE_END_DATE]"
-                            || $item == "[LETTER_ISSUE_DATE]"
                             || $item == "[PASSPORT_ISSUE_DATE]"
                             || $item == "[PASSPORT_EXPIRY_DATE]"
                         ) {
@@ -338,7 +339,12 @@ class StudentLetterController extends Controller
                                 $template = str_replace($item, '', $template);
                             }
                         }
+                        else if ($item == "[LETTER_ISSUE_DATE]") {
+                            $dateValue = $request_data["letter_issue_date"] ;
+                            $formattedDate = Carbon::parse($dateValue)->format('d M Y');
+                            $template = str_replace($item, $formattedDate, $template);
 
+                        }
                          else {
                             $template = str_replace($item, $student[$variableName], $template);
                         }

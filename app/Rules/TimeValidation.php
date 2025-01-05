@@ -25,7 +25,6 @@ class TimeValidation implements Rule
      */
     public function passes($attribute, $value)
     {
-
             $timeParts = explode(':', $value);
             if(empty($timeParts[0]) || empty($timeParts[1])) {
                 return false;
@@ -37,7 +36,6 @@ class TimeValidation implements Rule
                  return false;
             }
             return true;
-
     }
 
     /**

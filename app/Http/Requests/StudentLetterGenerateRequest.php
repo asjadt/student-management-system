@@ -25,7 +25,7 @@ class StudentLetterGenerateRequest extends FormRequest
      */
     public function rules()
     {
-       
+
         return [
             'student_id' => [
                 'required',
@@ -36,6 +36,10 @@ class StudentLetterGenerateRequest extends FormRequest
                 'required',
                 'numeric',
                 new ValidateLetterTemplate()
+            ],
+            'letter_issue_date' => [
+                'required',
+                'date'
             ],
         ];
     }
