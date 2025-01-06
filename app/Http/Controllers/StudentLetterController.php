@@ -351,8 +351,7 @@ class StudentLetterController extends Controller
                     }
                 }
 
-
-
+                
                 return response(["template" => $template], 201);
             });
         } catch (Exception $e) {
