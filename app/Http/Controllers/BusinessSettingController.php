@@ -36,7 +36,18 @@ class BusinessSettingController extends Controller
  *         description="The ID of the online student status.",
  *         example=1
  *     ),
- *  *     @OA\Property(
+ *
+ *     @OA\Property(
+ *         property="student_verification_fields",
+ *         type="integer",
+ *         description="The ID of the student verification field.",
+ *         example=1
+ *     ),
+ *
+ *
+ *
+ *
+ *       @OA\Property(
  *         property="student_data_fields",
  *         type="array",
  *         description="The ID of the online student status.",

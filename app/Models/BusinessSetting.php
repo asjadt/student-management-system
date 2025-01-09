@@ -14,11 +14,13 @@ class BusinessSetting extends Model
         'business_id',
         'online_student_status_id',
         'student_data_fields',
+        'student_verification_fields'
     ];
 
     // Cast these attributes to arrays test
     protected $casts = [
         'student_data_fields' => 'array',
+        'student_verification_fields' => 'array',
 
 
     ];

@@ -20,6 +20,8 @@ class BusinessSettingCreateRequest extends FormRequest
 
             // Validate online_verification_data array format
             'student_data_fields' => 'present|array',
+            'student_verification_fields' => 'present|array',
+
 
 
         ];

@@ -1990,10 +1990,11 @@ class StudentController extends Controller
             }
 
             if(!is_array($student->previous_education_history)) {
-                $previous_education_history =   json_decode($student->previous_education_history,true);
+                $previous_education_history = json_decode($student->previous_education_history,true);
             } else {
                 $previous_education_history =   $student->previous_education_history;
             }
+
 
          if(isset($previous_education_history['student_docs']) && is_array($previous_education_history['student_docs'])) {
             foreach ($previous_education_history['student_docs'] as &$student_doc_object) {
@@ -2002,8 +2003,8 @@ class StudentController extends Controller
                     $student_doc_object["file_name"] = "/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/".  $student_doc_object["file_name"];
             }
          }
-
-            $student->previous_education_history = $previous_education_history;
+         
+         $student->previous_education_history = $previous_education_history;
 
             return response()->json($student, 200);
         } catch (Exception $e) {
