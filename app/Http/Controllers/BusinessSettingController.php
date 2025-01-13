@@ -152,8 +152,7 @@ class BusinessSettingController extends Controller
     }
 
 
-
-    /**
+   /**
      *
      * @OA\Get(
      *      path="/v1.0/business-settings",
@@ -238,21 +237,148 @@ class BusinessSettingController extends Controller
      *     )
      */
 
-    public function getBusinessSetting(Request $request)
+     public function getBusinessSetting(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+             if (!$request->user()->hasRole('business_admin')) {
+                 return response()->json([
+                     "message" => "You can not perform this action"
+                 ], 401);
+             }
+
+             $business_setting = BusinessSetting::
+             where('business_settings.business_id', auth()->user()->business_id)
+                 ->when(!empty($request->search_key), function ($query) use ($request) {
+                     return $query->where(function ($query) use ($request) {
+                         $term = $request->search_key;
+                         $query->where("business_settings.name", "like", "%" . $term . "%");
+                     });
+                 })
+
+                 ->when(!empty($request->start_date), function ($query) use ($request) {
+                     return $query->where('business_settings.created_at', ">=", $request->start_date);
+                 })
+                 ->when(!empty($request->end_date), function ($query) use ($request) {
+                     return $query->where('business_settings.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                 })
+                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
+                     return $query->orderBy("business_settings.id", $request->order_by);
+                 }, function ($query) {
+                     return $query->orderBy("business_settings.id", "DESC");
+                 })
+                 ->when(!empty($request->per_page), function ($query) use ($request) {
+                     return $query->paginate($request->per_page);
+                 }, function ($query) {
+                     return $query->get();
+                 });;
+
+
+
+             return response()->json($business_setting, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
+
+    /**
+     *
+     * @OA\Get(
+     *      path="/client/v1.0/business-settings",
+     *      operationId="getBusinessSettingClient",
+     *      tags={"business_setting"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=false,
+     *  example=""
+     *      ),
+
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=false,
+     * example=""
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=false,
+     * example=""
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=false,
+     * example=""
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=false,
+     * example=""
+     * ),
+
+     *      summary="This method is to get business setting",
+     *      description="This method is to get business setting",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function getBusinessSettingClient(Request $request)
     {
         try {
             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-            if (!$request->user()->hasRole('business_admin')) {
-                return response()->json([
-                    "message" => "You can not perform this action"
-                ], 401);
+
+            if(empty(request()->filled("business_id"))) {
+              throw new Exception("Business Id is required",400);
             }
 
-
-
-
             $business_setting = BusinessSetting::
-            where('business_settings.business_id', auth()->user()->business_id)
+            where('business_settings.business_id', request()->input("business_id"))
                 ->when(!empty($request->search_key), function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
                         $term = $request->search_key;
@@ -285,6 +411,7 @@ class BusinessSettingController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
 
 
 

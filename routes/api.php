@@ -238,6 +238,8 @@ Route::get('/v1.0/businesses/by-business-owner/all', [BusinessController::class,
 Route::post('/v1.0/business-settings', [BusinessSettingController::class, "createBusinessSetting"]);
 Route::get('/v1.0/business-settings', [BusinessSettingController::class, "getBusinessSetting"]);
 
+
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // end business setting
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -658,6 +660,7 @@ Route::get('/v1.0/business-admin-dashboard', [DashboardManagementController::cla
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
 
 
+Route::get('/client/v1.0/business-settings', [BusinessSettingController::class, "getBusinessSettingClient"]);
 
 Route::post('/v1.0/client/students', [StudentController::class, "createStudentClient"]);
 Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentByIdClient"]);
