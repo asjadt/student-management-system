@@ -3185,7 +3185,29 @@ class DashboardManagementController extends Controller
         //    $data["inactive_businesses"] = Business::
         //    where("businesses.is_active",0)
         //  ->count();
-        $data["inactive_businesses"] = $data["total_businesses"] - $data["active_businesses"];
+
+            $data["inactive_businesses"] = $data["total_businesses"] - $data["active_businesses"];
+
+
+            // For this week (from Sunday to Saturday)
+$data["this_week_businesses"] = Business::
+whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+->count();
+
+// For last week
+$data["last_week_businesses"] = Business::
+whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
+->count();
+
+// For this month
+$data["this_month_businesses"] = Business::
+whereMonth('created_at', Carbon::now()->month)
+->count();
+
+// For last month
+$data["last_month_businesses"] = Business::
+whereMonth('created_at', Carbon::now()->subMonth()->month)
+->count();
 
 
 
