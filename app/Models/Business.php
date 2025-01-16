@@ -37,7 +37,8 @@ class Business extends Model
         "image",
         "background_image",
         "status",
-         "is_active",
+
+        "is_active",
 
 
 

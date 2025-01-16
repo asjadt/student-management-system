@@ -3181,10 +3181,11 @@ class DashboardManagementController extends Controller
            $data["active_businesses"] = Business::
              where("businesses.is_active",1)
            ->count();
-           $data["inactive_businesses"] = Business::
-           where("businesses.is_active",0)
-         ->count();
 
+        //    $data["inactive_businesses"] = Business::
+        //    where("businesses.is_active",0)
+        //  ->count();
+        $data["inactive_businesses"] = $data["total_businesses"] - $data["active_businesses"];
 
 
 
