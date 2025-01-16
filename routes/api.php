@@ -640,6 +640,9 @@ Route::get('/v1.0/business-owner-dashboard/upcoming-jobs/{business_id}/{duration
 
 
 Route::get('/v1.0/superadmin-dashboard', [DashboardManagementController::class, "getSuperAdminDashboardData"]);
+
+
+
 Route::get('/v1.0/data-collector-dashboard', [DashboardManagementController::class, "getDataCollectorDashboardData"]);
 
 Route::post('/v1.0/dashboard-widgets', [DashboardManagementController::class, "createDashboardWidget"]);

@@ -3166,6 +3166,7 @@ class DashboardManagementController extends Controller
 
     public function getSuperAdminDashboardData(Request $request)
     {
+
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             if (!$request->user()->hasRole('superadmin')) {
@@ -3174,23 +3175,15 @@ class DashboardManagementController extends Controller
                 ], 401);
             }
 
-            $data["businesses"] = $this->businesses();
+           $data = [];
 
-            $data["fuel_stations"] = $this->fuel_stations();
-
-            $data["customers"] = $this->customers();
-
-            $data["overall_customer_jobs"] = $this->overall_customer_jobs();
-
-            $data["overall_bookings"] = $this->overall_bookings();
-
-            $data["overall_jobs"] = $this->overall_jobs();
-
-
-
-            $data["overall_services"] = $this->overall_services();
-
-
+           $data["total_businesses"] = Business::count();
+           $data["active_businesses"] = Business::
+             where("businesses.is_active",1)
+           ->count();
+           $data["inactive_businesses"] = Business::
+           where("businesses.is_active",0)
+         ->count();
 
 
 
