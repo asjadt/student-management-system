@@ -49,6 +49,9 @@ class BusinessUpdateRequest extends BaseFormRequest
 
             'business.id' => 'required|numeric|required|exists:businesses,id',
             'business.name' => 'required|string|unique:businesses,name,' . $this->business["id"] . ',id',
+
+
+            'business.color_theme_name' => 'nullable|string',
             'business.about' => 'nullable|string',
             'business.web_page' => 'nullable|string',
             'business.phone' => 'nullable|string',

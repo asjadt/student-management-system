@@ -384,6 +384,7 @@ class BusinessController extends Controller
      *  "owner_id":"1",
      * "name":"ABCD businesses",
      * "about":"Best businesses in Dhaka",
+     * "color_theme_name":"#dddddd",
      * "web_page":"https://www.facebook.com/",
      *  "phone":"01771034383",
      *  "email":"rifatalashwad@gmail.com",
@@ -784,6 +785,8 @@ class BusinessController extends Controller
      *  @OA\Property(property="business", type="string", format="array",example={
      * "name":"ABCD businesses",
      * "about":"Best businesses in Dhaka",
+     *
+     * "color_theme_name":"#dddddd",
      * "web_page":"https://www.facebook.com/",
      *  "phone":"01771034383",
      *  "email":"rifatalashwad@gmail.com",
@@ -1044,6 +1047,9 @@ class BusinessController extends Controller
      * "name":"ABCD businesses",
      * "about":"Best businesses in Dhaka",
      * "web_page":"https://www.facebook.com/",
+     *
+     *  "color_theme_name":"#dddddd",
+     *
      *  "phone":"01771034383",
      *  "email":"rifatalashwad@gmail.com",
      *  "phone":"01771034383",
@@ -1229,6 +1235,7 @@ class BusinessController extends Controller
                     "name",
                     "about",
                     "web_page",
+                    "color_theme_name",
                     "phone",
                     "email",
                     "additional_information",
@@ -1419,6 +1426,8 @@ class BusinessController extends Controller
      * "name":"ABCD businesses",
      * "about":"Best businesses in Dhaka",
      * "web_page":"https://www.facebook.com/",
+     *   "color_theme_name":"#ddd",
+     *
      *  "phone":"01771034383",
      *  "email":"rifatalashwad@gmail.com",
      *  "phone":"01771034383",
@@ -1508,6 +1517,7 @@ class BusinessController extends Controller
                         "name",
                         "about",
                         "web_page",
+                        "color_theme_name",
                         "phone",
                         "email",
                         "additional_information",
@@ -1933,6 +1943,8 @@ class BusinessController extends Controller
                     "businesses.name",
                     "businesses.url",
                     "businesses.web_page",
+                    "businesses.color_theme_name",
+
                     "businesses.phone",
                     "businesses.email",
                     "businesses.address_line_1",

@@ -19,6 +19,7 @@ class Business extends Model
 
         "name",
         "url",
+        "color_theme_name",
         "about",
         "web_page",
         "phone",
