@@ -3119,9 +3119,187 @@ return [
         ]
 
 
+        ],
+
+        "student_data_fields" => [
+            [
+                "section_name" => "personal_information",
+                "title" => "Middle Name",
+                "name" => "middle_name",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => false
+                ]
+            ],
+            [
+                "section_name" => "contact_information",
+                "title" => "Contact Number",
+                "name" => "contact_number",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "passport_information",
+                "title" => "Passport Number",
+                "name" => "passport_number",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "passport_information",
+                "title" => "Passport Issue Date",
+                "name" => "passport_issue_date",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "passport_information",
+                "title" => "Passport Expiry Date",
+                "name" => "passport_expiry_date",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "passport_information",
+                "title" => "Place of Issue",
+                "name" => "place_of_issue",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "education_history",
+                "title" => "Course Title",
+                "name" => "course_title",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "education_history",
+                "title" => "Educational Institute Name",
+                "name" => "institution",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "education_history",
+                "title" => "Passing Year",
+                "name" => "education_history_year",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "education_history",
+                "title" => "Grade",
+                "name" => "education_history_grade",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "emergency_contact_information",
+                "title" => "Emergency Contact Name",
+                "name" => "name",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "emergency_contact_information",
+                "title" => "Relationship of emergency contact person",
+                "name" => "emergency_contact_relation",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "emergency_contact_information",
+                "title" => "Emergency Contact Address",
+                "name" => "address",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "emergency_contact_information",
+                "title" => "Emergency Contact Postcode",
+                "name" => "postcode",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ],
+            [
+                "section_name" => "emergency_contact_information",
+                "title" => "Emergency Contact Number",
+                "name" => "contact",
+                "public_form" => [
+                    "show" => true,
+                    "is_required" => true
+                ]
+            ]
+        ],
+        "student_verification_fields" => [
+            [
+                "section_name" => "personal_information",
+                "title" => "First Name",
+                "name" => "first_name",
+                "verification_form" => [
+                    "show" => true
+                ]
+            ],
+            [
+                "section_name" => "personal_information",
+                "title" => "Last Name",
+                "name" => "last_name",
+                "verification_form" => [
+                    "show" => true
+                ]
+            ],
+            [
+                "section_name" => "personal_information",
+                "title" => "Date Of Birth",
+                "name" => "date_of_birth",
+                "verification_form" => [
+                    "show" => true
+                ]
+            ],
+            [
+                "section_name" => "personal_information",
+                "title" => "Student ID",
+                "name" => "student_id",
+                "verification_form" => [
+                    "show" => true
+                ]
+            ],
+            [
+                "section_name" => "passport_information",
+                "title" => "Passport Number",
+                "name" => "passport_number",
+                "verification_form" => [
+                    "show" => true
+                ]
+            ]
         ]
-
-
 
 
 

@@ -22,10 +22,10 @@ class CreateBusinessSettingsTable extends Migration
             ->on(env('DB_DATABASE') . '.businesses')
             ->onDelete('cascade');
 
-            $table->unsignedBigInteger("online_student_status_id");
+            $table->unsignedBigInteger("online_student_status_id")->nullable(true);
             $table->foreign('online_student_status_id')->references('id')->on('student_statuses')->onDelete('cascade');
             $table->json('student_data_fields')->nullable(); // Online Form Fields (JSON)
-         
+
 
             $table->timestamps();
         });

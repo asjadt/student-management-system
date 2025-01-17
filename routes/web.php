@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\SetUpController;
 use App\Http\Controllers\SwaggerLoginController;
+use App\Models\Business;
+use App\Models\BusinessSetting;
 use App\Models\EmailTemplate;
 use App\Models\EmailTemplateWrapper;
 use App\Models\User;
@@ -81,6 +83,37 @@ Route::get("/test",function() {
 });
 
 
+
+Route::get("/default-business-setting", function() {
+
+    DB::statement('ALTER TABLE business_settings MODIFY online_student_status_id BIGINT UNSIGNED NULL;');
+
+    $businesses = Business::get();
+    foreach($businesses as $business){
+        $businessSetting = BusinessSetting::where([
+            "business_id" => $business->id
+        ])
+        ->first();
+
+        $businessSettingData = [
+            'business_id' => $business->id,
+
+            'student_data_fields' => config("setup-config.student_data_fields"),
+            'student_verification_fields' => config("setup-config.student_verification_fields")
+        ];
+
+        if(!empty($businessSetting)) {
+            $businessSetting->fill($businessSettingData);
+            $businessSetting->save();
+
+        } else {
+            BusinessSetting::create($businessSettingData);
+        }
+
+    }
+
+
+});
 
 Route::get("/delete-tables", function() {
    // Disable foreign key checks

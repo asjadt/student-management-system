@@ -18,6 +18,7 @@ use App\Http\Utils\UserActivityUtil;
 use App\Mail\SendPassword;
 
 use App\Models\Business;
+use App\Models\BusinessSetting;
 use App\Models\BusinessTime;
 use App\Models\Role;
 use App\Models\User;
@@ -495,6 +496,12 @@ class BusinessController extends Controller
                 $business =  Business::create($request_data['business']);
 
 
+                BusinessSetting::create([
+                    'business_id' => $business->id,
+                    'online_student_status_id' => NULL,
+                    'student_data_fields' => config("setup-config.student_data_fields"),
+                    'student_verification_fields' => config("setup-config.student_verification_fields")
+                ]);
 
 
 
@@ -965,18 +972,12 @@ class BusinessController extends Controller
             }
 
 
-
-            // $request_data["work_shift"]["business_id"] = $user->business_id;
-            // $request_data["work_shift"]["is_active"] = true;
-            // $request_data["work_shift"]["created_by"] = $user->id;
-            // $request_data["work_shift"]["is_business_default"] = 1;
-
-            // $request_data["work_shift"]["attendances_count"] = 0;
-            // $work_shift =  WorkShift::create($request_data["work_shift"]);
-
-
-
-            // $work_shift->details()->createMany($request_data["work_shift"]['details']);
+            BusinessSetting::create([
+                'business_id' => $business->id,
+                'online_student_status_id' => NULL,
+                'student_data_fields' => config("setup-config.student_data_fields"),
+                'student_verification_fields' => config("setup-config.student_verification_fields")
+            ]);
 
 
 

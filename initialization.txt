@@ -5,3 +5,4 @@ ALTER TABLE students MODIFY place_of_issue VARCHAR(255) NULL;
 
 role refresh needed 16 december
 correct the base urls for production
+update business setting by running a query. /default-business-setting
