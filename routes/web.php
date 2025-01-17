@@ -83,36 +83,49 @@ Route::get("/test",function() {
 });
 
 
-
 Route::get("/default-business-setting", function() {
 
-    DB::statement('ALTER TABLE business_settings MODIFY online_student_status_id BIGINT UNSIGNED NULL;');
+    echo "Starting the process...<br>";
 
-    $businesses = Business::get();
-    foreach($businesses as $business){
+    // Alter the table column
+    DB::statement('ALTER TABLE business_settings MODIFY online_student_status_id BIGINT UNSIGNED NULL;');
+    echo "Modified 'online_student_status_id' column in 'business_settings' table.<br>";
+
+    // Fetch all businesses
+    $businesses = Business::withTrashed()->get();
+    echo "Fetched " . count($businesses) . " businesses.<br>";
+
+    foreach ($businesses as $business) {
+        echo "Processing business ID: " . $business->id . ", Name: " . $business->name . "<br>";
+
         $businessSetting = BusinessSetting::where([
             "business_id" => $business->id
-        ])
-        ->first();
+        ])->first();
+
+        if ($businessSetting) {
+            echo "BusinessSetting exists for business ID: " . $business->id . ", Name: " . $business->name . "<br>";
+        } else {
+            echo "BusinessSetting does not exist for business ID: " . $business->id . ", Name: " . $business->name . "<br>";
+        }
 
         $businessSettingData = [
             'business_id' => $business->id,
-
             'student_data_fields' => config("setup-config.student_data_fields"),
             'student_verification_fields' => config("setup-config.student_verification_fields")
         ];
 
-        if(!empty($businessSetting)) {
+        if (!empty($businessSetting)) {
             $businessSetting->fill($businessSettingData);
             $businessSetting->save();
-
+            echo "Updated BusinessSetting for business ID: " . $business->id . ", Name: " . $business->name . "<br>";
         } else {
             BusinessSetting::create($businessSettingData);
+            echo "Created BusinessSetting for business ID: " . $business->id . ", Name: " . $business->name . "<br>";
         }
-
     }
 
-
+    echo "Process completed.<br>";
+    return "ok";
 });
 
 Route::get("/delete-tables", function() {
