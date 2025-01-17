@@ -2128,7 +2128,7 @@ $business = $this->getUrlLink($business,"logo",config("setup-config.business_gal
             $business = Business::where([
                 "id" => $id
             ])
-                ->select("id", "name", "logo", "web_page", "email")
+                ->select("id", "name", "logo", "web_page", "email","color_theme_name")
                 ->first();
 
 
