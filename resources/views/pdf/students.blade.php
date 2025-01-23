@@ -9,11 +9,13 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            font-size: 10px; /* Adjusted font size */
         }
 
         h1 {
             text-align: center;
             margin-bottom: 20px;
+            font-size: 12px; /* Adjusted font size */
         }
 
         table {
@@ -27,8 +29,9 @@
         }
 
         th, td {
-            padding: 8px;
+            padding: 4px; /* Adjusted padding */
             text-align: left;
+            font-size: 10px; /* Adjusted font size */
         }
 
         th {
@@ -38,7 +41,7 @@
         .footer {
             text-align: center;
             margin-top: 20px;
-            font-size: 12px;
+            font-size: 10px; /* Adjusted font size */
             color: #888;
         }
     </style>
