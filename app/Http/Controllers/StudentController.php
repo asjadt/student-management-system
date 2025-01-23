@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use PDF;
 
 class StudentController extends Controller
 {
@@ -1074,7 +1075,25 @@ class StudentController extends Controller
  *     required=false,
  *     example="20"
  * ),
-
+ *  @OA\Parameter(
+ *     name="response_type",
+ *     in="query",
+ *     description="response_type",
+ *     required=false,
+ *     example="20"
+ * ),
+ * @OA\Parameter(
+ *     name="file_name",
+ *     in="query",
+ *     description="file_name",
+ *     required=false,
+ *     example="20"
+ * ),
+ *
+ *
+ *
+ *
+ *
 
 
      *      summary="This method is to get students  ",
@@ -1127,7 +1146,30 @@ class StudentController extends Controller
 
              $query = Student::with("student_status","course_title");
              $query = $this->query_filters_v2($query);
+
              $students = $this->retrieveData($query, "id","students");
+
+
+             if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', 'CSV'])) {
+                if (strtoupper($request->response_type) == 'PDF') {
+
+                    if (empty($attendances)) {
+                        $pdf = PDF::loadView('pdf.no_data', []);
+                    } else {
+                        $pdf = PDF::loadView('pdf.students', ["students" => $students]);
+                    }
+
+                    return $pdf->download(((!empty($request->file_name) ? $request->file_name : 'students') . '.pdf'));
+                } elseif (strtoupper($request->response_type) === 'CSV') {
+
+                    return response()->json([
+                        "message" => "CSV not supported currently"
+                    ],404);
+                    // Excel::download(new AttendancesExport($attendances), ((!empty($request->file_name) ? $request->file_name : 'attendance') . '.csv'));
+                }
+            } else {
+                return response()->json($students, 200);
+            }
 
              return response()->json($students, 200);
          } catch (Exception $e) {
@@ -1328,7 +1370,21 @@ class StudentController extends Controller
  *     required=false,
  *     example="20"
  * ),
-
+ *  @OA\Parameter(
+ *     name="response_type",
+ *     in="query",
+ *     description="response_type",
+ *     required=false,
+ *     example="20"
+ * ),
+ * @OA\Parameter(
+ *     name="file_name",
+ *     in="query",
+ *     description="file_name",
+ *     required=false,
+ *     example="20"
+ * ),
+ *
 
 
      *      summary="This method is to get students  ",
@@ -1420,6 +1476,26 @@ class StudentController extends Controller
 
             );
             $students = $this->retrieveData($query, "id","students");
+
+            if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', 'CSV'])) {
+                if (strtoupper($request->response_type) == 'PDF') {
+                    if (empty($attendances)) {
+                        $pdf = PDF::loadView('pdf.no_data', []);
+                    } else {
+                        $pdf = PDF::loadView('pdf.students', ["students" => $students]);
+                    }
+
+                    return $pdf->download(((!empty($request->file_name) ? $request->file_name : 'students') . '.pdf'));
+                } elseif (strtoupper($request->response_type) === 'CSV') {
+
+                    return response()->json([
+                        "message" => "CSV not supported currently"
+                    ],404);
+                    // Excel::download(new AttendancesExport($attendances), ((!empty($request->file_name) ? $request->file_name : 'attendance') . '.csv'));
+                }
+            } else {
+                return response()->json($students, 200);
+            }
 
             return response()->json($students, 200);
         } catch (Exception $e) {
@@ -1684,8 +1760,12 @@ class StudentController extends Controller
             $students = $this->retrieveData($query, "id","students");
 
 
+            return response()->json($students, 200);
 
-             return response()->json($students, 200);
+
+
+
+
          } catch (Exception $e) {
 
              return $this->sendError($e, 500, $request);
@@ -2003,7 +2083,7 @@ class StudentController extends Controller
                     $student_doc_object["file_name"] = "/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/".  $student_doc_object["file_name"];
             }
          }
-         
+
          $student->previous_education_history = $previous_education_history;
 
             return response()->json($student, 200);

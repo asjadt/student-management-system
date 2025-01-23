@@ -20,16 +20,5 @@ class StudentStatus extends Model
         "created_by"
     ];
 
-    public function disabled()
-    {
-        return $this->hasMany(DisabledStudentStatus::class, 'student_status_id');
-    }
-
-
-
-
-
-
-
 
 }
