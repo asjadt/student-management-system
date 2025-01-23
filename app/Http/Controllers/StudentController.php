@@ -1153,7 +1153,7 @@ class StudentController extends Controller
              if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', 'CSV'])) {
                 if (strtoupper($request->response_type) == 'PDF') {
 
-                    if (empty($attendances)) {
+                    if (empty($students)) {
                         $pdf = PDF::loadView('pdf.no_data', []);
                     } else {
                         $pdf = PDF::loadView('pdf.students', ["students" => $students]);
@@ -1479,7 +1479,7 @@ class StudentController extends Controller
 
             if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', 'CSV'])) {
                 if (strtoupper($request->response_type) == 'PDF') {
-                    if (empty($attendances)) {
+                    if (empty($students)) {
                         $pdf = PDF::loadView('pdf.no_data', []);
                     } else {
                         $pdf = PDF::loadView('pdf.students', ["students" => $students]);
