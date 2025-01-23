@@ -1247,7 +1247,7 @@ class BusinessController extends Controller
                     "country",
                     "city",
                     "postcode",
-                    "logo",
+                    // "logo",
                     "image",
                     "status",
                     "background_image",

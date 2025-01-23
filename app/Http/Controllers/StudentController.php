@@ -1136,8 +1136,10 @@ class StudentController extends Controller
 
      public function getStudents(Request $request)
      {
+
          try {
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
+             
              if (!$request->user()->hasPermissionTo('student_update')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -1160,6 +1162,7 @@ class StudentController extends Controller
                     }
 
                     return $pdf->download(((!empty($request->file_name) ? $request->file_name : 'students') . '.pdf'));
+
                 } elseif (strtoupper($request->response_type) === 'CSV') {
 
                     return response()->json([
