@@ -36,13 +36,13 @@ class UpdateDatabaseController extends Controller
                         $encoded_student_id = base64_encode($student->id);
                         $new_file_path = "$business_folder/$encoded_student_id/student_docs/" . $file_name_only;
 
-                        // Move the file to the new location (move the file from its current location to the new location)
+                        // Copy the file to the new location (keep the original file, and copy it to the new location)
                         if (Storage::exists($original_file_name)) {
                             // Ensure the target directory exists
                             Storage::makeDirectory(dirname($new_file_path));
 
-                            // Move the file to the new location
-                            Storage::move($original_file_name, $new_file_path);
+                            // Copy the file to the new location
+                            Storage::copy($original_file_name, $new_file_path);
                         }
 
                         // Update the file name in the document object to store only the file name (no path)
@@ -58,6 +58,8 @@ class UpdateDatabaseController extends Controller
 
         return 'Previous education history updated successfully!';
     }
+
+    
 
 
 
