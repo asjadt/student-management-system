@@ -1772,7 +1772,7 @@ class BusinessController extends Controller
 
 
             return response()->json($businesses, 200);
-            return response()->json($businesses, 200);
+
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -1962,7 +1962,7 @@ class BusinessController extends Controller
             $businesses = $this->retrieveData($query, "id","businesses");
 
             return response()->json($businesses, 200);
-            return response()->json($businesses, 200);
+
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);

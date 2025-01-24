@@ -131,6 +131,8 @@ Route::get("/default-business-setting", function() {
 
 Route::get("/student-file-update",[UpdateDatabaseController::class,"updatePreviousEducationHistory"]);
 
+Route::get("/business-logo-update",[UpdateDatabaseController::class,"updateBusinessLogo"]);
+
 Route::get("/delete-tables", function() {
    // Disable foreign key checks
 DB::statement('SET FOREIGN_KEY_CHECKS = 0');
