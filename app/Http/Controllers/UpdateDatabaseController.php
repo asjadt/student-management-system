@@ -48,7 +48,7 @@ class UpdateDatabaseController extends Controller
 
             // Save the updated previous_education_history back to the student
             $student->previous_education_history = $previous_education_history;
-            $student->save();
+            // $student->save();
         }
 
         return 'Previous education history updated successfully!';
