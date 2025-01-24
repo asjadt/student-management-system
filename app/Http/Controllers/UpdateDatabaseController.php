@@ -35,10 +35,11 @@ class UpdateDatabaseController extends Controller
 
 
 
-                        // Move the file to the new folder
-                        if (Storage::exists($student_doc_object["file_name"])) {
-                            Storage::move($student_doc_object["file_name"], $new_file_path);
-                        }
+                       // Copy the file to the new folder
+if (Storage::exists($student_doc_object["file_name"])) {
+    Storage::copy($student_doc_object["file_name"], $new_file_path);
+}
+
 
                         // Update the file_name in the document object to store only the file name
                         $student_doc_object["file_name"] = $fileName;
