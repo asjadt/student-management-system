@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Storage;
 
 class UpdateDatabaseController extends Controller
 {
-
-
     public function updatePreviousEducationHistory()
     {
         $students = Student::all(); // Get all students
@@ -27,26 +25,18 @@ class UpdateDatabaseController extends Controller
                 foreach ($previous_education_history['student_docs'] as &$student_doc_object) {
                     // Ensure each student_doc_object has a file_name property
                     if (isset($student_doc_object["file_name"])) {
-                        // Get the file name from the current path
-                        $original_file_name = $student_doc_object["file_name"];
-                        $file_name_only = basename($original_file_name); // Extract just the file name
-
-                        // Generate the new file path (business folder and student ID)
+                        // Generate the new file path
                         $business_folder = str_replace(' ', '_', $student->business->name);
                         $encoded_student_id = base64_encode($student->id);
-                        $new_file_path = "$business_folder/$encoded_student_id/student_docs/" . $file_name_only;
+                        $new_file_path = "$business_folder/$encoded_student_id/student_docs/" . $student_doc_object["file_name"];
 
-                        // Move the file to the new location (move the file from its current location to the new location)
-                        if (Storage::exists($original_file_name)) {
-                            // Ensure the target directory exists
-                            Storage::makeDirectory(dirname($new_file_path));
-
-                            // Move the file to the new location
-                            Storage::move($original_file_name, $new_file_path);
+                        // Move the file to the new folder
+                        if (Storage::exists($student_doc_object["file_name"])) {
+                            Storage::move($student_doc_object["file_name"], $new_file_path);
                         }
 
-                        // Update the file name in the document object to store only the file name (no path)
-                        $student_doc_object["file_name"] = $file_name_only;
+                        // Update the file_name in the document object to store only the file name
+                        $student_doc_object["file_name"] = $new_file_path;
                     }
                 }
             }
@@ -58,8 +48,4 @@ class UpdateDatabaseController extends Controller
 
         return 'Previous education history updated successfully!';
     }
-
-
-
-
 }
