@@ -3127,8 +3127,8 @@ return [
                 "title" => "Middle Name",
                 "name" => "middle_name",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => false
+                    "show" => 1,
+                    "is_required" => 0
                 ]
             ],
             [
@@ -3136,8 +3136,8 @@ return [
                 "title" => "Contact Number",
                 "name" => "contact_number",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3145,8 +3145,8 @@ return [
                 "title" => "Passport Number",
                 "name" => "passport_number",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3154,8 +3154,8 @@ return [
                 "title" => "Passport Issue Date",
                 "name" => "passport_issue_date",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3163,8 +3163,8 @@ return [
                 "title" => "Passport Expiry Date",
                 "name" => "passport_expiry_date",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3172,8 +3172,8 @@ return [
                 "title" => "Place of Issue",
                 "name" => "place_of_issue",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3181,8 +3181,8 @@ return [
                 "title" => "Course Title",
                 "name" => "course_title",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3190,8 +3190,8 @@ return [
                 "title" => "Educational Institute Name",
                 "name" => "institution",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3199,8 +3199,8 @@ return [
                 "title" => "Passing Year",
                 "name" => "education_history_year",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3208,8 +3208,8 @@ return [
                 "title" => "Grade",
                 "name" => "education_history_grade",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3217,8 +3217,8 @@ return [
                 "title" => "Emergency Contact Name",
                 "name" => "name",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3226,8 +3226,8 @@ return [
                 "title" => "Relationship of emergency contact person",
                 "name" => "emergency_contact_relation",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3235,8 +3235,8 @@ return [
                 "title" => "Emergency Contact Address",
                 "name" => "address",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3244,8 +3244,8 @@ return [
                 "title" => "Emergency Contact Postcode",
                 "name" => "postcode",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ],
             [
@@ -3253,8 +3253,8 @@ return [
                 "title" => "Emergency Contact Number",
                 "name" => "contact",
                 "public_form" => [
-                    "show" => true,
-                    "is_required" => true
+                    "show" => 1,
+                    "is_required" => 1
                 ]
             ]
         ],
@@ -3264,7 +3264,7 @@ return [
                 "title" => "First Name",
                 "name" => "first_name",
                 "verification_form" => [
-                    "show" => true
+                    "show" => 1
                 ]
             ],
             [
@@ -3272,7 +3272,7 @@ return [
                 "title" => "Last Name",
                 "name" => "last_name",
                 "verification_form" => [
-                    "show" => true
+                    "show" => 1
                 ]
             ],
             [
@@ -3280,7 +3280,7 @@ return [
                 "title" => "Date Of Birth",
                 "name" => "date_of_birth",
                 "verification_form" => [
-                    "show" => true
+                    "show" => 1
                 ]
             ],
             [
@@ -3288,7 +3288,7 @@ return [
                 "title" => "Student ID",
                 "name" => "student_id",
                 "verification_form" => [
-                    "show" => true
+                    "show" => 1
                 ]
             ],
             [
@@ -3296,7 +3296,7 @@ return [
                 "title" => "Passport Number",
                 "name" => "passport_number",
                 "verification_form" => [
-                    "show" => true
+                    "show" => 1
                 ]
             ]
         ]
