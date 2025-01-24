@@ -90,7 +90,9 @@ class UpdateDatabaseController extends Controller
 
                         $fileName = basename($business->logo);
 
-                        $new_file_path = public_path("/",$business_folder ."/".config("setup-config.business_gallery_location")."/" . $fileName);
+                        $new_file_path = public_path($business_folder . "/" . config("setup-config.business_gallery_location") . "/" . $fileName);
+
+
 
 
                         $file_name = $business->logo; // e.g., "student_files/1735372025_Image.jpg"
@@ -126,7 +128,7 @@ class UpdateDatabaseController extends Controller
 
 
             echo json_encode($business->logo) . "<br>";
-            // $business->save();
+             $business->save();
         }
 
         return 'Business logo updated successfully!';
