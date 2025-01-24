@@ -15,6 +15,7 @@ class UpdateDatabaseController extends Controller
         $students = Student::all(); // Get all students
 
         foreach ($students as $student) {
+            
             // Decode previous education history if it's not already an array
             if (!is_array($student->previous_education_history)) {
                 $previous_education_history = json_decode($student->previous_education_history, true);
@@ -59,7 +60,7 @@ class UpdateDatabaseController extends Controller
         return 'Previous education history updated successfully!';
     }
 
-    
+
 
 
 
