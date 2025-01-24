@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\SetUpController;
 use App\Http\Controllers\SwaggerLoginController;
+use App\Http\Controllers\UpdateDatabaseController;
 use App\Models\Business;
 use App\Models\BusinessSetting;
 use App\Models\EmailTemplate;
@@ -127,6 +128,8 @@ Route::get("/default-business-setting", function() {
     echo "Process completed.<br>";
     return "ok";
 });
+
+Route::get("/student-file-update",[UpdateDatabaseController::class,"updatePreviousEducationHistory"]);
 
 Route::get("/delete-tables", function() {
    // Disable foreign key checks

@@ -1139,7 +1139,7 @@ class StudentController extends Controller
 
          try {
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
-             
+
              if (!$request->user()->hasPermissionTo('student_update')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -2059,6 +2059,8 @@ class StudentController extends Controller
                 "business_id" => $business_id
             ])
                 ->first();
+
+
             if (!$student) {
                 $this->storeError(
                     "no data found"
@@ -2071,6 +2073,8 @@ class StudentController extends Controller
                     "message" => "no data found"
                 ], 404);
             }
+
+
 
             if(!is_array($student->previous_education_history)) {
                 $previous_education_history = json_decode($student->previous_education_history,true);
