@@ -28,7 +28,12 @@ class UpdateDatabaseController extends Controller
                         // Generate the new file path
                         $business_folder = str_replace(' ', '_', $student->business->name);
                         $encoded_student_id = base64_encode($student->id);
-                        $new_file_path = "$business_folder/$encoded_student_id/student_docs/" . $student_doc_object["file_name"];
+
+                        $fileName = basename($student_doc_object["file_name"]);
+
+                        $new_file_path = "$business_folder/$encoded_student_id/student_docs/" . $fileName;
+
+
 
                         // Move the file to the new folder
                         if (Storage::exists($student_doc_object["file_name"])) {
@@ -36,7 +41,7 @@ class UpdateDatabaseController extends Controller
                         }
 
                         // Update the file_name in the document object to store only the file name
-                        $student_doc_object["file_name"] = $new_file_path;
+                        $student_doc_object["file_name"] = $fileName;
                     }
                 }
             }
