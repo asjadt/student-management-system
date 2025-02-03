@@ -149,6 +149,8 @@ Route::delete('/v1.0/business-tiers/{ids}', [BusinessTierController::class, "del
 // user management section --user
 // ********************************************
 
+Route::put('/v1.0/users/update-password', [UserManagementController::class, "updatePassword"]);
+
 Route::post('/v1.0/users/single-file-upload', [UserManagementController::class, "createUserFileSingle"]);
 
 Route::post('/v1.0/users/multiple-file-upload', [UserManagementController::class, "createUserFileMultiple"]);
