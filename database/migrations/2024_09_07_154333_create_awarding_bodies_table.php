@@ -23,38 +23,19 @@ class CreateAwardingBodiesTable extends Migration
 
             $table->string('name');
 
-
-
-
-
             $table->text('description')->nullable();
-
-
-
-
 
             $table->date('accreditation_start_date');
 
-
-
-
-
             $table->date('accreditation_expiry_date');
-
-
-
 
 
             $table->string('logo')->nullable();
 
 
+           $table->boolean('is_active')->default(false);
 
-
-
-
-                            $table->boolean('is_active')->default(false);
-
-                            $table->boolean('is_default')->default(false);
+            $table->boolean('is_default')->default(false);
 
 
 

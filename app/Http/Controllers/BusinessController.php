@@ -2318,7 +2318,8 @@ $business = $this->getUrlLink($business,"logo",config("setup-config.business_gal
             }
 
 
-            $business->delete();
+            $business->forceDelete();
+
 
             User::where('business_id', $ids)->delete();
 

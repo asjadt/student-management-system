@@ -2274,6 +2274,14 @@ class DashboardManagementController extends Controller
                         $query->orWhere("students.student_status_id", $business_setting->online_student_status_id);
                     });
             });
+        },  function ($query) use($business_setting) {
+            // When offline registration is requested, check if 'student_status_id' is NOT NULL
+            $query
+            ->whereNotNull('students.student_status_id')
+            ->when(!empty($business_setting) && !empty($business_setting->online_student_status_id), function($query) use ($business_setting) {
+                $query->whereNotIn('students.student_status_id', [$business_setting->online_student_status_id]);
+            })
+            ;
         });
 
         $data["total_data_count"] = $data_query->count();
