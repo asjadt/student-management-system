@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCMS - Forgot Password</title>
+    <title>Student Management System - Forgot Password</title>
 </head>
 <body style="font-family: Arial, sans-serif;">
 
@@ -13,7 +13,7 @@
             <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                 <tr>
                     <td style="padding: 40px 30px; text-align: center;">
-                        <h2 style="color: #333333;">SCMS - Forgot Password</h2>
+                        <h2 style="color: #333333;">Student Management System - Forgot Password</h2>
                     </td>
                 </tr>
                 <tr>
@@ -39,7 +39,7 @@
                 </tr>
                 <tr>
                     <td style="background-color: #28a745; padding: 20px 30px; border-radius: 0 0 10px 10px;">
-                        <p style="color: #ffffff; margin: 0;">Thank you, <br> The SCMS Team</p>
+                        <p style="color: #ffffff; margin: 0;">Thank you, <br> The Student Management System Team</p>
                     </td>
                 </tr>
             </table>
