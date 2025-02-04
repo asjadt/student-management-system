@@ -2430,11 +2430,12 @@ class DashboardManagementController extends Controller
 
             );
 
+
             // Total counts
-            $data["total_awarding_bodies"] = AwardingBody::where("business_id", auth()->user()->business_id)->count();
+            $data["total_awarding_bodies"]["total_data_count"] = AwardingBody::where("business_id", auth()->user()->business_id)->count();
+            
             $data["total_courses"] = CourseTitle::where("business_id", auth()->user()->business_id)
             ->count();
-
 
 
             // Expiry intervals
@@ -2442,7 +2443,7 @@ class DashboardManagementController extends Controller
 
             foreach ($expiryIntervals as $days) {
 
-                $data["awarding_body_expiry_in_{$days}_days"] = AwardingBody::
+                $data["total_awarding_bodies"]["awarding_body_expiry_in_{$days}_days"] = AwardingBody::
                 where("business_id", auth()->user()->business_id)
                 ->where('accreditation_start_date', '<=', Carbon::now()->addDays($days))->count();
             }
