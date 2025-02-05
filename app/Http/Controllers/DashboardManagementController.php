@@ -2446,11 +2446,11 @@ class DashboardManagementController extends Controller
             foreach ($expiryIntervals as $days) {
                 $data["total_awarding_bodies"]["awarding_body_expiry_in_{$days}_days"] = AwardingBody::
                     where("business_id", auth()->user()->business_id)
-                    ->whereDate("accreditation_start_date",">=", Carbon::now()->addDays($previousDays))
+                    ->whereDate("accreditation_start_date",">", Carbon::now()->addDays($previousDays))
                     ->whereDate("accreditation_start_date","<=", Carbon::now()->addDays($days))
                     ->count();
 
-                $previousDays = $days; // Move to the next interval
+                $previousDays = $days; 
             }
 
 

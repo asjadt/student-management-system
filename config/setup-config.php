@@ -311,11 +311,21 @@ return [
 
             ],
         ],
+        [
+            "role" => "agency",
+            "permissions" => [
 
+
+            ],
+        ],
         [
             "role" => "business_admin",
             "permissions" => [
 
+                "agency_create",
+                "agency_update",
+                "agency_view",
+                "agency_delete",
 
                 "student_letter_create",
                 "student_letter_update",
@@ -1403,6 +1413,7 @@ return [
     "roles" => [
         "superadmin",
         'reseller',
+        'agency',
         "business_admin",
         "business_staff",
         "business_administrator",
@@ -1516,6 +1527,11 @@ return [
         "business_update",
         "business_view",
         "business_delete",
+
+                "agency_create",
+                "agency_update",
+                "agency_view",
+                "agency_delete",
 
 
         "template_create",
@@ -1817,6 +1833,12 @@ return [
         "business_update" => "Can update business",
         "business_view" => "Can view business",
         "business_delete" => "Can delete business",
+
+        "agency_create"=> "Can create agency",
+        "agency_update"=> "Can create agency",
+        "agency_view"=> "Can create agency",
+        "agency_delete"=> "Can create agency",
+
 
         "template_create" => "Can create template",
         "template_update" => "Can update template",
@@ -2143,6 +2165,11 @@ return [
         "business_update" => "update",
         "business_view" => "view",
         "business_delete" => "delete",
+
+        "agency_create" => "create",
+        "agency_update" => "update",
+        "agency_view" => "view",
+        "agency_delete" => "delete",
 
         "template_create" => "create",
         "template_update" => "update",
@@ -2535,7 +2562,16 @@ return [
 
             ],
         ],
+        [
+            "header" => "agency",
+            "permissions" => [
+                "agency_create",
+                "agency_update",
+                "agency_view",
+                "agency_delete",
 
+            ],
+        ],
 
         [
             "header" => "template",

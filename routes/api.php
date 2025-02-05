@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AwardingBodyController;
 use App\Http\Controllers\DashboardManagementController;
@@ -206,7 +207,10 @@ Route::delete('/v1.0/roles/{ids}', [RolesController::class, "deleteRolesByIds"])
 
 
 
-
+Route::post('/v1.0/auth/register-with-agency', [AgencyController::class, "registerUserWithAgency"]);
+Route::put('/v1.0/agencies', [AgencyController::class, "updateAgency"]);
+Route::get('/v1.0/agencies', [AgencyController::class, "getAgencies"]);
+Route::delete('/v1.0/agencies/{ids}', [AgencyController::class, "deleteAgenciesByIds"]);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // business management section

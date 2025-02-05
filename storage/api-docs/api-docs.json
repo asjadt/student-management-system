@@ -19,6 +19,212 @@
         }
     ],
     "paths": {
+        "/v1.0/auth/register-with-agency": {
+            "post": {
+                "tags": [
+                    "agency_management"
+                ],
+                "summary": "This method is to store user with agency",
+                "description": "This method is to store user with agency",
+                "operationId": "registerUserWithAgency",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user",
+                                    "agency"
+                                ],
+                                "properties": {
+                                    "user": {
+                                        "type": "string",
+                                        "format": "array",
+                                        "example": {
+                                            "first_Name": "Rifat",
+                                            "last_Name": "Al-Ashwad",
+                                            "middle_Name": "Al-Ashwad",
+                                            "email": "rifatalashwad@gmail.com",
+                                            "password": "12345678",
+                                            "password_confirmation": "12345678",
+                                            "phone": "01771034383",
+                                            "image": "https://images.unsplash.com/photo-1671410714831-969877d103b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+                                            "send_password": 1,
+                                            "gender": "male"
+                                        }
+                                    },
+                                    "agency": {
+                                        "type": "object",
+                                        "example": {
+                                            "agency_name": "Best Agency",
+                                            "contact_person": "John Doe",
+                                            "email": "johndoe@example.com",
+                                            "phone_number": "01771034383",
+                                            "address": "123 Main Street, Dhaka, Bangladesh",
+                                            "commission_rate": 15.5,
+                                            "business_id": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/agencies": {
+            "put": {
+                "tags": [
+                    "agency_management"
+                ],
+                "summary": "This method is to update user with agency",
+                "description": "This method is to update user with agency",
+                "operationId": "updateAgency",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user",
+                                    "agency"
+                                ],
+                                "properties": {
+                                    "user": {
+                                        "type": "string",
+                                        "format": "array",
+                                        "example": {
+                                            "id": 1,
+                                            "first_Name": "Rifat",
+                                            "middle_Name": "Al-Ashwad",
+                                            "last_Name": "Al-Ashwad",
+                                            "email": "rifatalashwad@gmail.com",
+                                            "password": "12345678",
+                                            "password_confirmation": "12345678",
+                                            "phone": "01771034383",
+                                            "image": "https://images.unsplash.com/photo-1671410714831-969877d103b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+                                            "gender": "male"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/register": {
             "post": {
                 "tags": [
@@ -2932,6 +3138,7 @@
                                             "name": "ABCD businesses",
                                             "about": "Best businesses in Dhaka",
                                             "web_page": "https://www.facebook.com/",
+                                            "color_theme_name": "#dddddd",
                                             "phone": "01771034383",
                                             "email": "rifatalashwad@gmail.com",
                                             "additional_information": "No Additional Information",
@@ -3040,6 +3247,7 @@
                                             "owner_id": "1",
                                             "name": "ABCD businesses",
                                             "about": "Best businesses in Dhaka",
+                                            "color_theme_name": "#dddddd",
                                             "web_page": "https://www.facebook.com/",
                                             "phone": "01771034383",
                                             "email": "rifatalashwad@gmail.com",
@@ -3427,6 +3635,7 @@
                                         "example": {
                                             "name": "ABCD businesses",
                                             "about": "Best businesses in Dhaka",
+                                            "color_theme_name": "#dddddd",
                                             "web_page": "https://www.facebook.com/",
                                             "phone": "01771034383",
                                             "email": "rifatalashwad@gmail.com",
@@ -3633,6 +3842,7 @@
                                             "name": "ABCD businesses",
                                             "about": "Best businesses in Dhaka",
                                             "web_page": "https://www.facebook.com/",
+                                            "color_theme_name": "#ddd",
                                             "phone": "01771034383",
                                             "email": "rifatalashwad@gmail.com",
                                             "additional_information": "No Additional Information",
@@ -4347,6 +4557,11 @@
                                         "type": "integer",
                                         "example": 1
                                     },
+                                    "student_verification_fields": {
+                                        "description": "The ID of the student verification field.",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
                                     "student_data_fields": {
                                         "description": "The ID of the online student status.",
                                         "type": "array",
@@ -4370,6 +4585,108 @@
                         }
                     }
                 },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/client/v1.0/business-settings": {
+            "get": {
+                "tags": [
+                    "business_setting"
+                ],
+                "summary": "This method is to get business setting",
+                "description": "This method is to get business setting",
+                "operationId": "getBusinessSettingClient",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": false,
+                        "example": ""
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": false,
+                        "example": ""
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": false,
+                        "example": ""
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": false,
+                        "example": ""
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": false,
+                        "example": ""
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -13680,6 +13997,20 @@
                         "description": "Number of results per page",
                         "required": false,
                         "example": "20"
+                    },
+                    {
+                        "name": "response_type",
+                        "in": "query",
+                        "description": "response_type",
+                        "required": false,
+                        "example": "20"
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "description": "file_name",
+                        "required": false,
+                        "example": "20"
                     }
                 ],
                 "responses": {
@@ -14954,6 +15285,20 @@
                         "description": "Number of results per page",
                         "required": false,
                         "example": "20"
+                    },
+                    {
+                        "name": "response_type",
+                        "in": "query",
+                        "description": "response_type",
+                        "required": false,
+                        "example": "20"
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "description": "file_name",
+                        "required": false,
+                        "example": "20"
                     }
                 ],
                 "responses": {
@@ -15831,6 +16176,11 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "student_id"
+                                    },
+                                    "letter_issue_date": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "date"
                                     }
                                 },
                                 "type": "object"
@@ -18711,6 +19061,108 @@
                         "example": "1,2,3"
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/users/update-password": {
+            "put": {
+                "tags": [
+                    "user_management"
+                ],
+                "summary": "This method is to update user",
+                "description": "This method is to update user",
+                "operationId": "updatePassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "first_Name",
+                                    "last_Name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "phone",
+                                    "address_line_1",
+                                    "address_line_2",
+                                    "country",
+                                    "city",
+                                    "postcode",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "format": "number",
+                                        "example": "1"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Rifat"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -22114,6 +22566,10 @@
         }
     },
     "tags": [
+        {
+            "name": "agency_management",
+            "description": "agency_management"
+        },
         {
             "name": "auth",
             "description": "auth"
