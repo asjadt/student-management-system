@@ -517,7 +517,7 @@ class AgencyController extends Controller
              if (!$agency) {
                  $this->storeError("Agency not found", 404, "Front-end error", "Front-end error");
                  return response()->json([
-                     "message" => "The specified business does not exist."
+                     "message" => "The specified agency does not exist."
                  ], 404);
              }
 

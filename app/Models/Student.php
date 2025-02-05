@@ -68,7 +68,7 @@ class Student extends Model
 
     public function business()
     {
-        return $this->belongsTo(Business::class, 'business_id')->withTrashed();
+        return $this->belongsTo(Business::class, 'business_id');
     }
 
     public function creator()
