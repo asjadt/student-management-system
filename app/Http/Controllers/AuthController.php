@@ -1042,7 +1042,12 @@ public function getUser (Request $request) {
         $user->token = auth()->user()->createToken('authToken')->accessToken;
         $user->permissions = $user->getAllPermissions()->pluck('name');
         $user->roles = $user->roles->pluck('name');
-        $user->business = $user->business;
+
+
+        if(!empty($business)){
+            $user->business = $this->getUrlLink($user->business,"logo",config("setup-config.business_gallery_location"),$user->business->name);
+        }
+            
 
         // $user->default_background_image = ("/".  config("setup-config.business_background_image_location_full"));
 
