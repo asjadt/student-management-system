@@ -73,7 +73,7 @@ class StudentStatusUpdateRequest extends BaseFormRequest
                 },
             ],
             'description' => 'nullable|string',
-            'color' => 'required|string',
+            'color' => 'nullable|string',
         ];
 
         // if (!empty(auth()->user()->business_id)) {

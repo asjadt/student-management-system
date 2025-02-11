@@ -16,7 +16,7 @@ class CreateStudentStatusesTable extends Migration
         Schema::create('student_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('color');
+            $table->string('color')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(false);
             $table->boolean('is_default')->default(false);

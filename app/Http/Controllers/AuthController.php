@@ -1047,7 +1047,7 @@ public function getUser (Request $request) {
         if(!empty($business)){
             $user->business = $this->getUrlLink($user->business,"logo",config("setup-config.business_gallery_location"),$user->business->name);
         }
-            
+
 
         // $user->default_background_image = ("/".  config("setup-config.business_background_image_location_full"));
 

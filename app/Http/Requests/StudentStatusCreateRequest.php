@@ -48,7 +48,7 @@ class StudentStatusCreateRequest extends BaseFormRequest
                 },
             ],
             'description' => 'nullable|string',
-            'color' => 'required|string',
+            'color' => 'nullable|string',
         ];
 
         if(empty(auth()->user())) {

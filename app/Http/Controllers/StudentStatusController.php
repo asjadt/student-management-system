@@ -9,6 +9,7 @@ use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\BusinessSetting;
 use App\Models\DisabledStudentStatus;
 use App\Models\StudentStatus;
 use App\Models\SettingPaidLeaveStudentStatus;
@@ -314,10 +315,12 @@ class StudentStatusController extends Controller
 
 
      public function query_filters($query) {
-        $created_by  = NULL;
-        if(auth()->user()->business) {
-            $created_by = auth()->user()->business->created_by;
-        }
+
+        $business_setting = BusinessSetting::where([
+            "business_id" => auth()->user()->business_id
+        ])
+        ->first();
+
           return   $query
           ->where([
             "business_id" =>auth()->user()->business_id
@@ -329,9 +332,11 @@ class StudentStatusController extends Controller
                         ->orWhere("student_statuses.description", "like", "%" . $term . "%");
                 });
             })
-            //    ->when(!empty($request->product_category_id), function ($query) use ($request) {
-            //        return $query->where('product_category_id', $request->product_category_id);
-            //    })
+
+            ->when(request()->boolean("exclude_online_status"), function ($query) use($business_setting) {
+                return $query->whereNotIn('students.student_status_id', [$business_setting->online_student_status_id]);
+            })
+
             ->when(!empty(request()->start_date), function ($query) {
                 return $query->where('student_statuses.created_at', ">=",request()->start_date);
             })
