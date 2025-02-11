@@ -334,7 +334,7 @@ class StudentStatusController extends Controller
             })
 
             ->when(request()->boolean("exclude_online_status"), function ($query) use($business_setting) {
-                return $query->whereNotIn('students.student_status_id', [$business_setting->online_student_status_id]);
+                return $query->whereNotIn('student_statuses.id', [$business_setting->online_student_status_id]);
             })
 
             ->when(!empty(request()->start_date), function ($query) {

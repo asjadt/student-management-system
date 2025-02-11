@@ -21,8 +21,6 @@ class BusinessSetting extends Model
     protected $casts = [
         'student_data_fields' => 'array',
         'student_verification_fields' => 'array',
-
-
     ];
 
     // Optionally, you can define the relationship to StudentStatus if needed
