@@ -580,7 +580,8 @@ class CourseTitleController extends Controller
         'course_titles.name',
         'course_titles.level',
         'course_titles.description',
-        "course_titles.awarding_body_id"
+        "course_titles.awarding_body_id",
+        "course_titles.is_active"
              );
              $course_titles = $this->retrieveData($query, "id","course_titles");
 
