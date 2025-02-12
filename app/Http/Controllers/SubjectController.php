@@ -667,7 +667,8 @@ class SubjectController extends Controller
             ->select(
                 "subjects.id",
                 'subjects.name',
-                'subjects.description'
+                'subjects.description',
+                'subjects.is_active'
             );
             $subjects = $this->retrieveData($query, "id","subjects");
 
