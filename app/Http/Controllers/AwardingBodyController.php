@@ -731,7 +731,8 @@ class AwardingBodyController extends Controller
                 'awarding_bodies.description',
                 'awarding_bodies.accreditation_start_date',
                 'awarding_bodies.accreditation_expiry_date',
-                'awarding_bodies.logo'
+                'awarding_bodies.logo',
+                'awarding_bodies.is_active',
             );
             $awarding_bodies = $this->retrieveData($query, "id","awarding_bodies");
 
