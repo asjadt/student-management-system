@@ -1760,7 +1760,24 @@ class StudentController extends Controller
 
             $query = Student::with("student_status","course_title");
             $query = $this->query_filters($query);
-            $students = $this->retrieveData($query, "id","students");
+            $students = $query->when(!empty(request()->order_by) && in_array(strtoupper(request()->order_by), ['ASC', 'DESC']), function ($query)  {
+                return $query->orderBy("students" . "." . "id", request()->order_by);
+            }, function ($query)  {
+                return $query->orderBy("students" . "." . "id", "DESC");
+            })
+                ->when(request()->filled("id"), function ($query)  {
+                    return $query->where("students" . "." . 'id', request()->input("id"))->first();
+                }, function ($query) {
+                    return $query->when(!empty(request()->per_page), function ($query) {
+                        return $query->first(request()->per_page);
+                    }, function ($query) {
+                        return $query->first();
+                    });
+                });
+
+                if(request()->filled("id") && empty($data)) {
+                    throw new Exception("No data found",404);
+                };
 
 
             return response()->json($students, 200);
