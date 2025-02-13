@@ -469,7 +469,13 @@ class CourseTitleController extends Controller
      *       security={
      *           {"bearerAuth": {}}
      *       },
-
+     *              @OA\Parameter(
+     *         name="id",
+     *         in="query",
+     *         description="id",
+     *         required=true,
+     *  example="6"
+     *      ),
      *              @OA\Parameter(
      *         name="per_page",
      *         in="query",
