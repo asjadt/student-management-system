@@ -34,13 +34,13 @@ class CourseTitleController extends Controller
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
- * @OA\Property(property="name", type="string", format="string", example="tttttt"),
- *  * @OA\Property(property="color", type="string", format="string", example="red"),
- * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
- *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
- *      * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3}),
- *
- *
+     * @OA\Property(property="name", type="string", format="string", example="tttttt"),
+     *  * @OA\Property(property="color", type="string", format="string", example="red"),
+     * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
+     *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
+     *      * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3}),
+     *
+     *
      *
      *         ),
      *      ),
@@ -78,43 +78,78 @@ class CourseTitleController extends Controller
      *     )
      */
 
+    /**
+     * Creates a new course title.
+     *
+     * This function creates a new course title from the given request data.
+     * The request data is validated using the CourseTitleCreateRequest validator.
+     * The function first checks if the user has the right permission to create a course title.
+     * If the user does not have the right permission, it returns a 401 Unauthorized response.
+     * If the user has the right permission, it then creates a new course title using the validated request data.
+     * The course title's is_active field is set to 1, indicating that the course title is active.
+     * The course title's is_default field is set to 0, indicating that the course title is not the default course title.
+     * If the user is a superadmin, the is_default field is set to 1, indicating that the course title is the default course title.
+     * The course title's created_by field is set to the id of the user who created the course title.
+     * The course title's business_id field is set to the id of the user's business.
+     * If the user does not have a business, the business_id field is set to NULL.
+     * The course title is then saved to the database.
+     * The course title's subjects are then synced with the subject_ids in the request data.
+     * If an exception is thrown during the creation of the course title, the function logs the error and returns a 500 Internal Server Error response.
+     *
+     * @param CourseTitleCreateRequest $request The request data to create a new course title.
+     *
+     * @return \Illuminate\Http\Response The response of the function.
+     */
     public function createCourseTitle(CourseTitleCreateRequest $request)
     {
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            // Log the activity of creating a new course title.
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            // Start a database transaction.
             return DB::transaction(function () use ($request) {
+                // Check if the user has the right permission to create a course title.
                 if (!$request->user()->hasPermissionTo('course_title_create')) {
+                    // If the user does not have the right permission, return a 401 Unauthorized response.
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
                 }
 
+                // Get the validated request data.
                 $request_data = $request->validated();
 
-
+                // Set the course title's is_active field to 1.
                 $request_data["is_active"] = 1;
+                // Set the course title's is_default field to 0.
                 $request_data["is_default"] = 0;
-                $request_data["created_by"] = $request->user()->id;
-                $request_data["business_id"] = $request->user()->business_id;
 
+                // Set the course title's created_by field to the id of the user who created the course title.
+                $request_data["created_by"] = $request->user()->id;
+                // Set the course title's business_id field to the id of the user's business.
+                $request_data["business_id"] = $request->user()->business_id;
+                // If the user does not have a business, set the business_id field to NULL.
                 if (empty($request->user()->business_id)) {
                     $request_data["business_id"] = NULL;
+                    // If the user is a superadmin, set the is_default field to 1.
                     if ($request->user()->hasRole('superadmin')) {
                         $request_data["is_default"] = 1;
                     }
                 }
 
-
-
+                // Create a new course title using the validated request data.
                 $course_title =  CourseTitle::create($request_data);
 
+                // Sync the course title's subjects with the subject_ids in the request data.
                 $course_title->subjects()->sync($request_data["subject_ids"]);
 
 
+                // Return a 201 Created response with the new course title.
                 return response($course_title, 201);
             });
         } catch (Exception $e) {
+            // Log the error.
             error_log($e->getMessage());
+            // Return a 500 Internal Server Error response.
             return $this->sendError($e, 500, $request);
         }
     }
@@ -134,12 +169,12 @@ class CourseTitleController extends Controller
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-*      @OA\Property(property="id", type="number", format="number", example="Updated Christmas"),
- * @OA\Property(property="name", type="string", format="string", example="tttttt"),
- *  *  * @OA\Property(property="color", type="string", format="string", example="red"),
- * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
- *  * *  * @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
- *      * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3}),
+     *      @OA\Property(property="id", type="number", format="number", example="Updated Christmas"),
+     * @OA\Property(property="name", type="string", format="string", example="tttttt"),
+     *  *  * @OA\Property(property="color", type="string", format="string", example="red"),
+     * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
+     *  * *  * @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
+     *      * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3}),
 
 
      *
@@ -181,25 +216,35 @@ class CourseTitleController extends Controller
 
     public function updateCourseTitle(CourseTitleUpdateRequest $request)
     {
-
+        /**
+         * This is the request to update a course title.
+         * It takes the course title id and the new course title name, color, description, and awarding body id as parameters.
+         * It will update the course title in the database.
+         * It will also update the subjects associated with this course title.
+         * If the course title is not found in the database, it will return a 404 response.
+         * If the user does not have permission to update the course title, it will return a 401 response.
+         * If there is an error, it will return a 500 response.
+         */
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            // log the activity of the user
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             return DB::transaction(function () use ($request) {
+                // check if the user has permission to update course titles
                 if (!$request->user()->hasPermissionTo('course_title_update')) {
+                    // if the user doesn't have the permission, return a 401 response
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
                 }
 
+                // get the validated request data
                 $request_data = $request->validated();
-
-
-
+                // set the query params for the course title model
                 $course_title_query_params = [
                     "id" => $request_data["id"],
                 ];
 
-
+                // find the course title by id and update it
                 $course_title  =  tap(CourseTitle::where($course_title_query_params))->update(
                     collect($request_data)->only([
                         'name',
@@ -215,22 +260,28 @@ class CourseTitleController extends Controller
                     // ->with("somthing")
 
                     ->first();
+                // if the course title is not found, return a 404 response
                 if (!$course_title) {
                     return response()->json([
                         "message" => "something went wrong."
                     ], 500);
                 }
+
+                // update the subjects associated with this course title
                 $course_title->subjects()->sync($request_data["subject_ids"]);
 
+                // return the course title
                 return response($course_title, 201);
             });
         } catch (Exception $e) {
+            // log the error
             error_log($e->getMessage());
+            // return a 500 response
             return $this->sendError($e, 500, $request);
         }
     }
 
-  /**
+    /**
      *
      * @OA\Put(
      *      path="/v1.0/course-titles/toggle-active",
@@ -284,64 +335,102 @@ class CourseTitleController extends Controller
      *     )
      */
 
-     public function toggleActiveCourseTitle(GetIdRequest $request)
-     {
-
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             if (!$request->user()->hasPermissionTo('course_title_activate')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
-             $request_data = $request->validated();
-
-                $this->toggleActivation(
-                    CourseTitle::class,
-                    DisabledCourseTitle::class,
-                    'course_title_id',
-                    $request_data["id"],
-                    auth()->user()
-                );
-
-             return response()->json(['message' => 'course title status updated successfully'], 200);
-         } catch (Exception $e) {
-             error_log($e->getMessage());
-             return $this->sendError($e, 500, $request);
-         }
-     }
-
-     public function query_filters_v2($query)
+    /**
+     * Toggle the active status of a course title
+     *
+     * This method is protected by the "course_title_activate" permission.
+     * If the user does not have this permission, a 401 Unauthorized response will be returned.
+     *
+     * @param GetIdRequest $request The request containing the id of the course title to toggle
+     *
+     * @return \Illuminate\Http\Response A JSON response containing a success message
+     */
+    public function toggleActiveCourseTitle(GetIdRequest $request)
     {
-        $created_by  = NULL;
-        if(auth()->user()->business) {
+
+        try {
+            // log the activity of the user in the user_activity table
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+            // check if the user has the necessary permission to perform this action
+            if (!$request->user()->hasPermissionTo('course_title_activate')) {
+                // if the user does not have the permission, return a 401 Unauthorized response
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
+
+            // validate the request data
+            $request_data = $request->validated();
+
+            // call the toggleActivation method to either enable or disable the course title
+            // the toggleActivation method takes the following parameters:
+            // - the class name of the primary model
+            // - the class name of the model representing the disabled state
+            // - the name of the id attribute of the primary model
+            // - the id of the record to toggle
+            // - the currently authenticated user
+            $this->toggleActivation(
+                CourseTitle::class,        // the primary model class
+                DisabledCourseTitle::class, // the model class representing the disabled state
+                'course_title_id',         // the name of the id attribute of the primary model
+                $request_data["id"],       // the id of the record to toggle
+                auth()->user()             // the currently authenticated user
+            );
+
+            // return a success response with a JSON message
+            return response()->json(['message' => 'course title status updated successfully'], 200);
+        } catch (Exception $e) {
+            // log any exceptions that occur
+            error_log($e->getMessage());
+            // return a 500 Internal Server Error response with a JSON error message
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
+    public function query_filters_v2($query)
+    {
+        // Initialize the created_by variable
+        $created_by = NULL;
+
+        // Check if the authenticated user has a business
+        if (auth()->user()->business) {
+            // If the user has a business, set created_by to the creator of the business
             $created_by = auth()->user()->business->created_by;
         }
 
-        return   $query->where([
-            "business_id" =>auth()->user()->business_id
-         ])
+        // Apply a filter to the query based on the business_id of the authenticated user
+        return $query->where([
+            "business_id" => auth()->user()->business_id
+        ])
 
-        ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by) {
-            $query->forBusiness('course_titles', "remove_letter_templates", $created_by);
-        })
+            // If the user has a business_id, apply additional business-specific filtering
+            ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by) {
+                // Use a custom scope 'forBusiness' to apply business-specific logic to the query
+                $query->forBusiness('course_titles', "remove_letter_templates", $created_by);
+            })
 
+            // If a search key is provided in the request, filter the query based on the search key
             ->when(!empty(request()->search_key), function ($query) {
                 return $query->where(function ($query) {
                     $term = request()->search_key;
+                    // Search for the term in the name and description columns of course titles
                     $query->where("course_titles.name", "like", "%" . $term . "%")
                         ->orWhere("course_titles.description", "like", "%" . $term . "%");
                 });
             })
-            //    ->when(!empty(request()->product_category_id), function ($query) {
-            //        return $query->where('product_category_id', request()->product_category_id);
-            //    })
+
+            // If an awarding_body_id is provided in the request, filter the query by it
             ->when(!empty(request()->awarding_body_id), function ($query) {
                 return $query->where('course_titles.awarding_body_id', request()->awarding_body_id);
             })
+
+            // If a start date is provided in the request, filter the query for records created after it
             ->when(!empty(request()->start_date), function ($query) {
                 return $query->where('course_titles.created_at', ">=", request()->start_date);
             })
+
+            // If an end date is provided in the request, filter the query for records created before it
             ->when(!empty(request()->end_date), function ($query) {
                 return $query->where('course_titles.created_at', "<=", (request()->end_date . ' 23:59:59'));
             });
@@ -439,28 +528,53 @@ class CourseTitleController extends Controller
      *     )
      */
 
+    /**
+     * Get a list of course titles.
+     *
+     * This method returns a list of course titles, along with their awarding bodies and subjects.
+     * It also logs the activity of the user in the user_activity table.
+     * If the user does not have the right permission to view course titles, a 401 Unauthorized response will be returned.
+     * If an exception is thrown during the execution of this method, a 500 Internal Server Error response will be returned.
+     *
+     * @param Request $request The request containing the parameters to filter the course titles.
+     *
+     * @return \Illuminate\Http\Response A JSON response containing the list of course titles.
+     */
     public function getCourseTitles(Request $request)
     {
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            // Log the activity of the user in the user_activity table.
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+            // Check if the user has the right permission to view course titles.
             if (!$request->user()->hasPermissionTo('course_title_view')) {
+                // If the user does not have the permission, return a 401 Unauthorized response.
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
 
-            $query = CourseTitle::with("awarding_body","subjects");
-            $query = $this->query_filters_v2($query);
-            $course_titles = $this->retrieveData($query, "id","course_titles");
+            // Start building the query to retrieve the course titles.
+            $query = CourseTitle::with("awarding_body", "subjects");
 
+            // Call the query_filters_v2 method to add the filters to the query.
+            $query = $this->query_filters_v2($query);
+
+            // Call the retrieveData method to execute the query and retrieve the data.
+            $course_titles = $this->retrieveData($query, "id", "course_titles");
+
+            // Return a JSON response containing the list of course titles.
             return response()->json($course_titles, 200);
         } catch (Exception $e) {
+            // Log any exceptions that occur.
+            error_log($e->getMessage());
 
+            // Return a 500 Internal Server Error response with a JSON error message.
             return $this->sendError($e, 500, $request);
         }
     }
 
-     /**
+    /**
      *
      * @OA\Get(
      *      path="/v2.0/course-titles",
@@ -558,78 +672,101 @@ class CourseTitleController extends Controller
      *     )
      */
 
-     public function getCourseTitlesV2(Request $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity","DUMMY description");
-             if (!$request->user()->hasPermissionTo('course_title_view')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
+    public function getCourseTitlesV2(Request $request)
+    {
+        try {
+            // Log the activity of the user in the user_activity table.
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
+            // Check if the user has the right permission to view course titles.
+            if (!$request->user()->hasPermissionTo('course_title_view')) {
+                // If the user does not have the permission, return a 401 Unauthorized response.
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
-             $query = CourseTitle::with(
+            // Start building the query to retrieve the course titles.
+            $query = CourseTitle::with(
                 [
-                    "awarding_body" => function($query) {
-                       $query->select(
-                        "awarding_bodies.id",
-                        "awarding_bodies.name",
-                       );
+                    "awarding_body" => function ($query) {
+                        // Select only the id and name columns from the awarding bodies table.
+                        $query->select(
+                            "awarding_bodies.id",
+                            "awarding_bodies.name",
+                        );
                     }
 
                 ]
             );
-             $query = $this->query_filters_v2($query)
-             ->select(
-        "course_titles.id",
-        'course_titles.name',
-        'course_titles.level',
-        'course_titles.description',
-        "course_titles.awarding_body_id",
-        "course_titles.is_active"
-             );
-             $course_titles = $this->retrieveData($query, "id","course_titles");
 
-             return response()->json($course_titles, 200);
-         } catch (Exception $e) {
+            // Call the query_filters_v2 method to add the filters to the query.
+            $query = $this->query_filters_v2($query);
 
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            // Select the id, name, level, description, awarding body id, and is active columns from the course titles table.
+            $query->select(
+                "course_titles.id",
+                'course_titles.name',
+                'course_titles.level',
+                'course_titles.description',
+                "course_titles.awarding_body_id",
+                "course_titles.is_active"
+            );
+
+            // Call the retrieveData method to execute the query and retrieve the data.
+            $course_titles = $this->retrieveData($query, "id", "course_titles");
+
+            // Return a JSON response containing the list of course titles.
+            return response()->json($course_titles, 200);
+        } catch (Exception $e) {
+            // Log any exceptions that occur.
+            error_log($e->getMessage());
+
+            // Return a 500 Internal Server Error response with a JSON error message.
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
 
     public function query_filters($query)
     {
-        $business_id =  request()->business_id;
-        if(!$business_id) {
-           $error = [ "message" => "The given data was invalid.",
-           "errors" => ["business_id"=>["The business id field is required."]]
-           ];
-               throw new Exception(json_encode($error),422);
+        // Retrieve the business ID from the request
+        $business_id = request()->business_id;
+
+        // Check if the business ID is provided
+        if (!$business_id) {
+            // If not, prepare an error message indicating that the business ID field is required
+            $error = [
+                "message" => "The given data was invalid.",
+                "errors" => ["business_id" => ["The business id field is required."]]
+            ];
+            // Throw an exception with the error message and a 422 status code
+            throw new Exception(json_encode($error), 422);
         }
 
-        return   $query->where('course_titles.business_id', $business_id)
-        ->where('course_titles.is_active', 1)
-            ->when(!empty(request()->search_key), function ($query)  {
+        // Start building the query for course titles
+        return $query->where('course_titles.business_id', $business_id) // Filter the query by business ID
+            ->where('course_titles.is_active', 1) // Filter the query to include only active course titles
+            ->when(!empty(request()->search_key), function ($query) {
+                // If a search key is provided, further filter the query
                 return $query->where(function ($query) {
-                    $term = request()->search_key;
+                    $term = request()->search_key; // Retrieve the search key from the request
+                    // Filter course titles by matching the search key with the name or description
                     $query->where("course_titles.name", "like", "%" . $term . "%")
                         ->orWhere("course_titles.description", "like", "%" . $term . "%");
                 });
             })
-            //    ->when(!empty(request()->product_category_id), function ($query) use (request()) {
-            //        return $query->where('product_category_id', request()->product_category_id);
-            //    })
             ->when(!empty(request()->start_date), function ($query) {
+                // If a start date is provided, filter the query to include records created on or after the start date
                 return $query->where('course_titles.created_at', ">=", request()->start_date);
             })
             ->when(!empty(request()->end_date), function ($query) {
+                // If an end date is provided, filter the query to include records created on or before the end date
                 return $query->where('course_titles.created_at', "<=", (request()->end_date . ' 23:59:59'));
             });
     }
 
- /**
+    /**
      *
      * @OA\Get(
      *      path="/v1.0/client/course-titles",
@@ -728,24 +865,43 @@ class CourseTitleController extends Controller
      *     )
      */
 
-     public function getCourseTitlesClient(Request $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+    /**
+     * Get a list of course titles for the client (student).
+     *
+     * This endpoint is protected by the "student.course_titles" permission.
+     * If the user does not have this permission, a 403 Forbidden response will be returned.
+     *
+     * @param Request $request The request containing the parameters to filter the course titles.
+     *
+     * @return \Illuminate\Http\Response A JSON response containing the list of course titles.
+     */
+    public function getCourseTitlesClient(Request $request)
+    {
+        try {
+            // store the activity of the user in the user_activity table
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
+            // build the query to retrieve the course titles
+            $query = CourseTitle::query();
 
-             $query = CourseTitle::query();
-             $query = $this->query_filters($query);
-             $course_titles = $this->retrieveData($query, "id","course_titles");
+            // add the filters to the query
+            $query = $this->query_filters($query);
 
-             return response()->json($course_titles, 200);
-         } catch (Exception $e) {
+            // execute the query and retrieve the data
+            $course_titles = $this->retrieveData($query, "id", "course_titles");
 
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            // return a JSON response containing the list of course titles
+            return response()->json($course_titles, 200);
+        } catch (Exception $e) {
+            // log any exceptions that occur
+            error_log($e->getMessage());
 
- /**
+            // return a 500 Internal Server Error response with a JSON error message
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
+    /**
      *
      * @OA\Get(
      *      path="/v2.0/client/course-titles",
@@ -844,26 +1000,52 @@ class CourseTitleController extends Controller
      *     )
      */
 
-     public function getCourseTitlesClientV2(Request $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+    /**
+     * This method is to get course titles
+     * It takes the request with the search query parameters
+     * It logs the activity of the user in the user_activity table
+     * It builds the query to retrieve the course titles
+     * It adds the filters to the query
+     * It executes the query and retrieves the data
+     * It returns a JSON response containing the list of course titles
+     *
+     * @param Request $request The request containing the search query parameters
+     * @return \Illuminate\Http\Response A JSON response containing the list of course titles
+     */
+    public function getCourseTitlesClientV2(Request $request)
+    {
+        try {
+            // log the activity of the user in the user_activity table
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
 
-             $query = CourseTitle::query();
-             $query = $this->query_filters($query)
-             ->select(
-                'course_titles.id',
-                'course_titles.name'
-             );
-             $course_titles = $this->retrieveData($query, "id","course_titles");
+            // build the query to retrieve the course titles
+            $query = CourseTitle::query();
 
-             return response()->json($course_titles, 200);
-         } catch (Exception $e) {
+            // add the filters to the query
+            $query = $this->query_filters($query);
 
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            // select the columns to be retrieved
+            $query = $query
+                ->select(
+                    'course_titles.id',
+                    'course_titles.name'
+                );
+
+            // execute the query and retrieve the data
+            $course_titles = $this->retrieveData($query, "id", "course_titles");
+
+            // return a JSON response containing the list of course titles
+            return response()->json($course_titles, 200);
+        } catch (Exception $e) {
+
+            // log any exceptions that occur
+            error_log($e->getMessage());
+
+            // return a 500 Internal Server Error response with a JSON error message
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
 
     /**
@@ -924,111 +1106,133 @@ class CourseTitleController extends Controller
     public function getCourseTitleById($id, Request $request)
     {
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            // Log the activity of the user in the user_activity table.
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+            // Check if the user has the right permission to view course titles.
             if (!$request->user()->hasPermissionTo('course_title_view')) {
+                // If the user does not have the permission, return a 401 Unauthorized response.
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
 
-            $course_title =  CourseTitle::with(
+            // Start building the query to retrieve the course title.
+            $query = CourseTitle::with(
                 [
                     "subjects",
-                    "awarding_body" => function($query) {
-                      $query->select("awarding_bodies.id","awarding_bodies.name");
+                    "awarding_body" => function ($query) {
+                        // Select only the id and name columns from the awarding bodies table.
+                        $query->select("awarding_bodies.id", "awarding_bodies.name");
                     }
 
                 ]
 
-                )->where([
+            )->where([
                 "id" => $id,
-            ])
-                ->first();
-                if (!$course_title) {
-                    $this->storeError(
-                        "no data found"
-                        ,
-                        404,
-                        "front end error",
-                        "front end error"
-                       );
-                    return response()->json([
-                        "message" => "no data found"
-                    ], 404);
-                }
+            ]);
 
-                if (empty(auth()->user()->business_id)) {
+            // Execute the query and retrieve the course title.
+            $course_title = $query->first();
 
-                    if (auth()->user()->hasRole('superadmin')) {
-                        if (($course_title->business_id != NULL || $course_title->is_default != 1)) {
-                            $this->storeError(
-                                "You do not have permission to update this due to role restrictions.",
-                                403,
-                                "front end error",
-                                "front end error"
-                               );
-                            return response()->json([
-                                "message" => "You do not have permission to update this course title due to role restrictions."
-                            ], 403);
-                        }
-                    } else {
-                        if ($course_title->business_id != NULL) {
-                            $this->storeError(
-                                "You do not have permission to update this due to role restrictions.",
-                                403,
-                                "front end error",
-                                "front end error"
-                               );
-                            return response()->json([
-                                "message" => "You do not have permission to update this course title due to role restrictions."
-                            ], 403);
-                        } else if ($course_title->is_default == 0 && $course_title->created_by != auth()->user()->id) {
-                            $this->storeError(
-                                "You do not have permission to update this due to role restrictions.",
-                                403,
-                                "front end error",
-                                "front end error"
-                               );
-                                return response()->json([
-                                    "message" => "You do not have permission to update this course title due to role restrictions."
-                                ], 403);
+            // If the course title is not found, return a 404 response.
+            if (!$course_title) {
+                // Log the error in the error log.
+                $this->storeError(
+                    "no data found",
+                    404,
+                    "front end error",
+                    "front end error"
+                );
+                // Return a 404 response with a message.
+                return response()->json([
+                    "message" => "no data found"
+                ], 404);
+            }
 
-                        }
+            // If the user does not have a business id, check for role restrictions.
+            if (empty(auth()->user()->business_id)) {
+
+                // If the user is a super admin, check if the course title belongs to a business.
+                if (auth()->user()->hasRole('superadmin')) {
+                    // If the course title belongs to a business, check if the user has the permission to update the course title.
+                    if (($course_title->business_id != NULL || $course_title->is_default != 1)) {
+                        // If the user does not have the permission, return a 403 Forbidden response.
+                        $this->storeError(
+                            "You do not have permission to update this due to role restrictions.",
+                            403,
+                            "front end error",
+                            "front end error"
+                        );
+                        return response()->json([
+                            "message" => "You do not have permission to update this course title due to role restrictions."
+                        ], 403);
                     }
                 } else {
+                    // If the course title belongs to a business, return a 403 Forbidden response.
                     if ($course_title->business_id != NULL) {
-                        if (($course_title->business_id != auth()->user()->business_id)) {
+                        $this->storeError(
+                            "You do not have permission to update this due to role restrictions.",
+                            403,
+                            "front end error",
+                            "front end error"
+                        );
+                        return response()->json([
+                            "message" => "You do not have permission to update this course title due to role restrictions."
+                        ], 403);
+                    }
+
+                    // If the course title does not belong to a business and the user is not the creator of the course title, return a 403 Forbidden response.
+                    if ($course_title->is_default == 0 && $course_title->created_by != auth()->user()->id) {
+                        $this->storeError(
+                            "You do not have permission to update this due to role restrictions.",
+                            403,
+                            "front end error",
+                            "front end error"
+                        );
+                        return response()->json([
+                            "message" => "You do not have permission to update this course title due to role restrictions."
+                        ], 403);
+                    }
+                }
+            } else {
+                // If the user has a business id, check if the course title belongs to the user's business.
+                if ($course_title->business_id != NULL) {
+                    if (($course_title->business_id != auth()->user()->business_id)) {
+                        // If the course title does not belong to the user's business, return a 403 Forbidden response.
+                        $this->storeError(
+                            "You do not have permission to update this due to role restrictions.",
+                            403,
+                            "front end error",
+                            "front end error"
+                        );
+                        return response()->json([
+                            "message" => "You do not have permission to update this course title due to role restrictions."
+                        ], 403);
+                    }
+                } else {
+                    // If the course title does not belong to a business and the user is not the creator of the course title, return a 403 Forbidden response.
+                    if ($course_title->is_default == 0) {
+                        if ($course_title->created_by != auth()->user()->created_by) {
                             $this->storeError(
                                 "You do not have permission to update this due to role restrictions.",
                                 403,
                                 "front end error",
                                 "front end error"
-                               );
+                            );
                             return response()->json([
                                 "message" => "You do not have permission to update this course title due to role restrictions."
                             ], 403);
                         }
-                    } else {
-                        if ($course_title->is_default == 0) {
-                            if ($course_title->created_by != auth()->user()->created_by) {
-                                $this->storeError(
-                                    "You do not have permission to update this due to role restrictions.",
-                                    403,
-                                    "front end error",
-                                    "front end error"
-                                   );
-                                return response()->json([
-                                    "message" => "You do not have permission to update this course title due to role restrictions."
-                                ], 403);
-                            }
-                        }
                     }
                 }
+            }
 
-
+            // Return the course title in a 200 response.
             return response()->json($course_title, 200);
         } catch (Exception $e) {
 
+            // If there is an exception, log the error in the error log and return a 500 Internal Server Error response.
             return $this->sendError($e, 500, $request);
         }
     }
@@ -1091,75 +1295,91 @@ class CourseTitleController extends Controller
 
     public function deleteCourseTitlesByIds(Request $request, $ids)
     {
-
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            // Log the activity of the user in the user_activity table with a dummy activity and description.
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+            // Check if the user has permission to delete course titles.
             if (!$request->user()->hasPermissionTo('course_title_delete')) {
+                // If the user does not have permission, return a 401 Unauthorized response.
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
 
+            // Split the comma-separated string of ids into an array.
             $idsArray = explode(',', $ids);
+
+            // Retrieve the existing course title IDs from the database that match the provided IDs.
             $existingIds = CourseTitle::whereIn('id', $idsArray)
-            ->when(empty($request->user()->business_id), function ($query) use ($request) {
-                if ($request->user()->hasRole("superadmin")) {
-                    return $query->where('course_titles.business_id', NULL)
-                        ->where('course_titles.is_default', 1);
-                } else {
-                    return $query->where('course_titles.business_id', NULL)
-                        ->where('course_titles.is_default', 0)
-                        ->where('course_titles.created_by', $request->user()->id);
-                }
-            })
-            ->when(!empty($request->user()->business_id), function ($query) use ($request) {
-                return $query->where('course_titles.business_id', $request->user()->business_id)
-                    ->where('course_titles.is_default', 0);
-            })
+                ->when(empty($request->user()->business_id), function ($query) use ($request) {
+                    // If the user does not have a business ID.
+                    if ($request->user()->hasRole("superadmin")) {
+                        // If the user is a superadmin, retrieve course titles that are not associated with any business and are default.
+                        return $query->where('course_titles.business_id', NULL)
+                            ->where('course_titles.is_default', 1);
+                    } else {
+                        // If the user is not a superadmin, retrieve course titles that are not associated with any business, are not default, and were created by the user.
+                        return $query->where('course_titles.business_id', NULL)
+                            ->where('course_titles.is_default', 0)
+                            ->where('course_titles.created_by', $request->user()->id);
+                    }
+                })
+                ->when(!empty($request->user()->business_id), function ($query) use ($request) {
+                    // If the user has a business ID, retrieve course titles that are associated with the user's business and are not default.
+                    return $query->where('course_titles.business_id', $request->user()->business_id)
+                        ->where('course_titles.is_default', 0);
+                })
                 ->select('id')
                 ->get()
                 ->pluck('id')
                 ->toArray();
+
+            // Determine which provided IDs do not exist in the database.
             $nonExistingIds = array_diff($idsArray, $existingIds);
 
+            // If there are any non-existing IDs, log an error and return a 404 response.
             if (!empty($nonExistingIds)) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "Some or all of the specified data do not exist."
                 ], 404);
             }
 
-            $user_exists =  User::whereIn("course_title_id",$existingIds)->exists();
-            if($user_exists) {
-                $conflictingUsers = User::whereIn("course_title_id", $existingIds)->get(['id', 'first_Name',
-                'last_Name',]);
+            // Check if there are any users associated with the existing course titles.
+            $user_exists = User::whereIn("course_title_id", $existingIds)->exists();
+            if ($user_exists) {
+                // If there are, retrieve the conflicting users' details.
+                $conflictingUsers = User::whereIn("course_title_id", $existingIds)->get([
+                    'id',
+                    'first_Name',
+                    'last_Name',
+                ]);
+                // Log an error and return a 409 Conflict response with the conflicting users' details.
                 $this->storeError(
-                    "Some users are associated with the specified course titles"
-                    ,
+                    "Some users are associated with the specified course titles",
                     409,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "Some users are associated with the specified course titles",
                     "conflicting_users" => $conflictingUsers
                 ], 409);
-
             }
 
-
+            // Delete the existing course titles from the database.
             CourseTitle::destroy($existingIds);
 
-
-            return response()->json(["message" => "data deleted sussfully","deleted_ids" => $existingIds], 200);
+            // Return a 200 OK response with a success message and the list of deleted IDs.
+            return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $existingIds], 200);
         } catch (Exception $e) {
-
+            // If an exception occurs, log the error and return a 500 Internal Server Error response.
             return $this->sendError($e, 500, $request);
         }
     }
