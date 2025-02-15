@@ -20,6 +20,7 @@ use App\Http\Requests\UserUpdateJoiningDateRequest;
 use App\Http\Requests\UserUpdateProfileRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\UserUpdateV2Request;
+use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\ModuleUtil;
@@ -63,7 +64,7 @@ use Maatwebsite\Excel\Facades\Excel;
 // eeeeee
 class UserManagementController extends Controller
 {
-    use ErrorUtil, UserActivityUtil, BusinessUtil, ModuleUtil;
+    use ErrorUtil, UserActivityUtil, BusinessUtil, ModuleUtil, BasicUtil;
 
     /**
      *
@@ -622,7 +623,7 @@ class UserManagementController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
-    
+
     /**
      *
      * @OA\Post(
@@ -3206,87 +3207,18 @@ class UserManagementController extends Controller
                 ], 401);
             }
 
-
-
-
-
-            $users = User::with(
+            $query = User::with(
                 [
-                    "roles",
-
+                    "roles"
                 ]
             )
+                ->withCount('all_users as user_count');
 
-                ->whereNotIn('id', [$request->user()->id])
+            // add the filters to the query
+            $query = $this->query_filters($query);
 
-
-                ->when(empty(auth()->user()->business_id), function ($query) use ($request) {
-                    if (auth()->user()->hasRole("superadmin")) {
-                        return  $query->where(function ($query) {
-                            return   $query->where('business_id', NULL)
-                                ->orWhere(function ($query) {
-                                    return $query
-                                        ->whereNotNull("business_id")
-                                        ->whereHas("roles", function ($query) {
-                                            return $query->where("roles.name", "business_admin");
-                                        });
-                                });
-                        });
-                    } else {
-                        return  $query->where(function ($query) {
-                            return   $query->where('created_by', auth()->user()->id);
-                        });
-                    }
-                })
-                ->when(!empty(auth()->user()->business_id), function ($query) use ($request) {
-                    return $query->where(function ($query)  {
-                        return  $query->where('business_id', auth()->user()->business_id)
-                          ;
-                    });
-                })
-                ->when(!empty($request->role), function ($query) use ($request) {
-                    $rolesArray = explode(',', $request->role);
-                    return   $query->whereHas("roles", function ($q) use ($rolesArray) {
-                        return $q->whereIn("name", $rolesArray);
-                    });
-                })
-                ->when(!empty($request->search_key), function ($query) use ($request) {
-                    $term = $request->search_key;
-                    return $query->where(function ($subquery) use ($term) {
-                        $subquery->where("first_Name", "like", "%" . $term . "%")
-                            ->orWhere("last_Name", "like", "%" . $term . "%")
-                            ->orWhere("email", "like", "%" . $term . "%")
-                            ->orWhere("phone", "like", "%" . $term . "%");
-                    });
-                })
-
-                ->when(isset($request->is_in_employee), function ($query) use ($request) {
-                    return $query->where('is_in_employee', intval($request->is_in_employee));
-                })
-
-                ->when(isset($request->is_active), function ($query) use ($request) {
-                    return $query->where('is_active', intval($request->is_active));
-                })
-
-                ->when(!empty($request->start_date), function ($query) use ($request) {
-                    return $query->where('created_at', ">=", $request->start_date);
-                })
-                ->when(!empty($request->end_date), function ($query) use ($request) {
-                    return $query->where('created_at', "<=", ($request->end_date . ' 23:59:59'));
-                })
-
-                ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("users.id", $request->order_by);
-                }, function ($query) {
-                    return $query->orderBy("users.id", "DESC");
-                })
-
-                ->withCount('all_users as user_count')
-                ->when(!empty($request->per_page), function ($query) use ($request) {
-                    return $query->paginate($request->per_page);
-                }, function ($query) {
-                    return $query->get();
-                });
+            // execute the query and retrieve the data
+            $users = $this->retrieveData($query, "id", "users");
 
 
 
@@ -3740,6 +3672,262 @@ class UserManagementController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
+
+    public function query_filters($query)
+    {
+        $query->whereNotIn('id', [request()->user()->id])
+
+
+                 ->when(empty(auth()->user()->business_id), function ($query)  {
+                     if (auth()->user()->hasRole("superadmin")) {
+                         return  $query->where(function ($query) {
+                             return   $query->where('business_id', NULL)
+                                 ->orWhere(function ($query) {
+                                     return $query
+                                         ->whereNotNull("business_id")
+                                         ->whereHas("roles", function ($query) {
+                                             return $query->where("roles.name", "business_admin");
+                                         });
+                                 });
+                         });
+                     } else {
+                         return  $query->where(function ($query) {
+                             return   $query->where('created_by', auth()->user()->id);
+                         });
+                     }
+                 })
+                 ->when(!empty(auth()->user()->business_id), function ($query)  {
+                     return $query->where(function ($query)  {
+                         return  $query->where('business_id', auth()->user()->business_id)
+                           ;
+                     });
+                 })
+                 ->when(!empty($request->role), function ($query)  {
+                     $rolesArray = explode(',', request()->role);
+                     return   $query->whereHas("roles", function ($q) use ($rolesArray) {
+                         return $q->whereIn("name", $rolesArray);
+                     });
+                 })
+                 ->when(!empty($request->search_key), function ($query)  {
+                     $term = request()->search_key;
+                     return $query->where(function ($subquery) use ($term) {
+                         $subquery->where("first_Name", "like", "%" . $term . "%")
+                             ->orWhere("last_Name", "like", "%" . $term . "%")
+                             ->orWhere("email", "like", "%" . $term . "%")
+                             ->orWhere("phone", "like", "%" . $term . "%");
+                     });
+                 })
+
+                 ->when(isset($request->is_in_employee), function ($query)  {
+                     return $query->where('is_in_employee', intval(request()->is_in_employee));
+                 })
+
+                 ->when(isset($request->is_active), function ($query)  {
+                     return $query->where('is_active', intval(request()->is_active));
+                 })
+
+                 ->when(!empty($request->start_date), function ($query)  {
+                     return $query->where('created_at', ">=", request()->start_date);
+                 })
+                 ->when(!empty($request->end_date), function ($query)  {
+                     return $query->where('created_at', "<=", (request()->end_date . ' 23:59:59'));
+                 });
+
+
+
+    }
+
+    /**
+     *
+     * @OA\Get(
+     *      path="/v4.0/users",
+     *      operationId="getUsersV4",
+     *      tags={"user_management"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *   *              @OA\Parameter(
+     *         name="response_type",
+     *         in="query",
+     *         description="response_type: in pdf,csv,json",
+     *         required=true,
+     *  example="json"
+     *      ),
+     *      *   *              @OA\Parameter(
+     *         name="file_name",
+     *         in="query",
+     *         description="file_name",
+     *         required=true,
+     *  example="employee"
+     *      ),
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=true,
+     *  example="6"
+     *      ),
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
+     *   * *  @OA\Parameter(
+     * name="is_in_employee",
+     * in="query",
+     * description="is_in_employee",
+     * required=true,
+     * example="1"
+     * ),
+     *
+
+     *
+     *
+
+     *
+     *  *      *     @OA\Parameter(
+     * name="student_status_id",
+     * in="query",
+     * description="student_status_id",
+     * required=true,
+     * example="1"
+     * ),
+
+     *  *  *      *     @OA\Parameter(
+     * name="course_title_id",
+     * in="query",
+     * description="course_title_id",
+     * required=true,
+     * example="1"
+     * ),
+
+     *
+     *      *   * *  @OA\Parameter(
+     * name="is_active",
+     * in="query",
+     * description="is_active",
+     * required=true,
+     * example="1"
+     * ),
+     *
+     *    * *  @OA\Parameter(
+     * name="role",
+     * in="query",
+     * description="role",
+     * required=true,
+     * example="admin,manager"
+     * ),
+     *      summary="This method is to get user",
+     *      description="This method is to get user",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function getUsersV4(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+             if (!$request->user()->hasPermissionTo('user_view')) {
+                 return response()->json([
+                     "message" => "You can not perform this action"
+                 ], 401);
+             }
+
+             $query = User::with(
+                [
+                    "roles"
+                ]
+            )
+             ;
+
+            // add the filters to the query
+            $query = $this->query_filters($query)
+
+            ->select(
+            'first_Name',
+            'last_Name',
+            'email',
+            'phone',
+            'address_line_1',
+            'country',
+            'city',
+            'postcode',
+        );
+
+
+            // execute the query and retrieve the data
+            $users = $this->retrieveData($query, "id", "users");
+
+
+
+
+             if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', 'CSV'])) {
+                 if (strtoupper($request->response_type) == 'PDF') {
+                     $pdf = PDF::loadView('pdf.users', ["users" => $users]);
+                     return $pdf->download(((!empty($request->file_name) ? $request->file_name : 'employee') . '.pdf'));
+                 } elseif (strtoupper($request->response_type) === 'CSV') {
+
+                     return Excel::download(new UsersExport($users), ((!empty($request->file_name) ? $request->file_name : 'employee') . '.csv'));
+                 }
+             } else {
+                 return response()->json($users, 200);
+             }
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
 
     /**
      *
