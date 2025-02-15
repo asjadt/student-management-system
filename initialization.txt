@@ -11,3 +11,9 @@ correct the base urls for production
 update business setting by running a query. /default-business-setting
 /student-file-update
 /business-logo-update
+
+
+
+
+ALTER TABLE course_titles
+DROP COLUMN color;

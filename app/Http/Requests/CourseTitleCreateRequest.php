@@ -55,21 +55,13 @@ class CourseTitleCreateRequest extends FormRequest
 
             'level' => 'nullable|string',
             'description' => 'nullable|string',
-            'color' => 'required|string',
             "awarding_body_id" =>   [
                 "required",
             'numeric',
             new ValidateAwardingBody()
             ],
 
-            'subject_ids' => [
-                'present',
-                'array',
-            ],
-            'subject_ids.*' => [
-               "numeric",
-               "exists:subjects,id"
-            ],
+          
 
         ];
 

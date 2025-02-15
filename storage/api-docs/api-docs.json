@@ -5537,11 +5537,6 @@
                                         "format": "string",
                                         "example": "tttttt"
                                     },
-                                    "color": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "red"
-                                    },
                                     "description": {
                                         "type": "string",
                                         "format": "string",
@@ -5551,15 +5546,6 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "awarding_body_id"
-                                    },
-                                    "subject_ids": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": [
-                                            1,
-                                            2,
-                                            3
-                                        ]
                                     }
                                 },
                                 "type": "object"

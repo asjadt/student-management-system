@@ -35,10 +35,9 @@ class CourseTitleController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      * @OA\Property(property="name", type="string", format="string", example="tttttt"),
-     *  * @OA\Property(property="color", type="string", format="string", example="red"),
+
      * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
-     *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
-     *      * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3}),
+     *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id")
      *
      *
      *
@@ -93,7 +92,6 @@ class CourseTitleController extends Controller
      * The course title's business_id field is set to the id of the user's business.
      * If the user does not have a business, the business_id field is set to NULL.
      * The course title is then saved to the database.
-     * The course title's subjects are then synced with the subject_ids in the request data.
      * If an exception is thrown during the creation of the course title, the function logs the error and returns a 500 Internal Server Error response.
      *
      * @param CourseTitleCreateRequest $request The request data to create a new course title.
@@ -139,8 +137,7 @@ class CourseTitleController extends Controller
                 // Create a new course title using the validated request data.
                 $course_title =  CourseTitle::create($request_data);
 
-                // Sync the course title's subjects with the subject_ids in the request data.
-                $course_title->subjects()->sync($request_data["subject_ids"]);
+
 
 
                 // Return a 201 Created response with the new course title.
@@ -171,10 +168,10 @@ class CourseTitleController extends Controller
      *         @OA\JsonContent(
      *      @OA\Property(property="id", type="number", format="number", example="Updated Christmas"),
      * @OA\Property(property="name", type="string", format="string", example="tttttt"),
-     *  *  * @OA\Property(property="color", type="string", format="string", example="red"),
+
      * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
      *  * *  * @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
-     *      * @OA\Property(property="subject_ids", type="string", format="array", example={1,2,3}),
+
 
 
      *
@@ -249,7 +246,6 @@ class CourseTitleController extends Controller
                     collect($request_data)->only([
                         'name',
                         'level',
-                        'color',
                         'description',
                         "awarding_body_id"
                         // "is_active",
@@ -267,8 +263,7 @@ class CourseTitleController extends Controller
                     ], 500);
                 }
 
-                // update the subjects associated with this course title
-                $course_title->subjects()->sync($request_data["subject_ids"]);
+
 
                 // return the course title
                 return response($course_title, 201);

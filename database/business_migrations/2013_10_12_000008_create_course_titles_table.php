@@ -18,7 +18,6 @@ class CreateCourseTitlesTable extends Migration
         Schema::create('course_titles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('color');
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(false);
             $table->boolean('is_default')->default(false);

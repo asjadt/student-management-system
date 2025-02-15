@@ -12,7 +12,6 @@ class CourseTitle extends Model
     protected $fillable = [
         'name',
         'level',
-        'color',
         'description',
         "awarding_body_id",
         "is_active",
