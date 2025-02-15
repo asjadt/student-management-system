@@ -3676,7 +3676,7 @@ class UserManagementController extends Controller
 
     public function query_filters($query)
     {
-        $query->whereNotIn('id', [request()->user()->id])
+      return  $query->whereNotIn('id', [request()->user()->id])
 
 
                  ->when(empty(auth()->user()->business_id), function ($query)  {
@@ -3887,8 +3887,7 @@ class UserManagementController extends Controller
                 [
                     "roles"
                 ]
-            )
-             ;
+            );
 
             // add the filters to the query
             $query = $this->query_filters($query)
