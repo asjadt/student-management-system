@@ -714,7 +714,7 @@ class StudentStatusController extends Controller
         }
 
         return $query;
-
+    }
     /**
      *
      * @OA\Get(

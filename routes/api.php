@@ -610,7 +610,6 @@ Route::delete('/v1.0/course-titles/{ids}', [CourseTitleController::class, "delet
 
 
 Route::post('/v1.0/students/multiple-file-upload', [StudentController::class, "createStudentFileMultiple"]);
-
 Route::post('/v1.0/students', [StudentController::class, "createStudent"]);
 Route::put('/v1.0/students', [StudentController::class, "updateStudent"]);
 Route::get('/v1.0/students/validate/school-id/{student_id}', [StudentController::class, "validateStudentId"]);
