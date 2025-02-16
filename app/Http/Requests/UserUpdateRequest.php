@@ -44,7 +44,7 @@ class UserUpdateRequest extends BaseFormRequest
         'phone' => 'nullable|string',
         'image' => 'nullable|string',
         'address_line_1' => 'nullable|string',
-        'address_line_2' => 'nullable',
+        'address_line_2' => 'nullable|string',
         'country' => 'nullable|string',
         'city' => 'nullable|string',
         'postcode' => 'nullable|string',
@@ -56,11 +56,9 @@ class UserUpdateRequest extends BaseFormRequest
             function ($attribute, $value, $fail) {
                 $role  = Role::where(["name" => $value])->first();
 
-
                 if (!$role){
                          // $fail("$attribute is invalid.")
                          $fail("Role does not exists.");
-
                 }
 
                 if(!empty(auth()->user()->business_id)) {
@@ -86,21 +84,8 @@ class UserUpdateRequest extends BaseFormRequest
             },
         ],
 
-
-
-
-
-
-
         'gender' => 'nullable|string|in:male,female,other',
-        'is_in_employee' => "nullable|boolean",
 
-
-        'joining_date' => "nullable|date",
-        'salary_per_annum' => "nullable|numeric",
-        'weekly_contractual_hours' => 'nullable|numeric',
-        "minimum_working_days_per_week" => 'nullable|numeric|max:7',
-        "overtime_rate" => 'nullable|numeric',
         ];
     }
 

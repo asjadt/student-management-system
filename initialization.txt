@@ -17,3 +17,21 @@ update business setting by running a query. /default-business-setting
 
 ALTER TABLE course_titles
 DROP COLUMN color;
+ALTER TABLE users
+DROP COLUMN emergency_contact_details,
+DROP COLUMN is_in_employee,
+DROP COLUMN student_status_id,
+DROP FOREIGN KEY users_student_status_id_foreign,
+DROP COLUMN course_title_id,
+DROP FOREIGN KEY users_course_title_id_foreign,
+DROP COLUMN joining_date,
+DROP COLUMN salary_per_annum,
+DROP COLUMN weekly_contractual_hours,
+DROP COLUMN minimum_working_days_per_week,
+DROP COLUMN overtime_rate,
+DROP COLUMN is_active_visa_details,
+DROP COLUMN immigration_status,
+DROP COLUMN is_sponsorship_offered,
+DROP COLUMN sort_code,
+DROP COLUMN account_number,
+DROP COLUMN account_name;

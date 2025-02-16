@@ -156,6 +156,8 @@ Route::post('/v1.0/users/single-file-upload', [UserManagementController::class, 
 
 Route::post('/v1.0/users/multiple-file-upload', [UserManagementController::class, "createUserFileMultiple"]);
 Route::post('/v1.0/users', [UserManagementController::class, "createUser"]);
+
+
 Route::get('/v1.0/users/{id}', [UserManagementController::class, "getUserById"]);
 Route::put('/v1.0/users', [UserManagementController::class, "updateUser"]);
 
@@ -172,15 +174,6 @@ Route::get('/v1.0/users/get/user-activity', [UserManagementController::class, "g
 
 
 
-Route::post('/v2.0/users', [UserManagementController::class, "createUserV2"]);
-Route::put('/v2.0/users', [UserManagementController::class, "updateUserV2"]);
-Route::put('/v1.0/users/update-address', [UserManagementController::class, "updateUserAddress"]);
-Route::put('/v1.0/users/update-bank-details', [UserManagementController::class, "updateUserBankDetails"]);
-Route::put('/v1.0/users/update-joining-date', [UserManagementController::class, "updateUserJoiningDate"]);
-
-
-Route::put('/v1.0/users/update-emergency-contact', [UserManagementController::class, "updateEmergencyContact"]);
-Route::put('/v1.0/users/store-details', [UserManagementController::class, "storeUserDetails"]);
 Route::get('/v3.0/users', [UserManagementController::class, "getUsersV3"]);
 Route::get('/v2.0/users/{id}', [UserManagementController::class, "getUserByIdV2"]);
 Route::get('/v1.0/users/generate/employee-id', [UserManagementController::class, "generateEmployeeId"]);

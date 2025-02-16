@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('middle_Name')->nullable();
             $table->string('last_Name');
 
-            $table->json('emergency_contact_details')->nullable();
+
 
             $table->string('color_theme_name')->default("default");
 
@@ -27,22 +27,13 @@ class CreateUsersTable extends Migration
 
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
 
-            $table->boolean('is_in_employee')->nullable()->default(false);
 
 
-            $table->unsignedBigInteger('student_status_id')->nullable();
-            $table->foreign('student_status_id')->references('id')->on('student_statuses')->onDelete('restrict');
-
-            $table->unsignedBigInteger('course_title_id')->nullable();
-            $table->foreign('course_title_id')->references('id')->on('course_titles')->onDelete('restrict');
 
 
-            $table->date('joining_date')->nullable()->default(today());
-            $table->double('salary_per_annum')->nullable()->default(0);
-            $table->double('weekly_contractual_hours')->nullable()->default(0);
-            $table->integer('minimum_working_days_per_week')->nullable()->default(0);
-            $table->double('overtime_rate')->nullable()->default(0.0);
-            $table->double('is_active_visa_details')->nullable()->default(0);
+
+
+
 
 
 
@@ -77,20 +68,7 @@ class CreateUsersTable extends Migration
 
 
 
-            $table->enum('immigration_status', ['british_citizen', 'ilr', 'immigrant', 'sponsored'])->nullable();
-            $table->boolean('is_sponsorship_offered')->default(0)->nullable();
-
-
-
-
-
-
-
-            $table->string("sort_code")->nullable();
-            $table->string("account_number")->nullable();
-            $table->string("account_name")->nullable();
-
-
+          
 
 
 

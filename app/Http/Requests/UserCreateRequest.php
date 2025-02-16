@@ -31,18 +31,16 @@ class UserCreateRequest extends BaseFormRequest
         return [
         'first_Name' => 'required|string|max:255',
         'middle_Name' => 'nullable|string|max:255',
-
         'last_Name' => 'required|string|max:255',
 
 
         // 'email' => 'required|string|email|indisposable|max:255|unique:users',
         'email' => 'required|string|email|max:255|unique:users',
-
         'password' => 'required|string|min:6',
         'phone' => 'nullable|string',
         'image' => 'nullable|string',
         'address_line_1' => 'nullable|string',
-        'address_line_2' => 'nullable',
+        'address_line_2' => 'nullable|string',
         'country' => 'nullable|string',
         'city' => 'nullable|string',
         'postcode' => 'nullable|string',
@@ -88,17 +86,8 @@ class UserCreateRequest extends BaseFormRequest
 
 
 
-
-
-
-
         'gender' => 'nullable|string|in:male,female,other',
-        'is_in_employee' => "nullable|boolean",
-        'joining_date' => "nullable|date",
-        'salary_per_annum' => "nullable|numeric",
-        'weekly_contractual_hours' => 'nullable|numeric',
-        "minimum_working_days_per_week" => 'nullable|numeric|max:7',
-        "overtime_rate" => 'nullable|numeric'
+
 
 
 
