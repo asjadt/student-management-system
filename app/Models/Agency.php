@@ -16,7 +16,8 @@ class Agency extends Model
         'address',
         'commission_rate',
         "is_active",
-        'business_id'
+        'business_id',
+        "owner_id"
     ];
 
     public function business()
