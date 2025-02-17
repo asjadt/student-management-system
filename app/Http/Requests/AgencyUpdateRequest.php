@@ -46,11 +46,10 @@ class AgencyUpdateRequest extends BaseFormRequest
             // 'user.long' => 'nullable|string',
 
             'agency.id' => 'required|numeric|required|exists:agencies,id',
-            'agency.agency_name' => 'required|string|unique:agencies,agency_name',
+            'agency.agency_name' => 'required|string|unique:agencies,agency_name,' . $this->agency["id"] . ',id',
             'agency.contact_person' => 'required|string',
             'agency.email' => 'required|string|email|unique:agencies,email,' . $this->agency["id"] . ',id',
-
-            'agency.phone_number' => 'required|string|max:20|unique:agencies,phone_number',
+            'agency.phone_number' => 'required|string|max:20',
             'agency.address' => 'required|string',
             'agency.commission_rate' => 'required|numeric|min:0|max:100',
             'agency.business_id' => 'required|numeric|exists:businesses,id',
