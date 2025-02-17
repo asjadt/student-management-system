@@ -49,27 +49,17 @@ class Business extends Model
     ];
 
     protected $casts = [
-
-
         'student_disabled_fields' => 'array',
         'student_optional_fields' => 'array'
-
-
-
     ];
 
     public function owner(){
         return $this->belongsTo(User::class,'owner_id', 'id');
     }
 
-
     public function business_tier(){
         return $this->belongsTo(businessTier::class,'business_tier_id', 'id');
     }
-
-
-
-
 
 
     public function times(){
@@ -87,7 +77,7 @@ class Business extends Model
         $parsedDate = Carbon::parse($trail_end_date);
         return !($parsedDate->isPast() && !$parsedDate->isToday());
     }
-    
+
     public function getIsSubscribedAttribute($value)
     {
 
