@@ -1213,7 +1213,13 @@ class BusinessController extends Controller
                         "message" => "You can not perform this action"
                     ], 401);
                 }
+                if (!$this->businessOwnerCheck($request["business"]["id"])) {
+                    return response()->json([
+                        "message" => "you are not the owner of the business or the requested business does not exist."
+                    ], 401);
+                }
 
+                $request_data = $request->validated();
                 // Check if the user exists in the database
                 $userPrev = User::where([
                     "id" => $request_data["user"]["id"]
