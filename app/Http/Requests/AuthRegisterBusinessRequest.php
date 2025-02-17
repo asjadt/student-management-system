@@ -79,6 +79,8 @@ class AuthRegisterBusinessRequest extends BaseFormRequest
             'business.address_line_2' => 'nullable|string',
 
 
+            'business.trail_end_date' => 'required|string|date',
+
             'business.logo' => 'nullable|string',
 
             'business.image' => 'nullable|string',

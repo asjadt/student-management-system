@@ -35,7 +35,7 @@ class BusinessCreateRequest extends BaseFormRequest
             'business.name' => 'required|string|unique:businesses,name',
             'business.url' => 'nullable|string|max:255',
 
-
+            'business.trail_end_date' => 'required|string|date',
             'business.color_theme_name' => 'nullable|string',
             'business.about' => 'nullable|string',
             'business.web_page' => 'nullable|string',

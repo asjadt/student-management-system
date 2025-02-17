@@ -1249,6 +1249,7 @@ class BusinessController extends Controller
                 } else {
                     unset($request_data['user']['password']);
                 }
+
                 $request_data['user']['is_active'] = true;
                 $request_data['user']['remember_token'] = Str::random(10);
                 $request_data['user']['address_line_1'] = $request_data['business']['address_line_1'] ?? null;
@@ -1305,7 +1306,12 @@ class BusinessController extends Controller
                     $this->renameOrCreateFolder(str_replace(' ', '_', $business->name), str_replace(' ', '_', $request_data['business']["name"]));
                 }
 
+                if(auth()->user()->id == $business->owner_id) {
+                    $request_data['business']["trail_end_date"] = $business->trail_end_date;
+                }
+
                 $business->fill(collect($request_data['business'])->only([
+                    "trail_end_date",
                     "url",
                     "name",
                     "about",
@@ -1603,6 +1609,8 @@ class BusinessController extends Controller
                 // Validate the request data
                 $request_data = $request->validated();
 
+
+
                 // Update the business information
                 $business  =  tap(Business::where([
                     "id" => $request_data['business']["id"]
@@ -1701,6 +1709,14 @@ class BusinessController extends Controller
                         ->orWhere("city", "like", "%" . $term . "%")
                         ->orWhere("postcode", "like", "%" . $term . "%");
                 });
+            })
+            ->when(request()->filled("is_trail_ended"), function ($query)  {
+
+                if(request()->boolean("is_trail_ended")) {
+                    return $query->whereDate('trail_end_date', "<" , today());
+                } else {
+                    return $query->whereDate('trail_end_date', ">=" , today());
+                }
             })
             // If the user has provided a start date, filter the query to only
             // include businesses that were created after the start date.
@@ -2091,6 +2107,7 @@ class BusinessController extends Controller
 
             // Select the business fields
             $query = $query->select(
+                "businesses.trail_end_date",
                 "businesses.id",
                 "businesses.name",
                 "businesses.url",

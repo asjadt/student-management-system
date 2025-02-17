@@ -71,7 +71,7 @@ Route::post('/v1.0/business-image-multiple', [BusinessController::class, "create
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
 // Protected Routes
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
-Route::middleware(['custom.auth'])->group(function () {
+Route::middleware(['custom.auth',"business.subscription.check"])->group(function () {
 
 
     Route::post('/v2.0/files/single-file-upload', [FileManagementController::class, "createFileSingleV2"]);
