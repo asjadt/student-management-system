@@ -25,6 +25,9 @@ class Agency extends Model
         return $this->belongsTo(Business::class, 'business_id','id');
     }
 
-
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id','id');
+    }
 
 }

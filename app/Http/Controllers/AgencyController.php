@@ -427,7 +427,8 @@ class AgencyController extends Controller
              }
 
 
-             $query = Agency::where(function($query) {
+             $query = Agency::with("owner")
+             ->where(function($query) {
                  $query->where("owner_id",auth()->user()->id)
                  ->orWhere("business_id",auth()->user()->business_id);
              });
