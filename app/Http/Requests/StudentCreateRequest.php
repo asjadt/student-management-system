@@ -86,8 +86,6 @@ class StudentCreateRequest extends BaseFormRequest
             ],
             'attachments' => 'present|array',
             'attachments.*' => 'string',
-
-
             'course_duration'=> 'nullable|string',
             'course_detail'=> 'nullable|string',
 
@@ -105,6 +103,9 @@ class StudentCreateRequest extends BaseFormRequest
             'passport_issue_date' => 'nullable|date',
             'passport_expiry_date' => 'nullable|date|after:passport_issue_date',
             'place_of_issue' => 'nullable|string|max:255',
+
+            "agency_id" => "nullable|numeric|exists:agencies,id",
+            "agency_commission" => "nullable|required_with:agency_id|numeric|min:0",
 
 
 

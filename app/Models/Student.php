@@ -55,6 +55,10 @@ class Student extends Model
         'previous_education_history' => 'json',
     ];
 
+    public function referral()
+    {
+        return $this->hasOne(StudentReferral::class, 'student_id');
+    }
 
     public function course_title() {
         return $this->belongsTo(CourseTitle::class, 'course_title_id', 'id');
@@ -81,41 +85,6 @@ class Student extends Model
 
 
 
-
-    // public function getDate_Of_BirthAttribute($value)
-    // {
-    //     if($value) {
-    //         return (new Carbon($value))->format('d-m-Y');
-    //     }
-    //     return "";
-
-    // }
-
-    // public function getCourseStartDateAttribute($value)
-    // {
-    //     if($value) {
-    //         return (new Carbon($value))->format('d-m-Y');
-    //     }
-    //     return "";
-
-    // }
-    // public function getLetterIssueDateAttribute($value)
-    // {
-    //     if($value) {
-    //         return (new Carbon($value))->format('d-m-Y');
-    //     }
-    //     return "";
-    // }
-
-
-    // public function getCreatedAtAttribute($value)
-    // {
-    //     return (new Carbon($value))->format('d-m-Y');
-    // }
-    // public function getUpdatedAtAttribute($value)
-    // {
-    //     return (new Carbon($value))->format('d-m-Y');
-    // }
 
 
 

@@ -1561,520 +1561,6 @@
                 ]
             }
         },
-        "/v1.0/banks": {
-            "get": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to get banks  ",
-                "description": "This method is to get banks ",
-                "operationId": "getBanks",
-                "parameters": [
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "per_page",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "is_active",
-                        "in": "query",
-                        "description": "is_active",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "start_date",
-                        "in": "query",
-                        "description": "start_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "end_date",
-                        "in": "query",
-                        "description": "end_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "search_key",
-                        "required": true,
-                        "example": "search_key"
-                    },
-                    {
-                        "name": "order_by",
-                        "in": "query",
-                        "description": "order_by",
-                        "required": true,
-                        "example": "ASC"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to update bank ",
-                "description": "This method is to update bank",
-                "operationId": "updateBank",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "Updated Christmas"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "tttttt"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "erg ear ga&nbsp;"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to store bank",
-                "description": "This method is to store bank",
-                "operationId": "createBank",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "tttttt"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "erg ear ga&nbsp;"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/banks/toggle-active": {
-            "put": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to toggle designatation",
-                "description": "This method is to toggle designatation",
-                "operationId": "toggleActiveBank",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "number",
-                                        "example": "1"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/banks/{id}": {
-            "get": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to get bank by id",
-                "description": "This method is to get bank by id",
-                "operationId": "getBankById",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "id",
-                        "required": true,
-                        "example": "6"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/banks/{ids}": {
-            "delete": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to delete bank by id",
-                "description": "This method is to delete bank by id",
-                "operationId": "deleteBanksByIds",
-                "parameters": [
-                    {
-                        "name": "ids",
-                        "in": "path",
-                        "description": "ids",
-                        "required": true,
-                        "example": "1,2,3"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/v1.0/business-background-image": {
             "get": {
                 "tags": [
@@ -3785,106 +3271,6 @@
             }
         },
         "/v1.0/business-settings": {
-            "get": {
-                "tags": [
-                    "business_setting"
-                ],
-                "summary": "This method is to get business setting",
-                "description": "This method is to get business setting",
-                "operationId": "getBusinessSetting",
-                "parameters": [
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "per_page",
-                        "required": false,
-                        "example": ""
-                    },
-                    {
-                        "name": "start_date",
-                        "in": "query",
-                        "description": "start_date",
-                        "required": false,
-                        "example": ""
-                    },
-                    {
-                        "name": "end_date",
-                        "in": "query",
-                        "description": "end_date",
-                        "required": false,
-                        "example": ""
-                    },
-                    {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "search_key",
-                        "required": false,
-                        "example": ""
-                    },
-                    {
-                        "name": "order_by",
-                        "in": "query",
-                        "description": "order_by",
-                        "required": false,
-                        "example": ""
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
             "post": {
                 "tags": [
                     "business_setting"
@@ -4708,266 +4094,6 @@
             }
         },
         "/v1.0/class-routines": {
-            "get": {
-                "tags": [
-                    "class_routines"
-                ],
-                "summary": "This method is to get class routines  ",
-                "description": "This method is to get class routines ",
-                "operationId": "getClassRoutines",
-                "parameters": [
-                    {
-                        "name": "start_time",
-                        "in": "query",
-                        "description": "start_time",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "end_time",
-                        "in": "query",
-                        "description": "end_time",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "room_number",
-                        "in": "query",
-                        "description": "room_number",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "per_page",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "is_active",
-                        "in": "query",
-                        "description": "is_active",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "start_date",
-                        "in": "query",
-                        "description": "start_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "end_date",
-                        "in": "query",
-                        "description": "end_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "search_key",
-                        "required": true,
-                        "example": "search_key"
-                    },
-                    {
-                        "name": "order_by",
-                        "in": "query",
-                        "description": "order_by",
-                        "required": true,
-                        "example": "ASC"
-                    },
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "id",
-                        "required": true,
-                        "example": "ASC"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "class_routines"
-                ],
-                "summary": "This method is to update class routines ",
-                "description": "This method is to update class routines ",
-                "operationId": "updateClassRoutine",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "day_of_week": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "day_of_week"
-                                    },
-                                    "start_time": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "start_time"
-                                    },
-                                    "end_time": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "end_time"
-                                    },
-                                    "room_number": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "room_number"
-                                    },
-                                    "subject_id": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "subject_id"
-                                    },
-                                    "course_id": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "course_id"
-                                    },
-                                    "teacher_id": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "teacher_id"
-                                    },
-                                    "semester_id": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "semester_id"
-                                    },
-                                    "session_id": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "session_id"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
             "post": {
                 "tags": [
                     "class_routines"
@@ -5357,162 +4483,6 @@
                 ]
             }
         },
-        "/v1.0/class-routines/toggle-active": {
-            "put": {
-                "tags": [
-                    "class_routines"
-                ],
-                "summary": "This method is to toggle class routines",
-                "description": "This method is to toggle class routines",
-                "operationId": "toggleActiveClassRoutine",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "number",
-                                        "example": "1"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/class-routines/{ids}": {
-            "delete": {
-                "tags": [
-                    "class_routines"
-                ],
-                "summary": "This method is to delete class routine by id",
-                "description": "This method is to delete class routine by id",
-                "operationId": "deleteClassRoutinesByIds",
-                "parameters": [
-                    {
-                        "name": "ids",
-                        "in": "path",
-                        "description": "ids",
-                        "required": true,
-                        "example": "1,2,3"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/v1.0/course-titles-update": {
             "post": {
                 "tags": [
@@ -5815,478 +4785,6 @@
                         "description": "ids",
                         "required": true,
                         "example": "1,2,3"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/business-owner-dashboard/jobs-in-area/{business_id}": {
-            "get": {
-                "tags": [
-                    "dashboard_management.business_admin"
-                ],
-                "summary": "This should return list of jobs posted by drivers within same city and which are still not finalised and this business owner have not applied yet.",
-                "description": "This should return list of jobs posted by drivers within same city and which are still not finalised and this business owner have not applied yet.",
-                "operationId": "getBusinessOwnerDashboardDataJobList",
-                "parameters": [
-                    {
-                        "name": "business_id",
-                        "in": "path",
-                        "description": "business_id",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "start_date",
-                        "in": "query",
-                        "description": "start_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "end_date",
-                        "in": "query",
-                        "description": "end_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/business-owner-dashboard/jobs-application/{business_id}": {
-            "get": {
-                "tags": [
-                    "dashboard_management.business_admin"
-                ],
-                "summary": "Total number of Jobs in the area and out of which total number of jobs this business owner have applied",
-                "description": "Total number of Jobs in the area and out of which total number of jobs this business owner have applied",
-                "operationId": "getBusinessOwnerDashboardDataJobApplications",
-                "parameters": [
-                    {
-                        "name": "business_id",
-                        "in": "path",
-                        "description": "business_id",
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/business-owner-dashboard/winned-jobs-application/{business_id}": {
-            "get": {
-                "tags": [
-                    "dashboard_management.business_admin"
-                ],
-                "summary": "Total Job Won( Total job User have selcted this business )",
-                "description": "Total Job Won( Total job User have selcted this business )",
-                "operationId": "getBusinessOwnerDashboardDataWinnedJobApplications",
-                "parameters": [
-                    {
-                        "name": "business_id",
-                        "in": "path",
-                        "description": "business_id",
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/business-owner-dashboard/completed-bookings/{business_id}": {
-            "get": {
-                "tags": [
-                    "dashboard_management.business_admin"
-                ],
-                "summary": "Total completed Bookings Total Bookings completed by this business owner",
-                "description": "Total completed Bookings Total Bookings completed by this business owner",
-                "operationId": "getBusinessOwnerDashboardDataCompletedBookings",
-                "parameters": [
-                    {
-                        "name": "business_id",
-                        "in": "path",
-                        "description": "business_id",
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/business-owner-dashboard/upcoming-jobs/{business_id}/{duration}": {
-            "get": {
-                "tags": [
-                    "dashboard_management.business_admin"
-                ],
-                "summary": "Total completed Bookings Total Bookings completed by this business owner",
-                "description": "Total completed Bookings Total Bookings completed by this business owner",
-                "operationId": "getBusinessOwnerDashboardDataUpcomingJobs",
-                "parameters": [
-                    {
-                        "name": "business_id",
-                        "in": "path",
-                        "description": "business_id",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "duration",
-                        "in": "path",
-                        "description": "duration",
-                        "required": true,
-                        "example": "7"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/business-owner-dashboard/expiring-affiliations/{business_id}/{duration}": {
-            "get": {
-                "tags": [
-                    "dashboard_management.business_admin"
-                ],
-                "summary": "Total completed Bookings Total Bookings completed by this business owner",
-                "description": "Total completed Bookings Total Bookings completed by this business owner",
-                "operationId": "getBusinessOwnerDashboardDataExpiringAffiliations",
-                "parameters": [
-                    {
-                        "name": "business_id",
-                        "in": "path",
-                        "description": "business_id",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "duration",
-                        "in": "path",
-                        "description": "duration",
-                        "required": true,
-                        "example": "7"
                     }
                 ],
                 "responses": {
@@ -6819,341 +5317,6 @@
                         }
                     }
                 },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "z.unused"
-                ],
-                "summary": "This method is to store email template",
-                "description": "This method is to store email template",
-                "operationId": "createEmailTemplate",
-                "requestBody": {
-                    "description": "use {{dynamic-username}} {{dynamic-verify-link}} in the template.",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "type",
-                                    "template",
-                                    "is_active"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "emal v1"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "email_verification_mail"
-                                    },
-                                    "template": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "html template goes here"
-                                    },
-                                    "wrapper_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/email-templates/{perPage}": {
-            "get": {
-                "tags": [
-                    "template_management.email"
-                ],
-                "summary": "This method is to get email templates ",
-                "description": "This method is to get email templates",
-                "operationId": "getEmailTemplates",
-                "parameters": [
-                    {
-                        "name": "perPage",
-                        "in": "path",
-                        "description": "perPage",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "start_date",
-                        "in": "query",
-                        "description": "start_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "end_date",
-                        "in": "query",
-                        "description": "end_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "search_key",
-                        "required": true,
-                        "example": "search_key"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/email-templates/single/{id}": {
-            "get": {
-                "tags": [
-                    "template_management.email"
-                ],
-                "summary": "This method is to get email template by id",
-                "description": "This method is to get email template by id",
-                "operationId": "getEmailTemplateById",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "id",
-                        "required": true,
-                        "example": "6"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/email-template-types": {
-            "get": {
-                "tags": [
-                    "template_management.email"
-                ],
-                "summary": "This method is to get email template types ",
-                "description": "This method is to get email template types",
-                "operationId": "getEmailTemplateTypes",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -18326,16 +16489,6 @@
                                         "format": "string",
                                         "example": "male"
                                     },
-                                    "is_in_employee": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "designation_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
                                     "student_status_id": {
                                         "type": "number",
                                         "format": "number",
@@ -18345,31 +16498,6 @@
                                         "type": "number",
                                         "format": "number",
                                         "example": "1"
-                                    },
-                                    "salary_per_annum": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "weekly_contractual_hours": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "minimum_working_days_per_week": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "overtime_rate": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "5"
-                                    },
-                                    "joining_date": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2023-11-16"
                                     },
                                     "password": {
                                         "type": "boolean",
@@ -18387,11 +16515,6 @@
                                         "example": "1"
                                     },
                                     "address_line_1": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "address_line_2": {
                                         "type": "boolean",
                                         "format": "boolean",
                                         "example": "1"
@@ -18425,25 +16548,6 @@
                                         "type": "boolean",
                                         "format": "boolean",
                                         "example": "customer"
-                                    },
-                                    "work_shift_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "departments": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": [
-                                            1,
-                                            2,
-                                            3
-                                        ]
-                                    },
-                                    "emergency_contact_details": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": []
                                     }
                                 },
                                 "type": "object"
@@ -18554,41 +16658,6 @@
                                         "format": "string",
                                         "example": "male"
                                     },
-                                    "is_in_employee": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "designation_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "salary_per_annum": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "weekly_contractual_hours": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "minimum_working_days_per_week": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "5"
-                                    },
-                                    "overtime_rate": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "5"
-                                    },
-                                    "joining_date": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2023-11-16"
-                                    },
                                     "email": {
                                         "type": "string",
                                         "format": "string",
@@ -18619,11 +16688,6 @@
                                         "format": "boolean",
                                         "example": "dhaka"
                                     },
-                                    "address_line_2": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "dinajpur"
-                                    },
                                     "country": {
                                         "type": "string",
                                         "format": "boolean",
@@ -18653,738 +16717,6 @@
                                         "type": "string",
                                         "format": "boolean",
                                         "example": "customer"
-                                    },
-                                    "emergency_contact_details": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": []
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v2.0/users": {
-            "get": {
-                "tags": [
-                    "user_management"
-                ],
-                "summary": "This method is to get user",
-                "description": "This method is to get user",
-                "operationId": "getUsersV2",
-                "parameters": [
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "per_page",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "start_date",
-                        "in": "query",
-                        "description": "start_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "end_date",
-                        "in": "query",
-                        "description": "end_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "search_key",
-                        "required": true,
-                        "example": "search_key"
-                    },
-                    {
-                        "name": "is_in_employee",
-                        "in": "query",
-                        "description": "is_in_employee",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "business_id",
-                        "in": "query",
-                        "description": "business_id",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "is_active",
-                        "in": "query",
-                        "description": "is_active",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "role",
-                        "in": "query",
-                        "description": "role",
-                        "required": true,
-                        "example": "admin,manager"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to update user",
-                "description": "This method is to update user",
-                "operationId": "updateUserV2",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id",
-                                    "first_Name",
-                                    "last_Name",
-                                    "email",
-                                    "password",
-                                    "password_confirmation",
-                                    "phone",
-                                    "address_line_1",
-                                    "address_line_2",
-                                    "country",
-                                    "city",
-                                    "postcode",
-                                    "role"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "first_Name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Rifat"
-                                    },
-                                    "middle_Name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "How was this?"
-                                    },
-                                    "last_Name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "How was this?"
-                                    },
-                                    "user_id": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "045674"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "How was this?"
-                                    },
-                                    "image": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "...png"
-                                    },
-                                    "gender": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "male"
-                                    },
-                                    "is_in_employee": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "designation_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "student_status_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "course_title_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "salary_per_annum": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "weekly_contractual_hours": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "minimum_working_days_per_week": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "5"
-                                    },
-                                    "overtime_rate": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "5"
-                                    },
-                                    "joining_date": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2023-11-16"
-                                    },
-                                    "password": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "phone": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "address_line_1": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "address_line_2": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "country": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "city": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "postcode": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "lat": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "1207"
-                                    },
-                                    "long": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "1207"
-                                    },
-                                    "role": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "customer"
-                                    },
-                                    "work_shift_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "work_location_id": {
-                                        "type": "integer",
-                                        "format": "int",
-                                        "example": "1"
-                                    },
-                                    "is_active_visa_details": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "recruitment_processes": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": [
-                                            {
-                                                "recruitment_process_id": 1,
-                                                "description": "description",
-                                                "attachments": [
-                                                    "/abcd.jpg",
-                                                    "/efgh.jpg"
-                                                ]
-                                            },
-                                            {
-                                                "recruitment_process_id": 1,
-                                                "description": "description",
-                                                "attachments": [
-                                                    "/abcd.jpg",
-                                                    "/efgh.jpg"
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    "departments": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": [
-                                            1,
-                                            2,
-                                            3
-                                        ]
-                                    },
-                                    "emergency_contact_details": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": []
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to store user",
-                "description": "This method is to store user",
-                "operationId": "createUserV2",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "first_Name",
-                                    "last_Name",
-                                    "email",
-                                    "password",
-                                    "password_confirmation",
-                                    "phone",
-                                    "address_line_1",
-                                    "address_line_2",
-                                    "country",
-                                    "city",
-                                    "postcode",
-                                    "role"
-                                ],
-                                "properties": {
-                                    "first_Name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Rifat"
-                                    },
-                                    "middle_Name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Al"
-                                    },
-                                    "last_Name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Al"
-                                    },
-                                    "user_id": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "045674"
-                                    },
-                                    "gender": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "male"
-                                    },
-                                    "is_in_employee": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "designation_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "student_status_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "course_title_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "salary_per_annum": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "weekly_contractual_hours": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "10"
-                                    },
-                                    "minimum_working_days_per_week": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "5"
-                                    },
-                                    "overtime_rate": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "5"
-                                    },
-                                    "joining_date": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2023-11-16"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "rifatalashwad0@gmail.com"
-                                    },
-                                    "image": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "...png"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "12345678"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "12345678"
-                                    },
-                                    "phone": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "01771034383"
-                                    },
-                                    "address_line_1": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "dhaka"
-                                    },
-                                    "address_line_2": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "dinajpur"
-                                    },
-                                    "country": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "Bangladesh"
-                                    },
-                                    "city": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "Dhaka"
-                                    },
-                                    "postcode": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "1207"
-                                    },
-                                    "lat": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "1207"
-                                    },
-                                    "long": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "1207"
-                                    },
-                                    "role": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "customer"
-                                    },
-                                    "work_shift_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "work_location_id": {
-                                        "type": "integer",
-                                        "format": "int",
-                                        "example": "1"
-                                    },
-                                    "recruitment_processes": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": [
-                                            {
-                                                "recruitment_process_id": 1,
-                                                "description": "description",
-                                                "attachments": [
-                                                    "/abcd.jpg",
-                                                    "/efgh.jpg"
-                                                ]
-                                            },
-                                            {
-                                                "recruitment_process_id": 1,
-                                                "description": "description",
-                                                "attachments": [
-                                                    "/abcd.jpg",
-                                                    "/efgh.jpg"
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    "departments": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": [
-                                            1,
-                                            2,
-                                            3
-                                        ]
-                                    },
-                                    "emergency_contact_details": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": []
-                                    },
-                                    "immigration_status": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "british_citizen"
-                                    },
-                                    "is_active_visa_details": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "sponsorship_details": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": {
-                                            "date_assigned": "2023-01-01",
-                                            "expiry_date": "2024-01-01",
-                                            "status": "pending",
-                                            "note": "pending",
-                                            "certificate_number": "pending note",
-                                            "current_certificate_status": "pending",
-                                            "is_sponsorship_withdrawn": 1
-                                        }
-                                    },
-                                    "visa_details": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": {
-                                            "BRP_number": "BRP123",
-                                            "visa_issue_date": "2023-01-01",
-                                            "visa_expiry_date": "2024-01-01",
-                                            "place_of_issue": "City",
-                                            "visa_docs": [
-                                                {
-                                                    "file_name": "document1.pdf",
-                                                    "description": "Description 1"
-                                                },
-                                                {
-                                                    "file_name": "document2.pdf",
-                                                    "description": "Description 2"
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "passport_details": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": {
-                                            "passport_number": "ABC123",
-                                            "passport_issue_date": "2023-01-01",
-                                            "passport_expiry_date": "2024-01-01",
-                                            "place_of_issue": "City"
-                                        }
                                     }
                                 },
                                 "type": "object"
@@ -19490,538 +16822,6 @@
                                             "business_admin#1",
                                             "business_admin#1"
                                         ]
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/users/update-address": {
-            "put": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to update user address",
-                "description": "This method is to update user address",
-                "operationId": "updateUserAddress",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "phone": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "address_line_1": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "address_line_2": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "country": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "city": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "postcode": {
-                                        "type": "boolean",
-                                        "format": "boolean",
-                                        "example": "1"
-                                    },
-                                    "lat": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "1207"
-                                    },
-                                    "long": {
-                                        "type": "string",
-                                        "format": "boolean",
-                                        "example": "1207"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/users/update-bank-details": {
-            "put": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to update user address",
-                "description": "This method is to update user address",
-                "operationId": "updateUserBankDetails",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "bank_id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "sort_code": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "sort_code"
-                                    },
-                                    "account_number": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "account_number"
-                                    },
-                                    "account_name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "account_name"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/users/update-joining-date": {
-            "put": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to update user address",
-                "description": "This method is to update user address",
-                "operationId": "updateUserJoiningDate",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "joining_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "joining_date"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/users/update-emergency-contact": {
-            "put": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to update user contact",
-                "description": "This method is to update contact",
-                "operationId": "updateEmergencyContact",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "emergency_contact_details": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": []
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/users/store-details": {
-            "put": {
-                "tags": [
-                    "unused_apis"
-                ],
-                "summary": "This method is to store user details",
-                "description": "This method is to store user details",
-                "operationId": "storeUserDetails",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "user_id": {
-                                        "type": "number",
-                                        "format": "integer",
-                                        "example": "1"
-                                    },
-                                    "date_assigned": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2023-12-05"
-                                    },
-                                    "expiry_date": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2023-12-31"
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "enum": [
-                                            "pending",
-                                            "approved",
-                                            "denied",
-                                            "visa_granted"
-                                        ],
-                                        "example": "pending"
-                                    },
-                                    "note": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "Additional note"
-                                    },
-                                    "passport_details": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": {
-                                            "passport_number": "ABC123",
-                                            "passport_issue_date": "2023-01-01",
-                                            "passport_expiry_date": "2024-01-01",
-                                            "place_of_issue": "City",
-                                            "visa_details": {
-                                                "BRP_number": "BRP123",
-                                                "visa_issue_date": "2023-01-01",
-                                                "visa_expiry_date": "2024-01-01",
-                                                "place_of_issue": "City",
-                                                "visa_docs": [
-                                                    {
-                                                        "file_name": "document1.pdf",
-                                                        "description": "Description 1"
-                                                    },
-                                                    {
-                                                        "file_name": "document2.pdf",
-                                                        "description": "Description 2"
-                                                    }
-                                                ]
-                                            }
-                                        }
                                     }
                                 },
                                 "type": "object"
@@ -20350,6 +17150,129 @@
                 ]
             }
         },
+        "/v2.0/users": {
+            "get": {
+                "tags": [
+                    "user_management"
+                ],
+                "summary": "This method is to get user",
+                "description": "This method is to get user",
+                "operationId": "getUsersV2",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "is_in_employee",
+                        "in": "query",
+                        "description": "is_in_employee",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "business_id",
+                        "in": "query",
+                        "description": "business_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "role",
+                        "required": true,
+                        "example": "admin,manager"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v3.0/users": {
             "get": {
                 "tags": [
@@ -20398,6 +17321,150 @@
                         "name": "business_id",
                         "in": "query",
                         "description": "business_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "role",
+                        "required": true,
+                        "example": "admin,manager"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v4.0/users": {
+            "get": {
+                "tags": [
+                    "user_management"
+                ],
+                "summary": "This method is to get user",
+                "description": "This method is to get user",
+                "operationId": "getUsersV4",
+                "parameters": [
+                    {
+                        "name": "response_type",
+                        "in": "query",
+                        "description": "response_type: in pdf,csv,json",
+                        "required": true,
+                        "example": "json"
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "description": "file_name",
+                        "required": true,
+                        "example": "employee"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "is_in_employee",
+                        "in": "query",
+                        "description": "is_in_employee",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "student_status_id",
+                        "in": "query",
+                        "description": "student_status_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "course_title_id",
+                        "in": "query",
+                        "description": "course_title_id",
                         "required": true,
                         "example": "1"
                     },
@@ -21219,10 +18286,6 @@
             "description": "awarding_bodies"
         },
         {
-            "name": "unused_apis",
-            "description": "unused_apis"
-        },
-        {
             "name": "business_background_image",
             "description": "business_background_image"
         },
@@ -21233,6 +18296,10 @@
         {
             "name": "business_setting",
             "description": "business_setting"
+        },
+        {
+            "name": "unused_apis",
+            "description": "unused_apis"
         },
         {
             "name": "business_times_management",
@@ -21247,12 +18314,12 @@
             "description": "student.course_titles"
         },
         {
-            "name": "dashboard_management.business_admin",
-            "description": "dashboard_management.business_admin"
-        },
-        {
             "name": "dashboard_management.business_user",
             "description": "dashboard_management.business_user"
+        },
+        {
+            "name": "dashboard_management.business_admin",
+            "description": "dashboard_management.business_admin"
         },
         {
             "name": "dashboard_management.superadmin",
@@ -21263,12 +18330,12 @@
             "description": "dashboard_management.data_collector"
         },
         {
-            "name": "z.unused",
-            "description": "z.unused"
-        },
-        {
             "name": "template_management.email",
             "description": "template_management.email"
+        },
+        {
+            "name": "z.unused",
+            "description": "z.unused"
         },
         {
             "name": "files",

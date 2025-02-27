@@ -11,6 +11,7 @@ use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\Agency;
 use App\Models\Business;
 use App\Models\BusinessSetting;
 use App\Models\Student;
@@ -266,7 +267,14 @@ class StudentController extends Controller
 
 
 
+                 if (!empty($request_data["agency_id"])) {
 
+                        $student->referral()->create([
+                            'agency_id' => $request_data["agency_id"],
+                            'agency_commission' => $request_data["agency_commission"] // Assuming commission_rate is a percentage
+                        ]);
+
+                }
 
 
                  return response($student, 201);
@@ -672,6 +680,14 @@ class StudentController extends Controller
                 $student->previous_education_history = $request_data["previous_education_history"];
 
                 $student->save();
+
+                $student->referral()->delete();
+                if (!empty($request_data["agency_id"])) {
+                    $student->referral()->create([
+                        'agency_id' => $request_data["agency_id"],
+                        'agency_commission' => $request_data["agency_commission"] // Assuming commission_rate is a percentage
+                    ]);
+            }
 
                 return response($student, 201);
             });
@@ -1760,24 +1776,8 @@ class StudentController extends Controller
 
             $query = Student::with("student_status","course_title");
             $query = $this->query_filters($query);
-            $students = $query->when(!empty(request()->order_by) && in_array(strtoupper(request()->order_by), ['ASC', 'DESC']), function ($query)  {
-                return $query->orderBy("students" . "." . "id", request()->order_by);
-            }, function ($query)  {
-                return $query->orderBy("students" . "." . "id", "DESC");
-            })
-                ->when(request()->filled("id"), function ($query)  {
-                    return $query->where("students" . "." . 'id', request()->input("id"))->first();
-                }, function ($query) {
-                    return $query->when(!empty(request()->per_page), function ($query) {
-                        return $query->first(request()->per_page);
-                    }, function ($query) {
-                        return $query->first();
-                    });
-                });
 
-                if(request()->filled("id") && empty($data)) {
-                    throw new Exception("No data found",404);
-                };
+           $students = $this->retrieveData($query, "id","students");
 
 
             return response()->json($students, 200);

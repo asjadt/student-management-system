@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class StudentReferral extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        "student_id",
+        'agency_id',
+        'agency_commission',
+    ];
+
+
 }
