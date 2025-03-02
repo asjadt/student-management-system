@@ -2086,7 +2086,9 @@ class BusinessController extends Controller
 
             // Initialize a query on the Business model to include related 'owner' data
             // The owner is the user who created the business
-            $query = Business::with(
+            $query = Business::
+            withCount(["students as total_students"])
+            ->with(
                 [
                     "owner" => function ($query) {
                         // Select the user's id, first name, last name, middle name, phone, and image

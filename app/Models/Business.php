@@ -66,6 +66,11 @@ class Business extends Model
         return $this->hasMany(BusinessTime::class,'business_id', 'id');
     }
 
+
+    public function students(){
+        return $this->hasMany(Student::class,'business_id', 'id');
+    }
+
     private function isTrailDateValid($trail_end_date)
     {
         // Return false if trail_end_date is empty or null
