@@ -641,7 +641,7 @@ class StudentStatusController extends Controller
 
             // Apply the filters to the query
             // The filters are defined in the query_filters method
-            $query = $this->query_filters_v2($query)
+            $query = $this->query_filters($query)
                 ->select(
                     'student_statuses.id',
                     'student_statuses.name',
