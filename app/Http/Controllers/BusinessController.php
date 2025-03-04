@@ -2086,9 +2086,7 @@ class BusinessController extends Controller
 
             // Initialize a query on the Business model to include related 'owner' data
             // The owner is the user who created the business
-            $query = Business::
-            withCount(["students as total_students"])
-            ->with(
+            $query = Business::with(
                 [
                     "owner" => function ($query) {
                         // Select the user's id, first name, last name, middle name, phone, and image
@@ -2109,7 +2107,8 @@ class BusinessController extends Controller
 
             // Select the business fields
             $query = $query->select(
-                "businesses.trail_end_date",
+
+               [ "businesses.trail_end_date",
                 "businesses.id",
                 "businesses.name",
                 "businesses.url",
@@ -2127,7 +2126,9 @@ class BusinessController extends Controller
                 "businesses.status",
                 "businesses.is_active",
                 "businesses.owner_id",
-                "businesses.created_by"
+                "businesses.created_by",
+                DB::raw("(SELECT COUNT(*) FROM students WHERE students.business_id = businesses.id) as total_students") // Correct way to count students
+               ]
             );
 
             // Retrieve the data from the database, ordering by 'id'

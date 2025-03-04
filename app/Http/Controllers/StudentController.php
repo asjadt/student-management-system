@@ -180,8 +180,8 @@ class StudentController extends Controller
  *     @OA\Property(property="passport_issue_date", type="string", format="date", example="2020-01-01", description="Passport issue date of the student"),
  *     @OA\Property(property="passport_expiry_date", type="string", format="date", example="2030-01-01", description="Passport expiry date of the student"),
  *     @OA\Property(property="place_of_issue", type="string", format="string", example="New York, USA", description="Place where the student's passport was issued")
- *
- *
+ * *     @OA\Property(property="agency_id", type="string", format="string", example="agency_id"),
+ *      @OA\Property(property="agency_commission", type="string", format="string", example="agency_commission"),
  *
  *
  *
@@ -505,7 +505,9 @@ class StudentController extends Controller
  *     @OA\Property(property="previous_education_history", type="array", @OA\Items(type="object", example={"institution": "High School", "year": "2019", "grade": "A"}), description="Previous education history of the student"),
  *     @OA\Property(property="passport_issue_date", type="string", format="date", example="2020-01-01", description="Passport issue date of the student"),
  *     @OA\Property(property="passport_expiry_date", type="string", format="date", example="2030-01-01", description="Passport expiry date of the student"),
- *     @OA\Property(property="place_of_issue", type="string", format="string", example="New York, USA", description="Place where the student's passport was issued")
+ *     @OA\Property(property="place_of_issue", type="string", format="string", example="New York, USA", description="Place where the student's passport was issued"),
+ *  * *     @OA\Property(property="agency_id", type="string", format="string", example="agency_id"),
+ *      @OA\Property(property="agency_commission", type="string", format="string", example="agency_commission"),
 
      *
      *         ),
