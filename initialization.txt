@@ -35,3 +35,16 @@ DROP COLUMN is_sponsorship_offered,
 DROP COLUMN sort_code,
 DROP COLUMN account_number,
 DROP COLUMN account_name;
+
+
+
+
+
+ALTER TABLE `modules`
+DROP FOREIGN KEY `modules_business_tier_id_foreign`;
+
+ALTER TABLE `modules`
+DROP COLUMN `business_tier_id`;
+
+ALTER TABLE `modules`
+DROP COLUMN `is_default`;

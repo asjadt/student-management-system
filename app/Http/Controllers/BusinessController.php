@@ -14,6 +14,7 @@ use App\Http\Requests\GetIdRequest;
 use App\Http\Utils\BasicUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\BusinessUtil;
+use App\Http\Utils\DiscountUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Mail\SendPassword;
 
@@ -37,7 +38,7 @@ use Illuminate\Support\Str;
 
 class BusinessController extends Controller
 {
-    use ErrorUtil, BusinessUtil, UserActivityUtil, BasicUtil;
+    use ErrorUtil, BusinessUtil, UserActivityUtil, BasicUtil, DiscountUtil;
     /**
      *
      * @OA\Post(
@@ -410,6 +411,9 @@ class BusinessController extends Controller
 
      *
      *  @OA\Property(property="business", type="string", format="array",example={
+     * "number_of_employees_allowed" : 0,
+     * "service_plan_id" : 0,
+     * "service_plan_discount_code" : 0,
      *  "owner_id":"1",
      * "name":"ABCD businesses",
      * "about":"Best businesses in Dhaka",
@@ -534,6 +538,8 @@ class BusinessController extends Controller
                 // Set the is_active field of the business to true
                 $request_data['business']['is_active'] = true;
 
+                $request_data['business']['service_plan_discount_amount'] = $this->getDiscountAmount($request_data['business']);
+
                 // Create the business
                 $business =  Business::create($request_data['business']);
 
@@ -546,6 +552,7 @@ class BusinessController extends Controller
                     'student_verification_fields' => config("setup-config.student_verification_fields")
                 ]);
 
+                $business->service_plan = $business->service_plan;
                 // Return the created business
                 return response([
 
@@ -855,6 +862,9 @@ class BusinessController extends Controller
      *
      *
      *  @OA\Property(property="business", type="string", format="array",example={
+     * "number_of_employees_allowed" : 0,
+     * "service_plan_id" : 0,
+     * "service_plan_discount_code" : 0,
      * "name":"ABCD businesses",
      * "about":"Best businesses in Dhaka",
      *
@@ -987,6 +997,8 @@ class BusinessController extends Controller
             // Set the business to active
             $request_data['business']['is_active'] = true;
 
+            $request_data['business']['service_plan_discount_amount'] = $this->getDiscountAmount($request_data['business']);
+
             // Create a new business
             $business =  Business::create($request_data['business']);
 
@@ -1075,7 +1087,7 @@ class BusinessController extends Controller
             Log::info("Business created");
 
             // }
-
+            $business->service_plan = $business->service_plan;
 
             return response()->json([
                 "user" => $user,
@@ -1121,7 +1133,10 @@ class BusinessController extends Controller
      * }),
      *
      *  @OA\Property(property="business", type="string", format="array",example={
-     *   *  * "id":1,
+     * "id":1,
+     * "number_of_employees_allowed" : 0,
+     * "service_plan_id" : 0,
+     * "service_plan_discount_code" : 0,
      * "name":"ABCD businesses",
      * "about":"Best businesses in Dhaka",
      * "web_page":"https://www.facebook.com/",
@@ -1291,6 +1306,13 @@ class BusinessController extends Controller
                     ], 500);
                 }
 
+
+
+                if (!empty($request_data["business"]["is_self_registered_businesses"])) {
+                    $request_data['business']['service_plan_discount_amount'] = $this->getDiscountAmount($request_data['business']);
+                }
+
+
                 // Check if the business exists in the database
                 $business = Business::where(["id" => $request_data['business']["id"]])
                     ->first();
@@ -1333,7 +1355,11 @@ class BusinessController extends Controller
                     "background_image",
                     "currency",
                     "letter_template_header",
-                    "letter_template_footer"
+                    "letter_template_footer",
+                    "number_of_employees_allowed",
+                    "service_plan_id",
+                    "service_plan_discount_code",
+                    "service_plan_discount_amount",
                 ])->toArray());
 
                 $business->save();
@@ -1358,7 +1384,7 @@ class BusinessController extends Controller
                         ]);
                     }
                 }
-
+                $business->service_plan = $business->service_plan;
                 return response([
                     "user" => $user,
                     "business" => $business
@@ -1518,7 +1544,10 @@ class BusinessController extends Controller
 
      *
      *  @OA\Property(property="business", type="string", format="array",example={
-     *   *  * "id":1,
+     * "id":1,
+     * "number_of_employees_allowed" : 0,
+     * "service_plan_id" : 0,
+     * "service_plan_discount_code" : 0,
      * "name":"ABCD businesses",
      * "about":"Best businesses in Dhaka",
      * "web_page":"https://www.facebook.com/",
@@ -1609,7 +1638,9 @@ class BusinessController extends Controller
                 // Validate the request data
                 $request_data = $request->validated();
 
-
+                if (!empty($request_data["business"]["is_self_registered_businesses"])) {
+                    $request_data['business']['service_plan_discount_amount'] = $this->getDiscountAmount($request_data['business']);
+                }
 
                 // Update the business information
                 $business  =  tap(Business::where([
@@ -2232,6 +2263,8 @@ class BusinessController extends Controller
             if (!empty($business)) {
                 $business = $this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"), $business->name);
             }
+
+            $business->load('owner', 'times', 'service_plan');
 
             // Return the business data as a JSON response with a 200 OK status
             return response()->json($business, 200);

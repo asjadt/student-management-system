@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EnableBusinessModuleRequest;
+use App\Http\Requests\EnableServicePlanModuleRequest;
 use App\Http\Requests\GetIdRequest;
+use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
+use App\Http\Utils\ModuleUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\Business;
+use App\Models\BusinessModule;
 use App\Models\Module;
+use App\Models\ServicePlanModule;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 
 class ModuleController extends Controller
 {
-    use ErrorUtil, UserActivityUtil;
+    use ErrorUtil, UserActivityUtil, ModuleUtil, BusinessUtil;
    /**
      *
      * @OA\Put(
@@ -71,6 +78,7 @@ class ModuleController extends Controller
 
          try {
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
+
              if (!$request->user()->hasPermissionTo('module_update')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -84,13 +92,7 @@ class ModuleController extends Controller
             ])
                 ->first();
             if (!$module) {
-                $this->storeError(
-                    "no data found"
-                    ,
-                    404,
-                    "front end error",
-                    "front end error"
-                   );
+
                 return response()->json([
                     "message" => "no module found"
                 ], 404);
@@ -98,7 +100,7 @@ class ModuleController extends Controller
 
 
              $module->update([
-                 'is_active' => !$module->is_active
+                 'is_enabled' => !$module->is_enabled
              ]);
 
              return response()->json(['message' => 'Module status updated successfully'], 200);
@@ -107,6 +109,219 @@ class ModuleController extends Controller
              return $this->sendError($e, 500, $request);
          }
      }
+
+      /**
+     *
+     * @OA\Put(
+     *      path="/v1.0/business-modules/enable",
+     *      operationId="enableBusinessModule",
+     *      tags={"modules"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to toggle module active",
+     *      description="This method is to toggle module active",
+     *
+     *  @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *
+     *
+     *
+     *           @OA\Property(property="business_id", type="string", format="number",example="1"),
+     *           @OA\Property(property="active_module_ids", type="string", format="array",example="{1,2,3}"),
+     *
+     *
+     *
+     *         ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function enableBusinessModule(EnableBusinessModuleRequest $request)
+     {
+
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+
+             if (!$request->user()->hasPermissionTo('business_update')) {
+                 return response()->json([
+                     "message" => "You can not perform this action"
+                 ], 401);
+             }
+             $request_data = $request->validated();
+             $business = $this->businessOwnerCheck($request_data["business_id"], FALSE);
+
+             BusinessModule::where([
+                "business_id" => $request_data["business_id"]
+             ])
+             ->delete();
+              // Step 2: Determine active and disabled module IDs
+              $active_module_ids = $request_data['active_module_ids'];
+              $all_module_ids = Module::where('is_enabled', 1)->pluck('id')->toArray();
+
+
+              // Step 3: Prepare ServicePlanModule data for bulk insertion
+              $business_modules = [];
+              foreach ($all_module_ids as $module_id) {
+                  $business_modules[] = [
+                      'is_enabled' => in_array($module_id, $active_module_ids) ? 1 : 0,
+                      'business_id' => $business->id,
+                      'module_id' => $module_id,
+                      'created_by' => auth()->user()->id,
+                      'created_at' => now(),
+                      'updated_at' => now(),
+                  ];
+              }
+
+              // Bulk insert ServicePlanModule records
+              BusinessModule::insert($business_modules);
+
+
+
+
+
+             return response()->json([
+                'message' => 'Module status updated successfully',
+
+            ], 200);
+
+
+
+         } catch (Exception $e) {
+             error_log($e->getMessage());
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
+    /**
+     *
+     * @OA\Put(
+     *      path="/v1.0/service-plan-modules/enable",
+     *      operationId="enableServicePlanModule",
+     *      tags={"modules"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to toggle module active",
+     *      description="This method is to toggle module active",
+     *
+     *  @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *
+     *
+     *
+     *           @OA\Property(property="service_plan_id", type="string", format="number",example="1"),
+     *           @OA\Property(property="active_module_ids", type="string", format="array",example="{1,2,3}"),
+     *
+     *
+     *
+     *         ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function enableServicePlanModule(EnableServicePlanModuleRequest $request)
+     {
+
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+             if (!$request->user()->hasPermissionTo('module_update') || !$request->user()->hasPermissionTo('service_plan_update')) {
+                 return response()->json([
+                     "message" => "You can not perform this action"
+                 ], 401);
+             }
+
+             $request_data = $request->validated();
+
+             ServicePlanModule::where([
+                "service_plan_id" => $request_data["service_plan_id"]
+             ])
+             ->delete();
+
+
+        foreach($request_data["active_module_ids"] as $active_module_id){
+            ServicePlanModule::create([
+            "is_enabled" => 1,
+            "service_plan_id" => $request_data["service_plan_id"],
+            "module_id" => $active_module_id,
+            'created_by' => auth()->user()->id
+           ]);
+        }
+
+    return response()->json(['message' => 'Module status updated successfully'], 200);
+
+
+
+         } catch (Exception $e) {
+             error_log($e->getMessage());
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
 
  /**
      *
@@ -203,22 +418,31 @@ class ModuleController extends Controller
      {
          try {
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
-             if (!$request->user()->hasPermissionTo('module_view')) {
+             if (!$request->user()->hasPermissionTo('business_create')) {
                  return response()->json([
                      "message" => "You can not perform this action"
                  ], 401);
              }
 
+             $modules = Module::
+             where('modules.is_enabled', 1)
+             ->when(!$request->user()->hasPermissionTo('module_update'), function ($query) use ($request) {
+                return $query->where('modules.is_enabled', 1);
+            })
+            ->when(!auth()->user()->hasRole('superadmin'), function ($query) {
 
-             $modules = Module::when(!$request->user()->hasPermissionTo('module_update'), function ($query) use ($request) {
-                return $query->where('modules.is_active', 1);
-            })
-             ->when(!empty($request->business_tier_id), function ($query) use ($request) {
-                 return $query->where('modules.business_tier_id', $request->business_tier_id);
+              return $query->whereHas("reseller_modules", function($query) {
+                    return   $query
+                    ->where("reseller_modules.reseller_id", auth()->user()->id)
+                    ->where("reseller_modules.is_enabled", 1);
+                });
              })
-             ->when(empty($request->business_tier_id), function ($query) use ($request) {
-                return $query->where('modules.business_tier_id', NULL);
-            })
+            //  ->when(!empty($request->business_tier_id), function ($query) use ($request) {
+            //      return $query->where('modules.business_tier_id', $request->business_tier_id);
+            //  })
+            //  ->when(empty($request->business_tier_id), function ($query) use ($request) {
+            //     return $query->where('modules.business_tier_id', NULL);
+            // })
                  ->when(!empty($request->search_key), function ($query) use ($request) {
                      return $query->where(function ($query) use ($request) {
                          $term = $request->search_key;
@@ -239,12 +463,121 @@ class ModuleController extends Controller
                  }, function ($query) {
                      return $query->orderBy("modules.id", "DESC");
                  })
+                 ->select("id","name")
                  ->when(!empty($request->per_page), function ($query) use ($request) {
                      return $query->paginate($request->per_page);
                  }, function ($query) {
                      return $query->get();
-                 });;
+                 });
 
+
+             return response()->json($modules, 200);
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
+
+
+ /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/business-modules/{business_id}",
+     *      operationId="getBusinessModules",
+     *      tags={"modules"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *              @OA\Parameter(
+     *         name="business_id",
+     *         in="path",
+     *         description="business_id",
+     *         required=true,
+     *  example="6"
+     *      ),
+
+
+     *      summary="This method is to get modules",
+     *      description="This method is to get modules",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function getBusinessModules($business_id,Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+             if (!$request->user()->hasPermissionTo('business_update')) {
+                 return response()->json([
+                     "message" => "You can not perform this action"
+                 ], 401);
+             }
+
+             $businessQuery  = Business::where(["id" => $business_id]);
+
+             if (!auth()->user()->hasRole('superadmin')) {
+                 $businessQuery = $businessQuery->where(function ($query) {
+                     return   $query
+                        ->when(!auth()->user()->hasPermissionTo("handle_self_registered_businesses"),function($query) {
+                         $query->where('id', auth()->user()->business_id)
+                         ->orWhere('created_by', auth()->user()->id)
+                         ->orWhere('owner_id', auth()->user()->id);
+                        },
+                        function($query) {
+                         $query->where('is_self_registered_businesses', 1)
+                         ->orWhere('created_by', auth()->user()->id);
+                        }
+
+                     );
+
+                 });
+             }
+
+             $business =  $businessQuery->first();
+
+
+             if (empty($business)) {
+
+                 return response()->json([
+                     "message" => "no business found"
+                 ], 404);
+             }
+
+          $modules = $this->getModulesFunc($business);
 
 
              return response()->json($modules, 200);
@@ -258,4 +591,8 @@ class ModuleController extends Controller
 
 
 
+
 }
+
+
+

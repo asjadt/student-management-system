@@ -9,15 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 class BusinessTier extends Model
 {
     use HasFactory;
-    protected $connection = 'mysql';
-        protected $fillable = [
+    protected $fillable = [
         "name",
         "is_active",
         'created_by'
     ];
 
-    public function businesses(){
-        return $this->hasMany(Business::class,'business_tier_id', 'id');
+    public function service_plans(){
+        return $this->hasMany(ServicePlan::class,'business_tier_id', 'id');
     }
 
     public function modules(){
@@ -34,12 +33,5 @@ class BusinessTier extends Model
 
 
 
-    public function getCreatedAtAttribute($value)
-    {
-        return (new Carbon($value))->format('d-m-Y');
-    }
-    public function getUpdatedAtAttribute($value)
-    {
-        return (new Carbon($value))->format('d-m-Y');
-    }
+
 }

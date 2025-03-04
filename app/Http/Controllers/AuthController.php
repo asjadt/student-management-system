@@ -438,6 +438,8 @@ class AuthController extends Controller
             // Store the activity
             $this->storeActivity($request, "logged in", "User successfully logged into the system.");
 
+            $user = $user->load(['roles.permissions', 'permissions', 'business.service_plan.modules']);
+
             // Return the user's info
             return response()->json(['data' => $user,   "ok" => true], 200);
         } catch (Exception $e) {
@@ -1226,6 +1228,7 @@ class AuthController extends Controller
                 $user->business = $this->getUrlLink($user->business, "logo", config("setup-config.business_gallery_location"), $user->business->name);
             }
 
+            $user = $user->load(['roles.permissions', 'permissions', 'business.service_plan.modules']);
             // Retrieve the user's default background image from the database using the "default_background_image" field on the "user" model
             // $user->default_background_image = ("/".  config("setup-config.business_background_image_location_full"));
 

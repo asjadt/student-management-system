@@ -2,26 +2,23 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Module extends Model
+class BusinessModule extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        "name",
         "is_enabled",
+        "business_id",
+        "module_id",
         'created_by'
     ];
 
-   
 
-
-
-
-
-
+    public function business(){
+        return $this->belongsTo(Business::class,'business_id', 'id');
+    }
 
 }

@@ -24,6 +24,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationTemplateController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\ServicePlanController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StudentLetterController;
 use App\Http\Controllers\StudentStatusController;
@@ -94,18 +95,27 @@ Route::middleware(['custom.auth',"business.subscription.check"])->group(function
 
 
 
+ // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // modules  management section
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// modules  management section
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Route::put('/v1.0/modules/toggle-active', [ModuleController::class, "toggleActiveModule"]);
+
+    Route::put('/v1.0/business-modules/enable', [ModuleController::class, "enableBusinessModule"]);
+
+    Route::put('/v1.0/service-plan-modules/enable', [ModuleController::class, "enableServicePlanModule"]);
 
 
-Route::put('/v1.0/modules/toggle-active', [ModuleController::class, "toggleActiveModule"]);
-Route::get('/v1.0/modules', [ModuleController::class, "getModules"]);
+
+    Route::get('/v1.0/business-modules/{business_id}', [ModuleController::class, "getBusinessModules"]);
 
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// end modules management section
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    Route::get('/v1.0/modules', [ModuleController::class, "getModules"]);
+
+
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // end modules management section
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -599,6 +609,28 @@ Route::delete('/v1.0/course-titles/{ids}', [CourseTitleController::class, "delet
 
 
 
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    //  management section
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Route::post('/v1.0/service-plans', [ServicePlanController::class, "createServicePlan"]);
+    Route::put('/v1.0/service-plans', [ServicePlanController::class, "updateServicePlan"]);
+    Route::get('/v1.0/service-plans', [ServicePlanController::class, "getServicePlans"]);
+    Route::get('/v1.0/service-plans/{id}', [ServicePlanController::class, "getServicePlanById"]);
+    Route::delete('/v1.0/service-plans/{ids}', [ServicePlanController::class, "deleteServicePlansByIds"]);
+
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // end job platform management section
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // students  management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -686,6 +718,8 @@ Route::get('/v1.0/students/generate/student-id/{business_id}', [StudentControlle
 Route::get('/v1.0/students/validate/student-id/{student_id}/{business_id}', [StudentController::class, "validateStudentIdV2"]);
 
 Route::get('/v1.0/client/businesses/{id}', [BusinessController::class, "getBusinessByIdClient"]);
+
+Route::get('/v1.0/client/service-plans', [ServicePlanController::class, "getServicePlanClient"]);
 
 
 

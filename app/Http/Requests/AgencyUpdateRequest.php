@@ -111,7 +111,7 @@ class AgencyUpdateRequest extends BaseFormRequest
         'business.email.string' => 'The email field must be a string.',
         'business.email.unique' => 'The email has already been taken.',
         'business.email.exists' => 'The selected email is invalid.',
-        'business.additional_information.string' => 'The additional information field must be a string.',
+       
 
         'business.lat.required' => 'The latitude field is required.',
         'business.lat.string' => 'The latitude field must be a string.',

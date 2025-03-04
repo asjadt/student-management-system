@@ -24,20 +24,21 @@ class BusinessUpdateSeparateRequest extends BaseFormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
 
             'business.id' => 'required|numeric|required|exists:businesses,id',
             'business.name' => 'required|string|unique:businesses,name,' . $this->business["id"] . ',id',
 
             'business.color_theme_name' => 'nullable|string',
-            
+
             'business.about' => 'nullable|string',
             'business.web_page' => 'nullable|string',
             'business.phone' => 'nullable|string',
             // 'business.email' => 'required|string|email|indisposable|max:255',
             'business.email' => 'nullable|string|email|unique:businesses,email,' . $this->business["id"] . ',id',
             'business.additional_information' => 'nullable|string',
-
+            'business.service_plan_id' => 'required|numeric|exists:service_plans,id',
+            'business.number_of_employees_allowed' => 'nullable|integer',
 
             'business.lat' => 'nullable|numeric',
             'business.long' => 'nullable|numeric',
@@ -68,7 +69,12 @@ class BusinessUpdateSeparateRequest extends BaseFormRequest
 
         ];
 
+        if (request()->input('business.is_self_registered_businesses')) {
+            $rules['business.service_plan_discount_code'] = 'nullable|string';
 
+        }
+
+        return $rules;
     }
 
     public function messages()

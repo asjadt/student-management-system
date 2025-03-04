@@ -44,7 +44,11 @@ class Business extends Model
         "is_active",
         "business_tier_id",
         "owner_id",
-        'created_by'
+        'created_by',
+
+        "service_plan_id",
+        "service_plan_discount_code",
+        "service_plan_discount_amount",
 
     ];
 
@@ -64,6 +68,32 @@ class Business extends Model
 
     public function times(){
         return $this->hasMany(BusinessTime::class,'business_id', 'id');
+    }
+
+    public function getCalculatedNumberOfEmployeesAllowedAttribute()
+    {
+
+        if (!empty($this->number_of_employees_allowed)) {
+            return 0;
+        }
+        $service_plan = $this->service_plan;
+
+        return !empty($service_plan)
+            ? $service_plan->number_of_employees_allowed
+            : 0;
+    }
+
+    public function service_plan()
+    {
+        return $this->belongsTo(ServicePlan::class, 'service_plan_id', 'id');
+    }
+
+    public function current_subscription()
+    {
+        return $this->hasOne(BusinessSubscription::class, 'business_id', 'id')
+            ->where('business_subscriptions.service_plan_id', $this->service_plan_id)
+            ->orderByDesc("business_subscriptions.id")
+        ;
     }
 
 

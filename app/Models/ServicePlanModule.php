@@ -2,25 +2,25 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Module extends Model
+class ServicePlanModule extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
-        "name",
         "is_enabled",
+        "service_plan_id",
+        "module_id",
         'created_by'
     ];
 
-   
 
-
-
-
+    public function service_plan(){
+        return $this->belongsTo(ServicePlan::class,'service_plan_id', 'id');
+    }
 
 
 

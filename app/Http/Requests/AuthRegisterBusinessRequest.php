@@ -31,7 +31,7 @@ class AuthRegisterBusinessRequest extends BaseFormRequest
     public function rules()
     {
 
-        return [
+         $rules = [
             'user.first_Name' => 'required|string|max:255',
             'user.middle_Name' => 'nullable|string|max:255',
             'user.last_Name' => 'required|string|max:255',
@@ -66,6 +66,9 @@ class AuthRegisterBusinessRequest extends BaseFormRequest
             // 'business.email' => 'required|string|email|indisposable|max:255|unique:businesses,email',
             'business.email' => 'nullable|string|email|max:255|unique:businesses,email',
             'business.additional_information' => 'nullable|string',
+
+            'business.service_plan_id' => 'required|numeric|exists:service_plans,id',
+            'business.number_of_employees_allowed' => 'nullable|integer',
 
             'business.lat' => 'nullable|numeric',
             'business.long' => 'nullable|numeric',
@@ -164,16 +167,14 @@ class AuthRegisterBusinessRequest extends BaseFormRequest
                 },
             ],
 
-
-
-
-
-
-
-
-
         ];
 
+        if (request()->input('business.is_self_registered_businesses')) {
+            $rules['business.service_plan_discount_code'] = 'nullable|string';
+            unset($rules['business.trail_end_date']);
+        }
+
+        return $rules;
 
     }
 
