@@ -80,7 +80,10 @@ class Student extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-
+    public function student_referral()
+    {
+        return $this->hasOne(StudentReferral::class, 'student_id','id');
+    }
 
 
 

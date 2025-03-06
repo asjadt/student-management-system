@@ -15,5 +15,10 @@ class StudentReferral extends Model
         'agency_commission',
     ];
 
+    public function agency()
+    {
+        return $this->hasOne(Agency::class, 'id','agency_id');
+    }
+
 
 }

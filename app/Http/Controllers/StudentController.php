@@ -901,6 +901,8 @@ class StudentController extends Controller
                 return $query->whereRaw('BINARY students.student_id = ?', [request()->student_id]);
             });
     }
+
+
    /**
      *
      * @OA\Get(
@@ -1164,7 +1166,7 @@ class StudentController extends Controller
                  ], 401);
              }
 
-             $query = Student::with("student_status","course_title");
+             $query = Student::with("student_status","course_title","student_referral.agency");
              $query = $this->query_filters_v2($query);
 
              $students = $this->retrieveData($query, "id","students");

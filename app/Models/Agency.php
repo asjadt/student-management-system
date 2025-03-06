@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Agency extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'agency_name',
         'contact_person',
@@ -29,5 +30,6 @@ class Agency extends Model
     {
         return $this->belongsTo(User::class, 'owner_id','id');
     }
+
 
 }
