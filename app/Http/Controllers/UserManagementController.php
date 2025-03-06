@@ -23,6 +23,7 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\ModuleUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Mail\SendPasswordMail;
 use App\Mail\VerifyMail;
 use App\Models\ActivityLog;
 
@@ -551,7 +552,9 @@ class UserManagementController extends Controller
              }
 
 
-             $request_data['password'] = Hash::make($request['password']);
+             $password = Str::random(11);
+             $request_data['password'] = Hash::make($password);
+
              $request_data['is_active'] = true;
              $request_data['remember_token'] = Str::random(10);
 
@@ -572,6 +575,19 @@ class UserManagementController extends Controller
 
              $user->roles = $user->roles->pluck('name');
 
+
+             if (env("SEND_EMAIL") == true) {
+
+                try {
+                    Mail::to($user->email)->send(new SendPasswordMail($user, $password));
+                } catch (\Exception $e) {
+                    // Optionally log the error message if needed
+                    Log::error("Failed to send email: " . $e->getMessage());
+                    // Continue processing without interrupting the flow
+                }
+
+
+            }
 
              return response($user, 201);
          } catch (Exception $e) {
@@ -1938,6 +1954,7 @@ class UserManagementController extends Controller
             $query = $this->query_filters($query)
 
             ->select(
+            'id',
             'first_Name',
             'last_Name',
             'email',

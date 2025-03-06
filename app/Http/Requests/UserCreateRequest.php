@@ -36,7 +36,6 @@ class UserCreateRequest extends BaseFormRequest
 
         // 'email' => 'required|string|email|indisposable|max:255|unique:users',
         'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:6',
         'phone' => 'nullable|string',
         'image' => 'nullable|string',
         'address_line_1' => 'nullable|string',

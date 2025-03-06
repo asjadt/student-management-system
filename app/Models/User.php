@@ -24,7 +24,7 @@ class User extends Authenticatable
     protected $connection = 'mysql';
 
 
-    protected $appends = ['has_this_project'];
+
     protected $guard_name = "api";
     protected $fillable = [
         'first_Name',
@@ -75,49 +75,8 @@ class User extends Authenticatable
          'is_active'
     ];
 
-  public function getHasThisProjectAttribute($value) {
-    $request = request();
-    // You can now use $currentRequest as the request object
-    $has_this_project = $request->input('has_this_project');
 
 
-    if(empty($has_this_project)) {
-        return NULL;
-    }
-    $project = Project::
-    whereHas("users",function($query) {
-      $query->where("users.id",$this->id);
-   })
-     ->where([
-      "id" => $has_this_project
-     ])
-      ->first();
-
-      return $project?1:0;
-
-    }
-
-    public function payrun_users()
-    {
-        return $this->hasOne(PayrunUser::class, "user_id" ,'id');
-    }
-
-
-
-    public function projects() {
-        return $this->belongsToMany(Project::class, 'user_projects', 'user_id', 'project_id');
-    }
-
-
-    public function holidays() {
-        return $this->belongsToMany(Holiday::class, 'user_holidays', 'user_id', 'holiday_id');
-    }
-
-
-    public function work_location()
-    {
-        return $this->belongsTo(WorkLocation::class, "work_location_id" ,'id');
-    }
 
 
     public function business() {
@@ -130,19 +89,7 @@ class User extends Authenticatable
     }
 
 
-    public function departments() {
-        return $this->belongsToMany(Department::class, 'department_users', 'user_id', 'department_id');
-    }
 
-
-    public function recruitment_processes() {
-        return $this->hasMany(UserRecruitmentProcess::class, 'user_id', 'id');
-    }
-
-
-    public function designation() {
-        return $this->belongsTo(Designation::class, 'designation_id', 'id');
-    }
 
     public function student_status() {
         return $this->belongsTo(StudentStatus::class, 'student_status_id', 'id');
@@ -153,31 +100,7 @@ class User extends Authenticatable
     }
 
 
-    public function work_shifts() {
-        return $this->belongsToMany(WorkShift::class, 'user_work_shifts', 'user_id', 'work_shift_id');
-    }
-
-    public function leaves() {
-        return $this->hasMany(Leave::class, 'user_id', 'id');
-    }
-    public function attendances() {
-        return $this->hasMany(Attendance::class, 'user_id', 'id');
-    }
-
-    public function attendance_histories() {
-        return $this->hasMany(AttendanceHistory::class, 'user_id', 'id');
-    }
-
-    public function sponsorship_details() {
-        return $this->hasOne(EmployeeSponsorship::class, 'user_id', 'id');
-    }
-
-    public function passport_details() {
-        return $this->hasOne(EmployeePassportDetail::class, 'user_id', 'id');
-    }
-    public function visa_details() {
-        return $this->hasOne(EmployeeVisaDetail::class, 'user_id', 'id');
-    }
+    
 
     public function scopeWhereHasRecursiveHolidays($query, $today,$depth = 5)
     {

@@ -165,6 +165,7 @@ Route::put('/v1.0/users/update-password', [UserManagementController::class, "upd
 Route::post('/v1.0/users/single-file-upload', [UserManagementController::class, "createUserFileSingle"]);
 
 Route::post('/v1.0/users/multiple-file-upload', [UserManagementController::class, "createUserFileMultiple"]);
+
 Route::post('/v1.0/users', [UserManagementController::class, "createUser"]);
 
 
