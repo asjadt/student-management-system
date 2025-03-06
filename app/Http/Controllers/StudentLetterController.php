@@ -106,7 +106,7 @@ class StudentLetterController extends Controller
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             return DB::transaction(function () use ($request) {
                 if (!$request->user()->hasPermissionTo('student_letter_create')) {
                     return response()->json([
@@ -210,7 +210,7 @@ class StudentLetterController extends Controller
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             return DB::transaction(function () use ($request) {
                 if (!$request->user()->hasPermissionTo('student_letter_create')) {
                     return response()->json([
@@ -351,7 +351,7 @@ class StudentLetterController extends Controller
                     }
                 }
 
-                
+
                 return response(["template" => $template], 201);
             });
         } catch (Exception $e) {
@@ -487,7 +487,7 @@ public function closeUnclosedTags(&$html)
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             $request_data = $request->validated();
 
             $student_letter =  StudentLetter::where([
@@ -791,7 +791,7 @@ public function closeUnclosedTags(&$html)
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             return DB::transaction(function () use ($request) {
                 if (!$request->user()->hasPermissionTo('student_letter_update')) {
                     return response()->json([
@@ -899,7 +899,7 @@ public function closeUnclosedTags(&$html)
 
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             $this->isModuleEnabled("letter_template");
+            //  $this->isModuleEnabled("letter_template");
              return DB::transaction(function () use ($request) {
 
                 //  if (!$request->user()->hasPermissionTo('student_letter_update')) {
@@ -1139,7 +1139,7 @@ public function closeUnclosedTags(&$html)
      {
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             $this->isModuleEnabled("letter_template");
+            //  $this->isModuleEnabled("letter_template");
              if (!$request->user()->hasPermissionTo('student_letter_view')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -1306,7 +1306,7 @@ public function closeUnclosedTags(&$html)
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             if (!$request->user()->hasPermissionTo('student_letter_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
@@ -1486,7 +1486,7 @@ public function closeUnclosedTags(&$html)
      {
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             $this->isModuleEnabled("letter_template");
+            //  $this->isModuleEnabled("letter_template");
              if (!$request->user()->hasPermissionTo('student_letter_view')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -1631,7 +1631,7 @@ public function closeUnclosedTags(&$html)
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             if (!$request->user()->hasPermissionTo('student_letter_delete')) {
                 return response()->json([
                     "message" => "You can not perform this action"

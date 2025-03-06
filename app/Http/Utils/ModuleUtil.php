@@ -40,13 +40,13 @@ trait ModuleUtil
         }
 
 
-        $business_tier_id = $business->service_plan ? $business->service_plan->business_tier->id : 1;
+
 
 
         $is_enabled = false;
 
 
-    
+
 
 
         $servicePlanModule =    ServicePlanModule::where([

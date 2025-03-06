@@ -81,7 +81,7 @@ class LetterTemplateController extends Controller
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             return DB::transaction(function () use ($request) {
                 if (!$request->user()->hasPermissionTo('letter_template_create')) {
                     return response()->json([
@@ -196,7 +196,7 @@ class LetterTemplateController extends Controller
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             return DB::transaction(function () use ($request) {
                 if (!$request->user()->hasPermissionTo('letter_template_update')) {
                     return response()->json([
@@ -300,7 +300,7 @@ $letter_template->save();
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             if (!$request->user()->hasPermissionTo('letter_template_activate')) {
                 return response()->json([
                     "message" => "You can not perform this action"
@@ -473,7 +473,7 @@ $letter_template->save();
      {
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             $this->isModuleEnabled("letter_template");
+            //  $this->isModuleEnabled("letter_template");
              if (!$request->user()->hasPermissionTo('letter_template_view')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -604,7 +604,8 @@ $letter_template->save();
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+
+            // $this->isModuleEnabled("letter_template");
             if (!$request->user()->hasPermissionTo('letter_template_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
@@ -687,7 +688,7 @@ $letter_template->save();
      {
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             $this->isModuleEnabled("letter_template");
+            //  $this->isModuleEnabled("letter_template");
              if (!$request->user()->hasPermissionTo('letter_template_view')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -767,7 +768,7 @@ $letter_template->save();
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            $this->isModuleEnabled("letter_template");
+            // $this->isModuleEnabled("letter_template");
             if (!$request->user()->hasPermissionTo('letter_template_delete')) {
                 return response()->json([
                     "message" => "You can not perform this action"
