@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Http\Utils\BasicEmailUtil;
+
 use App\Models\Business;
 use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 class SendPasswordMail extends Mailable
 {
-    use Queueable, SerializesModels, BasicEmailUtil;
+    use Queueable, SerializesModels;
 
     public $user;
     public $password;
