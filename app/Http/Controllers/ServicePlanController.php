@@ -264,10 +264,17 @@ class ServicePlanController extends Controller
 
 
                 foreach ($request_data['discount_codes'] as $discountCode) {
-                    $service_plan->discount_codes()->updateOrCreate(
-                        ['id' => $discountCode['id']],
-                        $discountCode
-                    );
+                    if (!empty($discountCode['id'])) {
+                        // Update if ID exists
+                        $service_plan->discount_codes()->updateOrCreate(
+                            ['id' => $discountCode['id']],
+                            $discountCode
+                        );
+                    } else {
+                        // Create a new record if ID is empty
+                        $service_plan->discount_codes()->create($discountCode);
+                    }
+
                 }
 
                 // Step 1: Clear existing ServicePlanModule records

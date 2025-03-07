@@ -36,7 +36,7 @@ class ServicePlanUpdateRequest extends BaseFormRequest
             'business_tier_id' => 'required|exists:business_tiers,id',
 
             "discount_codes" => "present|array",
-            "discount_codes.*.id" => "required|numeric",
+
             "discount_codes.*.code" => [
                 "required",
                 new ValidateDiscountCode()
