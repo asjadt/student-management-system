@@ -11,6 +11,7 @@ use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\CourseTitle;
 use App\Models\DisabledCourseTitle;
+use App\Models\Student;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -1347,13 +1348,20 @@ class CourseTitleController extends Controller
             }
 
             // Check if there are any users associated with the existing course titles.
-            $user_exists = User::whereIn("course_title_id", $existingIds)->exists();
-            if ($user_exists) {
+
+            $student_exists = Student::
+            whereIn("course_title_id", $existingIds)
+            ->exists();
+
+            if ($student_exists) {
                 // If there are, retrieve the conflicting users' details.
-                $conflictingUsers = User::whereIn("course_title_id", $existingIds)->get([
+                $conflictingStudents = Student::
+                whereIn("course_title_id", $existingIds)->get([
                     'id',
-                    'first_Name',
-                    'last_Name',
+                    "title",
+                    'first_name',
+                    'middle_name',
+                    'last_name',
                 ]);
                 // Log an error and return a 409 Conflict response with the conflicting users' details.
                 $this->storeError(
@@ -1362,10 +1370,12 @@ class CourseTitleController extends Controller
                     "front end error",
                     "front end error"
                 );
+
                 return response()->json([
-                    "message" => "Some users are associated with the specified course titles",
-                    "conflicting_users" => $conflictingUsers
+                    "message" => "Some students are associated with the specified course titles",
+                    "conflicting_users" => $conflictingStudents
                 ], 409);
+
             }
 
             // Delete the existing course titles from the database.
@@ -1373,6 +1383,10 @@ class CourseTitleController extends Controller
 
             // Return a 200 OK response with a success message and the list of deleted IDs.
             return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $existingIds], 200);
+
+
+
+            
         } catch (Exception $e) {
             // If an exception occurs, log the error and return a 500 Internal Server Error response.
             return $this->sendError($e, 500, $request);
