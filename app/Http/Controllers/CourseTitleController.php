@@ -1370,7 +1370,7 @@ class CourseTitleController extends Controller
                     "front end error",
                     "front end error"
                 );
-
+                
                 return response()->json([
                     "message" => "Some students are associated with the specified course titles",
                     "conflicting_users" => $conflictingStudents
@@ -1386,7 +1386,7 @@ class CourseTitleController extends Controller
 
 
 
-            
+
         } catch (Exception $e) {
             // If an exception occurs, log the error and return a 500 Internal Server Error response.
             return $this->sendError($e, 500, $request);

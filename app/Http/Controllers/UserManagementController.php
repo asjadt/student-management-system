@@ -711,30 +711,31 @@ class UserManagementController extends Controller
             } else {
                 unset($request_data['password']);
             }
+
             $request_data['is_active'] = true;
             $request_data['remember_token'] = Str::random(10);
-            $userQueryTerms = [
+
+
+
+          $user = User::where([
                 "id" => $request_data["id"],
-            ];
+            ])
+            ->first();
 
-            $user  =  tap(User::where($userQueryTerms))->update(
-                     $request_data
-            )
-                // ->with("somthing")
-
-                ->first();
             if (!$user) {
-                $this->storeError(
-                    "no data found"
-                    ,
-                    404,
-                    "front end error",
-                    "front end error"
-                   );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
             }
+
+              $user->fill(
+                     $request_data
+            );
+
+            $user->save();
+
+
+
             $user->syncRoles([$request_data['role']]);
 
             $user->roles = $user->roles->pluck('name');
@@ -1737,6 +1738,7 @@ class UserManagementController extends Controller
 
     public function query_filters($query)
     {
+
       return  $query->whereNotIn('id', [request()->user()->id])
 
 

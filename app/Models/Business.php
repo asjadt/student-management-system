@@ -50,6 +50,9 @@ class Business extends Model
         "service_plan_discount_code",
         "service_plan_discount_amount",
 
+        "letter_template_header",
+        "letter_template_footer"
+
     ];
 
     protected $casts = [

@@ -1,0 +1,17 @@
+report -------------------------------------------- 
+a. Daily Sales Summary Report
+	•	Total sales for the day
+	•	Number of transactions
+	•	Average order value
+	•	Sales by payment method (cash, credit, digital wallets)
+
+b. Monthly/Weekly Sales Trends
+	•	Revenue trends over time
+	•	Best and worst sales days
+	•	Peak and off-peak hours
+	•	Seasonal sales patterns
+
+c. Sales by Category & Item
+	•	Sales breakdown by menu category (e.g., appetizers, entrees, desserts)
+	•	Top-selling and least-selling menu items
+	•	Profit margins per item
