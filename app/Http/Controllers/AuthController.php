@@ -218,14 +218,7 @@ class AuthController extends Controller
      *      )
      *     )
      */
-    /**
-     * Logs in a user to the system. This method will attempt to login the user based on the provided credentials.
-     * If the credentials are valid, the user will be logged in and a json response will be returned with the user's info.
-     * If the credentials are invalid, the user's login attempts will be increased and the user will be prompted to try again.
-     * If the user has 5 failed attempts, the user will be blocked from attempting to login for 15 minutes.
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+    
     public function login(Request $request)
     {
         try {
