@@ -240,10 +240,7 @@ class BusinessController extends Controller
             // Compare existing and new logo paths and delete the old logo if needed
             if (!empty($business->logo) && $business->logo !== $new_file_name) {
 
-
-                $existingLogoPath = public_path($this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"))["logo"], $business->name);
-
-
+                $existingLogoPath = public_path($business->logo);
 
                 if (File::exists($existingLogoPath)) {
                     File::delete($existingLogoPath);
@@ -2124,10 +2121,11 @@ class BusinessController extends Controller
 
             // If a business is found, generate a URL link for the business logo
             if (!empty($business)) {
-                $business = $this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"), $business->name);
+                $business->load('owner', 'times', 'service_plan');
+                // $business = $this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"), $business->name);
             }
 
-            $business->load('owner', 'times', 'service_plan');
+
 
             // Return the business data as a JSON response with a 200 OK status
             return response()->json($business, 200);

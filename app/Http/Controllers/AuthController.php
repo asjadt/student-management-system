@@ -218,7 +218,7 @@ class AuthController extends Controller
      *      )
      *     )
      */
-    
+
     public function login(Request $request)
     {
         try {
@@ -417,13 +417,13 @@ class AuthController extends Controller
             $user->permissions = $user->getAllPermissions()->pluck('name');
             $user->roles = $user->roles->pluck('name');
 
-            // Set the user's business
-            $business = $user->business;
-            if (!empty($business)) {
-                $business = $this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"), $business->name);
-            }
+            // // Set the user's business
+            // $business = $user->business;
+            // if (!empty($business)) {
+            //     $business = $this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"), $business->name);
+            // }
 
-            $user->business = $business;
+            // $user->business = $business;
 
             // Login the user
             Auth::login($user);
@@ -1216,10 +1216,16 @@ class AuthController extends Controller
             $user->roles = $user->roles->pluck('name');
 
             // Retrieve the user's business from the database using the "business" relation on the "user" model
-            if (!empty($user->business)) {
-                // Retrieve the business's logo from the database using the "getUrlLink" method on the "BusinessUtil" class
-                $user->business = $this->getUrlLink($user->business, "logo", config("setup-config.business_gallery_location"), $user->business->name);
-            }
+           // Set the user's business
+        //    $business = $user->business;
+
+        //    if (!empty($business)) {
+        //        $business = $this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"), $business->name);
+        //        $business->ddd = "ddddd";
+        //    }
+
+        //    $user->business = $business;
+
 
             $user = $user->load(['roles.permissions', 'permissions', 'business.service_plan.modules']);
             // Retrieve the user's default background image from the database using the "default_background_image" field on the "user" model

@@ -60,6 +60,14 @@ class Business extends Model
         'student_optional_fields' => 'array'
     ];
 
+    public function getLogoAttribute($value)
+    {
+        $business_name = $this->name ?? "no business";
+        $folder_name = config("setup-config.business_gallery_location");
+
+        return "/" . str_replace(' ', '_', $business_name) . "/" . $folder_name . "/" . $value;
+    }
+
     public function owner(){
         return $this->belongsTo(User::class,'owner_id', 'id');
     }
