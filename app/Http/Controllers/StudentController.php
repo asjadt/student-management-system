@@ -1602,7 +1602,6 @@ class StudentController extends Controller
                 return $query->whereRaw('BINARY students.student_id = ?', [request()->student_id]);
             });
     }
-
  /**
      *
      * @OA\Get(
@@ -1782,6 +1781,199 @@ class StudentController extends Controller
             $query = $this->query_filters($query);
 
            $students = $this->retrieveData($query, "id","students");
+
+
+            return response()->json($students, 200);
+
+
+
+
+
+         } catch (Exception $e) {
+
+             return $this->sendError($e, 500, $request);
+         }
+     }
+
+ /**
+     *
+     * @OA\Get(
+     *      path="/v3.0/client/students",
+     *      operationId="getStudentsClientV3",
+     *      tags={"students"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *              @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=true,
+     *  example="6"
+     *      ),
+     *    *      * *  @OA\Parameter(
+     * name="student_status_id",
+     * in="query",
+     * description="student_status_id",
+     * required=true,
+     * example="1"
+     * ),
+     *  *    *      * *  @OA\Parameter(
+     * name="course_title_id",
+     * in="query",
+     * description="course_title_id",
+     * required=true,
+     * example="1"
+     * ),
+     * *   * *  @OA\Parameter(
+     * name="student_id",
+     * in="query",
+     * description="student_id",
+     * required=true,
+     * example="412cbhg"
+     * ),
+     *   * *  @OA\Parameter(
+     * name="date_of_birth",
+     * in="query",
+     * description="date_of_birth",
+     * required=true,
+     * example="ASC"
+     * ),
+
+     *      * *  @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=true,
+     * example="ASC"
+     * ),
+     *      * * *  @OA\Parameter(
+     * name="is_single_search",
+     * in="query",
+     * description="is_single_search",
+     * required=true,
+     * example="ASC"
+     * ),
+     *    * * *  @OA\Parameter(
+     * name="id",
+     * in="query",
+     * description="id",
+     * required=true,
+     * example="id"
+     * ),
+     *
+     *  *     @OA\Parameter(
+     * name="title",
+     * in="query",
+     * description="title",
+     * required=true,
+     * example="title"
+     * ),
+     *     @OA\Parameter(
+     * name="first_name",
+     * in="query",
+     * description="first_name",
+     * required=true,
+     * example="first_name"
+     * ),
+     *    @OA\Parameter(
+     * name="middle_name",
+     * in="query",
+     * description="middle_name",
+     * required=true,
+     * example="middle_name"
+     * ),
+     *    *    @OA\Parameter(
+     * name="last_name",
+     * in="query",
+     * description="last_name",
+     * required=true,
+     * example="last_name"
+     * ),
+     *   *    *    @OA\Parameter(
+     * name="business_id",
+     * in="query",
+     * description="business_id",
+     * required=true,
+     * example="business_id"
+     * ),
+     *
+
+
+     *      summary="This method is to get students  ",
+     *      description="This method is to get students ",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+     public function getStudentsClientV3(Request $request)
+     {
+         try {
+             $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            //  if (!$request->user()->hasPermissionTo('student_update')) {
+            //      return response()->json([
+            //          "message" => "You can not perform this action"
+            //      ], 401);
+            //  } test
+
+            $query = Student::with("student_status","course_title");
+            $query = $this->query_filters($query);
+
+            $students = $query->first();
 
 
             return response()->json($students, 200);

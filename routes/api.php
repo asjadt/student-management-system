@@ -706,6 +706,8 @@ Route::get('/v2.0/client/student-statuses', [StudentStatusController::class, "ge
 
 Route::get('/v1.0/client/students', [StudentController::class, "getStudentsClient"]);
 Route::get('/v2.0/client/students', [StudentController::class, "getStudentsClientV2"]);
+Route::get('/v3.0/client/students', [StudentController::class, "getStudentsClientV3"]);
+
 
 Route::get('/v1.0/client/course-titles', [CourseTitleController::class, "getCourseTitlesClient"]);
 Route::get('/v2.0/client/course-titles', [CourseTitleController::class, "getCourseTitlesClientV2"]);
