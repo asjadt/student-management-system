@@ -360,46 +360,42 @@ class StudentStatusController extends Controller
      * @param  Illuminate\Database\Eloquent\Builder  $query
      * @return Illuminate\Database\Eloquent\Builder
      */
-    public function query_filters($query)
-    {
-        // Get the business setting for the current business
+
+    public function query_filters($query) {
+
         $business_setting = BusinessSetting::where([
             "business_id" => auth()->user()->business_id
         ])
-            ->first();
+        ->first();
 
-        // Filter the student statuses based on the business id
-        $query->where([
-            "business_id" => auth()->user()->business_id
-        ]);
+          return   $query
+          ->where([
+            "business_id" =>auth()->user()->business_id
+         ])
+            ->when(!empty(request()->search_key), function ($query) {
+                return $query->where(function ($query)  {
+                    $term = request()->search_key;
+                    $query->where("student_statuses.name", "like", "%" . $term . "%")
+                        ->orWhere("student_statuses.description", "like", "%" . $term . "%");
+                });
+            })
 
-        // If a search key is provided, filter the student statuses that match the search key
-        if (!empty(request()->search_key)) {
-            $query->where(function ($query) {
-                $term = request()->search_key;
-                // Search for the term in the name and description columns
-                $query->where("student_statuses.name", "like", "%" . $term . "%")
-                    ->orWhere("student_statuses.description", "like", "%" . $term . "%");
+            ->when(request()->boolean("exclude_online_status"), function ($query) use($business_setting) {
+                if(!empty($business_setting->online_student_status_id)) {
+                    return $query->whereNotIn('student_statuses.id', [$business_setting->online_student_status_id]);
+                } else {
+                    return $query;
+                }
+
+            })
+
+            ->when(!empty(request()->start_date), function ($query) {
+                return $query->where('student_statuses.created_at', ">=",request()->start_date);
+            })
+            ->when(!empty(request()->end_date), function ($query) {
+                return $query->where('student_statuses.created_at', "<=", (request()->end_date . ' 23:59:59'));
             });
-        }
-
-        // If the exclude_online_status parameter is true, exclude the online student status
-        if (request()->boolean("exclude_online_status")) {
-            $query->whereNotIn('student_statuses.id', [$business_setting->online_student_status_id]);
-        }
-
-        // If a start date is provided, filter the student statuses that are created after the start date
-        if (!empty(request()->start_date)) {
-            $query->where('student_statuses.created_at', ">=", request()->start_date);
-        }
-
-        // If an end date is provided, filter the student statuses that are created before the end date
-        if (!empty(request()->end_date)) {
-            $query->where('student_statuses.created_at', "<=", (request()->end_date . ' 23:59:59'));
-        }
-
-        return $query;
-    }
+     }
 
 
 
