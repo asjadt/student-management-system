@@ -795,10 +795,11 @@ class BusinessController extends Controller
     public function registerUserWithBusiness(AuthRegisterBusinessRequest $request)
     {
 
+
         try {
             // Store this activity in the activity log
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-
+            DB::beginTransaction();
 
             // Check if the user has the permission to create a business
             if (!$request->user()->hasPermissionTo('business_create')) {
@@ -938,8 +939,8 @@ class BusinessController extends Controller
             ]);
 
             BusinessSetting::create([
-                'business_id' => $online_status->id,
-                'online_student_status_id' => NULL,
+                'business_id' => $business->id,
+                'online_student_status_id' => $online_status->id,
                 'student_data_fields' => config("setup-config.student_data_fields"),
                 'student_verification_fields' => config("setup-config.student_verification_fields")
             ]);
@@ -960,12 +961,13 @@ class BusinessController extends Controller
             // }
             $business->service_plan = $business->service_plan;
 
+            DB::commit();
             return response()->json([
                 "user" => $user,
                 "business" => $business
             ], 201);
         } catch (Exception $e) {
-
+              DB::rollBack();
             return $this->sendError($e, 500, $request);
         }
     }
