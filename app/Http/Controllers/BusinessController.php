@@ -22,6 +22,7 @@ use App\Models\Business;
 use App\Models\BusinessSetting;
 use App\Models\BusinessTime;
 use App\Models\Role;
+use App\Models\StudentStatus;
 use App\Models\User;
 use App\Models\WorkShift;
 use Carbon\Carbon;
@@ -926,8 +927,18 @@ class BusinessController extends Controller
             }
 
             // Create a new business setting
+
+            $online_status = StudentStatus::create([
+                'name' => "Online Status",
+                'description' => "Indicates that the student applied online and is subject to approval.",
+                "is_active" => 1,
+                "is_default" => 1,
+                "business_id" => $business->id,
+                "created_by" => $business->owner_id
+            ]);
+
             BusinessSetting::create([
-                'business_id' => $business->id,
+                'business_id' => $online_status->id,
                 'online_student_status_id' => NULL,
                 'student_data_fields' => config("setup-config.student_data_fields"),
                 'student_verification_fields' => config("setup-config.student_verification_fields")
