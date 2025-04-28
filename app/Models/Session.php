@@ -25,12 +25,7 @@ class Session extends Model
 
     protected $casts = [
 
-
-
-
-                            'holiday_dates' => 'array',
-
-
+    'holiday_dates' => 'array',
 
 
   ];

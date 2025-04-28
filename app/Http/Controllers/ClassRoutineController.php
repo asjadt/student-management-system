@@ -867,7 +867,7 @@ class ClassRoutineController extends Controller
             $business_id = auth()->user()->business_id;
 
             // Initialize the class routines query
-            $class_routines = ClassRoutine::with("teacher", "subject", "semester");
+            $class_routines = ClassRoutine::with("teacher", "subject", "semester","session");
 
             // Filter the class routines by business ID
             $class_routines->where('class_routines.business_id', $business_id);
