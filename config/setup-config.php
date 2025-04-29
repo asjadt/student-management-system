@@ -163,7 +163,11 @@ return [
                 "class_routine_view",
                 "class_routine_delete",
 
-
+                "attendance_create",
+                "attendance_update",
+                "attendance_activate",
+                "attendance_view",
+                "attendance_delete",
 
 
 
@@ -566,6 +570,11 @@ return [
                  "class_routine_view",
                  "class_routine_delete",
 
+                 "attendance_create",
+                 "attendance_update",
+                 "attendance_activate",
+                 "attendance_view",
+                 "attendance_delete",
 
 
 
@@ -841,6 +850,12 @@ return [
                   "class_routine_view",
                   "class_routine_delete",
 
+                  "attendance_create",
+                  "attendance_update",
+                  "attendance_activate",
+                  "attendance_view",
+                  "attendance_delete",
+
 
                   "awarding_body_create",
                   "awarding_body_update",
@@ -1106,6 +1121,12 @@ return [
                   "class_routine_view",
                   "class_routine_delete",
 
+                  "attendance_create",
+                  "attendance_update",
+                  "attendance_activate",
+                  "attendance_view",
+                  "attendance_delete",
+
 
                   "awarding_body_create",
                   "awarding_body_update",
@@ -1369,6 +1390,13 @@ return [
                   "class_routine_activate",
                   "class_routine_view",
                   "class_routine_delete",
+
+
+                  "attendance_create",
+                  "attendance_update",
+                  "attendance_activate",
+                  "attendance_view",
+                  "attendance_delete",
 
 
                   "awarding_body_create",
@@ -1701,6 +1729,11 @@ return [
          "class_routine_view",
          "class_routine_delete",
 
+         "attendance_create",
+         "attendance_update",
+         "attendance_activate",
+         "attendance_view",
+         "attendance_delete",
 
 
 
@@ -2004,6 +2037,12 @@ return [
          "class_routine_activate" => "",
          "class_routine_view" => "",
          "class_routine_delete" => "",
+
+         "attendance_create" => "",
+         "attendance_update" => "",
+         "attendance_activate" => "",
+         "attendance_view" => "",
+         "attendance_delete" => "",
 
 
          "awarding_body_create"=>"",
@@ -2939,6 +2978,18 @@ return [
                         "class_routine_delete",
 
 
+
+                    ],
+                ],
+                [
+                    "header" => "attendance",
+                    "permissions" => [
+                        
+                        "attendance_create",
+                        "attendance_update",
+                        "attendance_activate",
+                        "attendance_view",
+                        "attendance_delete",
 
                     ],
                 ],

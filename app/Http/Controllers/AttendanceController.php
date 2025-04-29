@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttendanceCreateRequest;
+use App\Http\Requests\AttendanceUpdateRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\Attendance;
+use App\Models\ClassRoutine;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -16,32 +22,32 @@ class AttendanceController extends Controller
     /**
      *
      * @OA\Post(
-     *      path="/v1.0/class-routines",
-     *      operationId="createClassRoutine",
-     *      tags={"class_routines"},
+     *      path="/v1.0/attendances",
+     *      operationId="createAttendance",
+     *      tags={"attendances"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to store class routines",
-     *      description="This method is to store class routines",
+     *      summary="This method is to store attendances",
+     *      description="This method is to store attendances",
      *
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     * @OA\Property(property="day_of_week", type="string", format="string", example="day_of_week"),
-     * @OA\Property(property="start_time", type="string", format="string", example="start_time"),
-     * @OA\Property(property="end_time", type="string", format="string", example="end_time"),
-     * @OA\Property(property="room_number", type="string", format="string", example="room_number"),
-     * @OA\Property(property="subject_id", type="string", format="string", example="subject_id"),
-     * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
-     *
-     * @OA\Property(property="teacher_id", type="string", format="string", example="teacher_id"),
-     * @OA\Property(property="semester_id", type="string", format="string", example="semester_id"),
-     * @OA\Property(property="session_id", type="string", format="string", example="session_id"),
-     *
-     *
-     *
-     *
+*             @OA\Property(property="class_routine_id", type="integer", example=1),
+ *             @OA\Property(property="attendance_date", type="string", format="date", example="2025-04-29"),
+ *             @OA\Property(
+ *                 property="students",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     required={"id", "status"},
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="status", type="string", enum={"present", "absent", "late", "excused"}, example="present"),
+ *                     @OA\Property(property="remarks", type="string", example="Came late due to traffic")
+ *                 )
+ *             ),
+
      *
      *         ),
      *      ),
@@ -79,16 +85,17 @@ class AttendanceController extends Controller
      *     )
      */
 
-    public function createClassRoutine(ClassRoutineCreateRequest $request)
+    public function createAttendance(AttendanceCreateRequest $request)
     {
+        DB::beginTransaction();
         try {
-            // Log the user's activity for creating a class routine
+            // Log the user's activity for creating a attendance
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
             // Start a database transaction to ensure data consistency
-            return DB::transaction(function () use ($request) {
-                // Check if the authenticated user has permission to create a class routine
-                if (!auth()->user()->hasPermissionTo('class_routine_create')) {
+
+                // Check if the authenticated user has permission to create a attendance
+                if (!auth()->user()->hasPermissionTo('attendance_create')) {
                     // If not, return a 401 Unauthorized response
                     return response()->json([
                         "message" => "You can not perform this action"
@@ -98,32 +105,49 @@ class AttendanceController extends Controller
                 // Validate the request data
                 $request_data = $request->validated();
 
-                // Set the default status for the class routine as active
-                $request_data["is_active"] = 1;
 
-                // Set the user who created this class routine
+                // Set the user who created this attendance
                 $request_data["created_by"] = auth()->user()->id;
 
                 // Set the business ID from the authenticated user's business ID
                 $request_data["business_id"] = auth()->user()->business_id;
 
-                // If the user does not belong to a business
-                if (empty(auth()->user()->business_id)) {
-                    // Set business ID to NULL
-                    $request_data["business_id"] = NULL;
-                    // If the user has a 'superadmin' role, mark this class routine as default
-                    if (auth()->user()->hasRole('superadmin')) {
-                        $request_data["is_default"] = 1;
-                    }
-                }
+                $routine = ClassRoutine::findOrFail($request_data["class_routine_id"]);
 
-                // Create a new class routine with the validated data
-                $class_routine = ClassRoutine::create($request_data);
+        foreach ($request_data["students"] as $student) {
+            Attendance::updateOrCreate(
+                [
+                    'student_id' => $student['id'],
+                    'attendance_date' => $request->attendance_date,
+                ],
+                [
+                    'class_routine_id' => $routine->id,
+                    'status' => $student['status'],
+                    'remarks' => $student['remarks'] ?? null,
 
-                // Return the newly created class routine with a 201 Created response
-                return response($class_routine, 201);
-            });
+                    // Routine snapshot
+                    'day_of_week' => $routine->day_of_week,
+                    'start_time' => $routine->start_time,
+                    'end_time' => $routine->end_time,
+                    'room_number' => $routine->room_number,
+                    'subject_id' => $routine->subject_id,
+                    'teacher_id' => $routine->teacher_id,
+                    'semester_id' => $routine->semester_id,
+                    'session_id' => $routine->session_id,
+                    'course_id' => $routine->course_id,
+
+                    'business_id' => $request_data["business_id"],
+                    'created_by' => $request_data["created_by"],
+                ]
+            );
+        }
+DB::commit();
+        return response()->json(['message' => 'Attendance recorded for all students.'], 201);
+
+
+
         } catch (Exception $e) {
+            DB::rollBack();
             // If an exception occurs, handle the error by returning a 500 Internal Server Error response
             return $this->sendError($e, 500, $request);
         }
@@ -133,29 +157,22 @@ class AttendanceController extends Controller
     /**
      *
      * @OA\Put(
-     *      path="/v1.0/class-routines",
-     *      operationId="updateClassRoutine",
-     *      tags={"class_routines"},
+     *      path="/v1.0/attendances",
+     *      operationId="updateAttendance",
+     *      tags={"attendances"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
-     *      summary="This method is to update class routines ",
-     *      description="This method is to update class routines ",
+     *      summary="This method is to update attendance ",
+     *      description="This method is to update attendance ",
      *
      *  @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      *      @OA\Property(property="id", type="number", format="number", example="1"),
-     * @OA\Property(property="day_of_week", type="string", format="string", example="day_of_week"),
-     * @OA\Property(property="start_time", type="string", format="string", example="start_time"),
-     * @OA\Property(property="end_time", type="string", format="string", example="end_time"),
-     * @OA\Property(property="room_number", type="string", format="string", example="room_number"),
-     * @OA\Property(property="subject_id", type="string", format="string", example="subject_id"),
-     * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
+     * @OA\Property(property="status", type="string", format="string", example="status"),
+     * @OA\Property(property="remarks", type="string", format="string", example="remarks")
      *
-     * @OA\Property(property="teacher_id", type="string", format="string", example="teacher_id"),
-     * @OA\Property(property="semester_id", type="string", format="string", example="semester_id"),
-     * @OA\Property(property="session_id", type="string", format="string", example="session_id"),
      *
      *
      *         ),
@@ -194,23 +211,20 @@ class AttendanceController extends Controller
      *     )
      */
 
-    /**
-     * Updates an existing class routine
-     *
-     * @param ClassRoutineUpdateRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function updateClassRoutine(ClassRoutineUpdateRequest $request)
+
+
+    public function updateAttendance(AttendanceUpdateRequest $request)
     {
 
+        DB::beginTransaction();
         try {
-            // Store the activity for updating a class routine
+            // Store the activity for updating a attendance
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
             // Start a transaction to ensure data consistency
-            return DB::transaction(function () use ($request) {
-                // Check if the authenticated user has permission to update a class routine
-                if (!auth()->user()->hasPermissionTo('class_routine_update')) {
+
+                // Check if the authenticated user has permission to update a attendance
+                if (!auth()->user()->hasPermissionTo('attendance_update')) {
                     // If not, return a 401 Unauthorized response
                     return response()->json([
                         "message" => "You can not perform this action"
@@ -220,51 +234,35 @@ class AttendanceController extends Controller
                 // Validate the request data
                 $request_data = $request->validated();
 
-                // Extract the class routine ID from the validated data
-                $class_routine_id = $request_data["id"];
 
-                // Find the class routine by the provided ID
-                $class_routine_query_params = [
-                    "id" => $class_routine_id,
-                ];
+                $attendance = Attendance::where([
+                    "business_id" => auth()->user()->business_id,
+                    "id" => $request_data["id"],
+                    ])->first();
 
-                $class_routine = ClassRoutine::where($class_routine_query_params)->first();
+                    if (empty($attendance)) {
+                        return response()->json([
+                            "message" => "No attendance found"
+                        ], 500);
+                    }
 
-                if ($class_routine) {
-                    // Fill the class routine object with the validated request data
-                    $class_routine->fill(collect($request_data)->only([
 
-                        "day_of_week",
-                        "start_time",
-                        "end_time",
-                        "room_number",
-                        "subject_id",
-                        "course_id",
-                        "teacher_id",
-                        "semester_id",
-                        "session_id"
-                        // "is_default",
-                        // "is_active",
-                        // "business_id",
-                        // "created_by"
-                    ])->toArray());
 
-                    // Save the changes to the class routine
-                    $class_routine->save();
+                    // Fill the attendance object with the validated request data
+                    $attendance->fill($request_data);
 
-                    // Return the updated class routine
-                    return response($class_routine, 201);
-                } else {
-                    // Return a 500 Internal Server Error response if something went wrong
-                    return response()->json([
-                        "message" => "something went wrong."
-                    ], 500);
-                }
-            });
+                    // Save the changes to the attendance
+                    $attendance->save();
+
+                    DB::commit();
+                    // Return the updated attendance
+                    return response($attendance, 201);
+
+
+
         } catch (Exception $e) {
-            // Log the error
-            error_log($e->getMessage());
 
+DB::rollBack();
             // Return a 500 Internal Server Error response with the error message
             return $this->sendError($e, 500, $request);
         }
@@ -272,253 +270,204 @@ class AttendanceController extends Controller
 
 
     /**
-     *
-     * @OA\Get(
-     *      path="/v1.0/class-routines",
-     *      operationId="getClassRoutines",
-     *      tags={"class_routines"},
-     *       security={
-     *           {"bearerAuth": {}}
-     *       },
+ * @OA\Get(
+ *      path="/v1.0/attendances",
+ *      operationId="getAttendances",
+ *      tags={"attendances"},
+ *      security={{"bearerAuth": {}}},
+ *
+ *      @OA\Parameter(
+ *         name="start_time",
+ *         in="query",
+ *         description="Start time of the attendance",
+ *         required=true,
+ *         example="08:00"
+ *      ),
+ *      @OA\Parameter(
+ *         name="end_time",
+ *         in="query",
+ *         description="End time of the attendance",
+ *         required=true,
+ *         example="10:00"
+ *      ),
+ *      @OA\Parameter(
+ *         name="room_number",
+ *         in="query",
+ *         description="Room number",
+ *         required=true,
+ *         example="101"
+ *      ),
+ *      @OA\Parameter(
+ *         name="per_page",
+ *         in="query",
+ *         description="Records per page for pagination",
+ *         required=false,
+ *         example="10"
+ *      ),
+ *      @OA\Parameter(
+ *         name="is_active",
+ *         in="query",
+ *         description="Is the attendance active?",
+ *         required=false,
+ *         example="1"
+ *      ),
+ *      @OA\Parameter(
+ *         name="start_date",
+ *         in="query",
+ *         description="Start date to filter attendances",
+ *         required=true,
+ *         example="2025-04-01"
+ *      ),
+ *      @OA\Parameter(
+ *         name="end_date",
+ *         in="query",
+ *         description="End date to filter attendances",
+ *         required=true,
+ *         example="2025-04-30"
+ *      ),
+ *      @OA\Parameter(
+ *         name="search_key",
+ *         in="query",
+ *         description="Search key to search by student name, subject name, etc.",
+ *         required=false,
+ *         example="Math"
+ *      ),
+ *      @OA\Parameter(
+ *         name="order_by",
+ *         in="query",
+ *         description="Order the results (ASC or DESC)",
+ *         required=false,
+ *         example="DESC"
+ *      ),
+ *      @OA\Parameter(
+ *         name="id",
+ *         in="query",
+ *         description="Attendance ID to fetch a specific record",
+ *         required=false,
+ *         example="1"
+ *      ),
+ *      summary="Get attendances based on filters",
+ *      description="This method retrieves attendance records based on given filters such as attendance time, room, date, and more.",
+ *
+ *      @OA\Response(
+ *          response=200,
+ *          description="Successful operation",
+ *          @OA\JsonContent()
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthenticated",
+ *          @OA\JsonContent()
+ *      ),
+ *      @OA\Response(
+ *          response=422,
+ *          description="Unprocessable Content",
+ *          @OA\JsonContent()
+ *      ),
+ *      @OA\Response(
+ *          response=403,
+ *          description="Forbidden",
+ *          @OA\JsonContent()
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Not Found",
+ *          @OA\JsonContent()
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Server Error",
+ *          @OA\JsonContent()
+ *      )
+ * )
+ */
+public function getAttendances(Request $request)
+{
+    try {
+        // Store the activity for getting attendances
+        $this->storeActivity($request, "Attendance fetched", "Fetched attendance records with given filters");
 
-
-     *         @OA\Parameter(
-     *         name="start_time",
-     *         in="query",
-     *         description="start_time",
-     *         required=true,
-     *  example="6"
-     *      ),
-
-
-
-     *         @OA\Parameter(
-     *         name="end_time",
-     *         in="query",
-     *         description="end_time",
-     *         required=true,
-     *  example="6"
-     *      ),
-
-
-
-     *         @OA\Parameter(
-     *         name="room_number",
-     *         in="query",
-     *         description="room_number",
-     *         required=true,
-     *  example="6"
-     *      ),
-
-
-
-
-
-     *         @OA\Parameter(
-     *         name="per_page",
-     *         in="query",
-     *         description="per_page",
-     *         required=true,
-     *  example="6"
-     *      ),
-
-     *     @OA\Parameter(
-     * name="is_active",
-     * in="query",
-     * description="is_active",
-     * required=true,
-     * example="1"
-     * ),
-     *     @OA\Parameter(
-     * name="start_date",
-     * in="query",
-     * description="start_date",
-     * required=true,
-     * example="2019-06-29"
-     * ),
-     * *  @OA\Parameter(
-     * name="end_date",
-     * in="query",
-     * description="end_date",
-     * required=true,
-     * example="2019-06-29"
-     * ),
-     * *  @OA\Parameter(
-     * name="search_key",
-     * in="query",
-     * description="search_key",
-     * required=true,
-     * example="search_key"
-     * ),
-     * *  @OA\Parameter(
-     * name="order_by",
-     * in="query",
-     * description="order_by",
-     * required=true,
-     * example="ASC"
-     * ),
-     * *  @OA\Parameter(
-     * name="id",
-     * in="query",
-     * description="id",
-     * required=true,
-     * example="ASC"
-     * ),
-
-
-
-
-     *      summary="This method is to get class routines  ",
-     *      description="This method is to get class routines ",
-     *
-
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *       @OA\JsonContent(),
-     *       ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     * @OA\JsonContent(),
-     *      ),
-     *        @OA\Response(
-     *          response=422,
-     *          description="Unprocesseble Content",
-     *    @OA\JsonContent(),
-     *      ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden",
-     *   @OA\JsonContent()
-     * ),
-     *  * @OA\Response(
-     *      response=400,
-     *      description="Bad Request",
-     *   *@OA\JsonContent()
-     *   ),
-     * @OA\Response(
-     *      response=404,
-     *      description="not found",
-     *   *@OA\JsonContent()
-     *   )
-     *      )
-     *     )
-     */
-
-    /**
-     * Gets a list of class routines based on the given filters.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getClassRoutines(Request $request)
-    {
-        try {
-            // Store the activity for getting class routines
-            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-
-            // Check if the user has permission to view class routines
-            if (!$request->user()->hasPermissionTo('class_routine_view')) {
-                // If not, return a 401 Unauthorized response
-                return response()->json([
-                    "message" => "You can not perform this action"
-                ], 401);
-            }
-
-            // Get the business ID of the user
-            $business_id = auth()->user()->business_id;
-
-            // Initialize the class routines query
-            $class_routines = ClassRoutine::with("teacher", "subject", "semester","session");
-
-            // Filter the class routines by business ID
-            $class_routines->where('class_routines.business_id', $business_id);
-
-            // Filter the class routines by ID
-            if ($request->filled("id")) {
-                $class_routines->where('class_routines.id', $request->id);
-            }
-
-            // Filter the class routines by start time
-            if ($request->filled("start_time")) {
-                $class_routines->where('class_routines.start_time', $request->start_time);
-            }
-
-            // Filter the class routines by end time
-            if ($request->filled("end_time")) {
-                $class_routines->where('class_routines.end_time', $request->end_time);
-            }
-
-            // Filter the class routines by room number
-            if ($request->filled("room_number")) {
-                $class_routines->where('class_routines.room_number', $request->room_number);
-            }
-
-            // Filter the class routines by search key
-            if ($request->filled("search_key")) {
-                $search_key = $request->search_key;
-                $class_routines->where(function ($query) use ($search_key) {
-                    // Search the class routines by start time, end time, room number, teacher name, subject name, and semester name
-                    $query
-                        ->where("class_routines.start_time", "like", "%" . $search_key . "%")
-                        ->orWhere("class_routines.end_time", "like", "%" . $search_key . "%")
-                        ->orWhere("class_routines.room_number", "like", "%" . $search_key . "%")
-                        ->orWhere("teachers.name", "like", "%" . $search_key . "%")
-                        ->orWhere("subjects.name", "like", "%" . $search_key . "%")
-                        ->orWhere("semesters.name", "like", "%" . $search_key . "%")
-                    ;
-                });
-            }
-
-            // Filter the class routines by start date
-            if ($request->filled("start_date")) {
-                $class_routines->where('class_routines.created_at', ">=", $request->start_date);
-            }
-
-            // Filter the class routines by end date
-            if ($request->filled("end_date")) {
-                $class_routines->where('class_routines.created_at', "<=", ($request->end_date . ' 23:59:59'));
-            }
-
-            // Order the class routines by ID
-            if ($request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])) {
-                $class_routines->orderBy("class_routines.id", $request->order_by);
-            } else {
-                $class_routines->orderBy("class_routines.id", "DESC");
-            }
-
-            // Get the class routines
-            if ($request->filled("id")) {
-                $class_routines = $class_routines->where("class_routines.id", $request->input("id"))->first();
-            } else {
-                $class_routines = $class_routines->when(!empty(request()->per_page), function ($query) {
-                    return $query->paginate(request()->per_page);
-                }, function ($query) {
-                    return $query->get();
-                });
-            }
-
-            // If no data is found, throw a 404 Not Found exception
-            if ($request->filled("id") && empty($class_routines)) {
-                throw new Exception("No data found", 404);
-            }
-
-            // Return the class routines
-            return response()->json($class_routines, 200);
-        } catch (Exception $e) {
-
-            // Return an error response if an exception is thrown
-            return $this->sendError($e, 500, $request);
+        // Check if the user has permission to view attendances
+        if (!$request->user()->hasPermissionTo('attendance_view')) {
+            return response()->json([
+                "message" => "You are not authorized to perform this action"
+            ], 401);
         }
-    }
 
+        // Get the business ID of the user
+        $business_id = auth()->user()->business_id;
+
+        // Initialize the attendance query
+        $attendances = Attendance::with("teacher", "subject", "semester", "session")
+            ->where('business_id', $business_id);
+
+        // Apply filters based on request parameters
+        if ($request->filled("id")) {
+            $attendances->where('id', $request->id);
+        }
+
+        if ($request->filled("start_time")) {
+            $attendances->where('start_time', $request->start_time);
+        }
+
+        if ($request->filled("end_time")) {
+            $attendances->where('end_time', $request->end_time);
+        }
+
+        if ($request->filled("room_number")) {
+            $attendances->where('room_number', $request->room_number);
+        }
+
+        if ($request->filled("search_key")) {
+            $search_key = $request->search_key;
+            $attendances->where(function ($query) use ($search_key) {
+                $query->where("room_number", "like", "%" . $search_key . "%")
+                    ->orWhereHas("teacher", function ($query) use ($search_key) {
+                        $query->where("name", "like", "%" . $search_key . "%");
+                    })
+                    ->orWhereHas("subject", function ($query) use ($search_key) {
+                        $query->where("name", "like", "%" . $search_key . "%");
+                    })
+                    ->orWhereHas("semester", function ($query) use ($search_key) {
+                        $query->where("name", "like", "%" . $search_key . "%");
+                    });
+            });
+        }
+
+        if ($request->filled("start_date")) {
+            $attendances->where('attendance_date', '>=', $request->start_date);
+        }
+
+        if ($request->filled("end_date")) {
+            $attendances->where('attendance_date', '<=', $request->end_date . ' 23:59:59');
+        }
+
+        // Order results
+        if ($request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])) {
+            $attendances->orderBy("id", $request->order_by);
+        } else {
+            $attendances->orderBy("id", "DESC");
+        }
+
+        // Paginate or get all
+        if ($request->filled("per_page")) {
+            $attendances = $attendances->paginate($request->per_page);
+        } else {
+            $attendances = $attendances->get();
+        }
+
+        // Return the attendance data
+        return response()->json($attendances, 200);
+    } catch (Exception $e) {
+        return $this->sendError($e, 500, $request);
+    }
+}
     /**
      *
      *     @OA\Delete(
-     *      path="/v1.0/class-routines/{ids}",
-     *      operationId="deleteClassRoutinesByIds",
-     *      tags={"class_routines"},
+     *      path="/v1.0/attendances/{ids}",
+     *      operationId="deleteAttendancesByIds",
+     *      tags={"attendances"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -529,8 +478,8 @@ class AttendanceController extends Controller
      *         required=true,
      *  example="1,2,3"
      *      ),
-     *      summary="This method is to delete class routine by id",
-     *      description="This method is to delete class routine by id",
+     *      summary="This method is to delete attendance by id",
+     *      description="This method is to delete attendance by id",
      *
 
      *      @OA\Response(
@@ -568,21 +517,21 @@ class AttendanceController extends Controller
      */
 
     /**
-     * Deletes one or more class routines by ID.
+     * Deletes one or more attendance by ID.
      *
      * @param Request $request
      * @param string $ids
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteClassRoutinesByIds(Request $request, $ids)
+    public function deleteAttendancesByIds(Request $request, $ids)
     {
         try {
 
             // Log the user's activity in the database
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            // Check if the user has permission to delete class routines
-            if (!$request->user()->hasPermissionTo('class_routine_delete')) {
+            // Check if the user has permission to delete attendance
+            if (!$request->user()->hasPermissionTo('attendance_delete')) {
                 // If the user does not have permission, return a 401 Unauthorized response
                 return response()->json([
                     "message" => "You can not perform this action"
@@ -593,9 +542,9 @@ class AttendanceController extends Controller
             $idsArray = explode(',', $ids);
 
             // Retrieve the existing IDs in the database
-            $existingIds = ClassRoutine::whereIn('id', $idsArray)
-                // The class routines must belong to the same business as the user
-                ->where('class_routines.business_id', auth()->user()->business_id)
+            $existingIds = Attendance::whereIn('id', $idsArray)
+                // The attendance must belong to the same business as the user
+                ->where('attendances.business_id', auth()->user()->business_id)
 
                 // Select only the 'id' column
                 ->select('id')
@@ -616,8 +565,8 @@ class AttendanceController extends Controller
                 ], 404);
             }
 
-            // Delete the class routines
-            ClassRoutine::destroy($existingIds);
+            // Delete the attendance
+            Attendance::destroy($existingIds);
 
             // Return a 200 OK response with a message indicating that the data was deleted successfully
             return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $existingIds], 200);

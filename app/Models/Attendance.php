@@ -28,7 +28,7 @@ class Attendance extends Model
         'created_by',
     ];
 
-    public function classRoutine()
+    public function class_routine()
     {
         return $this->belongsTo(ClassRoutine::class);
     }

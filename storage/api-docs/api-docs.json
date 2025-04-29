@@ -373,6 +373,122 @@
                 ]
             }
         },
+        "/v1.0/attendances": {
+            "post": {
+                "tags": [
+                    "attendances"
+                ],
+                "summary": "This method is to store class attendances",
+                "description": "This method is to store class attendances",
+                "operationId": "createAttendance",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "class_routine_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "attendance_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-04-29"
+                                    },
+                                    "students": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "id",
+                                                "status"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "present",
+                                                        "absent",
+                                                        "late",
+                                                        "excused"
+                                                    ],
+                                                    "example": "present"
+                                                },
+                                                "remarks": {
+                                                    "type": "string",
+                                                    "example": "Came late due to traffic"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/register": {
             "post": {
                 "tags": [
@@ -464,6 +580,97 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "1207"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "This method is to login user",
+                "description": "This method is to login user",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "asjadtariq@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "12345678@We"
                                     }
                                 },
                                 "type": "object"
@@ -13173,6 +13380,185 @@
                 ]
             }
         },
+        "/v3.0/client/students": {
+            "get": {
+                "tags": [
+                    "students"
+                ],
+                "summary": "This method is to get students  ",
+                "description": "This method is to get students ",
+                "operationId": "getStudentsClientV3",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "student_status_id",
+                        "in": "query",
+                        "description": "student_status_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "course_title_id",
+                        "in": "query",
+                        "description": "course_title_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "student_id",
+                        "in": "query",
+                        "description": "student_id",
+                        "required": true,
+                        "example": "412cbhg"
+                    },
+                    {
+                        "name": "date_of_birth",
+                        "in": "query",
+                        "description": "date_of_birth",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "is_single_search",
+                        "in": "query",
+                        "description": "is_single_search",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "id"
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "title",
+                        "required": true,
+                        "example": "title"
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "description": "first_name",
+                        "required": true,
+                        "example": "first_name"
+                    },
+                    {
+                        "name": "middle_name",
+                        "in": "query",
+                        "description": "middle_name",
+                        "required": true,
+                        "example": "middle_name"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "last_name",
+                        "required": true,
+                        "example": "last_name"
+                    },
+                    {
+                        "name": "business_id",
+                        "in": "query",
+                        "description": "business_id",
+                        "required": true,
+                        "example": "business_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v2.0/client/students": {
             "get": {
                 "tags": [
@@ -19116,6 +19502,10 @@
         {
             "name": "agency_management",
             "description": "agency_management"
+        },
+        {
+            "name": "attendances",
+            "description": "attendances"
         },
         {
             "name": "auth",
