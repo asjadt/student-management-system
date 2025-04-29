@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AgencyController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AwardingBodyController;
 use App\Http\Controllers\DashboardManagementController;
@@ -78,11 +79,6 @@ Route::middleware(['custom.auth',"business.subscription.check"])->group(function
     Route::post('/v2.0/files/single-file-upload', [FileManagementController::class, "createFileSingleV2"]);
     Route::post('/v2.0/files/multiple-file-upload', [FileManagementController::class, "createFileMultipleV2"]);
 
-
-
-
-
-
     Route::post('/v1.0/files/multiple-student-file-upload', [FileManagementController::class, "createStudentFileMultipleSecure"]);
 
     Route::get('/v1.0/file/{filename}', [FileManagementController::class, "getFile"]);
@@ -104,8 +100,6 @@ Route::middleware(['custom.auth',"business.subscription.check"])->group(function
     Route::put('/v1.0/business-modules/enable', [ModuleController::class, "enableBusinessModule"]);
 
     Route::put('/v1.0/service-plan-modules/enable', [ModuleController::class, "enableServicePlanModule"]);
-
-
 
     Route::get('/v1.0/business-modules/{business_id}', [ModuleController::class, "getBusinessModules"]);
 
@@ -529,23 +523,27 @@ Route::post('/v1.0/class-routines', [ClassRoutineController::class, "createClass
 Route::put('/v1.0/class-routines', [ClassRoutineController::class, "updateClassRoutine"]);
 Route::post('/v1.0/class-routines/week', [ClassRoutineController::class, "createWeeklyClassRoutine"]);
 Route::put('/v1.0/class-routines/week', [ClassRoutineController::class, "updateWeeklyClassRoutine"]);
-
-
-
 Route::put('/v1.0/class-routines/toggle-active', [ClassRoutineController::class, "toggleActiveClassRoutine"]);
-
 Route::get('/v1.0/class-routines', [ClassRoutineController::class, "getClassRoutines"]);
-
 Route::delete('/v1.0/class-routines/{ids}', [ClassRoutineController::class, "deleteClassRoutinesByIds"]);
-
-
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // end class routines management section
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// class routines management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+Route::post('/v1.0/attendances', [AttendanceController::class, "createAttendance"]);
+Route::put('/v1.0/attendances', [AttendanceController::class, "updateAttendance"]);
+Route::get('/v1.0/attendances', [AttendanceController::class, "getAttendances"]);
+Route::delete('/v1.0/attendances/{ids}', [AttendanceController::class, "deleteAttendancesByIds"]);
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// end class routines management section
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 

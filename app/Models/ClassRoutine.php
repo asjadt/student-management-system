@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClassRoutine extends Model
 {
     use HasFactory, DefaultQueryScopesTrait;
+
     protected $fillable = [
                     'day_of_week',
                     'start_time',
