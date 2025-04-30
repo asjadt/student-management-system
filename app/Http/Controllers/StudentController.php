@@ -628,6 +628,11 @@ class StudentController extends Controller
                     ], 500);
                 }
 
+
+
+
+
+
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
 
                 if (isset($request_data["previous_education_history"]["student_docs"])) {
@@ -674,9 +679,6 @@ class StudentController extends Controller
                 } else {
                     $request_data["previous_education_history"]["student_docs"] = [];
                 }
-
-
-
 
 
                 $student->previous_education_history = $request_data["previous_education_history"];

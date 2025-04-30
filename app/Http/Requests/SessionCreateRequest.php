@@ -53,7 +53,8 @@ $rules = [
         'array',
 
     ],
-
+'course_ids' => ['present', 'array'],
+'course_ids.*' => ['numeric', 'exists:course_titles,id'],
 
 ];
 

@@ -40,7 +40,7 @@ class CourseTitleController extends Controller
      * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
      *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
      *
-     *   *  @OA\Property(property="session_ids", type="string", format="string", example="session_ids")
+
      *
      *
      *
@@ -141,7 +141,7 @@ class CourseTitleController extends Controller
                 // Create a new course title using the validated request data.
                 $course_title =  CourseTitle::create($request_data);
 
-                $course_title->sessions()->sync($request_data["sessions_ids"]);
+
 
 
 

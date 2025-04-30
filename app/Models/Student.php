@@ -86,9 +86,13 @@ class Student extends Model
     }
 
 
+    public function student_courses() {
+        return $this->hasMany(StudentCourse::class, "student_id", "id");
+    }
 
-
-
+    public function last_student_course() {
+        return $this->hasOne(StudentCourse::class, "student_id", "id")->orderByDesc("id");
+    }
 
 
 

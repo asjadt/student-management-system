@@ -16,14 +16,20 @@ class CreateStudentCoursesTable extends Migration
         Schema::create('student_courses', function (Blueprint $table) {
             $table->id();
              // Course Information
-             $table->unsignedBigInteger('student_id')->nullable();
+             $table->unsignedBigInteger('student_id');
              $table->foreign('student_id')
                  ->references('id')
                  ->on('students')
-                 ->onDelete('set null');
+                 ->onDelete('CASCADE');
+
+                 $table->unsignedBigInteger('session_id')->nullable();
+                 $table->foreign('session_id')
+                     ->references('id')
+                     ->on('sessions')
+                     ->onDelete('CASCADE');
 
              $table->date('course_start_date');
-             $table->unsignedBigInteger('course_title_id')->nullable();
+             $table->unsignedBigInteger('course_title_id');
              $table->foreign('course_title_id')
                  ->references('id')
                  ->on('course_titles')
