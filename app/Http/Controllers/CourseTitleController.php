@@ -139,12 +139,9 @@ class CourseTitleController extends Controller
                 // Create a new course title using the validated request data.
                 $course_title =  CourseTitle::create($request_data);
 
-                if(!empty($request_data["course_id"])){
-                    SessionCourse::create([
-                      "session_id" => $request_data["session_id"],
-                      "course_id" => $course_title->id
-                    ]);
-                }
+                $course_title->session()->sync($request_data["sessions_ids"]);
+
+
 
 
                 // Return a 201 Created response with the new course title.
@@ -268,7 +265,7 @@ class CourseTitleController extends Controller
                         "message" => "something went wrong."
                     ], 500);
                 }
-
+                $course_title->session()->sync($request_data["sessions_ids"]);
 
 
                 // return the course title
@@ -371,14 +368,20 @@ class CourseTitleController extends Controller
             // - the name of the id attribute of the primary model
             // - the id of the record to toggle
             // - the currently authenticated user
-            $this->toggleActivation(
-                CourseTitle::class,        // the primary model class
-                DisabledCourseTitle::class, // the model class representing the disabled state
-                'course_title_id',         // the name of the id attribute of the primary model
-                $request_data["id"],       // the id of the record to toggle
-                auth()->user()             // the currently authenticated user
-            );
+          $course =  CourseTitle::where([
+                'id'=> $request_data["id"],
+                'business_id'=> auth()->user()->business_id,
+                ])
+                ->first();
 
+                if (!$course) {
+                    return response()->json([
+                        "message" => "Invalid Id"
+                    ], 500);
+                }
+
+                $course->is_active = !$course->is_active;
+                $course->save();
             // return a success response with a JSON message
             return response()->json(['message' => 'course title status updated successfully'], 200);
         } catch (Exception $e) {

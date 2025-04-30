@@ -86,7 +86,8 @@ class CourseTitleUpdateRequest extends FormRequest
             new ValidateAwardingBody()
             ],
 
-           
+            'sessions_ids' => ['present', 'array'],
+            'sessions_ids.*' => ['numeric', 'exists:sessions,id'],
 
 
 

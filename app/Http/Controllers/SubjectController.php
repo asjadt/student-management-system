@@ -119,11 +119,8 @@ class SubjectController extends Controller
 
 
                 if(!empty($request_data["course_id"])){
-                  CourseSubject::create([
-                    "course_id" => $request_data["course_id"],
-                    "subject_id" => $subject->id
-                  ]);
-                }
+                    $subject->courses()->sync([$request_data["course_id"]]);
+                  }
 
                 return response($subject, 201);
             });
@@ -227,11 +224,7 @@ class SubjectController extends Controller
                     ], 500);
                 }
                 if(!empty($request_data["course_id"])){
-                    CourseSubject::where(["subject_id"=>$subject->id])->delete();
-                    CourseSubject::create([
-                      "course_id" => $request_data["course_id"],
-                      "subject_id" => $subject->id
-                    ]);
+                    $subject->courses()->sync([$request_data["course_id"]]);
                   }
                 $subject->teachers()->sync($request_data["teacher_ids"]);
 

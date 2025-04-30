@@ -55,13 +55,15 @@ class CourseTitleCreateRequest extends FormRequest
 
             'level' => 'nullable|string',
             'description' => 'nullable|string',
+
             "awarding_body_id" =>   [
                 "required",
             'numeric',
             new ValidateAwardingBody()
             ],
 
-          
+         'sessions_ids' => ['present', 'array'],
+'sessions_ids.*' => ['numeric', 'exists:sessions,id'],
 
         ];
 

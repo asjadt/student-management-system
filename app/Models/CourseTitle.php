@@ -20,9 +20,9 @@ class CourseTitle extends Model
         "created_by"
     ];
 
-    public function disabled()
-    {
-        return $this->hasMany(DisabledCourseTitle::class, 'course_title_id');
+
+    public function session () {
+        return   $this->belongsToMany(Session::class,"session_courses","course_id","session_id");
     }
 
 
