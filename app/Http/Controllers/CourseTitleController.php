@@ -406,9 +406,9 @@ class CourseTitleController extends Controller
         ])
 
             // If the user has a business_id, apply additional business-specific filtering
-            ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by) {
+            ->when(!empty(auth()->user()->business_id), function ($query) {
                 // Use a custom scope 'forBusiness' to apply business-specific logic to the query
-                $query->forBusiness('course_titles', "remove_letter_templates", $created_by);
+                $query->forBusiness('course_titles');
             })
 
             // If a search key is provided in the request, filter the query based on the search key

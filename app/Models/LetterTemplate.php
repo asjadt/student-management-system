@@ -24,10 +24,7 @@ class LetterTemplate extends Model
         "parent_id",
     ];
 
-    public function disabled()
-    {
-        return $this->hasMany(DisabledLetterTemplate::class, 'letter_template_id', 'id');
-    }
+    
 
     // public function getTemplateAttribute($value)
     // {

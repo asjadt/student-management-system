@@ -37,11 +37,11 @@ class ValidateLetterTemplate implements Rule
             $query->when(auth()->user()->hasRole('superadmin'), function ($query)  {
                 $query->forSuperAdmin('letter_templates');
             }, function ($query) use ($created_by) {
-                $query->forNonSuperAdmin('letter_templates', 'disabled_letter_templates', $created_by);
+                $query->forNonSuperAdmin('letter_templates', $created_by);
             });
         })
-        ->when(!empty(auth()->user()->business_id), function ($query) use ( $created_by) {
-            $query->forBusiness('letter_templates', "disabled_letter_templates", $created_by);
+        ->when(!empty(auth()->user()->business_id), function ($query) {
+            $query->forBusiness('letter_templates');
         })
         ->exists();
 

@@ -10,13 +10,8 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\BusinessSetting;
-use App\Models\DisabledStudentStatus;
 use App\Models\StudentStatus;
-use App\Models\SettingPaidLeaveStudentStatus;
-use App\Models\SettingUnpaidLeaveStudentStatus;
 use App\Models\Student;
-use App\Models\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -332,15 +327,23 @@ class StudentStatusController extends Controller
             // Validate the incoming request and retrieve the validated data
             $request_data = $request->validated();
 
-            // Call the toggleActivation method to either enable or disable the student status
-            // Pass the necessary class names and identifiers to perform the toggling action
-            $this->toggleActivation(
-                StudentStatus::class,        // The primary model class
-                DisabledStudentStatus::class, // The model class representing the disabled state
-                'student_status_id',         // The ID attribute name
-                $request_data["id"],         // The specific ID to toggle
-                auth()->user()               // The currently authenticated user
-            );
+             // get the data by the given id
+             $student_status =  StudentStatus::where([
+                "id" => $request_data["id"],
+            ])
+                ->first();
+
+            // if no data is found, return a 404 response
+            if (!$student_status) {
+                return response()->json([
+                    "message" => "no data found"
+                ], 404);
+            }
+
+                $student_status->is_active = !$student_status->is_active;
+                $student_status->save();
+
+           
 
             // Return a success response if the operation was completed
             return response()->json(['message' => 'student status status updated successfully'], 200);

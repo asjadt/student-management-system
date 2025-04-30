@@ -13,9 +13,6 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\Semester;
-use App\Models\DisabledSemester;
-use App\Models\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -211,7 +208,7 @@ class SemesterController extends Controller
                         "name",
                         "start_date",
                         "end_date",
-                        
+
                         "break_start_date",
                         "break_end_date",
 

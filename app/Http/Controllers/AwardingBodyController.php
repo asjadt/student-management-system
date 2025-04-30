@@ -16,9 +16,7 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\AwardingBody;
-use App\Models\DisabledAwardingBody;
-use App\Models\User;
-use Carbon\Carbon;
+
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -353,14 +351,10 @@ class AwardingBodyController extends Controller
             }
 
 
-            // toggle the active status of the awarding body
-            $this->toggleActivation(
-                AwardingBody::class,
-                DisabledAwardingBody::class,
-                'awarding_body',
-                $request_data["id"],
-                auth()->user()
-            );
+
+                $awarding_body->is_active = !$awarding_body->is_active;
+                $awarding_body->save();
+
 
 
             // return a success response
@@ -394,12 +388,12 @@ class AwardingBodyController extends Controller
             }, function ($query) use ($created_by) {
                 // if the user is not a super admin, we filter the results by the businesses
                 // that the user is allowed to see, and that are created by the user
-                $query->forNonSuperAdmin('awarding_bodies', 'remove_awarding_bodies', $created_by);
+                $query->forNonSuperAdmin('awarding_bodies', $created_by);
             });
         })
             // if the user is assigned to a business, we filter the results by the business
-            ->when(!empty(auth()->user()->business_id), function ($query) use ($created_by) {
-                $query->forBusiness('awarding_bodies', "remove_awarding_bodies", $created_by);
+            ->when(!empty(auth()->user()->business_id), function ($query) {
+                $query->forBusiness('awarding_bodies');
             })
             // filter the results by the name of the awarding body
             ->when(!empty(request()->name), function ($query) {

@@ -10,7 +10,6 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\ModuleUtil;
 use App\Http\Utils\UserActivityUtil;
-use App\Models\DisabledLetterTemplate;
 use App\Models\LetterTemplate;
 use Exception;
 use Illuminate\Http\Request;
@@ -308,13 +307,23 @@ $letter_template->save();
             }
             $request_data = $request->validated();
 
-            $this->toggleActivation(
-                LetterTemplate::class,
-                DisabledLetterTemplate::class,
-                'letter_template_id',
-                $request_data["id"],
-                auth()->user()
-            );
+              // get the letter template by the given id
+              $letter_template =  LetterTemplate::where([
+                "id" => $request_data["id"],
+            ])
+                ->first();
+
+            // if no letter template is found, return a 404 response
+            if (!$letter_template) {
+                return response()->json([
+                    "message" => "no data found"
+                ], 404);
+            }
+
+                $letter_template->is_active = !$letter_template->is_active;
+                $letter_template->save();
+
+
 
             return response()->json(['message' => 'letter template status updated successfully'], 200);
         } catch (Exception $e) {
@@ -333,11 +342,11 @@ $letter_template->save();
             $query->when(auth()->user()->hasRole('superadmin'), function ($query)  {
                 $query->forSuperAdmin('letter_templates');
             }, function ($query) use ($created_by) {
-                $query->forNonSuperAdmin('letter_templates', 'remove_letter_templates', $created_by);
+                $query->forNonSuperAdmin('letter_templates', $created_by);
             });
         })
-        ->when(!empty(auth()->user()->business_id), function ($query) use ( $created_by) {
-            $query->forBusiness('letter_templates', "remove_letter_templates", $created_by);
+        ->when(!empty(auth()->user()->business_id), function ($query)  {
+            $query->forBusiness('letter_templates');
         })
 
             ->when(!empty(request()->id), function ($query) {

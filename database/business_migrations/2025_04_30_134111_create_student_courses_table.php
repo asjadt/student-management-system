@@ -43,6 +43,9 @@ class CreateStudentCoursesTable extends Migration
 
             $table->date('letter_issue_date')->nullable();
 
+            $table->string('course_dutation')->nullable();
+            $table->longText('course_detail')->nullable();
+
             $table->timestamps();
         });
     }
