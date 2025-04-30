@@ -50,11 +50,6 @@ class StudentCreateRequest extends BaseFormRequest
                 'numeric',
                 function ($attribute, $value, $fail) {
 
-                    $created_by  = NULL;
-                    if(auth()->user()->business) {
-                        $created_by = auth()->user()->business->created_by;
-                    }
-
                     $exists = StudentStatus::where("student_statuses.id",$value)
 
                     ->exists();

@@ -16,5 +16,10 @@ class StudentCourse extends Model
         'course_fee',
         'fee_paid',
         'letter_issue_date',
+        'course_dutation',
+        'course_detail'
+
     ];
+
+
 }

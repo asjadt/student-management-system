@@ -15,6 +15,7 @@ use App\Models\Agency;
 use App\Models\Business;
 use App\Models\BusinessSetting;
 use App\Models\Student;
+use App\Models\StudentCourse;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -243,9 +244,10 @@ class StudentController extends Controller
                  $request_data["created_by"] = $request->user()->id;
 
 
+                 $student = Student::create($request_data);
 
+                 StudentCourse::create($request_data);
 
-                 $student =  Student::create($request_data);
 
 
                  $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
@@ -263,14 +265,12 @@ class StudentController extends Controller
                  }
 
 
-
                  $student->previous_education_history = $request_data["previous_education_history"];
                  $student->save();
 
 
 
                  if (!empty($request_data["agency_id"])) {
-
                         $student->referral()->create([
                             'agency_id' => $request_data["agency_id"],
                             'agency_commission' => $request_data["agency_commission"] // Assuming commission_rate is a percentage
@@ -412,6 +412,8 @@ class StudentController extends Controller
                 }
 
                 $student =  Student::create($request_data);
+
+                StudentCourse::create($request_data);
 
                 $business = $student->business;
 
@@ -571,13 +573,7 @@ class StudentController extends Controller
                     "id" => $request_data["id"],
                     "business_id" => $business_id
                 ];
-                // $student_prev = Student::where($student_query_params)
-                //     ->first();
-                // if (!$student_prev) {
-                //     return response()->json([
-                //         "message" => "no student found"
-                //     ], 404);
-                // }
+
 
 
 
@@ -634,7 +630,7 @@ class StudentController extends Controller
                 }
 
 
-
+                StudentCourse::create($request_data);
 
 
 
