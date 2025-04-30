@@ -23,9 +23,9 @@ class CreateAttendancesTable extends Migration
             $table->enum('status', ['present', 'absent', 'late', 'excused'])->default('present');
             $table->text('remarks')->nullable();
 
-            $table->string('day_of_week');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->string('day_of_week')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->string('room_number')->nullable();
             $table->foreignId('subject_id')->nullable()->constrained("subjects")->onDelete("set null");
             $table->foreignId('teacher_id')->nullable()->constrained("users")->onDelete("set null");

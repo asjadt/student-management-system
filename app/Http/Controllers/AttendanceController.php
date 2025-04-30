@@ -35,6 +35,16 @@ class AttendanceController extends Controller
      *         required=true,
      *         @OA\JsonContent(
 *             @OA\Property(property="class_routine_id", type="integer", example=1),
+*             @OA\Property(property="day_of_week", type="integer", example=1),
+*             @OA\Property(property="start_time", type="integer", example=1),
+*             @OA\Property(property="end_time", type="integer", example=1),
+*             @OA\Property(property="room_number", type="integer", example=1),
+*             @OA\Property(property="subject_id", type="integer", example=1),
+*             @OA\Property(property="teacher_id", type="integer", example=1),
+*             @OA\Property(property="semester_id", type="integer", example=1),
+*             @OA\Property(property="session_id", type="integer", example=1),
+*             @OA\Property(property="course_id", type="integer", example=1),
+
  *             @OA\Property(property="attendance_date", type="string", format="date", example="2025-04-29"),
  *             @OA\Property(
  *                 property="students",
@@ -112,7 +122,7 @@ class AttendanceController extends Controller
                 // Set the business ID from the authenticated user's business ID
                 $request_data["business_id"] = auth()->user()->business_id;
 
-                $routine = ClassRoutine::findOrFail($request_data["class_routine_id"]);
+
 
         foreach ($request_data["students"] as $student) {
             Attendance::updateOrCreate(
@@ -121,20 +131,20 @@ class AttendanceController extends Controller
                     'attendance_date' => $request->attendance_date,
                 ],
                 [
-                    'class_routine_id' => $routine->id,
+                    'class_routine_id' => $request_data["class_routine_id"],
                     'status' => $student['status'],
                     'remarks' => $student['remarks'] ?? null,
 
                     // Routine snapshot
-                    'day_of_week' => $routine->day_of_week,
-                    'start_time' => $routine->start_time,
-                    'end_time' => $routine->end_time,
-                    'room_number' => $routine->room_number,
-                    'subject_id' => $routine->subject_id,
-                    'teacher_id' => $routine->teacher_id,
-                    'semester_id' => $routine->semester_id,
-                    'session_id' => $routine->session_id,
-                    'course_id' => $routine->course_id,
+                    'day_of_week' => $request_data["day_of_week"],
+                    'start_time' => $request_data["start_time"],
+                    'end_time' => $request_data["end_time"],
+                    'room_number' => $request_data["room_number"],
+                    'subject_id' => $request_data["subject_id"],
+                    'teacher_id' => $request_data["teacher_id"],
+                    'semester_id' => $request_data["semester_id"],
+                    'session_id' => $request_data["session_id"],
+                    'course_id' => $request_data["course_id"],
 
                     'business_id' => $request_data["business_id"],
                     'created_by' => $request_data["created_by"],
