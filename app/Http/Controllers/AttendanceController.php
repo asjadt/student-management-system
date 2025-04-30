@@ -286,76 +286,27 @@ DB::rollBack();
  *      tags={"attendances"},
  *      security={{"bearerAuth": {}}},
  *
- *      @OA\Parameter(
- *         name="start_time",
- *         in="query",
- *         description="Start time of the attendance",
- *         required=true,
- *         example="08:00"
- *      ),
- *      @OA\Parameter(
- *         name="end_time",
- *         in="query",
- *         description="End time of the attendance",
- *         required=true,
- *         example="10:00"
- *      ),
- *      @OA\Parameter(
- *         name="room_number",
- *         in="query",
- *         description="Room number",
- *         required=true,
- *         example="101"
- *      ),
- *      @OA\Parameter(
- *         name="per_page",
- *         in="query",
- *         description="Records per page for pagination",
- *         required=false,
- *         example="10"
- *      ),
- *      @OA\Parameter(
- *         name="is_active",
- *         in="query",
- *         description="Is the attendance active?",
- *         required=false,
- *         example="1"
- *      ),
- *      @OA\Parameter(
- *         name="start_date",
- *         in="query",
- *         description="Start date to filter attendances",
- *         required=true,
- *         example="2025-04-01"
- *      ),
- *      @OA\Parameter(
- *         name="end_date",
- *         in="query",
- *         description="End date to filter attendances",
- *         required=true,
- *         example="2025-04-30"
- *      ),
- *      @OA\Parameter(
- *         name="search_key",
- *         in="query",
- *         description="Search key to search by student name, subject name, etc.",
- *         required=false,
- *         example="Math"
- *      ),
- *      @OA\Parameter(
- *         name="order_by",
- *         in="query",
- *         description="Order the results (ASC or DESC)",
- *         required=false,
- *         example="DESC"
- *      ),
- *      @OA\Parameter(
- *         name="id",
- *         in="query",
- *         description="Attendance ID to fetch a specific record",
- *         required=false,
- *         example="1"
- *      ),
+  *      @OA\Parameter(name="id", in="query", description="Attendance ID", required=false, example="1"),
+     *      @OA\Parameter(name="class_routine_id", in="query", description="Class routine ID", required=false, example="5"),
+     *      @OA\Parameter(name="student_id", in="query", description="Student ID", required=false, example="12"),
+     *      @OA\Parameter(name="attendance_date", in="query", description="Exact attendance date", required=false, example="2025-04-15"),
+     *      @OA\Parameter(name="status", in="query", description="Attendance status", required=false, example="present"),
+     *      @OA\Parameter(name="remarks", in="query", description="Remarks for the attendance", required=false, example="Late arrival"),
+     *      @OA\Parameter(name="day_of_week", in="query", description="Day of the week", required=false, example="Monday"),
+     *      @OA\Parameter(name="start_time", in="query", description="Start time of the attendance", required=false, example="08:00"),
+     *      @OA\Parameter(name="end_time", in="query", description="End time of the attendance", required=false, example="10:00"),
+     *      @OA\Parameter(name="room_number", in="query", description="Room number", required=false, example="101"),
+     *      @OA\Parameter(name="subject_id", in="query", description="Subject ID", required=false, example="3"),
+     *      @OA\Parameter(name="teacher_id", in="query", description="Teacher ID", required=false, example="7"),
+     *      @OA\Parameter(name="semester_id", in="query", description="Semester ID", required=false, example="2"),
+     *      @OA\Parameter(name="session_id", in="query", description="Session ID", required=false, example="1"),
+     *      @OA\Parameter(name="course_id", in="query", description="Course ID", required=false, example="6"),
+     *      @OA\Parameter(name="created_by", in="query", description="Created by user ID", required=false, example="15"),
+     *      @OA\Parameter(name="start_date", in="query", description="Start date to filter attendances", required=false, example="2025-04-01"),
+     *      @OA\Parameter(name="end_date", in="query", description="End date to filter attendances", required=false, example="2025-04-30"),
+     *      @OA\Parameter(name="search_key", in="query", description="Search key (room, teacher, subject, semester)", required=false, example="Math"),
+     *      @OA\Parameter(name="order_by", in="query", description="Order direction (ASC or DESC)", required=false, example="DESC"),
+     *      @OA\Parameter(name="per_page", in="query", description="Number of records per page", required=false, example="10"),
  *      summary="Get attendances based on filters",
  *      description="This method retrieves attendance records based on given filters such as attendance time, room, date, and more.",
  *
@@ -407,64 +358,61 @@ public function getAttendances(Request $request)
         // Get the business ID of the user
         $business_id = auth()->user()->business_id;
 
-        // Initialize the attendance query
         $attendances = Attendance::with("teacher", "subject", "semester", "session")
-            ->where('business_id', $business_id);
+        ->where('business_id', $business_id);
 
-        // Apply filters based on request parameters
-        if ($request->filled("id")) {
-            $attendances->where('id', $request->id);
-        }
+    // Apply filters for each fillable field
+    $filterable_fields = [
+        'id', 'class_routine_id', 'student_id', 'attendance_date', 'status',
+        'remarks', 'day_of_week', 'start_time', 'end_time', 'room_number',
+        'subject_id', 'teacher_id', 'semester_id', 'session_id', 'course_id',
+        'created_by'
+    ];
 
-        if ($request->filled("start_time")) {
-            $attendances->where('start_time', $request->start_time);
+    foreach ($filterable_fields as $field) {
+        if ($request->filled($field)) {
+            $attendances->where($field, $request->$field);
         }
+    }
 
-        if ($request->filled("end_time")) {
-            $attendances->where('end_time', $request->end_time);
-        }
+    // Handle date range separately
+    if ($request->filled("start_date")) {
+        $attendances->where('attendance_date', '>=', $request->start_date);
+    }
 
-        if ($request->filled("room_number")) {
-            $attendances->where('room_number', $request->room_number);
-        }
+    if ($request->filled("end_date")) {
+        $attendances->where('attendance_date', '<=', $request->end_date . ' 23:59:59');
+    }
 
-        if ($request->filled("search_key")) {
-            $search_key = $request->search_key;
-            $attendances->where(function ($query) use ($search_key) {
-                $query->where("room_number", "like", "%" . $search_key . "%")
-                    ->orWhereHas("teacher", function ($query) use ($search_key) {
-                        $query->where("name", "like", "%" . $search_key . "%");
-                    })
-                    ->orWhereHas("subject", function ($query) use ($search_key) {
-                        $query->where("name", "like", "%" . $search_key . "%");
-                    })
-                    ->orWhereHas("semester", function ($query) use ($search_key) {
-                        $query->where("name", "like", "%" . $search_key . "%");
-                    });
-            });
-        }
+    // Search key across related models and room_number
+    if ($request->filled("search_key")) {
+        $search_key = $request->search_key;
+        $attendances->where(function ($query) use ($search_key) {
+            $query->where("room_number", "like", "%" . $search_key . "%")
+                ->orWhereHas("teacher", function ($query) use ($search_key) {
+                    $query->where("name", "like", "%" . $search_key . "%");
+                })
+                ->orWhereHas("subject", function ($query) use ($search_key) {
+                    $query->where("name", "like", "%" . $search_key . "%");
+                })
+                ->orWhereHas("semester", function ($query) use ($search_key) {
+                    $query->where("name", "like", "%" . $search_key . "%");
+                });
+        });
+    }
 
-        if ($request->filled("start_date")) {
-            $attendances->where('attendance_date', '>=', $request->start_date);
-        }
+    // Order by id
+    $order_by = $request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])
+        ? $request->order_by
+        : 'DESC';
+    $attendances->orderBy("id", $order_by);
 
-        if ($request->filled("end_date")) {
-            $attendances->where('attendance_date', '<=', $request->end_date . ' 23:59:59');
-        }
+    // Paginate or get all
+    $attendances = $request->filled("per_page")
+        ? $attendances->paginate($request->per_page)
+        : $attendances->get();
 
-        // Order results
-        if ($request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])) {
-            $attendances->orderBy("id", $request->order_by);
-        } else {
-            $attendances->orderBy("id", "DESC");
-        }
 
-        // Paginate or get all
-        if ($request->filled("per_page")) {
-            $attendances = $attendances->paginate($request->per_page);
-        } else {
-            $attendances = $attendances->get();
-        }
 
         // Return the attendance data
         return response()->json($attendances, 200);

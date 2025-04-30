@@ -132,6 +132,7 @@ class SubjectController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
     /**
      *
      * @OA\Put(
@@ -225,6 +226,13 @@ class SubjectController extends Controller
                         "message" => "something went wrong."
                     ], 500);
                 }
+                if(!empty($request_data["course_id"])){
+                    CourseSubject::where(["subject_id"=>$subject->id])->delete();
+                    CourseSubject::create([
+                      "course_id" => $request_data["course_id"],
+                      "subject_id" => $subject->id
+                    ]);
+                  }
                 $subject->teachers()->sync($request_data["teacher_ids"]);
 
 

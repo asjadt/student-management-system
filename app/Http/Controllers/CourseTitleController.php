@@ -11,6 +11,7 @@ use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\CourseTitle;
 use App\Models\DisabledCourseTitle;
+use App\Models\SessionCourse;
 use App\Models\Student;
 use App\Models\User;
 use Exception;
@@ -138,15 +139,19 @@ class CourseTitleController extends Controller
                 // Create a new course title using the validated request data.
                 $course_title =  CourseTitle::create($request_data);
 
-
+                if(!empty($request_data["course_id"])){
+                    SessionCourse::create([
+                      "session_id" => $request_data["session_id"],
+                      "course_id" => $course_title->id
+                    ]);
+                }
 
 
                 // Return a 201 Created response with the new course title.
                 return response($course_title, 201);
             });
         } catch (Exception $e) {
-            // Log the error.
-            error_log($e->getMessage());
+
             // Return a 500 Internal Server Error response.
             return $this->sendError($e, 500, $request);
         }
@@ -154,7 +159,7 @@ class CourseTitleController extends Controller
 
     /**
      *
-     * @OA\Post(
+     * @OA\Put(
      *      path="/v1.0/course-titles-update",
      *      operationId="updateCourseTitle",
      *      tags={"student.course_titles"},
@@ -1370,7 +1375,7 @@ class CourseTitleController extends Controller
                     "front end error",
                     "front end error"
                 );
-                
+
                 return response()->json([
                     "message" => "Some students are associated with the specified course titles",
                     "conflicting_users" => $conflictingStudents

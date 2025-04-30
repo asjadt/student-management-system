@@ -374,12 +374,314 @@
             }
         },
         "/v1.0/attendances": {
+            "get": {
+                "tags": [
+                    "attendances"
+                ],
+                "summary": "Get attendances based on filters",
+                "description": "This method retrieves attendance records based on given filters such as attendance time, room, date, and more.",
+                "operationId": "getAttendances",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Attendance ID",
+                        "required": false,
+                        "example": "1"
+                    },
+                    {
+                        "name": "class_routine_id",
+                        "in": "query",
+                        "description": "Class routine ID",
+                        "required": false,
+                        "example": "5"
+                    },
+                    {
+                        "name": "student_id",
+                        "in": "query",
+                        "description": "Student ID",
+                        "required": false,
+                        "example": "12"
+                    },
+                    {
+                        "name": "attendance_date",
+                        "in": "query",
+                        "description": "Exact attendance date",
+                        "required": false,
+                        "example": "2025-04-15"
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Attendance status",
+                        "required": false,
+                        "example": "present"
+                    },
+                    {
+                        "name": "remarks",
+                        "in": "query",
+                        "description": "Remarks for the attendance",
+                        "required": false,
+                        "example": "Late arrival"
+                    },
+                    {
+                        "name": "day_of_week",
+                        "in": "query",
+                        "description": "Day of the week",
+                        "required": false,
+                        "example": "Monday"
+                    },
+                    {
+                        "name": "start_time",
+                        "in": "query",
+                        "description": "Start time of the attendance",
+                        "required": false,
+                        "example": "08:00"
+                    },
+                    {
+                        "name": "end_time",
+                        "in": "query",
+                        "description": "End time of the attendance",
+                        "required": false,
+                        "example": "10:00"
+                    },
+                    {
+                        "name": "room_number",
+                        "in": "query",
+                        "description": "Room number",
+                        "required": false,
+                        "example": "101"
+                    },
+                    {
+                        "name": "subject_id",
+                        "in": "query",
+                        "description": "Subject ID",
+                        "required": false,
+                        "example": "3"
+                    },
+                    {
+                        "name": "teacher_id",
+                        "in": "query",
+                        "description": "Teacher ID",
+                        "required": false,
+                        "example": "7"
+                    },
+                    {
+                        "name": "semester_id",
+                        "in": "query",
+                        "description": "Semester ID",
+                        "required": false,
+                        "example": "2"
+                    },
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "description": "Session ID",
+                        "required": false,
+                        "example": "1"
+                    },
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "description": "Course ID",
+                        "required": false,
+                        "example": "6"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "description": "Created by user ID",
+                        "required": false,
+                        "example": "15"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Start date to filter attendances",
+                        "required": false,
+                        "example": "2025-04-01"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "End date to filter attendances",
+                        "required": false,
+                        "example": "2025-04-30"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "Search key (room, teacher, subject, semester)",
+                        "required": false,
+                        "example": "Math"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "Order direction (ASC or DESC)",
+                        "required": false,
+                        "example": "DESC"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of records per page",
+                        "required": false,
+                        "example": "10"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "attendances"
+                ],
+                "summary": "This method is to update attendance ",
+                "description": "This method is to update attendance ",
+                "operationId": "updateAttendance",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": "1"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "status"
+                                    },
+                                    "remarks": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "remarks"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "attendances"
                 ],
-                "summary": "This method is to store class attendances",
-                "description": "This method is to store class attendances",
+                "summary": "This method is to store attendances",
+                "description": "This method is to store attendances",
                 "operationId": "createAttendance",
                 "requestBody": {
                     "required": true,
@@ -388,6 +690,42 @@
                             "schema": {
                                 "properties": {
                                     "class_routine_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "day_of_week": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "start_time": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "end_time": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "room_number": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "subject_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "teacher_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "semester_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "session_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "course_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
