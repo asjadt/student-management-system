@@ -10,10 +10,9 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\CourseTitle;
-use App\Models\DisabledCourseTitle;
-use App\Models\SessionCourse;
+
 use App\Models\Student;
-use App\Models\User;
+
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +38,10 @@ class CourseTitleController extends Controller
      * @OA\Property(property="name", type="string", format="string", example="tttttt"),
 
      * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
-     *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id")
+     *  @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
+     *
+     *   *  @OA\Property(property="session_ids", type="string", format="string", example="session_ids")
+     *
      *
      *
      *
@@ -139,7 +141,7 @@ class CourseTitleController extends Controller
                 // Create a new course title using the validated request data.
                 $course_title =  CourseTitle::create($request_data);
 
-                $course_title->session()->sync($request_data["sessions_ids"]);
+                $course_title->sessions()->sync($request_data["sessions_ids"]);
 
 
 
@@ -174,7 +176,7 @@ class CourseTitleController extends Controller
 
      * @OA\Property(property="description", type="string", format="string", example="erg ear ga&nbsp;"),
      *  * *  * @OA\Property(property="awarding_body_id", type="string", format="string", example="awarding_body_id"),
-
+     *   *  @OA\Property(property="session_ids", type="string", format="string", example="session_ids")
 
 
      *
@@ -265,7 +267,7 @@ class CourseTitleController extends Controller
                         "message" => "something went wrong."
                     ], 500);
                 }
-                $course_title->session()->sync($request_data["sessions_ids"]);
+                $course_title->sessions()->sync($request_data["sessions_ids"]);
 
 
                 // return the course title
@@ -361,13 +363,7 @@ class CourseTitleController extends Controller
             // validate the request data
             $request_data = $request->validated();
 
-            // call the toggleActivation method to either enable or disable the course title
-            // the toggleActivation method takes the following parameters:
-            // - the class name of the primary model
-            // - the class name of the model representing the disabled state
-            // - the name of the id attribute of the primary model
-            // - the id of the record to toggle
-            // - the currently authenticated user
+
           $course =  CourseTitle::where([
                 'id'=> $request_data["id"],
                 'business_id'=> auth()->user()->business_id,
@@ -382,6 +378,7 @@ class CourseTitleController extends Controller
 
                 $course->is_active = !$course->is_active;
                 $course->save();
+
             // return a success response with a JSON message
             return response()->json(['message' => 'course title status updated successfully'], 200);
         } catch (Exception $e) {
@@ -429,6 +426,12 @@ class CourseTitleController extends Controller
                 return $query->where('course_titles.awarding_body_id', request()->awarding_body_id);
             })
 
+            ->when(!empty(request()->session_ids), function ($query) {
+                return $query->whereHas('sessions', function($query) {
+                    $session_ids = explode(',', request()->session_ids);
+                      $query->whereIn("sessions.id",$session_ids);
+                });
+            })
             // If a start date is provided in the request, filter the query for records created after it
             ->when(!empty(request()->start_date), function ($query) {
                 return $query->where('course_titles.created_at', ">=", request()->start_date);
@@ -699,7 +702,15 @@ class CourseTitleController extends Controller
                             "awarding_bodies.id",
                             "awarding_bodies.name",
                         );
-                    }
+                    },
+                    "sessions" => function ($query) {
+                        // Select only the id and name columns from the awarding bodies table.
+                        $query->select(
+                            "sessions.id",
+                            "sessions.name",
+                        );
+                    },
+
 
                 ]
             );
@@ -758,6 +769,15 @@ class CourseTitleController extends Controller
                     // Filter course titles by matching the search key with the name or description
                     $query->where("course_titles.name", "like", "%" . $term . "%")
                         ->orWhere("course_titles.description", "like", "%" . $term . "%");
+                });
+            })
+            ->when(!empty(request()->awarding_body_id), function ($query) {
+                return $query->where('course_titles.awarding_body_id', request()->awarding_body_id);
+            })
+            ->when(!empty(request()->session_ids), function ($query) {
+                return $query->whereHas('sessions', function($query) {
+                    $session_ids = explode(',', request()->session_ids);
+                      $query->whereIn("sessions.id",$session_ids);
                 });
             })
             ->when(!empty(request()->start_date), function ($query) {
