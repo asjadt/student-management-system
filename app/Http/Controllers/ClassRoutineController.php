@@ -273,7 +273,7 @@ class ClassRoutineController extends Controller
                     $class_routine = ClassRoutine::create($day);
                     $created_routines[] = $class_routine;
                 }
-                
+
             }
 
             // Commit the transaction
@@ -868,7 +868,7 @@ class ClassRoutineController extends Controller
             $business_id = auth()->user()->business_id;
 
             // Initialize the class routines query
-            $class_routines = ClassRoutine::with("teacher", "subject", "semester","session");
+            $class_routines = ClassRoutine::with("teacher", "subject", "semester","session","course");
 
             // Filter the class routines by business ID
             $class_routines->where('class_routines.business_id', $business_id);
