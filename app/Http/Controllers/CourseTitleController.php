@@ -562,7 +562,7 @@ class CourseTitleController extends Controller
             }
 
             // Start building the query to retrieve the course titles.
-            $query = CourseTitle::with("awarding_body", "subjects");
+            $query = CourseTitle::with("awarding_body", "subjects","sessions");
 
             // Call the query_filters_v2 method to add the filters to the query.
             $query = $this->query_filters_v2($query);

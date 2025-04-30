@@ -153,7 +153,7 @@ class StudentController extends Controller
  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
  *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"}),
 
-             * *     @OA\Property(property="course_", type="string", format="email", example="course_duration", description="course_duration"),
+             * *     @OA\Property(property="course_duration", type="string", format="email", example="course_duration", description="course_duration"),
              *  * *     @OA\Property(property="course_detail", type="string", format="email", example="course_detail", description="course_duration"),
              *
  * *     @OA\Property(property="email", type="string", format="email", example="student@example.com", description="Email address of the student"),
