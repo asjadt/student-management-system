@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\CourseTitle;
+use App\Models\Session;
 use App\Models\StudentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,20 @@ class StudentCreateRequestClient extends BaseFormRequest
             'letter_issue_date' => 'nullable|date',
             'business_id' => 'required|numeric|exists:businesses,id',
 
+            'session_id' => [
+                "required",
+                'numeric',
+                function ($attribute, $value, $fail) {
+
+            $exists = Session::where("sessions.id",$value)->exists();
+
+                if (!$exists) {
+                    $fail("$attribute is invalid.");
+                }
+
+                },
+            ],
+            
             'course_title_id' => [
                 "required",
                 'numeric',

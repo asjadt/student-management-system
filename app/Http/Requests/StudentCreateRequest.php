@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\CourseTitle;
+use App\Models\Session;
 use App\Models\StudentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
@@ -64,15 +65,22 @@ class StudentCreateRequest extends BaseFormRequest
 
                 },
             ],
+            'session_id' => [
+                "required",
+                'numeric',
+                function ($attribute, $value, $fail) {
+            $exists = Session::where("sessions.id",$value)->exists();
+                if (!$exists) {
+                    $fail("$attribute is invalid.");
+                }
+                },
+            ],
             'course_title_id' => [
                 "required",
                 'numeric',
                 function ($attribute, $value, $fail) {
 
-                    $created_by  = NULL;
-                    if(auth()->user()->business) {
-                        $created_by = auth()->user()->business->created_by;
-                    }
+
 
                     $exists = CourseTitle::where("course_titles.id",$value)
 

@@ -151,6 +151,8 @@ class StudentController extends Controller
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
  *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
+ * *  *     @OA\Property(property="session_id", type="number", format="number", example=1),
+ *
  *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"}),
 
              * *     @OA\Property(property="course_duration", type="string", format="email", example="course_duration", description="course_duration"),
@@ -317,6 +319,7 @@ class StudentController extends Controller
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
  *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
+ * *  *     @OA\Property(property="session_id", type="number", format="number", example=1),
  *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"}),
 
              * *     @OA\Property(property="course_", type="string", format="email", example="course_duration", description="course_duration"),
@@ -488,6 +491,7 @@ class StudentController extends Controller
  *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
  *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
  *  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
+ *  *  *  *     @OA\Property(property="session_id", type="number", format="number", example=1),
  *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"}),
  *       * *     @OA\Property(property="course_duration", type="string", format="email", example="course_duration", description="course_duration"),
              *  * *     @OA\Property(property="course_detail", type="string", format="email", example="course_detail", description="course_duration"),
@@ -595,6 +599,7 @@ class StudentController extends Controller
         'letter_issue_date',
         'student_status_id',
         "course_title_id",
+        "session_id",
         'attachments',
         'course_duration',
         'course_detail',
@@ -896,6 +901,10 @@ class StudentController extends Controller
             ->when(!empty(request()->course_title_id), function ($query) {
                 return $query->where('students.course_title_id',request()->course_title_id);
             })
+            ->when(!empty(request()->session_id), function ($query) {
+                return $query->where('students.session_id',request()->session_id);
+            })
+
             ->when(!empty(request()->date_of_birth), function ($query)  {
                 return $query->where('students.date_of_birth',request()->date_of_birth);
             })
@@ -1062,6 +1071,14 @@ class StudentController extends Controller
  *     required=false,
  *     example="10"
  * ),
+ *  * @OA\Parameter(
+ *     name="session_id",
+ *     in="query",
+ *     description="Filter by course title ID",
+ *     required=false,
+ *     example="10"
+ * ),
+ *
  * @OA\Parameter(
  *     name="date_of_birth",
  *     in="query",
@@ -1168,7 +1185,7 @@ class StudentController extends Controller
                  ], 401);
              }
 
-             $query = Student::with("student_status","course_title","student_referral.agency");
+             $query = Student::with("student_status","course_title","student_referral.agency","session");
              $query = $this->query_filters_v2($query);
 
              $students = $this->retrieveData($query, "id","students");
@@ -1360,6 +1377,14 @@ class StudentController extends Controller
  *     required=false,
  *     example="10"
  * ),
+ *  * @OA\Parameter(
+ *     name="session_id",
+ *     in="query",
+ *     description="Filter by course title ID",
+ *     required=false,
+ *     example="10"
+ * ),
+ *
  * @OA\Parameter(
  *     name="date_of_birth",
  *     in="query",
@@ -1460,7 +1485,7 @@ class StudentController extends Controller
                 ], 401);
             }
 
-            $query = Student::with("student_status","course_title");
+            $query = Student::with("student_status","course_title","session");
             $query = $this->query_filters_v2($query)
             ->select(
                 "students.id",
@@ -1480,6 +1505,8 @@ class StudentController extends Controller
                 'students.letter_issue_date',
                 'students.student_status_id',
                 "students.course_title_id",
+                "students.session_id",
+
                 'students.attachments',
                 'students.course_duration',
                 'students.course_detail',
@@ -1597,6 +1624,10 @@ class StudentController extends Controller
              ->when(!empty(request()->course_title_id), function ($query)  {
                 return $query->where('students.course_title_id',request()->course_title_id);
             })
+            ->when(!empty(request()->session_id), function ($query)  {
+                return $query->where('students.session_id',request()->session_id);
+            })
+
              ->when(!empty(request()->date_of_birth), function ($query) {
                  return $query->where('students.date_of_birth',request()->date_of_birth);
              })
@@ -1635,6 +1666,14 @@ class StudentController extends Controller
      * required=true,
      * example="1"
      * ),
+     *  *  *    *      * *  @OA\Parameter(
+     * name="session_id",
+     * in="query",
+     * description="session_id",
+     * required=true,
+     * example="1"
+     * ),
+     *
      * *   * *  @OA\Parameter(
      * name="student_id",
      * in="query",
@@ -1779,7 +1818,7 @@ class StudentController extends Controller
             //      ], 401);
             //  } test
 
-            $query = Student::with("student_status","course_title");
+            $query = Student::with("student_status","course_title","session");
             $query = $this->query_filters($query);
 
            $students = $this->retrieveData($query, "id","students");
@@ -1828,6 +1867,14 @@ class StudentController extends Controller
      * required=true,
      * example="1"
      * ),
+     *  *  *    *      * *  @OA\Parameter(
+     * name="session_id",
+     * in="query",
+     * description="session_id",
+     * required=true,
+     * example="1"
+     * ),
+     *
      * *   * *  @OA\Parameter(
      * name="student_id",
      * in="query",
@@ -1972,7 +2019,7 @@ class StudentController extends Controller
             //      ], 401);
             //  } test
 
-            $query = Student::with("student_status","course_title");
+            $query = Student::with("student_status","course_title","session");
             $query = $this->query_filters($query);
 
             $students = $query->first();
@@ -2021,6 +2068,14 @@ class StudentController extends Controller
      * required=true,
      * example="1"
      * ),
+     *   *  *    *      * *  @OA\Parameter(
+     * name="session_id",
+     * in="query",
+     * description="session_id",
+     * required=true,
+     * example="1"
+     * ),
+     *
      * *   * *  @OA\Parameter(
      * name="student_id",
      * in="query",
@@ -2167,12 +2222,17 @@ class StudentController extends Controller
 
             $query = Student::with(
                 [
-                    "student_status" => function($query) {
+                "student_status" => function($query) {
                     $query->select("student_statuses.id","student_statuses.name");
                 },
                 "course_title"  => function($query) {
                     $query->select("course_titles.id","course_titles.name");
+                },
+
+                "session"  => function($query) {
+                    $query->select("sessions.id","sessions.name");
                 }
+
                 ]
             );
             $query = $this->query_filters($query)

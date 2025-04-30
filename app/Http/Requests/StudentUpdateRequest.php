@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\CourseTitle;
+use App\Models\Session;
 use App\Models\Student;
 use App\Models\StudentStatus;
 use Illuminate\Foundation\Http\FormRequest;
@@ -47,6 +48,7 @@ class StudentUpdateRequest extends BaseFormRequest
             'last_name' => 'required|string',
             'title' => 'required|string',
             'nationality' => 'required|string',
+
             "course_fee" => "required|numeric",
             "fee_paid" => "required|numeric",
             'passport_number' => 'nullable|string',
@@ -62,14 +64,24 @@ class StudentUpdateRequest extends BaseFormRequest
                 'numeric',
                 function ($attribute, $value, $fail) {
 
-                    $created_by  = NULL;
-                    if(auth()->user()->business) {
-                        $created_by = auth()->user()->business->created_by;
-                    }
 
                     $exists = StudentStatus::where("student_statuses.id",$value)
 
                     ->exists();
+
+                if (!$exists) {
+                    $fail("$attribute is invalid.");
+                }
+
+                },
+            ],
+
+            'session_id' => [
+                "required",
+                'numeric',
+                function ($attribute, $value, $fail) {
+
+            $exists = Session::where("sessions.id",$value)->exists();
 
                 if (!$exists) {
                     $fail("$attribute is invalid.");

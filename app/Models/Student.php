@@ -17,6 +17,7 @@ class Student extends Model
         'last_name',
         "student_id",
         'nationality',
+        "session_id",
         "course_fee",
         "fee_paid",
         'passport_number',
@@ -63,6 +64,11 @@ class Student extends Model
     public function course_title() {
         return $this->belongsTo(CourseTitle::class, 'course_title_id', 'id');
     }
+
+    public function session() {
+        return $this->belongsTo(Session::class, 'session_id', 'id');
+    }
+
 
     // Relationships
     public function student_status()
