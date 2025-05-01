@@ -250,19 +250,19 @@ class StudentController extends Controller
 
                 $student_session = StudentSession::create([
                     'student_id' => $student->id,
-                    'session_id' => $request_data["session_id"]
+                    'session_id' => $request_data["session_id"]??""
                 ]);
 
                 $student_session_course =  StudentSessionCourse::create([
                     'student_session_id' => $student_session->id,
-                    'course_title_id'=> $request_data["course_title_id"],
-                    'course_start_date'=> $request_data["course_start_date"],
-                    'course_end_date'=> $request_data["course_end_date"],
-                    'course_fee'=> $request_data["course_fee"],
-                    'fee_paid'=> $request_data["fee_paid"],
-                    'course_duration'=> $request_data["course_duration"],
-                    'course_detail'=> $request_data["course_detail"],
-                    "level"=> $request_data["level"]
+                    'course_title_id'=> $request_data["course_title_id"]??"",
+                    'course_start_date'=> $request_data["course_start_date"]??"",
+                    'course_end_date'=> $request_data["course_end_date"]??"",
+                    'course_fee'=> $request_data["course_fee"]??"",
+                    'fee_paid'=> $request_data["fee_paid"]??"",
+                    'course_duration'=> $request_data["course_duration"]??"",
+                    'course_detail'=> $request_data["course_detail"]??"",
+                    "level"=> $request_data["level"]??""
                 ]);
 
 
@@ -876,7 +876,7 @@ class StudentController extends Controller
 
 
                 }
-             
+
 
 
                 return response(["ok" => true], 201);
