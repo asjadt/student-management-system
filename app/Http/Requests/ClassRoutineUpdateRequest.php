@@ -91,7 +91,7 @@ $rules = [
     'required',
     'numeric',
     'exists:users,id',
-    new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time,$this->id),
+    // new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time,$this->id),
 ],
 
 'semester_id' => [

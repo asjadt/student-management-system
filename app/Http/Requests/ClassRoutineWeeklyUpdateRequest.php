@@ -76,15 +76,15 @@ class ClassRoutineWeeklyUpdateRequest extends FormRequest
 
         if (!$day_data) return;
 
-        $rule = new TeacherAvailable(
-            $day_data['day_of_week'] ?? null,
-            $day_data['start_time'] ?? null,
-            $day_data['end_time'] ?? null
-        );
+        // $rule = new TeacherAvailable(
+        //     $day_data['day_of_week'] ?? null,
+        //     $day_data['start_time'] ?? null,
+        //     $day_data['end_time'] ?? null
+        // );
 
-        if (!$rule->passes($attribute, $value)) {
-            $fail($rule->message());
-        }
+        // if (!$rule->passes($attribute, $value)) {
+        //     $fail($rule->message());
+        // }
     },
 ],
 

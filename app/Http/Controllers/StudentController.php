@@ -246,6 +246,7 @@ class StudentController extends Controller
 
                  $student = Student::create($request_data);
 
+                 $request_data["student_id"] = $student->id;
                  StudentCourse::create($request_data);
 
 
@@ -412,7 +413,7 @@ class StudentController extends Controller
                 }
 
                 $student =  Student::create($request_data);
-
+                $request_data["student_id"] = $student->id;
                 StudentCourse::create($request_data);
 
                 $business = $student->business;
@@ -629,7 +630,7 @@ class StudentController extends Controller
                     ], 500);
                 }
 
-
+                $request_data["student_id"] = $student->id;
                 StudentCourse::create($request_data);
 
 
