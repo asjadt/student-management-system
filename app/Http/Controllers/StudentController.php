@@ -266,8 +266,6 @@ class StudentController extends Controller
                 ]);
 
 
-
-
                  $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"],true);
 
                  if (isset($request_data["previous_education_history"]["student_docs"])) {
@@ -618,15 +616,15 @@ class StudentController extends Controller
          'last_name',
          'nationality',
 
-        //  "course_fee",
-        //  "fee_paid",
-        //  'course_start_date',
-        //  'course_end_date',
-        //  "course_title_id",
-        //  "session_id",
-        //  'course_duration',
-        //  'course_detail',
-        // 'level',
+         "course_fee",
+         "fee_paid",
+         'course_start_date',
+         'course_end_date',
+         "course_title_id",
+         "session_id",
+         'course_duration',
+         'course_detail',
+        'level',
 
 
          'letter_issue_date',
