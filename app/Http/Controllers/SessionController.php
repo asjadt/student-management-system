@@ -511,7 +511,7 @@ class SessionController extends Controller
              }
 
 
-             $query = Session::with("courses");
+             $query = Session::with("courses.subjects");
              $query = $this->query_filters($query);
              $sessions = $this->retrieveData($query, "id","sessions");
 
