@@ -109,12 +109,13 @@ class StudentUpdateRequest extends BaseFormRequest
 
                 },
             ],
+            'course_duration'=> 'nullable|string',
+            'course_detail'=> 'nullable|string',
+
+
             'attachments' => 'nullable|array',
             'attachments.*' => 'string',
 
-
-            'course_duration'=> 'nullable|string',
-            'course_detail'=> 'nullable|string',
 
             'email' => 'nullable|email|max:255',
             'contact_number' => 'nullable|string|max:20',
@@ -140,11 +141,5 @@ class StudentUpdateRequest extends BaseFormRequest
         ];
     }
 
-    public function messages()
-    {
-        return [
 
-
-        ];
-    }
 }

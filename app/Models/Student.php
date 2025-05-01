@@ -92,15 +92,13 @@ class Student extends Model
     }
 
 
-    public function student_courses() {
-        return $this->hasMany(StudentCourse::class, "student_id", "id");
+    public function student_sessions() {
+        return $this->hasMany(StudentSession::class, "student_id", "id");
     }
 
-    public function last_student_course() {
-        return $this->hasOne(StudentCourse::class, "student_id", "id")->orderByDesc("id");
+    public function sessions() {
+        return $this->belongsToMany(Session::class,"student_sessions","student_id","session_id");
     }
-
-
 
 
 
