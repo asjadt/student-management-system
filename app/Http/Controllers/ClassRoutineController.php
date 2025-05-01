@@ -867,81 +867,117 @@ class ClassRoutineController extends Controller
             // Get the business ID of the user
             $business_id = auth()->user()->business_id;
 
-            // Initialize the class routines query
-            $class_routines = ClassRoutine::with("teacher", "subject", "semester","session","course");
+            $class_routines = ClassRoutine::with("teacher", "subject", "semester", "session", "course");
 
-            // Filter the class routines by business ID
+            // Filter by business ID
             $class_routines->where('class_routines.business_id', $business_id);
 
-            // Filter the class routines by ID
+            // Filter by ID
             if ($request->filled("id")) {
                 $class_routines->where('class_routines.id', $request->id);
             }
 
-            // Filter the class routines by start time
+            // Filter by start time
             if ($request->filled("start_time")) {
                 $class_routines->where('class_routines.start_time', $request->start_time);
             }
 
-            // Filter the class routines by end time
+            // Filter by end time
             if ($request->filled("end_time")) {
                 $class_routines->where('class_routines.end_time', $request->end_time);
             }
 
-            // Filter the class routines by room number
+            // Filter by room number
             if ($request->filled("room_number")) {
                 $class_routines->where('class_routines.room_number', $request->room_number);
             }
 
-            // Filter the class routines by search key
+            // Filter by day of week
+            if ($request->filled("day_of_week")) {
+                $class_routines->where('class_routines.day_of_week', $request->day_of_week);
+            }
+
+            // Filter by subject_id
+            if ($request->filled("subject_id")) {
+                $class_routines->where('class_routines.subject_id', $request->subject_id);
+            }
+
+            // Filter by teacher_id
+            if ($request->filled("teacher_id")) {
+                $class_routines->where('class_routines.teacher_id', $request->teacher_id);
+            }
+
+            // Filter by semester_id
+            if ($request->filled("semester_id")) {
+                $class_routines->where('class_routines.semester_id', $request->semester_id);
+            }
+
+            // Filter by session_id
+            if ($request->filled("session_id")) {
+                $class_routines->where('class_routines.session_id', $request->session_id);
+            }
+
+            // Filter by course_id
+            if ($request->filled("course_id")) {
+                $class_routines->where('class_routines.course_id', $request->course_id);
+            }
+
+            // Filter by is_active
+            if ($request->filled("is_active")) {
+                $class_routines->where('class_routines.is_active', $request->is_active);
+            }
+
+            // Filter by created_by
+            if ($request->filled("created_by")) {
+                $class_routines->where('class_routines.created_by', $request->created_by);
+            }
+
+            // Filter by search_key
             if ($request->filled("search_key")) {
                 $search_key = $request->search_key;
                 $class_routines->where(function ($query) use ($search_key) {
-                    // Search the class routines by start time, end time, room number, teacher name, subject name, and semester name
                     $query
                         ->where("class_routines.start_time", "like", "%" . $search_key . "%")
                         ->orWhere("class_routines.end_time", "like", "%" . $search_key . "%")
                         ->orWhere("class_routines.room_number", "like", "%" . $search_key . "%")
                         ->orWhere("teachers.name", "like", "%" . $search_key . "%")
                         ->orWhere("subjects.name", "like", "%" . $search_key . "%")
-                        ->orWhere("semesters.name", "like", "%" . $search_key . "%")
-                    ;
+                        ->orWhere("semesters.name", "like", "%" . $search_key . "%");
                 });
             }
 
-            // Filter the class routines by start date
+            // Filter by start_date
             if ($request->filled("start_date")) {
                 $class_routines->where('class_routines.created_at', ">=", $request->start_date);
             }
 
-            // Filter the class routines by end date
+            // Filter by end_date
             if ($request->filled("end_date")) {
-                $class_routines->where('class_routines.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                $class_routines->where('class_routines.created_at', "<=", $request->end_date . ' 23:59:59');
             }
 
-            // Order the class routines by ID
+            // Order by ID
             if ($request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])) {
                 $class_routines->orderBy("class_routines.id", $request->order_by);
             } else {
                 $class_routines->orderBy("class_routines.id", "DESC");
             }
 
-            // Get the class routines
+            // Final result
             if ($request->filled("id")) {
-                $class_routines = $class_routines->where("class_routines.id", $request->input("id"))->first();
+                $class_routines = $class_routines->first();
             } else {
-                $class_routines = $class_routines->when(!empty(request()->per_page), function ($query) {
-                    return $query->paginate(request()->per_page);
+                $class_routines = $class_routines->when(!empty($request->per_page), function ($query) use ($request) {
+                    return $query->paginate($request->per_page);
                 }, function ($query) {
                     return $query->get();
                 });
             }
 
-            // If no data is found, throw a 404 Not Found exception
+            // Throw exception if not found
             if ($request->filled("id") && empty($class_routines)) {
                 throw new Exception("No data found", 404);
             }
-
             // Return the class routines
             return response()->json($class_routines, 200);
         } catch (Exception $e) {
