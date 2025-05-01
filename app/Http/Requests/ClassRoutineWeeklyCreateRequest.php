@@ -3,7 +3,7 @@
 
 namespace App\Http\Requests;
 
-
+use App\Rules\TeacherAvailable;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateClassRoutineName;
 
@@ -62,10 +62,30 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
     'exists:subjects,id',
 ],
 
-'course_data.*.days.*.teacher_id' => [
+ 'course_data.*.days.*.teacher_id' => [
     'required',
     'numeric',
     'exists:users,id',
+    function ($attribute, $value, $fail) {
+        // Get the parent day item
+        $segments = explode('.', $attribute);
+        $course_index = $segments[1] ?? null;
+        $day_index = $segments[3] ?? null;
+
+        $day_data = request()->input("course_data.$course_index.days.$day_index");
+
+        if (!$day_data) return;
+
+        $rule = new TeacherAvailable(
+            $day_data['day_of_week'] ?? null,
+            $day_data['start_time'] ?? null,
+            $day_data['end_time'] ?? null
+        );
+
+        if (!$rule->passes($attribute, $value)) {
+            $fail($rule->message());
+        }
+    },
 ],
 
 

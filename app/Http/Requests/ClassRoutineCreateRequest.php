@@ -3,7 +3,7 @@
 
 namespace App\Http\Requests;
 
-
+use App\Rules\TeacherAvailable;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateClassRoutineName;
 
@@ -51,7 +51,6 @@ class ClassRoutineCreateRequest extends BaseFormRequest
                 'required',
                 'string',
 
-
             ],
 
             'subject_id' => [
@@ -67,12 +66,12 @@ class ClassRoutineCreateRequest extends BaseFormRequest
             ],
 
 
-            'teacher_id' => [
-                'required',
-                'numeric',
-                "exists:users,id"
-
-            ],
+           'teacher_id' => [
+            'required',
+            'numeric',
+            'exists:users,id',
+            new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time),
+        ],
 
             'semester_id' => [
                 'nullable',
@@ -96,4 +95,5 @@ class ClassRoutineCreateRequest extends BaseFormRequest
 
         return $rules;
     }
+
 }
