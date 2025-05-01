@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStudentSessionTable extends Migration
+class CreateStudentSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -28,7 +28,7 @@ class CreateStudentSessionTable extends Migration
                      ->on('sessions')
                      ->onDelete('CASCADE');
 
-           
+
 
             $table->timestamps();
         });
