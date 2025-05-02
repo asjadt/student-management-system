@@ -136,18 +136,18 @@ class AttendanceController extends Controller
                     'remarks' => $student['remarks'] ?? null,
 
                     // Routine snapshot
-                    'day_of_week' => $request_data["day_of_week"],
-                    'start_time' => $request_data["start_time"],
-                    'end_time' => $request_data["end_time"],
-                    'room_number' => $request_data["room_number"],
-                    'subject_id' => $request_data["subject_id"],
-                    'teacher_id' => $request_data["teacher_id"],
-                    'semester_id' => $request_data["semester_id"],
-                    'session_id' => $request_data["session_id"],
-                    'course_id' => $request_data["course_id"],
+                    'day_of_week' => $request_data["day_of_week"]??"",
+                    'start_time' => $request_data["start_time"]??"",
+                    'end_time' => $request_data["end_time"]??"",
+                    'room_number' => $request_data["room_number"]??"",
+                    'subject_id' => $request_data["subject_id"]??"",
+                    'teacher_id' => $request_data["teacher_id"]??"",
+                    'semester_id' => $request_data["semester_id"]??"",
+                    'session_id' => $request_data["session_id"]??"",
+                    'course_id' => $request_data["course_id"]??"",
 
-                    'business_id' => $request_data["business_id"],
-                    'created_by' => $request_data["created_by"],
+                    'business_id' => $request_data["business_id"]??"",
+                    'created_by' => $request_data["created_by"]??"",
                 ]
             );
         }
