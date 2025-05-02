@@ -41,7 +41,7 @@ class AttendanceController extends Controller
 *             @OA\Property(property="room_number", type="integer", example=1),
 *             @OA\Property(property="subject_id", type="integer", example=1),
 *             @OA\Property(property="teacher_id", type="integer", example=1),
-*             @OA\Property(property="semester_id", type="integer", example=1),
+
 *             @OA\Property(property="session_id", type="integer", example=1),
 *             @OA\Property(property="course_id", type="integer", example=1),
 
@@ -142,7 +142,7 @@ class AttendanceController extends Controller
                     'room_number' => $request_data["room_number"]??"",
                     'subject_id' => $request_data["subject_id"]??"",
                     'teacher_id' => $request_data["teacher_id"]??"",
-                    'semester_id' => $request_data["semester_id"]??"",
+
                     'session_id' => $request_data["session_id"]??"",
                     'course_id' => $request_data["course_id"]??"",
 
@@ -298,7 +298,7 @@ DB::rollBack();
      *      @OA\Parameter(name="room_number", in="query", description="Room number", required=false, example="101"),
      *      @OA\Parameter(name="subject_id", in="query", description="Subject ID", required=false, example="3"),
      *      @OA\Parameter(name="teacher_id", in="query", description="Teacher ID", required=false, example="7"),
-     *      @OA\Parameter(name="semester_id", in="query", description="Semester ID", required=false, example="2"),
+
      *      @OA\Parameter(name="session_id", in="query", description="Session ID", required=false, example="1"),
      *      @OA\Parameter(name="course_id", in="query", description="Course ID", required=false, example="6"),
      *      @OA\Parameter(name="created_by", in="query", description="Created by user ID", required=false, example="15"),
@@ -365,7 +365,7 @@ public function getAttendances(Request $request)
     $filterable_fields = [
         'id', 'class_routine_id', 'student_id', 'attendance_date', 'status',
         'remarks', 'day_of_week', 'start_time', 'end_time', 'room_number',
-        'subject_id', 'teacher_id', 'semester_id', 'session_id', 'course_id',
+        'subject_id', 'teacher_id', 'session_id', 'course_id',
         'created_by'
     ];
 

@@ -29,7 +29,7 @@ class CreateAttendancesTable extends Migration
             $table->string('room_number')->nullable();
             $table->foreignId('subject_id')->nullable()->constrained("subjects")->onDelete("set null");
             $table->foreignId('teacher_id')->nullable()->constrained("users")->onDelete("set null");
-            $table->foreignId('semester_id')->nullable()->constrained("semesters")->onDelete("set null");
+         
             $table->foreignId('session_id')->nullable()->constrained("sessions")->onDelete("set null");
             $table->foreignId('course_id')->nullable()->constrained("course_titles")->onDelete("set null");
 
