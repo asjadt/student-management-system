@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AttendanceCreateRequest;
+use App\Http\Requests\AttendanceCreateRequestV2;
 use App\Http\Requests\AttendanceUpdateRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
@@ -162,7 +163,153 @@ DB::commit();
             return $this->sendError($e, 500, $request);
         }
     }
+  /**
+     *
+     * @OA\Post(
+     *      path="/v2.0/attendances",
+     *      operationId="createAttendanceV2",
+     *      tags={"attendances"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to store attendances",
+     *      description="This method is to store attendances",
+     *
+    *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              required={"attendance_date", "students"},
+ *              @OA\Property(property="attendance_date", type="string", format="date", example="2025-04-29"),
+ *              @OA\Property(
+ *                  property="students",
+ *                  type="array",
+ *                  @OA\Items(
+ *                      type="object",
+ *                      required={"id", "subjects"},
+ *                      @OA\Property(property="id", type="integer", example=1),
+ *                      @OA\Property(
+ *                          property="subjects",
+ *                          type="array",
+ *                          @OA\Items(
+ *                              type="object",
+ *                              required={"subject_id", "teacher_id", "status"},
+ *                              @OA\Property(property="class_routine_id", type="integer", example=1),
+ *                              @OA\Property(property="day_of_week", type="integer", example=1),
+ *                              @OA\Property(property="start_time", type="string", format="time", example="09:00"),
+ *                              @OA\Property(property="end_time", type="string", format="time", example="10:00"),
+ *                              @OA\Property(property="room_number", type="string", example="A101"),
+ *                              @OA\Property(property="subject_id", type="integer", example=10),
+ *                              @OA\Property(property="teacher_id", type="integer", example=5),
+ *                              @OA\Property(property="session_id", type="integer", example=1),
+ *                              @OA\Property(property="course_id", type="integer", example=1),
+ *                              @OA\Property(property="status", type="string", enum={"present", "absent", "late", "excused"}, example="present"),
+ *                              @OA\Property(property="remarks", type="string", example="Came late due to traffic")
+ *                          )
+ *                      )
+ *                  )
+ *              )
+ *          )
+ *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
 
+     public function createAttendanceV2(AttendanceCreateRequestV2 $request)
+     {
+         DB::beginTransaction();
+         try {
+             // Log the user's activity for creating a attendance
+             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+             // Start a database transaction to ensure data consistency
+
+                 // Check if the authenticated user has permission to create a attendance
+                 if (!auth()->user()->hasPermissionTo('attendance_create')) {
+                     // If not, return a 401 Unauthorized response
+                     return response()->json([
+                         "message" => "You can not perform this action"
+                     ], 401);
+                 }
+
+                 // Validate the request data
+                 $request_data = $request->validated();
+
+
+                 // Set the user who created this attendance
+                 $request_data["created_by"] = auth()->user()->id;
+
+                 // Set the business ID from the authenticated user's business ID
+                 $request_data["business_id"] = auth()->user()->business_id;
+
+
+
+                 foreach ($request_data["students"] as $student) {
+                    foreach ($student["subjects"] as $subject_entry) {
+                        Attendance::updateOrCreate(
+                            [
+                                'student_id' => $student['id'],
+                                'subject_id' => $subject_entry['subject_id'],
+                                'teacher_id' => $subject_entry['teacher_id'],
+                                'attendance_date' => $request->attendance_date,
+                            ],
+                            [
+                                'class_routine_id' => $subject_entry["class_routine_id"] ?? null,
+                                'status' => $subject_entry['status'],
+                                'remarks' => $subject_entry['remarks'] ?? null,
+                                'day_of_week' => $subject_entry["day_of_week"] ?? null,
+                                'start_time' => $subject_entry["start_time"] ?? null,
+                                'end_time' => $subject_entry["end_time"] ?? null,
+                                'room_number' => $subject_entry["room_number"] ?? null,
+                                'session_id' => $subject_entry["session_id"] ?? null,
+                                'course_id' => $subject_entry["course_id"] ?? null,
+                                'business_id' => $request_data["business_id"],
+                                'created_by' => $request_data["created_by"],
+                            ]
+                        );
+                    }
+                }
+
+ DB::commit();
+         return response()->json(['message' => 'Attendance recorded for all students.'], 201);
+
+
+
+         } catch (Exception $e) {
+             DB::rollBack();
+             // If an exception occurs, handle the error by returning a 500 Internal Server Error response
+             return $this->sendError($e, 500, $request);
+         }
+     }
 
     /**
      *

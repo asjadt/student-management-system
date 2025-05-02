@@ -529,6 +529,8 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     Route::post('/v1.0/attendances', [AttendanceController::class, "createAttendance"]);
+    Route::post('/v2.0/attendances', [AttendanceController::class, "createAttendanceV2"]);
+
     Route::put('/v1.0/attendances', [AttendanceController::class, "updateAttendance"]);
     Route::get('/v1.0/attendances', [AttendanceController::class, "getAttendances"]);
     Route::delete('/v1.0/attendances/{ids}', [AttendanceController::class, "deleteAttendancesByIds"]);
