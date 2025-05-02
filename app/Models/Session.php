@@ -36,6 +36,10 @@ class Session extends Model
 }
 
 
+public function students () {
+    return   $this->belongsToMany(Student::class,"student_sessions","session_id","student_id");
+}
+
 
 
 

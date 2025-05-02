@@ -948,6 +948,22 @@ class StudentController extends Controller
         ->when(!empty(request()->id), function ($query)  {
             return $query->where('students.id',request()->id);
         })
+        // ->whereHas("student_sessions", function($query) {
+        //     $query
+        //     ->whereHas("student_session_courses", function($query) {
+        //         $query
+        //         ->whereHas("student_course_subjects", function($query) {
+        //             $query->when(request()->filled("subject_id"), function($query) {
+        //                 $query->where("student_course_subjects.subject_id",request()->input("subject_id"));
+        //          });
+        //         })
+        //         ->when(request()->filled("course_id"), function($query) {
+        //                $query->where("student_session_courses.course_title_id",request()->input("course_id"));
+        //         });
+        //     }) ->when(request()->filled("session_id"), function($query) {
+        //         $query->where("student_sessions.session_id",request()->input("session_id"));
+        //  });
+        // })
 
         ->when(!empty(request()->nationality), function ($query)  {
             return $query->where('students.nationality', request()->nationality);
@@ -1730,7 +1746,22 @@ class StudentController extends Controller
          ->when(!empty(request()->id), function ($query)  {
             return $query->where('students.id',request()->id);
         })
-
+        // ->whereHas("student_sessions", function($query) {
+        //     $query
+        //     ->whereHas("student_session_courses", function($query) {
+        //         $query
+        //         ->whereHas("student_course_subjects", function($query) {
+        //             $query->when(request()->filled("subject_id"), function($query) {
+        //                 $query->where("student_course_subjects.subject_id",request()->input("subject_id"));
+        //          });
+        //         })
+        //         ->when(request()->filled("course_id"), function($query) {
+        //                $query->where("student_session_courses.course_title_id",request()->input("course_id"));
+        //         });
+        //     }) ->when(request()->filled("session_id"), function($query) {
+        //         $query->where("student_sessions.session_id",request()->input("session_id"));
+        //  });
+        // })
 
         ->when(!empty(request()->title), function ($query)  {
             return $query->where('students.title',request()->title);

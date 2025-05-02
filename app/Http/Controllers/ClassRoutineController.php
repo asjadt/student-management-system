@@ -867,7 +867,31 @@ class ClassRoutineController extends Controller
             // Get the business ID of the user
             $business_id = auth()->user()->business_id;
 
-            $class_routines = ClassRoutine::with("teacher", "subject", "semester", "session", "course");
+            $class_routines = ClassRoutine::with(
+                [
+            "teacher",
+            "subject",
+            "semester",
+            "session",
+            "session.students" => function($query) {
+                $query->whereHas("student_sessions.student_session_courses", function($query) {
+                    $query
+                    ->whereHas("student_course_subjects", function($query) {
+                        $query->when(request()->filled("subject_id"), function($query) {
+                            $query->where("student_course_subjects.subject_id",request()->input("subject_id"));
+                     });
+                    })
+                    ->when(request()->filled("course_id"), function($query) {
+                           $query->where("student_session_courses.course_title_id",request()->input("course_id"));
+                    });
+                });
+
+
+            },
+            "course"
+
+                ]
+            );
 
             // Filter by business ID
             $class_routines->where('class_routines.business_id', $business_id);
@@ -907,10 +931,7 @@ class ClassRoutineController extends Controller
                 $class_routines->where('class_routines.teacher_id', $request->teacher_id);
             }
 
-            // Filter by semester_id
-            if ($request->filled("semester_id")) {
-                $class_routines->where('class_routines.semester_id', $request->semester_id);
-            }
+
 
             // Filter by session_id
             if ($request->filled("session_id")) {
