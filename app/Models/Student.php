@@ -113,7 +113,7 @@ class Student extends Model
             $query
             ->whereHas("student_session_courses", function($query) {
                 $query
-                ->whereHas("student_course_subjects", function($query) {
+                ->whereHas("student_session_course_subjects", function($query) {
                     $query->when(request()->filled("subject_id"), function($query) {
                         $query->where("student_course_subjects.subject_id",request()->input("subject_id"));
                  });
