@@ -874,19 +874,7 @@ class ClassRoutineController extends Controller
             "semester",
             "session",
             "session.students" => function($query) {
-                $query->whereHas("student_sessions.student_session_courses", function($query) {
-                    $query
-                    ->whereHas("student_course_subjects", function($query) {
-                        $query->when(request()->filled("subject_id"), function($query) {
-                            $query->where("student_course_subjects.subject_id",request()->input("subject_id"));
-                     });
-                    })
-                    ->when(request()->filled("course_id"), function($query) {
-                           $query->where("student_session_courses.course_title_id",request()->input("course_id"));
-                    });
-                });
-
-
+                $query->filterStudent();
             },
             "course"
 

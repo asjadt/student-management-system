@@ -102,6 +102,143 @@ class Student extends Model
 
 
 
+    public function scopeFilterStudent($query,$business_setting=NULL)
+    {
+
+        $dataQuery = $query
+        ->when(!empty(request()->id), function ($query)  {
+            return $query->where('students.id',request()->id);
+        })
+        ->whereHas("student_sessions", function($query) {
+            $query
+            ->whereHas("student_session_courses", function($query) {
+                $query
+                ->whereHas("student_course_subjects", function($query) {
+                    $query->when(request()->filled("subject_id"), function($query) {
+                        $query->where("student_course_subjects.subject_id",request()->input("subject_id"));
+                 });
+                })
+                ->when(request()->filled("course_id"), function($query) {
+                       $query->where("student_session_courses.course_title_id",request()->input("course_id"));
+                });
+            }) ->when(request()->filled("session_id"), function($query) {
+                $query->where("student_sessions.session_id",request()->input("session_id"));
+         });
+        })
+
+        ->when(!empty(request()->nationality), function ($query)  {
+            return $query->where('students.nationality', request()->nationality);
+        })
+        ->when(!empty(request()->letter_issue_start_date), function ($query)  {
+            return $query->where('students.letter_issue_date', '>=', request()->letter_issue_start_date);
+        })
+        ->when(!empty(request()->letter_issue_end_date), function ($query) {
+            return $query->where('students.letter_issue_date', '<=', request()->letter_issue_end_date . ' 23:59:59');
+        })
+        ->when(!empty(request()->fee_paid_min), function ($query)  {
+            return $query->where('students.fee_paid', '>=', request()->fee_paid_min);
+        })
+        ->when(!empty(request()->fee_paid_max), function ($query)  {
+            return $query->where('students.fee_paid', '<=', request()->fee_paid_max);
+        })
+
+        ->when(!empty(request()->course_start_date_start_date), function ($query)  {
+            return $query->where('students.course_start_date', '>=', request()->course_start_date_start_date);
+        })
+        ->when(!empty(request()->course_start_date_end_date), function ($query)  {
+            return $query->where('students.course_start_date', '<=', request()->course_start_date_end_date . ' 23:59:59');
+        })
+        ->when(!empty(request()->course_end_date_start_date), function ($query)  {
+            return $query->where('students.course_end_date', '>=', request()->course_end_date_start_date);
+        })
+        ->when(!empty(request()->course_end_date_end_date), function ($query)  {
+            return $query->where('students.course_end_date', '<=', request()->course_end_date_end_date . ' 23:59:59');
+        })
+
+        ->when(!empty(request()->title), function ($query)  {
+            return $query->where('students.title',request()->title);
+        })
+        ->when(!empty(request()->first_name), function ($query)  {
+            return $query->where('students.first_name',request()->first_name);
+        })
+        ->when(!empty(request()->middle_name), function ($query)  {
+            return $query->where('students.middle_name',request()->middle_name);
+        })
+        ->when(!empty(request()->last_name), function ($query)  {
+            return $query->where('students.last_name',request()->last_name);
+        })
+        ->when(!empty(request()->name), function ($query) {
+            return $query->where(function ($query) {
+                $terms = explode(' ', request()->name); // Split the input into individual words
+                foreach ($terms as $term) {
+                    $query
+                    ->orWhere('students.title', 'like', '%' . $term . '%')
+                    ->orWhere('students.first_name', 'like', '%' . $term . '%')
+                          ->orWhere('students.middle_name', 'like', '%' . $term . '%')
+                          ->orWhere('students.last_name', 'like', '%' . $term . '%');
+                }
+            });
+        })
+            ->when(!empty(request()->search_key), function ($query)  {
+                return $query->where(function ($query)  {
+                    $term = request()->search_key;
+                    $query->where("students.title", "like", "%" . $term . "%")
+                        ->orWhere("students.first_name", "like", "%" . $term . "%")
+                        ->orWhere("students.middle_name", "like", "%" . $term . "%")
+                        ->orWhere("students.last_name", "like", "%" . $term . "%")
+                        ->orWhere("students.nationality", "like", "%" . $term . "%")
+                        ->orWhere("students.passport_number", "like", "%" . $term . "%")
+                        ->orWhere("students.student_id", "like", "%" . $term . "%")
+                        ->orWhere("students.date_of_birth", "like", "%" . $term . "%");
+                });
+            })
+            //    ->when(!empty(request()->product_category_id), function ($query) use (request()) {
+            //        return $query->where('product_category_id', request()->product_category_id);
+            //    })
+            ->when(!empty(request()->start_date), function ($query)  {
+                return $query->where('students.created_at', ">=", request()->start_date);
+            })
+            ->when(!empty(request()->end_date), function ($query)  {
+                return $query->where('students.created_at', "<=", (request()->end_date . ' 23:59:59'));
+            })
+            ->when(!empty(request()->student_status_id), function ($query)  {
+                return $query->where('students.student_status_id',request()->student_status_id);
+            })
+            ->when(
+                request()->boolean("is_online_registered"),
+                function ($query) use ($business_setting) {
+                    // When online registration is requested, check if 'student_status_id' is NULL
+                    $query->where(function($query) use ($business_setting) {
+                        $query->whereNull('students.student_status_id')
+                            // Apply online status condition if business setting exists
+                            ->when(!empty($business_setting) && !empty($business_setting->online_student_status_id), function($query) use ($business_setting) {
+                                $query->orWhere('students.student_status_id', $business_setting->online_student_status_id);
+                            });
+                    });
+                },
+                function ($query) use($business_setting) {
+                    // When offline registration is requested, check if 'student_status_id' is NOT NULL
+                    $query
+                    ->whereNotNull('students.student_status_id')
+                    ->when(!empty($business_setting) && !empty($business_setting->online_student_status_id), function($query) use ($business_setting) {
+                        $query->whereNotIn('students.student_status_id', [$business_setting->online_student_status_id]);
+                    })
+                    ;
+                }
+            )
+
+
+
+            ->when(!empty(request()->date_of_birth), function ($query)  {
+                return $query->where('students.date_of_birth',request()->date_of_birth);
+            })
+            ->when(!empty(request()->student_id), function ($query)  {
+                return $query->whereRaw('BINARY students.student_id = ?', [request()->student_id]);
+            });
+
+        return $dataQuery;
+    }
+
 
 
 
