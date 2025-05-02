@@ -256,13 +256,7 @@ class StudentController extends Controller
                 $student_session_course =  StudentSessionCourse::create([
                     'student_session_id' => $student_session->id,
                     'course_title_id'=> $request_data["course_title_id"]??"",
-                    'course_start_date'=> $request_data["course_start_date"]??"",
-                    'course_end_date'=> $request_data["course_end_date"]??"",
-                    'course_fee'=> $request_data["course_fee"]??"",
-                    'fee_paid'=> $request_data["fee_paid"]??"",
-                    'course_duration'=> $request_data["course_duration"]??"",
-                    'course_detail'=> $request_data["course_detail"]??"",
-                    "level"=> $request_data["level"]??""
+
                 ]);
 
 
@@ -438,13 +432,7 @@ class StudentController extends Controller
                 $student_session_course =  StudentSessionCourse::create([
                     'student_session_id' => $student_session->id,
                     'course_title_id'=> $request_data["course_title_id"]??"",
-                    'course_start_date'=> $request_data["course_start_date"]??"",
-                    'course_end_date'=> $request_data["course_end_date"]??"",
-                    'course_fee'=> $request_data["course_fee"]??"",
-                    'fee_paid'=> $request_data["fee_paid"]??"",
-                    'course_duration'=> $request_data["course_duration"]??"",
-                    'course_detail'=> $request_data["course_detail"]??"",
-                    "level"=> $request_data["level"]??""
+
                 ]);
 
                 $business = $student->business;
@@ -747,51 +735,40 @@ class StudentController extends Controller
      *      summary="This method is to update student courses",
      *      description="This method is to update student courses",
      *
-     *  @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-*      @OA\Property(property="id", type="number", format="number", example="Updated Christmas"),
-*     @OA\Property(property="title", type="string", format="string", example="title"),
-*     @OA\Property(property="first_name", type="string", format="string", example="John"),
-
- *     @OA\Property(property="middle_name", type="string", format="string", example=""),
- *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
- *     @OA\Property(property="nationality", type="string", format="string", example="Country"),
- *  * *     @OA\Property(property="course_fee", type="string", format="string", example="Country"),
- * *     @OA\Property(property="fee_paid", type="string", format="string", example="Country"),
-
- *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
- *     @OA\Property(property="student_id", type="string", format="string", example="School123"),
- *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
- *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
- *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
- *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
- *  *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
- *  *  *  *     @OA\Property(property="session_id", type="number", format="number", example=1),
- *   @OA\Property(property="attachments", type="string", format="array", example={"/abcd.jpg","/efgh.jpg"}),
- *       * *     @OA\Property(property="course_duration", type="string", format="email", example="course_duration", description="course_duration"),
-             *  * *     @OA\Property(property="course_detail", type="string", format="email", example="course_detail", description="course_duration"),
-             *
- * *     @OA\Property(property="email", type="string", format="email", example="student@example.com", description="Email address of the student"),
- *     @OA\Property(property="contact_number", type="string", format="string", example="+1234567890", description="Contact number of the student"),
- *     @OA\Property(property="sex", type="string", format="string", example="Male", description="Sex of the student"),
- *     @OA\Property(property="address", type="string", format="string", example="123 Main St, Apartment 4B", description="Address of the student"),
- *     @OA\Property(property="country", type="string", format="string", example="United States", description="Country of the student's address"),
- *     @OA\Property(property="city", type="string", format="string", example="New York", description="City of the student's address"),
- *     @OA\Property(property="postcode", type="string", format="string", example="10001", description="Postal code of the student's address"),
- *     @OA\Property(property="lat", type="string", format="string", example="40.712776", description="Latitude of the student's address"),
- *     @OA\Property(property="long", type="string", format="string", example="-74.005974", description="Longitude of the student's address"),
- *     @OA\Property(property="emergency_contact_details", type="object", example={"name": "John Doe", "relation": "Father", "contact": "+1234567890"}, description="Emergency contact details of the student"),
- *     @OA\Property(property="previous_education_history", type="array", @OA\Items(type="object", example={"institution": "High School", "year": "2019", "grade": "A"}), description="Previous education history of the student"),
- *     @OA\Property(property="passport_issue_date", type="string", format="date", example="2020-01-01", description="Passport issue date of the student"),
- *     @OA\Property(property="passport_expiry_date", type="string", format="date", example="2030-01-01", description="Passport expiry date of the student"),
- *     @OA\Property(property="place_of_issue", type="string", format="string", example="New York, USA", description="Place where the student's passport was issued"),
- *  * *     @OA\Property(property="agency_id", type="string", format="string", example="agency_id"),
- *      @OA\Property(property="agency_commission", type="string", format="string", example="agency_commission"),
-
-     *
-     *         ),
-     *      ),
+    *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"student_id", "sessions"},
+ *             @OA\Property(property="student_id", type="integer", example=1),
+ *             @OA\Property(
+ *                 property="sessions",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     required={"session_id", "courses"},
+ *                     @OA\Property(property="session_id", type="integer", example=2),
+ *                     @OA\Property(
+ *                         property="courses",
+ *                         type="array",
+ *                         @OA\Items(
+ *                             type="object",
+ *                             required={"course_title_id", "subjects"},
+ *                             @OA\Property(property="course_title_id", type="integer", example=3),
+ *                             @OA\Property(
+ *                                 property="subjects",
+ *                                 type="array",
+ *                                 @OA\Items(
+ *                                     type="object",
+ *                                     required={"subject_id"},
+ *                                     @OA\Property(property="subject_id", type="integer", example=4)
+ *                                 )
+ *                             )
+ *                         )
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -855,13 +832,6 @@ class StudentController extends Controller
                         $student_session_course =  StudentSessionCourse::create([
                             'student_session_id' => $student_session->id,
                             'course_title_id'=> $request_course["course_title_id"],
-                            'course_start_date'=> $request_course["course_start_date"]??"",
-                            'course_end_date'=> $request_course["course_end_date"]??"",
-                            'course_fee'=> $request_course["course_fee"]??"",
-                            'fee_paid'=> $request_course["fee_paid"]??"",
-                            'course_duration'=> $request_course["course_duration"]??"",
-                            'course_detail'=> $request_course["course_detail"]??"",
-                            "level"=> $request_course["level"]??""
                         ]);
 
                         foreach($request_course["subjects"] as $request_subject) {

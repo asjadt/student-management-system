@@ -4912,7 +4912,7 @@
             }
         },
         "/v1.0/course-titles-update": {
-            "post": {
+            "put": {
                 "tags": [
                     "student.course_titles"
                 ],
@@ -4944,6 +4944,11 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "awarding_body_id"
+                                    },
+                                    "session_ids": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "session_ids"
                                     }
                                 },
                                 "type": "object"
@@ -11445,6 +11450,13 @@
                         "example": "6"
                     },
                     {
+                        "name": "course_ids",
+                        "in": "query",
+                        "description": "course_ids",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
                         "name": "start_end_date",
                         "in": "query",
                         "description": "start_end_date",
@@ -11601,6 +11613,11 @@
                                         "type": "string",
                                         "format": "array",
                                         "example": []
+                                    },
+                                    "course_ids": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "course_ids"
                                     }
                                 },
                                 "type": "object"
@@ -11696,6 +11713,11 @@
                                         "type": "string",
                                         "format": "array",
                                         "example": []
+                                    },
+                                    "course_ids": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "course_ids"
                                     }
                                 },
                                 "type": "object"
@@ -12304,6 +12326,13 @@
                         "example": "10"
                     },
                     {
+                        "name": "session_id",
+                        "in": "query",
+                        "description": "Filter by course title ID",
+                        "required": false,
+                        "example": "10"
+                    },
+                    {
                         "name": "date_of_birth",
                         "in": "query",
                         "description": "Filter by date of birth (YYYY-MM-DD)",
@@ -12493,6 +12522,11 @@
                                         "example": 1
                                     },
                                     "course_title_id": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": 1
+                                    },
+                                    "session_id": {
                                         "type": "number",
                                         "format": "number",
                                         "example": 1
@@ -12765,6 +12799,11 @@
                                         "format": "number",
                                         "example": 1
                                     },
+                                    "session_id": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": 1
+                                    },
                                     "attachments": {
                                         "type": "string",
                                         "format": "array",
@@ -12773,7 +12812,7 @@
                                             "b.jpeg"
                                         ]
                                     },
-                                    "course_": {
+                                    "course_duration": {
                                         "description": "course_duration",
                                         "type": "string",
                                         "format": "email",
@@ -12971,6 +13010,13 @@
                         "name": "course_title_id",
                         "in": "query",
                         "description": "course_title_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "description": "session_id",
                         "required": true,
                         "example": "1"
                     },
@@ -13205,6 +13251,11 @@
                                         "format": "number",
                                         "example": 1
                                     },
+                                    "session_id": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": 1
+                                    },
                                     "attachments": {
                                         "type": "string",
                                         "format": "array",
@@ -13317,6 +13368,138 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "New York, USA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/students-courses": {
+            "put": {
+                "tags": [
+                    "students"
+                ],
+                "summary": "This method is to update student courses",
+                "description": "This method is to update student courses",
+                "operationId": "updateStudentCourses",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "student_id",
+                                    "sessions"
+                                ],
+                                "properties": {
+                                    "student_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "sessions": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "session_id",
+                                                "courses"
+                                            ],
+                                            "properties": {
+                                                "session_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "courses": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "required": [
+                                                            "course_title_id",
+                                                            "subjects"
+                                                        ],
+                                                        "properties": {
+                                                            "course_title_id": {
+                                                                "type": "integer",
+                                                                "example": 3
+                                                            },
+                                                            "subjects": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "required": [
+                                                                        "subject_id"
+                                                                    ],
+                                                                    "properties": {
+                                                                        "subject_id": {
+                                                                            "type": "integer",
+                                                                            "example": 4
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
                                     }
                                 },
                                 "type": "object"
@@ -13612,6 +13795,13 @@
                         "example": "10"
                     },
                     {
+                        "name": "session_id",
+                        "in": "query",
+                        "description": "Filter by course title ID",
+                        "required": false,
+                        "example": "10"
+                    },
+                    {
                         "name": "date_of_birth",
                         "in": "query",
                         "description": "Filter by date of birth (YYYY-MM-DD)",
@@ -13745,6 +13935,13 @@
                         "name": "course_title_id",
                         "in": "query",
                         "description": "course_title_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "description": "session_id",
                         "required": true,
                         "example": "1"
                     },
@@ -13924,6 +14121,13 @@
                         "name": "course_title_id",
                         "in": "query",
                         "description": "course_title_id",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "session_id",
+                        "in": "query",
+                        "description": "session_id",
                         "required": true,
                         "example": "1"
                     },

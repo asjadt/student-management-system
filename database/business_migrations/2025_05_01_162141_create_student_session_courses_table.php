@@ -22,24 +22,13 @@ class CreateStudentSessionCoursesTable extends Migration
                 ->on('student_sessions')
                 ->onDelete('CASCADE');
 
-             $table->date('course_start_date');
-             $table->date('course_end_date');
              $table->unsignedBigInteger('course_title_id');
              $table->foreign('course_title_id')
                  ->references('id')
                  ->on('course_titles')
                  ->onDelete('set null');
 
-             // Fee Information
-             $table->double('course_fee');
-             $table->double('fee_paid');
 
-             // School and Letter Information
-
-            $table->string('level')->nullable();
-
-            $table->string('course_duration')->nullable();
-            $table->longText('course_detail')->nullable();
 
 
             $table->timestamps();

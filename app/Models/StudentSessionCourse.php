@@ -11,14 +11,6 @@ class StudentSessionCourse extends Model
     protected $fillable = [
         'student_session_id',
         'course_title_id',
-        'course_start_date',
-        'course_end_date',
-        'course_fee',
-        'fee_paid',
-        'course_duration',
-        'course_detail',
-        "level"
-
     ];
 
     public function course() {

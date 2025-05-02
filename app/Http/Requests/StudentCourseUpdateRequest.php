@@ -43,41 +43,34 @@ class StudentCourseUpdateRequest extends FormRequest
                 },
             ],
 
-    'sessions' => 'required|array',
-    'sessions.*.session_id' => [
-        'required',
-        'numeric',
-        function ($attribute, $value, $fail) {
-            $exists = Session::where("id", $value)->exists();
-            if (!$exists) {
-                $fail("$attribute is invalid.");
-            }
-        },
-    ],
+            'sessions' => 'required|array',
+            'sessions.*.session_id' => [
+                'required',
+                'numeric',
+                function ($attribute, $value, $fail) {
+                    $exists = Session::where("id", $value)->exists();
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
+                },
+            ],
 
-    // Course level
-    'sessions.*.courses' => 'required|array',
-    'sessions.*.courses.*.course_start_date' => 'required|date',
-    'sessions.*.courses.*.course_end_date' => 'nullable|date',
-    'sessions.*.courses.*.course_title_id' => [
-        'required',
-        'numeric',
-        function ($attribute, $value, $fail) {
-            $exists = CourseTitle::where("id", $value)->exists();
-            if (!$exists) {
-                $fail("$attribute is invalid.");
-            }
-        },
-    ],
-    'sessions.*.courses.*.course_fee' => 'required|numeric',
-    'sessions.*.courses.*.fee_paid' => 'required|numeric',
-    'sessions.*.courses.*.level' => 'nullable|string',
-    'sessions.*.courses.*.course_duration' => 'nullable|string',
-    'sessions.*.courses.*.course_detail' => 'nullable|string',
+            // Course level
+            'sessions.*.courses' => 'required|array',
+            'sessions.*.courses.*.course_title_id' => [
+                'required',
+                'numeric',
+                function ($attribute, $value, $fail) {
+                    $exists = CourseTitle::where("id", $value)->exists();
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
+                },
+            ],
 
-    // Subject level
-    'sessions.*.courses.*.subjects' => 'required|array',
-    'sessions.*.courses.*.subjects.*.subject_id' => 'required|numeric|exists:subjects,id',
+            // Subject level
+            'sessions.*.courses.*.subjects' => 'required|array',
+            'sessions.*.courses.*.subjects.*.subject_id' => 'required|numeric|exists:subjects,id',
 
 
         ];
