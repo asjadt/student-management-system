@@ -358,7 +358,7 @@ public function getAttendances(Request $request)
         // Get the business ID of the user
         $business_id = auth()->user()->business_id;
 
-        $attendances = Attendance::with("teacher", "subject", "semester", "session")
+        $attendances = Attendance::with("teacher", "subject", "semester", "session","course","student")
         ->where('business_id', $business_id);
 
     // Apply filters for each fillable field
