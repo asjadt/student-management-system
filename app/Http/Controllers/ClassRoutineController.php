@@ -718,8 +718,6 @@ class ClassRoutineController extends Controller
      *       security={
      *           {"bearerAuth": {}}
      *       },
-
-
      *         @OA\Parameter(
      *         name="start_time",
      *         in="query",
@@ -727,9 +725,6 @@ class ClassRoutineController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
-
-
      *         @OA\Parameter(
      *         name="end_time",
      *         in="query",
@@ -737,9 +732,6 @@ class ClassRoutineController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
-
-
      *         @OA\Parameter(
      *         name="room_number",
      *         in="query",
@@ -747,11 +739,6 @@ class ClassRoutineController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
-
-
-
-
      *         @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -844,12 +831,7 @@ class ClassRoutineController extends Controller
      *     )
      */
 
-    /**
-     * Gets a list of class routines based on the given filters.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function getClassRoutines(Request $request)
     {
         try {
