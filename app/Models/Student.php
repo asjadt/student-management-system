@@ -121,8 +121,8 @@ class Student extends Model
                 ->when(request()->filled("course_id"), function($query) {
                        $query->where("student_session_courses.course_title_id",request()->input("course_id"));
                 });
-            }) ->when(request()->filled("session_id"), function($query) {
-                $query->where("student_sessions.session_id",request()->input("session_id"));
+            }) ->when(request()->filled("student_session_id"), function($query) {
+                $query->where("student_sessions.session_id",request()->input("student_session_id"));
          });
         })
 

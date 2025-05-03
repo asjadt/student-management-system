@@ -904,8 +904,8 @@ class ClassRoutineController extends Controller
 
 
             // Filter by session_id
-            if ($request->filled("session_id")) {
-                $class_routines->where('class_routines.session_id', $request->session_id);
+            if ($request->filled("student_session_id")) {
+                $class_routines->where('class_routines.session_id', $request->student_session_id);
             }
 
             // Filter by course_id
