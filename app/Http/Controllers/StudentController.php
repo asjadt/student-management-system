@@ -653,6 +653,29 @@ class StudentController extends Controller
                  }
 
 
+$student_session = StudentSession::where([
+    'student_id' => $student->id,
+    'session_id' => $request_data["session_id"]
+])->first();
+                if(!empty($student_session)) {
+                    $student_session = StudentSession::create([
+                        'student_id' => $student->id,
+                        'session_id' => $request_data["session_id"]
+                    ]);
+                }
+
+                if(!StudentSessionCourse::where([
+                    'student_session_id' => $student_session->id,
+                    'course_title_id'=> $request_data["course_title_id"],
+                ])->exists()) {
+                    $student_session_course =  StudentSessionCourse::create([
+                        'student_session_id' => $student_session->id,
+                        'course_title_id'=> $request_data["course_title_id"],
+                    ]);
+                }
+
+
+
 
 
 
