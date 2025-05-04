@@ -188,7 +188,7 @@ DB::commit();
  *                      required={"id", "subjects"},
  *                      @OA\Property(property="id", type="integer", example=1),
  *                      @OA\Property(
- *                          property="subjects",
+ *                          property="attendances",
  *                          type="array",
  *                          @OA\Items(
  *                              type="object",
@@ -274,24 +274,24 @@ DB::commit();
 
 
                  foreach ($request_data["students"] as $student) {
-                    foreach ($student["subjects"] as $subject_entry) {
+                    foreach ($student["attendances"] as $attendance_entry) {
                         Attendance::updateOrCreate(
                             [
                                 'student_id' => $student['id'],
-                                'subject_id' => $subject_entry['subject_id'],
-                                'teacher_id' => $subject_entry['teacher_id'],
+                                'subject_id' => $attendance_entry['subject_id'],
+                                'teacher_id' => $attendance_entry['teacher_id'],
                                 'attendance_date' => $request->attendance_date,
                             ],
                             [
-                                'class_routine_id' => $subject_entry["class_routine_id"] ?? null,
-                                'status' => $subject_entry['status'],
-                                'remarks' => $subject_entry['remarks'] ?? null,
-                                'day_of_week' => $subject_entry["day_of_week"] ?? null,
-                                'start_time' => $subject_entry["start_time"] ?? null,
-                                'end_time' => $subject_entry["end_time"] ?? null,
-                                'room_number' => $subject_entry["room_number"] ?? null,
-                                'session_id' => $subject_entry["session_id"] ?? null,
-                                'course_id' => $subject_entry["course_id"] ?? null,
+                                'class_routine_id' => $attendance_entry["class_routine_id"] ?? null,
+                                'status' => $attendance_entry['status'],
+                                'remarks' => $attendance_entry['remarks'] ?? null,
+                                'day_of_week' => $attendance_entry["day_of_week"] ?? null,
+                                'start_time' => $attendance_entry["start_time"] ?? null,
+                                'end_time' => $attendance_entry["end_time"] ?? null,
+                                'room_number' => $attendance_entry["room_number"] ?? null,
+                                'session_id' => $attendance_entry["session_id"] ?? null,
+                                'course_id' => $attendance_entry["course_id"] ?? null,
                                 'business_id' => $request_data["business_id"],
                                 'created_by' => $request_data["created_by"],
                             ]
