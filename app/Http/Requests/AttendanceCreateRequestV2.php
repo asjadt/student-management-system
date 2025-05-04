@@ -30,7 +30,7 @@ class AttendanceCreateRequestV2 extends FormRequest
         'students' => 'required|array|min:1',
         'students.*.id' => 'required|exists:students,id',
         'students.*.attendances' => 'required|array|min:1',
-        'students.*.attendances.*.class_routine_id' => 'nullable|numeric|exists:class_routines,id',
+        'students.*.attendances.*.class_routine_id' => 'required|numeric|exists:class_routines,id',
         'students.*.attendances.*.day_of_week' => 'nullable|integer|between:1,7',
         'students.*.attendances.*.start_time' => 'nullable|date_format:H:i',
         'students.*.attendances.*.end_time' => 'nullable|date_format:H:i|after:students.*.subjects.*.start_time',

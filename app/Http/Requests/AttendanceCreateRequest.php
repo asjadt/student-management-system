@@ -25,7 +25,7 @@ class AttendanceCreateRequest extends FormRequest
     {
 
         return [
-            'class_routine_id' => 'nullable|numeric|exists:class_routines,id',
+            'class_routine_id' => 'required|numeric|exists:class_routines,id',
             'day_of_week' => 'nullable|integer|between:1,7', // Validates that day_of_week is an integer between 1 and 7
             'start_time' => 'nullable|date_format:H:i', // Validates the start_time format (HH:mm)
             'end_time' => 'nullable|date_format:H:i|after:start_time', // Ensures end_time is after start_time
