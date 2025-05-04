@@ -13,7 +13,7 @@ class AttendanceCreateRequestV2 extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class AttendanceCreateRequestV2 extends FormRequest
      * @return array
      */
 
-     
+
     public function rules()
 {
     return [
