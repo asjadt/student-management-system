@@ -100,7 +100,9 @@ class Student extends Model
         return $this->belongsToMany(Session::class,"student_sessions","student_id","session_id");
     }
 
-
+    public function attendances() {
+        return $this->hasMany(Attendance::class, "student_id", "id");
+    }
 
     public function scopeFilterStudent($query,$business_setting=NULL)
     {
@@ -132,11 +134,16 @@ class Student extends Model
 
             });
         })
-
+        ->when(request()->filled("exclude_attendance_date"), function ($query)  {
+            return $query->whereDoesntHave('attendances', function($query) {
+                  $query->where("attendances.attendance_date",request()->input("exclude_attendance_date"));
+            });
+        })
 
         ->when(!empty(request()->nationality), function ($query)  {
             return $query->where('students.nationality', request()->nationality);
         })
+
         ->when(!empty(request()->letter_issue_start_date), function ($query)  {
             return $query->where('students.letter_issue_date', '>=', request()->letter_issue_start_date);
         })
