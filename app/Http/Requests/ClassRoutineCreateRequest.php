@@ -70,7 +70,7 @@ class ClassRoutineCreateRequest extends BaseFormRequest
             'required',
             'numeric',
             'exists:users,id',
-            // new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time),
+             new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time),
         ],
 
             'semester_id' => [
