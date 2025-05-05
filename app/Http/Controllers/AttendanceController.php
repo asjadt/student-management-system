@@ -10,6 +10,7 @@ use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\Attendance;
 use App\Models\ClassRoutine;
+use App\Models\Student;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -869,7 +870,7 @@ public function getAttendancesV3(Request $request)
             'teacher_id' => $group->first()->teacher_id,
             'session_id' => $group->first()->session_id,
             'course_id' => $group->first()->course_id,
-            'students' => $group->pluck('student_id')->unique()->values(),
+            'students' => Student::whereIn("id",$group->pluck('student_id')->unique()->values())->get(),
         ];
     })->values();
 
