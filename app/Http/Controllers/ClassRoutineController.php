@@ -107,9 +107,21 @@ class ClassRoutineController extends Controller
                         "message" => "You can not perform this action"
                     ], 401);
                 }
+                $incoming_data = $request->input('routines'); // array of routines
 
+                $duplicates = collect($incoming_data)->duplicates(function ($item) {
+                    return $item['day_of_week'] . '-' . $item['start_time'] . '-' . $item['end_time'] . '-' . $item['teacher_id'];
+                });
+
+                if ($duplicates->isNotEmpty()) {
+                    return response()->json([
+                        'message' => 'Duplicate entries found in submitted data.',
+                        'duplicates' => $duplicates->values()
+                    ], 422);
+                }
                 // Validate the request data
                 $request_data = $request->validated();
+
 
                 // Set the default status for the class routine as active
                 $request_data["is_active"] = 1;
@@ -380,6 +392,31 @@ class ClassRoutineController extends Controller
             // Validate the request data
             $request_data = $request->validated();
 
+            $course_data = $request->input('course_data', []);
+$seen = [];
+
+foreach ($course_data as $course_index => $course) {
+    foreach ($course['days'] ?? [] as $day_index => $day) {
+        $key = implode('-', [
+            $day['day_of_week'] ?? '',
+            $day['start_time'] ?? '',
+            $day['end_time'] ?? '',
+            $day['teacher_id'] ?? '',
+            $day['room_number'] ?? '',
+            $day['subject_id'] ?? '',
+        ]);
+
+        if (in_array($key, $seen)) {
+            return response()->json([
+                'message' => 'Duplicate class schedule found in submitted data.',
+                'duplicate_at' => "course_data[$course_index][days][$day_index]"
+            ], 422);
+        }
+
+        $seen[] = $key;
+    }
+}
+
             // Get the ID from the request body
             $routine_id = $request_data['id'];
 
@@ -532,6 +569,43 @@ class ClassRoutineController extends Controller
 
                 // Validate the request data
                 $request_data = $request->validated();
+                $course_data = $request->input('course_data', []);
+$seen = [];
+
+foreach ($course_data as $course_index => $course) {
+    foreach ($course['days'] ?? [] as $day_index => $day) {
+        $key = implode('-', [
+            $day['day_of_week'] ?? '',
+            $day['start_time'] ?? '',
+            $day['end_time'] ?? '',
+            $day['teacher_id'] ?? '',
+            $day['room_number'] ?? '',
+            $day['subject_id'] ?? '',
+        ]);
+
+        if (in_array($key, $seen)) {
+            return response()->json([
+                'message' => 'Duplicate class schedule found in submitted data.',
+                'duplicate_at' => "course_data[$course_index][days][$day_index]"
+            ], 422);
+        }
+
+        $seen[] = $key;
+    }
+}
+
+                $incoming_data = $request->input('routines'); // array of routines
+
+$duplicates = collect($incoming_data)->duplicates(function ($item) {
+    return $item['day_of_week'] . '-' . $item['start_time'] . '-' . $item['end_time'] . '-' . $item['teacher_id'];
+});
+
+if ($duplicates->isNotEmpty()) {
+    return response()->json([
+        'message' => 'Duplicate entries found in submitted data.',
+        'duplicates' => $duplicates->values()
+    ], 422);
+}
 
                 // Extract the class routine ID from the validated data
                 $class_routine_id = $request_data["id"];

@@ -74,17 +74,12 @@ class ClassRoutineCreateRequest extends BaseFormRequest
              new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time),
         ],
 
-            'semester_id' => [
-                'nullable',
-                'numeric',
-                "exists:semesters,id",
-                new UniqueSchedulePerSession($this->day_of_week, $this->start_time, $this->end_time, $this->session_id)
-            ],
+            
             'session_id' => [
                 'nullable',
                 'numeric',
-                "exists:sessions,id"
-
+                "exists:sessions,id",
+                new UniqueSchedulePerSession($this->day_of_week, $this->start_time, $this->end_time, $this->session_id)
             ],
 
 

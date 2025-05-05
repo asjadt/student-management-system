@@ -13,7 +13,7 @@ class UniqueSchedulePerSession implements Rule
     protected $session_id;
     protected $id;
 
-    public function __construct($day, $start, $end, $session_id,$id)
+    public function __construct($day, $start, $end, $session_id,$id=NULL)
     {
         $this->day = $day;
         $this->start = $start;

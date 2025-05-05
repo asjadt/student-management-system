@@ -1767,7 +1767,6 @@ class UserManagementController extends Controller
                      });
                  })
                  ->when(request()->filled("role"), function ($query)  {
-
                      $rolesArray = explode(',', request()->role);
                      return   $query->whereHas("roles", function ($q) use ($rolesArray) {
                          return $q->whereIn("name", $rolesArray);

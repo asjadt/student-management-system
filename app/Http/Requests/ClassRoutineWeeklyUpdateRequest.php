@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\TeacherAvailable;
+use App\Rules\UniqueSchedulePerSession;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ClassRoutineWeeklyUpdateRequest extends FormRequest
@@ -76,27 +77,25 @@ class ClassRoutineWeeklyUpdateRequest extends FormRequest
 
         if (!$day_data) return;
 
-        // $rule = new TeacherAvailable(
-        //     $day_data['day_of_week'] ?? null,
-        //     $day_data['start_time'] ?? null,
-        //     $day_data['end_time'] ?? null
-        // );
+        $rule = new TeacherAvailable(
+            $day_data['day_of_week'] ?? null,
+            $day_data['start_time'] ?? null,
+            $day_data['end_time'] ?? null,
+            $this->id
+        );
 
-        // if (!$rule->passes($attribute, $value)) {
-        //     $fail($rule->message());
-        // }
+        if (!$rule->passes($attribute, $value)) {
+            $fail($rule->message());
+        }
     },
 ],
 
-            'semester_id' => [
-                'nullable',
-                'numeric',
-                'exists:semesters,id',
-            ],
+
             'session_id' => [
                 'nullable',
                 'numeric',
                 'exists:sessions,id',
+                new UniqueSchedulePerSession($this->day_of_week, $this->start_time, $this->end_time, $this->session_id,$this->id)
             ],
 
         ];
