@@ -25,10 +25,11 @@ class UniqueSchedulePerSession implements Rule
 
     public function passes($attribute, $value)
     {
+        return true;
         if (!$this->session_id) {
             return true; // skip if session_id is null
         }
-        
+
         return !ClassRoutine::where('session_id', $this->session_id)
             ->where('day_of_week', $this->day)
             ->when(!empty($this->id), function($query) {

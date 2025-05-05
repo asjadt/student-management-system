@@ -21,6 +21,7 @@ class TeacherAvailable implements Rule
 
     public function passes($attribute, $value)
     {
+        return true;
         if (empty($this->day_of_week) || empty($this->start_time) || empty($this->end_time) || empty($value)) {
             return true; // Skip validation if any required value is missing
         }

@@ -107,18 +107,18 @@ class ClassRoutineController extends Controller
                         "message" => "You can not perform this action"
                     ], 401);
                 }
-                $incoming_data = $request->input('routines'); // array of routines
+                // $incoming_data = $request->input('routines'); // array of routines
 
-                $duplicates = collect($incoming_data)->duplicates(function ($item) {
-                    return $item['day_of_week'] . '-' . $item['start_time'] . '-' . $item['end_time'] . '-' . $item['teacher_id'];
-                });
+                // $duplicates = collect($incoming_data)->duplicates(function ($item) {
+                //     return $item['day_of_week'] . '-' . $item['start_time'] . '-' . $item['end_time'] . '-' . $item['teacher_id'];
+                // });
 
-                if ($duplicates->isNotEmpty()) {
-                    return response()->json([
-                        'message' => 'Duplicate entries found in submitted data.',
-                        'duplicates' => $duplicates->values()
-                    ], 422);
-                }
+                // if ($duplicates->isNotEmpty()) {
+                //     return response()->json([
+                //         'message' => 'Duplicate entries found in submitted data.',
+                //         'duplicates' => $duplicates->values()
+                //     ], 422);
+                // }
                 // Validate the request data
                 $request_data = $request->validated();
 
@@ -247,32 +247,32 @@ class ClassRoutineController extends Controller
                     "message" => "You cannot perform this action"
                 ], 401);
             }
-            $course_data = $request->input('course_data', []);
-            $seen = [];
+            // $course_data = $request->input('course_data', []);
+            // $seen = [];
 
-            foreach ($course_data as $course_index => $course) {
-                foreach ($course['days'] ?? [] as $day_index => $day) {
-                    $key = implode('-', [
-                        $day['day_of_week'] ?? '',
-                        $day['start_time'] ?? '',
-                        $day['end_time'] ?? '',
-                        $day['teacher_id'] ?? '',
-                        $day['room_number'] ?? '',
-                        $day['subject_id'] ?? '',
-                        $day['session_id'] ?? '', // ✅ Include session_id for session-based duplication check
-                    ]);
+            // foreach ($course_data as $course_index => $course) {
+            //     foreach ($course['days'] ?? [] as $day_index => $day) {
+            //         $key = implode('-', [
+            //             $day['day_of_week'] ?? '',
+            //             $day['start_time'] ?? '',
+            //             $day['end_time'] ?? '',
+            //             $day['teacher_id'] ?? '',
+            //             $day['room_number'] ?? '',
+            //             $day['subject_id'] ?? '',
+            //             $day['session_id'] ?? '', // ✅ Include session_id for session-based duplication check
+            //         ]);
 
-                    if (isset($seen[$key])) {
-                        return response()->json([
-                            'message' => 'Duplicate class schedule found in submitted data.',
-                            'duplicate_at' => "course_data[$course_index][days][$day_index]",
-                            'conflicts_with' => $seen[$key], // Optional: show where the conflict is
-                        ], 422);
-                    }
+            //         if (isset($seen[$key])) {
+            //             return response()->json([
+            //                 'message' => 'Duplicate class schedule found in submitted data.',
+            //                 'duplicate_at' => "course_data[$course_index][days][$day_index]",
+            //                 'conflicts_with' => $seen[$key], // Optional: show where the conflict is
+            //             ], 422);
+            //         }
 
-                    $seen[$key] = "course_data[$course_index][days][$day_index]";
-                }
-            }
+            //         $seen[$key] = "course_data[$course_index][days][$day_index]";
+            //     }
+            // }
             // Validate the request data
             $request_data = $request->validated();
 
@@ -413,32 +413,32 @@ class ClassRoutineController extends Controller
                     "message" => "You cannot perform this action"
                 ], 401);
             }
-            $course_data = $request->input('course_data', []);
-            $seen = [];
+            // $course_data = $request->input('course_data', []);
+            // $seen = [];
 
-            foreach ($course_data as $course_index => $course) {
-                foreach ($course['days'] ?? [] as $day_index => $day) {
-                    $key = implode('-', [
-                        $day['day_of_week'] ?? '',
-                        $day['start_time'] ?? '',
-                        $day['end_time'] ?? '',
-                        $day['teacher_id'] ?? '',
-                        $day['room_number'] ?? '',
-                        $day['subject_id'] ?? '',
-                        $day['session_id'] ?? '', // ✅ Include session_id for session-based duplication check
-                    ]);
+            // foreach ($course_data as $course_index => $course) {
+            //     foreach ($course['days'] ?? [] as $day_index => $day) {
+            //         $key = implode('-', [
+            //             $day['day_of_week'] ?? '',
+            //             $day['start_time'] ?? '',
+            //             $day['end_time'] ?? '',
+            //             $day['teacher_id'] ?? '',
+            //             $day['room_number'] ?? '',
+            //             $day['subject_id'] ?? '',
+            //             $day['session_id'] ?? '', // ✅ Include session_id for session-based duplication check
+            //         ]);
 
-                    if (isset($seen[$key])) {
-                        return response()->json([
-                            'message' => 'Duplicate class schedule found in submitted data.',
-                            'duplicate_at' => "course_data[$course_index][days][$day_index]",
-                            'conflicts_with' => $seen[$key], // Optional: show where the conflict is
-                        ], 422);
-                    }
+            //         if (isset($seen[$key])) {
+            //             return response()->json([
+            //                 'message' => 'Duplicate class schedule found in submitted data.',
+            //                 'duplicate_at' => "course_data[$course_index][days][$day_index]",
+            //                 'conflicts_with' => $seen[$key], // Optional: show where the conflict is
+            //             ], 422);
+            //         }
 
-                    $seen[$key] = "course_data[$course_index][days][$day_index]";
-                }
-            }
+            //         $seen[$key] = "course_data[$course_index][days][$day_index]";
+            //     }
+            // }
             // Validate the request data
             $request_data = $request->validated();
 
@@ -592,46 +592,21 @@ class ClassRoutineController extends Controller
                         "message" => "You can not perform this action"
                     ], 401);
                 }
+                // $incoming_data = $request->input('routines'); // array of routines
 
+                // $duplicates = collect($incoming_data)->duplicates(function ($item) {
+                //     return $item['day_of_week'] . '-' . $item['start_time'] . '-' . $item['end_time'] . '-' . $item['teacher_id'];
+                // });
+
+                // if ($duplicates->isNotEmpty()) {
+                //     return response()->json([
+                //         'message' => 'Duplicate entries found in submitted data.',
+                //         'duplicates' => $duplicates->values()
+                //     ], 422);
+                // }
                 // Validate the request data
                 $request_data = $request->validated();
-                $course_data = $request->input('course_data', []);
-$seen = [];
 
-foreach ($course_data as $course_index => $course) {
-    foreach ($course['days'] ?? [] as $day_index => $day) {
-        $key = implode('-', [
-            $day['day_of_week'] ?? '',
-            $day['start_time'] ?? '',
-            $day['end_time'] ?? '',
-            $day['teacher_id'] ?? '',
-            $day['room_number'] ?? '',
-            $day['subject_id'] ?? '',
-        ]);
-
-        if (in_array($key, $seen)) {
-            return response()->json([
-                'message' => 'Duplicate class schedule found in submitted data.',
-                'duplicate_at' => "course_data[$course_index][days][$day_index]"
-            ], 422);
-        }
-
-        $seen[] = $key;
-    }
-}
-
- $incoming_data = $request->input('routines'); // array of routines
-
-$duplicates = collect($incoming_data)->duplicates(function ($item) {
-    return $item['day_of_week'] . '-' . $item['start_time'] . '-' . $item['end_time'] . '-' . $item['teacher_id'];
-});
-
-if ($duplicates->isNotEmpty()) {
-    return response()->json([
-        'message' => 'Duplicate entries found in submitted data.',
-        'duplicates' => $duplicates->values()
-    ], 422);
-}
 
                 // Extract the class routine ID from the validated data
                 $class_routine_id = $request_data["id"];
