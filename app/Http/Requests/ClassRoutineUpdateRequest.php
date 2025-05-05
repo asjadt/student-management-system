@@ -6,6 +6,7 @@ namespace App\Http\Requests;
 
 use App\Models\ClassRoutine;
 use App\Rules\TeacherAvailable;
+use App\Rules\UniqueSchedulePerSession;
 use App\Rules\ValidateClassRoutineName;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -91,7 +92,7 @@ $rules = [
     'required',
     'numeric',
     'exists:users,id',
-    // new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time,$this->id),
+     new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time,$this->id),
 ],
 
 'semester_id' => [
@@ -104,6 +105,7 @@ $rules = [
     'nullable',
     'numeric',
     'exists:sessions,id',
+    new UniqueSchedulePerSession($this->day_of_week, $this->start_time, $this->end_time, $this->session_id,$this->id)
 ],
 
 
