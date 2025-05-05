@@ -276,9 +276,7 @@ class ClassRoutineController extends Controller
             // Validate the request data
             $request_data = $request->validated();
 
-            // Extract the semester ID and session ID from the validated data
-            $semester_id = $request_data['semester_id'] ?? null;
-            $session_id = $request_data['session_id'];
+
 
             // Extract the course data from the validated data
             $course_data = $request_data['course_data'];
@@ -294,8 +292,7 @@ class ClassRoutineController extends Controller
                 // Iterate over each day in the course data
                 foreach ($course['days'] as $day) {
                     // Add the semester ID, session ID, course ID, active status, created by and business ID to the day's data
-                    $day['semester_id'] = $semester_id;
-                    $day['session_id'] = $session_id;
+       
                     $day['course_id'] = $course_id;  // Add course_id to each day's data
                     $day['is_active'] = 1;
                     $day['created_by'] = auth()->user()->id;
@@ -446,9 +443,8 @@ class ClassRoutineController extends Controller
             // Get the ID from the request body
             $routine_id = $request_data['id'];
 
-            // Ensure the requested data exists
-            $semester_id = $request_data['semester_id'] ?? NULL;
-            $session_id = $request_data['session_id'];
+
+
             $course_data = $request_data['course_data'];
 
             $updated_routines = [];
@@ -470,8 +466,7 @@ class ClassRoutineController extends Controller
                     }
 
                     // Update the existing routine
-                    $day['semester_id'] = $semester_id;
-                    $day['session_id'] = $session_id;
+
                     $day['course_id'] = $course_id;  // Ensure course_id is set
                     $day['is_active'] = 1;
                     $day['updated_by'] = auth()->user()->id;
