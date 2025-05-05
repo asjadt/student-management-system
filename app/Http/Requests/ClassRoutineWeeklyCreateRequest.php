@@ -80,6 +80,8 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
             $day_data['day_of_week'] ?? null,
             $day_data['start_time'] ?? null,
             $day_data['end_time'] ?? null,
+            $value
+
         );
 
         if (!$rule->passes($attribute, $value)) {

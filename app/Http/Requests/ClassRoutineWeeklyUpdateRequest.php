@@ -79,6 +79,7 @@ class ClassRoutineWeeklyUpdateRequest extends FormRequest
             $day_data['day_of_week'] ?? null,
             $day_data['start_time'] ?? null,
             $day_data['end_time'] ?? null,
+            $value,
             $this->id
         );
 
