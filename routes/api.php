@@ -533,6 +533,7 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
 
     Route::put('/v1.0/attendances', [AttendanceController::class, "updateAttendance"]);
     Route::get('/v1.0/attendances', [AttendanceController::class, "getAttendances"]);
+    Route::get('/v2.0/attendances', [AttendanceController::class, "getAttendancesV2"]);
     Route::delete('/v1.0/attendances/{ids}', [AttendanceController::class, "deleteAttendancesByIds"]);
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
