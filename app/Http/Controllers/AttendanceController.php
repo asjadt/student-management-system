@@ -861,16 +861,29 @@ public function getAttendancesV3(Request $request)
     // Paginate or get all
     $attendances_collection = $attendances->get();
 
-    // Group and format data
     $grouped = $attendances_collection->groupBy(function ($item) {
         return $item->subject_id . '-' . $item->teacher_id . '-' . $item->session_id . '-' . $item->course_id;
     })->map(function ($group) {
+        // Filter present and absent students
+        $present_students = $group->filter(function ($attendance) {
+            return $attendance->status === 'present';
+        });
+
+        $absent_students = $group->filter(function ($attendance) {
+            return $attendance->status === 'absent';
+        });
+
+        // Get unique student IDs for present and absent students
+        $present_student_ids = $present_students->pluck('student_id')->unique()->values();
+        $absent_student_ids = $absent_students->pluck('student_id')->unique()->values();
+
         return [
             'subject_id' => $group->first()->subject_id,
             'teacher_id' => $group->first()->teacher_id,
             'session_id' => $group->first()->session_id,
             'course_id' => $group->first()->course_id,
-            'students' => Student::whereIn("id",$group->pluck('student_id')->unique()->values())->get(),
+            'present_students' => Student::whereIn("id", $present_student_ids)->get(),
+            'absent_students' => Student::whereIn("id", $absent_student_ids)->get(),
         ];
     })->values();
 
