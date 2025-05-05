@@ -7,6 +7,7 @@ use App\Rules\TeacherAvailable;
 use App\Rules\UniqueSchedulePerSession;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateClassRoutineName;
+use Exception;
 
 class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
 {
@@ -62,7 +63,30 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
     'numeric',
     'exists:subjects,id',
 ],
+'course_data.*.days.*.session_id' => [
+    'required',
+    'numeric',
+    'exists:sessions,id',
+    function ($attribute, $value, $fail) {
+        $segments = explode('.', $attribute);
+        $course_index = $segments[1] ?? null;
+        $day_index = $segments[3] ?? null;
 
+        $day_data = request()->input("course_data.$course_index.days.$day_index");
+
+        if (!$day_data) return;
+
+        $rule = new UniqueSchedulePerSession(
+            $day_data['day_of_week'] ?? null,
+            $day_data['start_time'] ?? null,
+            $day_data['end_time'] ?? null,
+        );
+
+        if (!$rule->passes($attribute, $value)) {
+            $fail($rule->message());
+        }
+    },
+],
  'course_data.*.days.*.teacher_id' => [
     'required',
     'numeric',
@@ -77,6 +101,9 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
 
         if (!$day_data) return;
 
+
+
+
         $rule = new TeacherAvailable(
             $day_data['day_of_week'] ?? null,
             $day_data['start_time'] ?? null,
@@ -89,12 +116,7 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
     },
 ],
 
-            'session_id' => [
-                'nullable',
-                'numeric',
-                'exists:sessions,id',
-                new UniqueSchedulePerSession($this->day_of_week, $this->start_time, $this->end_time, $this->session_id,$this->id)
-            ],
+
 
         ];
     }

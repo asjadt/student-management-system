@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use App\Models\ClassRoutine;
+use Exception;
 use Illuminate\Contracts\Validation\Rule;
 
 class UniqueSchedulePerSession implements Rule
@@ -27,7 +28,7 @@ class UniqueSchedulePerSession implements Rule
         if (!$this->session_id) {
             return true; // skip if session_id is null
         }
-
+        
         return !ClassRoutine::where('session_id', $this->session_id)
             ->where('day_of_week', $this->day)
             ->when(!empty($this->id), function($query) {
