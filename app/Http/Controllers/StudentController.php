@@ -840,27 +840,28 @@ class StudentController extends Controller
                     "student_id" => $request_data["student_id"]
                 ])->delete();
 
+
                 foreach ($request_data["sessions"] as $request_session) {
+    $student_session = StudentSession::create([
+        'student_id' => $request_data["student_id"],
+        'session_id' => $request_session["session_id"]
+    ]);
 
-                    $student_session = StudentSession::create([
-                        'student_id' => $request_data["student_id"],
-                        'session_id' => $request_session["session_id"]
-                    ]);
+    foreach ($request_session["courses"] as $request_course) {
+        $student_session_course = StudentSessionCourse::create([
+            'student_session_id' => $student_session->id,
+            'course_title_id' => $request_course["course_title_id"],
+        ]);
 
-                    foreach ($request_session["courses"] as $request_course) {
-                        $student_session_course =  StudentSessionCourse::create([
-                            'student_session_id' => $student_session->id,
-                            'course_title_id' => $request_course["course_title_id"],
-                        ]);
+        foreach ($request_course["subjects"] as $request_subject) {
+            StudentCourseSubject::create([
+                'student_session_course_id' => $student_session_course->id,
+                'subject_id' => $request_subject["subject_id"]
+            ]);
+        }
+    }
+}
 
-                        foreach ($request_course["subjects"] as $request_subject) {
-                            $student_session_course =  StudentCourseSubject::create([
-                                'student_session_course_id' => $student_session_course->id,
-                                'subject_id' => $request_subject["subject_id"]
-                            ]);
-                        }
-                    }
-                }
 
 
 
