@@ -1739,7 +1739,7 @@ class UserManagementController extends Controller
     public function query_filters($query)
     {
 
-      return  $query->whereNotIn('id', [request()->user()->id])
+      $query =  $query->whereNotIn('id', [request()->user()->id])
 
 
                  ->when(empty(auth()->user()->business_id), function ($query)  {
@@ -1766,13 +1766,14 @@ class UserManagementController extends Controller
                            ;
                      });
                  })
-                 ->when(!empty($request->role), function ($query)  {
+                 ->when(request()->filled("role"), function ($query)  {
+
                      $rolesArray = explode(',', request()->role);
                      return   $query->whereHas("roles", function ($q) use ($rolesArray) {
                          return $q->whereIn("name", $rolesArray);
                      });
                  })
-                 ->when(!empty($request->search_key), function ($query)  {
+                 ->when(!empty(request()->search_key), function ($query)  {
                      $term = request()->search_key;
                      return $query->where(function ($subquery) use ($term) {
                          $subquery->where("first_Name", "like", "%" . $term . "%")
@@ -1782,23 +1783,23 @@ class UserManagementController extends Controller
                      });
                  })
 
-                 ->when(isset($request->is_in_employee), function ($query)  {
+                 ->when(isset(request()->is_in_employee), function ($query)  {
                      return $query->where('is_in_employee', intval(request()->is_in_employee));
                  })
 
-                 ->when(isset($request->is_active), function ($query)  {
+                 ->when(isset(request()->is_active), function ($query)  {
                      return $query->where('is_active', intval(request()->is_active));
                  })
 
-                 ->when(!empty($request->start_date), function ($query)  {
+                 ->when(!empty(request()->start_date), function ($query)  {
                      return $query->where('created_at', ">=", request()->start_date);
                  })
-                 ->when(!empty($request->end_date), function ($query)  {
+                 ->when(!empty(request()->end_date), function ($query)  {
                      return $query->where('created_at', "<=", (request()->end_date . ' 23:59:59'));
                  });
 
 
-
+return $query;
     }
 
     /**
