@@ -501,57 +501,10 @@ public function getAttendances(Request $request)
             ], 401);
         }
 
-        // Get the business ID of the user
-        $business_id = auth()->user()->business_id;
+
 
         $attendances = Attendance::with("teacher", "subject", "semester", "session","course","student")
-        ->where('business_id', $business_id);
-
-    // Apply filters for each fillable field
-    $filterable_fields = [
-        'id', 'class_routine_id', 'student_id', 'attendance_date', 'status',
-        'remarks', 'day_of_week', 'start_time', 'end_time', 'room_number',
-        'subject_id', 'teacher_id', 'session_id', 'course_id',
-        'created_by'
-    ];
-
-    foreach ($filterable_fields as $field) {
-        if ($request->filled($field)) {
-            $attendances->where($field, $request->$field);
-        }
-    }
-
-    // Handle date range separately
-    if ($request->filled("start_date")) {
-        $attendances->where('attendance_date', '>=', $request->start_date);
-    }
-
-    if ($request->filled("end_date")) {
-        $attendances->where('attendance_date', '<=', $request->end_date . ' 23:59:59');
-    }
-
-    // Search key across related models and room_number
-    if ($request->filled("search_key")) {
-        $search_key = $request->search_key;
-        $attendances->where(function ($query) use ($search_key) {
-            $query->where("room_number", "like", "%" . $search_key . "%")
-                ->orWhereHas("teacher", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                })
-                ->orWhereHas("subject", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                })
-                ->orWhereHas("semester", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                });
-        });
-    }
-
-    // Order by id
-    $order_by = $request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])
-        ? $request->order_by
-        : 'DESC';
-    $attendances->orderBy("id", $order_by);
+        ->filterAttendance();
 
     // Paginate or get all
     $attendances = $request->filled("per_page")
@@ -643,57 +596,10 @@ public function getAttendancesV2(Request $request)
             ], 401);
         }
 
-        // Get the business ID of the user
-        $business_id = auth()->user()->business_id;
 
         $attendances = Attendance::with("teacher", "subject", "semester", "session","course","student")
-        ->where('business_id', $business_id);
+        ->filterAttendance();
 
-    // Apply filters for each fillable field
-    $filterable_fields = [
-        'id', 'class_routine_id', 'student_id', 'attendance_date', 'status',
-        'remarks', 'day_of_week', 'start_time', 'end_time', 'room_number',
-        'subject_id', 'teacher_id', 'session_id', 'course_id',
-        'created_by'
-    ];
-
-    foreach ($filterable_fields as $field) {
-        if ($request->filled($field)) {
-            $attendances->where($field, $request->$field);
-        }
-    }
-
-    // Handle date range separately
-    if ($request->filled("start_date")) {
-        $attendances->where('attendance_date', '>=', $request->start_date);
-    }
-
-    if ($request->filled("end_date")) {
-        $attendances->where('attendance_date', '<=', $request->end_date . ' 23:59:59');
-    }
-
-    // Search key across related models and room_number
-    if ($request->filled("search_key")) {
-        $search_key = $request->search_key;
-        $attendances->where(function ($query) use ($search_key) {
-            $query->where("room_number", "like", "%" . $search_key . "%")
-                ->orWhereHas("teacher", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                })
-                ->orWhereHas("subject", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                })
-                ->orWhereHas("semester", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                });
-        });
-    }
-
-    // Order by id
-    $order_by = $request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])
-        ? $request->order_by
-        : 'DESC';
-    $attendances->orderBy("id", $order_by);
 
     // Paginate or get all
     $attendances = $request->filled("per_page")
@@ -806,57 +712,11 @@ public function getAttendancesV3(Request $request)
             ], 401);
         }
 
-        // Get the business ID of the user
-        $business_id = auth()->user()->business_id;
 
-        $attendances = Attendance::with("teacher", "subject", "semester", "session","course","student")
-        ->where('business_id', $business_id);
 
-    // Apply filters for each fillable field
-    $filterable_fields = [
-        'id', 'class_routine_id', 'student_id', 'attendance_date', 'status',
-        'remarks', 'day_of_week', 'start_time', 'end_time', 'room_number',
-        'subject_id', 'teacher_id', 'session_id', 'course_id',
-        'created_by'
-    ];
+        $attendances = Attendance::with("teacher", "subject", "semester", "session", "course", "student")->filterAttendance();
+        ;
 
-    foreach ($filterable_fields as $field) {
-        if ($request->filled($field)) {
-            $attendances->where($field, $request->$field);
-        }
-    }
-
-    // Handle date range separately
-    if ($request->filled("start_date")) {
-        $attendances->where('attendance_date', '>=', $request->start_date);
-    }
-
-    if ($request->filled("end_date")) {
-        $attendances->where('attendance_date', '<=', $request->end_date . ' 23:59:59');
-    }
-
-    // Search key across related models and room_number
-    if ($request->filled("search_key")) {
-        $search_key = $request->search_key;
-        $attendances->where(function ($query) use ($search_key) {
-            $query->where("room_number", "like", "%" . $search_key . "%")
-                ->orWhereHas("teacher", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                })
-                ->orWhereHas("subject", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                })
-                ->orWhereHas("semester", function ($query) use ($search_key) {
-                    $query->where("name", "like", "%" . $search_key . "%");
-                });
-        });
-    }
-
-    // Order by id
-    $order_by = $request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])
-        ? $request->order_by
-        : 'DESC';
-    $attendances->orderBy("id", $order_by);
 
     // Paginate or get all
     $attendances_collection = $attendances->get();

@@ -134,11 +134,11 @@ class Student extends Model
 
             });
         })
-        ->when(request()->filled("exclude_attendance_date"), function ($query)  {
-            return $query->whereDoesntHave('attendances', function($query) {
-                  $query->where("attendances.attendance_date",request()->input("exclude_attendance_date"));
-            });
-        })
+        // ->when(request()->filled("exclude_attendance_date"), function ($query)  {
+        //     return $query->whereDoesntHave('attendances', function($query) {
+        //           $query->where("attendances.attendance_date",request()->input("exclude_attendance_date"));
+        //     });
+        // })
 
         ->when(!empty(request()->nationality), function ($query)  {
             return $query->where('students.nationality', request()->nationality);

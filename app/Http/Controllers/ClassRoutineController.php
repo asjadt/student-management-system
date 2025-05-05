@@ -858,7 +858,10 @@ class ClassRoutineController extends Controller
             "session.students" => function($query) {
                 $query->filterStudent();
             },
-            "course"
+            "course",
+            "attendances" => function($query) {
+                  $query->filterAttendance();
+            }
 
                 ]
             );
