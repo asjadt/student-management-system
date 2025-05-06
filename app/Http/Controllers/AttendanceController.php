@@ -760,7 +760,7 @@ public function getAttendancesV3(Request $request)
             'attendance_date' => $group->first()->attendance_date,
             'class_routine' => ClassRoutine::with("teacher","subject","course","session")->where([
               "id"=> $group->first()->class_routine_id
-            ])->get(),
+            ])->first(),
             'present_students' => Student::whereIn("id", $present_student_ids)->get(),
             'absent_students' => Student::whereIn("id", $absent_student_ids)->get(),
         ];
