@@ -257,20 +257,29 @@ class ClassRoutineController extends Controller
                         $day['end_time'] ?? '',
                         $day['teacher_id'] ?? '',
                         $day['subject_id'] ?? '',
-                        $day['session_id'] ?? '', // ✅ Include session_id for session-based duplication check
+                        $day['session_id'] ?? '',
                     ]);
 
                     if (isset($seen[$key])) {
+                        // Extract the conflicting course/day indices
+                        preg_match('/course_data\[(\d+)\]\[days\]\[(\d+)\]/', $seen[$key], $matches);
+                        $seen_course_index = $matches[1] ?? '?';
+                        $seen_day_index = $matches[2] ?? '?';
+
                         return response()->json([
-                            'message' => 'Duplicate class schedule found in submitted data.',
-                            'duplicate_at' => "course_data[$course_index][days][$day_index]",
-                            'conflicts_with' => $seen[$key], // Optional: show where the conflict is
+                            'message' => 'The given data was invalid.',
+                            'errors' => [
+                                "course_data.$course_index.days.$day_index" => [
+                                    "Duplicate class schedule found. Conflicts with course_data[$seen_course_index][days][$seen_day_index]."
+                                ]
+                            ]
                         ], 422);
                     }
 
                     $seen[$key] = "course_data[$course_index][days][$day_index]";
                 }
             }
+
             // Validate the request data
             $request_data = $request->validated();
 
