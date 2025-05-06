@@ -503,7 +503,15 @@ public function getAttendances(Request $request)
 
 
 
-        $attendances = Attendance::with("teacher", "subject", "semester", "session","course","student")
+        $attendances = Attendance::with(
+            [
+                "class_routine.teacher",
+                "class_routine.subject",
+                "class_routine.course",
+                "class_routine.session",
+                "student"
+            ]
+            )
         ->filterAttendance();
 
     // Paginate or get all
@@ -597,7 +605,13 @@ public function getAttendancesV2(Request $request)
         }
 
 
-        $attendances = Attendance::with("teacher", "subject", "semester", "session","course","student")
+        $attendances = Attendance::with(  [
+            "class_routine.teacher",
+            "class_routine.subject",
+            "class_routine.course",
+            "class_routine.session",
+            "student"
+        ])
         ->filterAttendance();
 
 
@@ -714,7 +728,13 @@ public function getAttendancesV3(Request $request)
 
 
 
-        $attendances = Attendance::with("teacher", "subject", "semester", "session", "course", "student")->filterAttendance();
+        $attendances = Attendance::with(  [
+            "class_routine.teacher",
+            "class_routine.subject",
+            "class_routine.course",
+            "class_routine.session",
+            "student"
+        ])->filterAttendance();
         ;
 
 
@@ -742,6 +762,9 @@ public function getAttendancesV3(Request $request)
             'teacher_id' => $group->first()->teacher_id,
             'session_id' => $group->first()->session_id,
             'course_id' => $group->first()->course_id,
+            'class_routine' => ClassRoutine::with("teacher","subject","course","session")->where([
+              "id"=> $group->first()->class_routine_id
+            ])->get(),
             'present_students' => Student::whereIn("id", $present_student_ids)->get(),
             'absent_students' => Student::whereIn("id", $absent_student_ids)->get(),
         ];
