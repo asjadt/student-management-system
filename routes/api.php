@@ -14,7 +14,6 @@ use App\Http\Controllers\BusinessTierController;
 use App\Http\Controllers\BusinessTimesController;
 use App\Http\Controllers\ClassRoutineController;
 use App\Http\Controllers\CourseTitleController;
-use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\FileManagementController;
 use App\Http\Controllers\InstallmentPaymentController;
@@ -565,23 +564,8 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
 
 
 
-    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    // semesters management section
-    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-    Route::post('/v1.0/semesters', [SemesterController::class, "createSemester"]);
-    Route::put('/v1.0/semesters', [SemesterController::class, "updateSemester"]);
-
-    Route::put('/v1.0/semesters/toggle-active', [SemesterController::class, "toggleActiveSemester"]);
-
-    Route::get('/v1.0/semesters', [SemesterController::class, "getSemesters"]);
-    Route::delete('/v1.0/semesters/{ids}', [SemesterController::class, "deleteSemestersByIds"]);
 
 
-
-    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    // end semesters management section
-    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 

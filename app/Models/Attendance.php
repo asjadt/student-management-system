@@ -21,7 +21,6 @@ class Attendance extends Model
         'room_number',
         'subject_id',
         'teacher_id',
-        'semester_id',
         'session_id',
         'course_id',
         'business_id',
@@ -48,10 +47,7 @@ class Attendance extends Model
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
-    public function semester()
-    {
-        return $this->belongsTo(Semester::class);
-    }
+
 
     public function session()
     {
@@ -111,8 +107,7 @@ $query = $query
         $q->where(function ($sub) use ($search) {
             $sub->where("room_number", "like", "%{$search}%")
                 ->orWhereHas("teacher", fn($q) => $q->where("name", "like", "%{$search}%"))
-                ->orWhereHas("subject", fn($q) => $q->where("name", "like", "%{$search}%"))
-                ->orWhereHas("semester", fn($q) => $q->where("name", "like", "%{$search}%"));
+                ->orWhereHas("subject", fn($q) => $q->where("name", "like", "%{$search}%"));
         });
     })
     ->when(

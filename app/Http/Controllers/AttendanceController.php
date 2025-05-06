@@ -450,7 +450,7 @@ DB::rollBack();
      *      @OA\Parameter(name="created_by", in="query", description="Created by user ID", required=false, example="15"),
      *      @OA\Parameter(name="start_date", in="query", description="Start date to filter attendances", required=false, example="2025-04-01"),
      *      @OA\Parameter(name="end_date", in="query", description="End date to filter attendances", required=false, example="2025-04-30"),
-     *      @OA\Parameter(name="search_key", in="query", description="Search key (room, teacher, subject, semester)", required=false, example="Math"),
+
      *      @OA\Parameter(name="order_by", in="query", description="Order direction (ASC or DESC)", required=false, example="DESC"),
      *      @OA\Parameter(name="per_page", in="query", description="Number of records per page", required=false, example="10"),
  *      summary="Get attendances based on filters",
@@ -553,7 +553,7 @@ public function getAttendances(Request $request)
      *      @OA\Parameter(name="created_by", in="query", description="Created by user ID", required=false, example="15"),
      *      @OA\Parameter(name="start_date", in="query", description="Start date to filter attendances", required=false, example="2025-04-01"),
      *      @OA\Parameter(name="end_date", in="query", description="End date to filter attendances", required=false, example="2025-04-30"),
-     *      @OA\Parameter(name="search_key", in="query", description="Search key (room, teacher, subject, semester)", required=false, example="Math"),
+
      *      @OA\Parameter(name="order_by", in="query", description="Order direction (ASC or DESC)", required=false, example="DESC"),
      *      @OA\Parameter(name="per_page", in="query", description="Number of records per page", required=false, example="10"),
  *      summary="Get attendances based on filters",
@@ -675,7 +675,7 @@ public function getAttendancesV2(Request $request)
      *      @OA\Parameter(name="created_by", in="query", description="Created by user ID", required=false, example="15"),
      *      @OA\Parameter(name="start_date", in="query", description="Start date to filter attendances", required=false, example="2025-04-01"),
      *      @OA\Parameter(name="end_date", in="query", description="End date to filter attendances", required=false, example="2025-04-30"),
-     *      @OA\Parameter(name="search_key", in="query", description="Search key (room, teacher, subject, semester)", required=false, example="Math"),
+
      *      @OA\Parameter(name="order_by", in="query", description="Order direction (ASC or DESC)", required=false, example="DESC"),
      *      @OA\Parameter(name="per_page", in="query", description="Number of records per page", required=false, example="10"),
  *      summary="Get attendances based on filters",
@@ -734,8 +734,7 @@ public function getAttendancesV3(Request $request)
             "class_routine.course",
             "class_routine.session",
             "student"
-        ])->filterAttendance();
-        ;
+        ])->filterAttendance();;
 
 
     // Paginate or get all

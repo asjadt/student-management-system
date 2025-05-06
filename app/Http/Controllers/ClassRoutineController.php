@@ -49,7 +49,7 @@ class ClassRoutineController extends Controller
      * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
      *
      * @OA\Property(property="teacher_id", type="string", format="string", example="teacher_id"),
-     * @OA\Property(property="semester_id", type="string", format="string", example="semester_id"),
+
      * @OA\Property(property="session_id", type="string", format="string", example="session_id"),
      *
      *
@@ -192,7 +192,6 @@ class ClassRoutineController extends Controller
      *             )
      *         )
      *     ),
-     *     @OA\Property(property="semester_id", type="string", example="semester_id"),
      *     @OA\Property(property="session_id", type="string", example="session_id")
      *
      *     ),
@@ -291,8 +290,8 @@ class ClassRoutineController extends Controller
 
                 // Iterate over each day in the course data
                 foreach ($course['days'] as $day) {
-                    // Add the semester ID, session ID, course ID, active status, created by and business ID to the day's data
-       
+
+
                     $day['course_id'] = $course_id;  // Add course_id to each day's data
                     $day['is_active'] = 1;
                     $day['created_by'] = auth()->user()->id;
@@ -357,7 +356,7 @@ class ClassRoutineController extends Controller
      *                 )
      *             )
      *         ),
-     *         @OA\Property(property="semester_id", type="string", example="semester_id"),
+
      *         @OA\Property(property="session_id", type="string", example="session_id")
      *     ),
      * ),
@@ -525,7 +524,7 @@ class ClassRoutineController extends Controller
      * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
      *
      * @OA\Property(property="teacher_id", type="string", format="string", example="teacher_id"),
-     * @OA\Property(property="semester_id", type="string", format="string", example="semester_id"),
+
      * @OA\Property(property="session_id", type="string", format="string", example="session_id"),
      *
      *
@@ -624,7 +623,6 @@ class ClassRoutineController extends Controller
                         "subject_id",
                         "course_id",
                         "teacher_id",
-                        "semester_id",
                         "session_id"
                         // "is_default",
                         // "is_active",
@@ -923,7 +921,6 @@ class ClassRoutineController extends Controller
                 [
             "teacher",
             "subject",
-            "semester",
             "session",
             "session.students" => function($query) {
                 $query->filterStudent();
@@ -1005,8 +1002,7 @@ class ClassRoutineController extends Controller
                         ->orWhere("class_routines.end_time", "like", "%" . $search_key . "%")
                         ->orWhere("class_routines.room_number", "like", "%" . $search_key . "%")
                         ->orWhere("teachers.name", "like", "%" . $search_key . "%")
-                        ->orWhere("subjects.name", "like", "%" . $search_key . "%")
-                        ->orWhere("semesters.name", "like", "%" . $search_key . "%");
+                        ->orWhere("subjects.name", "like", "%" . $search_key . "%");
                 });
             }
 

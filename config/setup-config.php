@@ -137,11 +137,7 @@ return [
                 "course_title_view",
                 "course_title_delete",
 
-                "semester_create",
-                "semester_update",
-                "semester_activate",
-                "semester_view",
-                "semester_delete",
+
 
                 "subject_create",
                 "subject_update",
@@ -545,11 +541,7 @@ return [
                  "course_title_delete",
 
 
-                 "semester_create",
-                 "semester_update",
-                 "semester_activate",
-                 "semester_view",
-                 "semester_delete",
+
 
                  "subject_create",
                  "subject_update",
@@ -826,11 +818,7 @@ return [
                   "course_title_delete",
 
 
-                  "semester_create",
-                  "semester_update",
-                  "semester_activate",
-                  "semester_view",
-                  "semester_delete",
+
 
                   "subject_create",
                   "subject_update",
@@ -1097,11 +1085,6 @@ return [
                   "course_title_delete",
 
 
-                  "semester_create",
-                  "semester_update",
-                  "semester_activate",
-                  "semester_view",
-                  "semester_delete",
 
                   "subject_create",
                   "subject_update",
@@ -1367,11 +1350,7 @@ return [
                   "course_title_delete",
 
 
-                  "semester_create",
-                  "semester_update",
-                  "semester_activate",
-                  "semester_view",
-                  "semester_delete",
+
 
                   "subject_create",
                   "subject_update",
@@ -1705,11 +1684,7 @@ return [
         "course_title_view",
          "course_title_delete",
 
-         "semester_create",
-         "semester_update",
-         "semester_activate",
-         "semester_view",
-         "semester_delete",
+
 
          "subject_create",
          "subject_update",
@@ -2013,11 +1988,7 @@ return [
         "course_title_view" => "",
          "course_title_delete" => "",
 
-         "semester_create" => "",
-         "semester_update" => "",
-         "semester_view" => "",
-         "semester_delete" => "",
-         "semester_activate" => "",
+
 
 
          "subject_create" => "",
@@ -2984,7 +2955,7 @@ return [
                 [
                     "header" => "attendance",
                     "permissions" => [
-                        
+
                         "attendance_create",
                         "attendance_update",
                         "attendance_activate",
@@ -3023,18 +2994,7 @@ return [
             ],
         ],
 
-        [
-            "header" => "semester",
-            "permissions" => [
-
-                "semester_create",
-        "semester_update",
-        "semester_activate",
-        "semester_view",
-        "semester_delete",
-
-            ],
-        ],
+      
 
         [
             "header" => "awarding_body",

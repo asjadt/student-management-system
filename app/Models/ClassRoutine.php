@@ -20,7 +20,6 @@ class ClassRoutine extends Model
                     'room_number',
                     'subject_id',
                     'teacher_id',
-                    'semester_id',
                     'session_id',
                     'course_id',
                     "is_active",
