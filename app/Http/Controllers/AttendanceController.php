@@ -742,7 +742,7 @@ public function getAttendancesV3(Request $request)
     $attendances_collection = $attendances->get();
 
     $grouped = $attendances_collection->groupBy(function ($item) {
-        return $item->subject_id . '-' . $item->teacher_id . '-' . $item->session_id . '-' . $item->course_id;
+        return $item->class_routine_id . '-' . $item->attendance_date;
     })->map(function ($group) {
         // Filter present and absent students
         $present_students = $group->filter(function ($attendance) {
@@ -758,10 +758,7 @@ public function getAttendancesV3(Request $request)
         $absent_student_ids = $absent_students->pluck('student_id')->unique()->values();
 
         return [
-            'subject_id' => $group->first()->subject_id,
-            'teacher_id' => $group->first()->teacher_id,
-            'session_id' => $group->first()->session_id,
-            'course_id' => $group->first()->course_id,
+            'attendance_date' => $group->first()->attendance_date,
             'class_routine' => ClassRoutine::with("teacher","subject","course","session")->where([
               "id"=> $group->first()->class_routine_id
             ])->get(),
