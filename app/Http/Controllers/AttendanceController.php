@@ -778,6 +778,7 @@ public function getAttendancesV3(Request $request)
             'absent_percentage' => $attendances_collection->count() > 0
                 ? round(($attendances_collection->where('status', 'absent')->count() / $attendances_collection->count()) * 100, 2)
                 : 0,
+            'total_students' => $attendances_collection->pluck('student_id')->unique()->count(),
         ]
     ], 200);
 
