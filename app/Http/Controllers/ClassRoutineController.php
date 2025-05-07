@@ -14,6 +14,7 @@ use App\Http\Requests\GetIdRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\Attendance;
 use App\Models\ClassRoutine;
 
 use Exception;
@@ -417,34 +418,16 @@ class ClassRoutineController extends Controller
                     "message" => "You cannot perform this action"
                 ], 401);
             }
-            // $course_data = $request->input('course_data', []);
-            // $seen = [];
-
-            // foreach ($course_data as $course_index => $course) {
-            //     foreach ($course['days'] ?? [] as $day_index => $day) {
-            //         $key = implode('-', [
-            //             $day['day_of_week'] ?? '',
-            //             $day['start_time'] ?? '',
-            //             $day['end_time'] ?? '',
-            //             $day['teacher_id'] ?? '',
-            //             $day['room_number'] ?? '',
-            //             $day['subject_id'] ?? '',
-            //             $day['session_id'] ?? '', // ✅ Include session_id for session-based duplication check
-            //         ]);
-
-            //         if (isset($seen[$key])) {
-            //             return response()->json([
-            //                 'message' => 'Duplicate class schedule found in submitted data.',
-            //                 'duplicate_at' => "course_data[$course_index][days][$day_index]",
-            //                 'conflicts_with' => $seen[$key], // Optional: show where the conflict is
-            //             ], 422);
-            //         }
-
-            //         $seen[$key] = "course_data[$course_index][days][$day_index]";
-            //     }
-            // }
             // Validate the request data
             $request_data = $request->validated();
+
+            if (Attendance::where([
+                "class_routine_id" => $request_data["id"]
+            ])->exists()) { // Use exists() instead of exist()
+                return response()->json([
+                    "message" => "The class routine cannot be updated because attendance has already been recorded for it."
+                ], 409);
+            }
 
 
             // Get the ID from the request body
@@ -609,7 +592,13 @@ class ClassRoutineController extends Controller
                 // Validate the request data
                 $request_data = $request->validated();
 
-
+                if (Attendance::where([
+                    "class_routine_id" => $request_data["id"]
+                ])->exists()) { // Use exists() instead of exist()
+                    return response()->json([
+                        "message" => "The class routine cannot be updated because attendance has already been recorded for it."
+                    ], 409);
+                }
                 // Extract the class routine ID from the validated data
                 $class_routine_id = $request_data["id"];
 
@@ -1133,6 +1122,14 @@ class ClassRoutineController extends Controller
 
             // Split the given IDs by comma and convert to an array
             $idsArray = explode(',', $ids);
+
+            if (Attendance::whereIn(
+                "class_routine_id", $idsArray
+            )->exists()) { // Use exists() instead of exist()
+                return response()->json([
+                    "message" => "The class routine cannot be updated because attendance has already been recorded for it."
+                ], 409);
+            }
 
             // Retrieve the existing IDs in the database
             $existingIds = ClassRoutine::whereIn('id', $idsArray)
