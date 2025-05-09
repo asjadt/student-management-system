@@ -2994,7 +2994,7 @@ return [
             ],
         ],
 
-      
+
 
         [
             "header" => "awarding_body",
@@ -3346,8 +3346,13 @@ return [
                     "show" => 1
                 ]
             ]
-        ]
+                ],
 
+        "system_modules" => [
+            "agency_management",
+            "schedule",
+            "attendance"
+        ]
 
 
 ];

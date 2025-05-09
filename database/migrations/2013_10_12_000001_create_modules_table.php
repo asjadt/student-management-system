@@ -32,7 +32,14 @@ class CreateModulesTable extends Migration
             "name" => "agency_management",
             "is_enabled" => 1,
            ],
-
+           [
+            "name" => "schedule",
+            "is_enabled" => 1,
+           ],
+           [
+            "name" => "attendance",
+            "is_enabled" => 1,
+           ],
         ));
 
 

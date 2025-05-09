@@ -11,6 +11,7 @@ use App\Models\Designation;
 use App\Models\ErrorLog;
 use App\Models\JobPlatform;
 use App\Models\JobType;
+use App\Models\Module;
 use App\Models\RecruitmentProcess;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -310,7 +311,24 @@ return "swagger generated";
 
 
     }
+    public function updateModule()
+    {
+        $modules = config("setup-config.system_modules");
+        foreach ($modules as $module) {
+            $module_exists = Module::where([
+                "name" => $module
+            ])
+                ->exists();
 
+            if (!$module_exists) {
+                Module::create([
+                    "name" => $module,
+                    "is_enabled" => 1,
+                    'created_by' => 1,
+                ]);
+            }
+        }
+    }
     public function roleRefresh(Request $request)
     {
 
