@@ -2316,7 +2316,7 @@ class StudentController extends Controller
             $student =  Student::with([
                 "student_status",
                 "student_sessions",
-                "student_sessions.session",
+                "student_sessions.session.class_routines",
                 "student_sessions.student_session_courses",
                 "student_sessions.student_session_courses.course",
                 "student_sessions.student_session_courses.student_session_course_subjects",

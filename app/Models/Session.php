@@ -41,7 +41,9 @@ public function students () {
 }
 
 
-
+  public function class_routines() {
+        return $this->hasMany(ClassRoutine::class, "session_id", "id");
+    }
 
 
 
