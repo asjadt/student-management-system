@@ -582,16 +582,10 @@ class StudentController extends Controller
                 $business_id =  $request->user()->business_id;
                 $request_data = $request->validated();
 
-
-
-
                 $student_query_params = [
                     "id" => $request_data["id"],
                     "business_id" => $business_id
                 ];
-
-
-
 
                 $student  =  tap(Student::where($student_query_params))->update(
                     collect($request_data)->only([
@@ -649,29 +643,8 @@ class StudentController extends Controller
                     ], 500);
                 }
 
-                $student_session = StudentSession::where([
-                    'student_id' => $student->id,
-                    'session_id' => $request_data["session_id"]
-                ])->first();
 
-                if (!empty($student_session)) {
-                    $student_session = StudentSession::create([
-                        'student_id' => $student->id,
-                        'session_id' => $request_data["session_id"]
-                    ]);
-                }
-
-                if (!StudentSessionCourse::where([
-                    'student_session_id' => $student_session->id,
-                    'course_title_id' => $request_data["course_title_id"],
-                ])->exists()) {
-                    $student_session_course =  StudentSessionCourse::create([
-                        'student_session_id' => $student_session->id,
-                        'course_title_id' => $request_data["course_title_id"],
-                    ]);
-                }
-
-
+             
 
 
 

@@ -191,8 +191,6 @@ class SessionController extends Controller
                 }
                 $request_data = $request->validated();
 
-
-
                 $session_query_params = [
                     "id" => $request_data["id"],
                 ];

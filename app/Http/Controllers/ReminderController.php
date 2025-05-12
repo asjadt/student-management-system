@@ -180,6 +180,7 @@ class ReminderController extends Controller
 
         DB::beginTransaction();
          try {
+
              $this->storeActivity($request, "DUMMY activity","DUMMY description");
 
              if (!auth()->user()->hasPermissionTo('reminder_update')) {
