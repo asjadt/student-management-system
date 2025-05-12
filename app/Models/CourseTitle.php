@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class CourseTitle extends Model
 {
     use HasFactory, DefaultQueryScopesTrait;
+
     protected $fillable = [
         'name',
         'level',

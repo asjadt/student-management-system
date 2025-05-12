@@ -340,7 +340,11 @@ return [
                 "session_delete",
 
 
-
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
 
                 "letter_template_create",
                 "letter_template_update",
@@ -629,6 +633,12 @@ return [
                 "session_view",
                 "session_delete",
 
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
+
 
                 "letter_template_create",
                 "letter_template_update",
@@ -896,6 +906,11 @@ return [
                 "session_view",
                 "session_delete",
 
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
 
                 "letter_template_create",
                 "letter_template_update",
@@ -1161,6 +1176,11 @@ return [
                 "session_view",
                 "session_delete",
 
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
 
                 "letter_template_create",
                 "letter_template_update",
@@ -1440,6 +1460,12 @@ return [
         "session_activate",
         "session_view",
         "session_delete",
+
+        "reminder_create",
+        "reminder_update",
+        "reminder_activate",
+        "reminder_view",
+        "reminder_delete",
 
 
         "letter_template_create",
@@ -2707,12 +2733,19 @@ return [
         "session_activate",
         "session_view",
         "session_delete",
-
-
             ],
         ],
 
-
+        [
+            "header" => "reminder",
+            "permissions" => [
+        "reminder_create",
+        "reminder_update",
+        "reminder_activate",
+        "reminder_view",
+        "reminder_delete",
+            ],
+        ],
 
 
         [

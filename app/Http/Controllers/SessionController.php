@@ -89,6 +89,7 @@ class SessionController extends Controller
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             return DB::transaction(function () use ($request) {
+
                 if (!auth()->user()->hasPermissionTo('session_create')) {
                     return response()->json([
                         "message" => "You can not perform this action"
@@ -96,9 +97,7 @@ class SessionController extends Controller
                 }
 
                 $request_data = $request->validated();
-
                 $request_data["is_active"] = 1;
-
                 $request_data["created_by"] = auth()->user()->id;
                 $request_data["business_id"] = auth()->user()->business_id;
 
@@ -504,6 +503,7 @@ class SessionController extends Controller
      {
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
              if (!$request->user()->hasPermissionTo('session_view')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -657,6 +657,7 @@ class SessionController extends Controller
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
             if (!$request->user()->hasPermissionTo('session_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"

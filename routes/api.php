@@ -23,6 +23,7 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationTemplateController;
 use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\ServicePlanController;
 use App\Http\Controllers\SessionController;
@@ -541,6 +542,19 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
+      // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // reminders  management section
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Route::post('/v1.0/reminders', [ReminderController::class, "createReminder"]);
+    Route::put('/v1.0/reminders', [ReminderController::class, "updateReminder"]);
+    Route::get('/v1.0/reminders', [ReminderController::class, "getReminders"]);
+    Route::get('/v1.0/reminders/{id}', [ReminderController::class, "getReminderById"]);
+    Route::delete('/v1.0/reminders/{ids}', [ReminderController::class, "deleteRemindersByIds"]);
+
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // end reminders management section
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
