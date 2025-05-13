@@ -108,17 +108,17 @@ class ReminderScheduler extends Command
                             // Check if reminder should be sent after expiry
                             if ($reminder_date->eq($student->passport_expiry_date)) {
                                 // send reminder
-                                $this->sendDocumentExpiryReminder($reminder, $student, $business);
+                                $this->sendMaintenanceReminder($reminder, $student, $business);
                             } elseif ($reminder_date->gt($student->passport_expiry_date)  && $this->checkReminderFrequency($reminder, $reminder_date)) {
-                                $this->sendDocumentExpiryReminder($reminder, $student, $business);
+                                $this->sendMaintenanceReminder($reminder, $student, $business);
                             }
                         } elseif ($reminder->send_time == "before_expiry") {
                             // Check if reminder should be sent before expiry
                             if ($reminder_date->eq($now)) {
                                 // send reminder
-                                $this->sendDocumentExpiryReminder($reminder, $student, $business);
+                                $this->sendMaintenanceReminder($reminder, $student, $business);
                             } elseif ($reminder_date->lt($now)  && $this->checkReminderFrequency($reminder, $reminder_date)) {
-                                $this->sendDocumentExpiryReminder($reminder, $student, $business);
+                                $this->sendMaintenanceReminder($reminder, $student, $business);
                             }
                         }
                     }
@@ -207,15 +207,13 @@ class ReminderScheduler extends Command
         Mail::to([$business->email, "rifatbilalphilips@gmail.com", $business->owner->email])->send(new DocumentExpiryReminderMail($reminder->title, $reminder, $student, $business));
     }
 
-    private function sendMaintenanceReminder($reminder, $property, $business)
+    private function sendMaintenanceReminder($reminder, $student, $business)
     {
         $this->writeLog("Sending email to: " . $business->email);
 
 
-        $this->writeLog("now Sending maintenance report");
-
 
         // Send email
-        Mail::to([$business->email, "rifatbilalphilips@gmail.com", $business->owner->email])->send(new AttendanceReminderMail($reminder->title, $reminder, $property, $business));
+        Mail::to([$business->email, "rifatbilalphilips@gmail.com", $business->owner->email])->send(new AttendanceReminderMail($reminder->title, $reminder, $student, $business));
     }
 }
