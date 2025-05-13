@@ -33,9 +33,9 @@ class DocumentExpiryReminderMail extends Mailable
             ->with([
                 'title' => $this->title,
                 'message_desc' =>  (($this->reminder->send_time == "after_expiry")
-                ? ("The passport for the student " . $this->student->first_name . " " . $this->student->middle_name . " " . $this->student->last_name . " expired " . $days_difference . " days ago. Please renew it now.")
+                ? ("The passport for the student " . $this->student->title . " ". $this->student->first_name . " " . $this->student->middle_name . " " . $this->student->last_name . " expired " . $days_difference . " days ago. Please renew it now.")
                 :
-                ("The passport for the student " . $this->student->first_name . " " . $this->student->middle_name . " " . $this->student->last_name . " will expire in " . $days_difference . " days. Please renew it in time.")),
+                ("The passport for the student " . $this->student->title . " " . $this->student->first_name . " " . $this->student->middle_name . " " . $this->student->last_name . " will expire in " . $days_difference . " days. Please renew it in time.")),
 
                 'student' => $this->student,
                 'business' => $this->business
