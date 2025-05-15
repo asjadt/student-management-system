@@ -6,6 +6,7 @@ use App\Http\Requests\WidgetCreateRequest;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\Attendance;
 use App\Models\AwardingBody;
 use App\Models\Business;
 use App\Models\BusinessSetting;
@@ -2649,7 +2650,6 @@ class DashboardManagementController extends Controller
                 $end_date_of_previous_week,
                 $business_setting,
                 1
-
             );
 
 
@@ -2674,7 +2674,56 @@ class DashboardManagementController extends Controller
                 $previousDays = $days;
             }
 
+            $students_with_current_sessions = Student::with('session')
+            ->whereHas('session', function($query) {
+                $query->whereDate('sessions.start_date', '<=', today())
+                      ->whereDate('sessions.end_date', '>=', today());
+            })->get();
 
+        // Buckets
+        $range_0_60 = [];
+        $range_60_75 = [];
+        $range_75_85 = [];
+        $range_85_100 = [];
+
+        foreach ($students_with_current_sessions as $student) {
+            $session_id = optional($student->session)->id;
+            if (!$session_id) continue;
+
+            $present = Attendance::where('student_id', $student->id)
+                ->where('session_id', $session_id)
+                ->where('status', 'present')
+                ->count();
+
+            $total = Attendance::where('student_id', $student->id)
+                ->where('session_id', $session_id)
+                ->count();
+
+            if ($total == 0) {
+                $percentage = 0;
+            } else {
+                $percentage = ($present / $total) * 100;
+            }
+
+            // Categorize based on percentage
+            if ($percentage < 60) {
+                $range_0_60[] = $student;
+            } elseif ($percentage < 75) {
+                $range_60_75[] = $student;
+            } elseif ($percentage < 85) {
+                $range_75_85[] = $student;
+            } else {
+                $range_85_100[] = $student;
+            }
+        }
+
+        // Example: Display or return results
+        $data["attendance_report"] = [
+            '0-60%' => $range_0_60,
+            '60-75%' => $range_60_75,
+            '75-85%' => $range_75_85,
+            '85-100%' => $range_85_100,
+        ];
 
             return response()->json($data, 200);
         } catch (Exception $e) {
