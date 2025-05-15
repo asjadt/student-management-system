@@ -2680,11 +2680,17 @@ class DashboardManagementController extends Controller
                       ->whereDate('sessions.end_date', '>=', today());
             })->get();
 
-        // Buckets
-        $range_0_60 = [];
-        $range_60_75 = [];
-        $range_75_85 = [];
-        $range_85_100 = [];
+            $students_with_current_sessions = Student::with('session')
+            ->whereHas('session', function($query) {
+                $query->whereDate('sessions.start_date', '<=', today())
+                      ->whereDate('sessions.end_date', '>=', today());
+            })->get();
+
+        // Initialize counters
+        $count_0_60 = 0;
+        $count_60_75 = 0;
+        $count_75_85 = 0;
+        $count_85_100 = 0;
 
         foreach ($students_with_current_sessions as $student) {
             $session_id = optional($student->session)->id;
@@ -2705,24 +2711,24 @@ class DashboardManagementController extends Controller
                 $percentage = ($present / $total) * 100;
             }
 
-            // Categorize based on percentage
+            // Increment counter based on percentage
             if ($percentage < 60) {
-                $range_0_60[] = $student;
+                $count_0_60++;
             } elseif ($percentage < 75) {
-                $range_60_75[] = $student;
+                $count_60_75++;
             } elseif ($percentage < 85) {
-                $range_75_85[] = $student;
+                $count_75_85++;
             } else {
-                $range_85_100[] = $student;
+                $count_85_100++;
             }
         }
 
-        // Example: Display or return results
+        // Return or use the counts
         $data["attendance_report"] = [
-            '0-60%' => $range_0_60,
-            '60-75%' => $range_60_75,
-            '75-85%' => $range_75_85,
-            '85-100%' => $range_85_100,
+            '0-60%' => $count_0_60,
+            '60-75%' => $count_60_75,
+            '75-85%' => $count_75_85,
+            '85-100%' => $count_85_100,
         ];
 
             return response()->json($data, 200);
