@@ -2292,6 +2292,7 @@ class StudentController extends Controller
                 "student_sessions.student_session_courses.course",
                 "student_sessions.student_session_courses.student_session_course_subjects",
                 "student_sessions.student_session_courses.student_session_course_subjects.subject",
+                "referral"
             ])
                 ->where([
                     "id" => $id,
