@@ -13,6 +13,7 @@ use App\Http\Controllers\BusinessSettingController;
 use App\Http\Controllers\BusinessTierController;
 use App\Http\Controllers\BusinessTimesController;
 use App\Http\Controllers\ClassRoutineController;
+use App\Http\Controllers\ClientTicketingSystemController;
 use App\Http\Controllers\CourseTitleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\FileManagementController;
@@ -680,6 +681,14 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
     // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     // end dashboard section
     // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ // @@@@@@
+    // ticketing system
+    // @@@@@@
+       Route::get('/get-ticket-token', [ClientTicketingSystemController::class, "getTicketToken"]);
+ // @@@@@@
+    // ticketing system
+    // @@@@@@
 
 
 });

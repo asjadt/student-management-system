@@ -502,13 +502,6 @@
                         "example": "2025-04-30"
                     },
                     {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "Search key (room, teacher, subject, semester)",
-                        "required": false,
-                        "example": "Math"
-                    },
-                    {
                         "name": "order_by",
                         "in": "query",
                         "description": "Order direction (ASC or DESC)",
@@ -945,13 +938,6 @@
                         "example": "2025-04-30"
                     },
                     {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "Search key (room, teacher, subject, semester)",
-                        "required": false,
-                        "example": "Math"
-                    },
-                    {
                         "name": "order_by",
                         "in": "query",
                         "description": "Order direction (ASC or DESC)",
@@ -1315,13 +1301,6 @@
                         "description": "End date to filter attendances",
                         "required": false,
                         "example": "2025-04-30"
-                    },
-                    {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "Search key (room, teacher, subject, semester)",
-                        "required": false,
-                        "example": "Math"
                     },
                     {
                         "name": "order_by",
@@ -5273,11 +5252,6 @@
                                         "format": "string",
                                         "example": "teacher_id"
                                     },
-                                    "semester_id": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "semester_id"
-                                    },
                                     "session_id": {
                                         "type": "string",
                                         "format": "string",
@@ -5410,10 +5384,6 @@
                                             "type": "object"
                                         }
                                     },
-                                    "semester_id": {
-                                        "type": "string",
-                                        "example": "semester_id"
-                                    },
                                     "session_id": {
                                         "type": "string",
                                         "example": "session_id"
@@ -5543,10 +5513,6 @@
                                             "type": "object"
                                         }
                                     },
-                                    "semester_id": {
-                                        "type": "string",
-                                        "example": "semester_id"
-                                    },
                                     "session_id": {
                                         "type": "string",
                                         "example": "session_id"
@@ -5605,6 +5571,31 @@
                                 "schema": {}
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/get-ticket-token": {
+            "get": {
+                "tags": [
+                    "ticketing_client"
+                ],
+                "summary": "Get encrypted JWT ticket token",
+                "operationId": "getTicketToken",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "500": {
+                        "description": "Server error"
                     }
                 },
                 "security": [
@@ -10329,6 +10320,435 @@
                 ]
             }
         },
+        "/v1.0/reminders": {
+            "get": {
+                "tags": [
+                    "reminders"
+                ],
+                "summary": "This method is to get reminders  ",
+                "description": "This method is to get reminders ",
+                "operationId": "getReminders",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "reminders"
+                ],
+                "summary": "This method is to update reminder ",
+                "description": "This method is to update reminder",
+                "operationId": "updateReminder",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": "Updated Christmas"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Your Title"
+                                    },
+                                    "entity_name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Your Entity Name"
+                                    },
+                                    "duration": {
+                                        "type": "integer",
+                                        "format": "int",
+                                        "example": 10
+                                    },
+                                    "duration_unit": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "enum": [
+                                            "days",
+                                            "weeks",
+                                            "months"
+                                        ],
+                                        "example": "days"
+                                    },
+                                    "send_time": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "enum": [
+                                            "before_expiry",
+                                            "after_expiry"
+                                        ],
+                                        "example": "before_expiry"
+                                    },
+                                    "frequency_after_first_reminder": {
+                                        "type": "integer",
+                                        "format": "int",
+                                        "example": 2
+                                    },
+                                    "reminder_limit": {
+                                        "type": "integer",
+                                        "format": "int",
+                                        "example": 2
+                                    },
+                                    "keep_sending_until_update": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "reminders"
+                ],
+                "summary": "This method is to store reminder",
+                "description": "This method is to store reminder",
+                "operationId": "createReminder",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Your Title"
+                                    },
+                                    "entity_name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Your Entity Name"
+                                    },
+                                    "duration": {
+                                        "type": "integer",
+                                        "format": "int",
+                                        "example": 10
+                                    },
+                                    "duration_unit": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "enum": [
+                                            "days",
+                                            "weeks",
+                                            "months"
+                                        ],
+                                        "example": "days"
+                                    },
+                                    "send_time": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "enum": [
+                                            "before_expiry",
+                                            "after_expiry"
+                                        ],
+                                        "example": "before_expiry"
+                                    },
+                                    "frequency_after_first_reminder": {
+                                        "type": "integer",
+                                        "format": "int",
+                                        "example": 2
+                                    },
+                                    "reminder_limit": {
+                                        "type": "integer",
+                                        "format": "int",
+                                        "example": 2
+                                    },
+                                    "keep_sending_until_update": {
+                                        "type": "boolean",
+                                        "format": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1.0/reminders/{ids}": {
+            "delete": {
+                "tags": [
+                    "reminders"
+                ],
+                "summary": "This method is to delete reminder by id",
+                "description": "This method is to delete reminder by id",
+                "operationId": "deleteRemindersByIds",
+                "parameters": [
+                    {
+                        "name": "ids",
+                        "in": "path",
+                        "description": "ids",
+                        "required": true,
+                        "example": "1,2,3"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocesseble Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/roles": {
             "get": {
                 "tags": [
@@ -10846,543 +11266,6 @@
                 "summary": "This method is to get initioal permissions",
                 "description": "This method is to get initioal permissions",
                 "operationId": "getInitialPermissions",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/semesters": {
-            "get": {
-                "tags": [
-                    "semesters"
-                ],
-                "summary": "This method is to get semesters  ",
-                "description": "This method is to get semesters ",
-                "operationId": "getSemesters",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "name",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "start_start_date",
-                        "in": "query",
-                        "description": "start_start_date",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "end_start_date",
-                        "in": "query",
-                        "description": "end_start_date",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "start_end_date",
-                        "in": "query",
-                        "description": "start_end_date",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "end_end_date",
-                        "in": "query",
-                        "description": "end_end_date",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "per_page",
-                        "required": true,
-                        "example": "6"
-                    },
-                    {
-                        "name": "is_active",
-                        "in": "query",
-                        "description": "is_active",
-                        "required": true,
-                        "example": "1"
-                    },
-                    {
-                        "name": "start_date",
-                        "in": "query",
-                        "description": "start_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "end_date",
-                        "in": "query",
-                        "description": "end_date",
-                        "required": true,
-                        "example": "2019-06-29"
-                    },
-                    {
-                        "name": "search_key",
-                        "in": "query",
-                        "description": "search_key",
-                        "required": true,
-                        "example": "search_key"
-                    },
-                    {
-                        "name": "order_by",
-                        "in": "query",
-                        "description": "order_by",
-                        "required": true,
-                        "example": "ASC"
-                    },
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "id",
-                        "required": true,
-                        "example": "ASC"
-                    },
-                    {
-                        "name": "is_single_search",
-                        "in": "query",
-                        "description": "is_single_search",
-                        "required": true,
-                        "example": "ASC"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "semesters"
-                ],
-                "summary": "This method is to update semesters ",
-                "description": "This method is to update semesters ",
-                "operationId": "updateSemester",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "number",
-                                        "format": "number",
-                                        "example": "1"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "name"
-                                    },
-                                    "start_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "start_date"
-                                    },
-                                    "end_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "end_date"
-                                    },
-                                    "break_start_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "break_start_date"
-                                    },
-                                    "break_end_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "break_end_date"
-                                    },
-                                    "course_ids": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": [
-                                            1,
-                                            2,
-                                            3
-                                        ]
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "semesters"
-                ],
-                "summary": "This method is to store semesters",
-                "description": "This method is to store semesters",
-                "operationId": "createSemester",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "name"
-                                    },
-                                    "start_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "start_date"
-                                    },
-                                    "end_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "end_date"
-                                    },
-                                    "break_start_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "break_start_date"
-                                    },
-                                    "break_end_date": {
-                                        "type": "string",
-                                        "format": "string",
-                                        "example": "break_end_date"
-                                    },
-                                    "course_ids": {
-                                        "type": "string",
-                                        "format": "array",
-                                        "example": [
-                                            1,
-                                            2,
-                                            3
-                                        ]
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/semesters/toggle-active": {
-            "put": {
-                "tags": [
-                    "semesters"
-                ],
-                "summary": "This method is to toggle semesters",
-                "description": "This method is to toggle semesters",
-                "operationId": "toggleActiveSemester",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "number",
-                                        "example": "1"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocesseble Content",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/v1.0/semesters/{ids}": {
-            "delete": {
-                "tags": [
-                    "semesters"
-                ],
-                "summary": "This method is to delete semester by id",
-                "description": "This method is to delete semester by id",
-                "operationId": "deleteSemestersByIds",
-                "parameters": [
-                    {
-                        "name": "ids",
-                        "in": "path",
-                        "description": "ids",
-                        "required": true,
-                        "example": "1,2,3"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -20785,6 +20668,10 @@
             "description": "class_routines"
         },
         {
+            "name": "ticketing_client",
+            "description": "ticketing_client"
+        },
+        {
             "name": "student.course_titles",
             "description": "student.course_titles"
         },
@@ -20841,12 +20728,12 @@
             "description": "payment_type_management"
         },
         {
-            "name": "user_management.role",
-            "description": "user_management.role"
+            "name": "reminders",
+            "description": "reminders"
         },
         {
-            "name": "semesters",
-            "description": "semesters"
+            "name": "user_management.role",
+            "description": "user_management.role"
         },
         {
             "name": "service_plans",
