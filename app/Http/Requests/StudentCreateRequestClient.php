@@ -47,20 +47,17 @@ class StudentCreateRequestClient extends BaseFormRequest
             'letter_issue_date' => 'nullable|date',
             'business_id' => 'required|numeric|exists:businesses,id',
 
-            'session_id' => [
-                "required",
+
+  'session_id' => [
+                "nullable",
                 'numeric',
                 function ($attribute, $value, $fail) {
-
             $exists = Session::where("sessions.id",$value)->exists();
-
                 if (!$exists) {
                     $fail("$attribute is invalid.");
                 }
-
                 },
             ],
-            
             'course_title_id' => [
                 "required",
                 'numeric',

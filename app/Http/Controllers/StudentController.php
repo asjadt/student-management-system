@@ -251,7 +251,7 @@ class StudentController extends Controller
                     'session_id' => $request_data["session_id"]
                 ]);
 
-                $student_session_course =  StudentSessionCourse::create([
+                  StudentSessionCourse::create([
                     'student_session_id' => $student_session->id,
                     'course_title_id' => $request_data["course_title_id"] ?? "",
 
@@ -404,7 +404,6 @@ class StudentController extends Controller
                 $request_data["course_start_date"] = "1970-01-01";
 
 
-
                 $request_data["student_id"] = $this->generateUniqueId(Business::class, $request_data["business_id"], Student::class, 'student_id');
 
                 $business_setting = BusinessSetting::where([
@@ -421,16 +420,7 @@ class StudentController extends Controller
                 $student =  Student::create($request_data);
 
 
-                $student_session = StudentSession::create([
-                    'student_id' => $student->id,
-                    'session_id' => $request_data["session_id"] ?? ""
-                ]);
 
-                $student_session_course =  StudentSessionCourse::create([
-                    'student_session_id' => $student_session->id,
-                    'course_title_id' => $request_data["course_title_id"] ?? "",
-
-                ]);
 
                 $business = $student->business;
 
@@ -461,7 +451,6 @@ class StudentController extends Controller
                     "student_full_name" => trim(($student->title ?? '') . ' ' . ($student->first_name ?? '') . ' ' . ($student->middle_name ?? '') . ' ' . ($student->last_name ?? '')),
 
                     "business_email" => $business->email,
-
 
                 ];
 
@@ -604,8 +593,6 @@ class StudentController extends Controller
                         'course_duration',
                         'course_detail',
                         'level',
-
-
                         'letter_issue_date',
                         'passport_number',
                         'student_id',
@@ -644,6 +631,25 @@ class StudentController extends Controller
                 }
 
 
+// First, check or create the student session
+$student_session = StudentSession::firstOrCreate(
+    [
+        'student_id' => $student->id,
+        'session_id' => $request_data["session_id"]
+    ]
+);
+
+// Then, only create the course entry if not already present
+$existing_course = StudentSessionCourse::where('student_session_id', $student_session->id)
+    ->where('course_title_id', $request_data["course_title_id"] ?? "")
+    ->exists();
+
+if (!$existing_course) {
+    StudentSessionCourse::create([
+        'student_session_id' => $student_session->id,
+        'course_title_id' => $request_data["course_title_id"] ?? "",
+    ]);
+}
 
 
 
