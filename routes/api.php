@@ -702,6 +702,7 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
 Route::get('/client/v1.0/business-settings', [BusinessSettingController::class, "getBusinessSettingClient"]);
 
 Route::post('/v1.0/client/students', [StudentController::class, "createStudentClient"]);
+Route::post('/v2.0/client/students', [StudentController::class, "createStudentClientV2"]);
 Route::get('/v1.0/client/students/{id}', [StudentController::class, "getStudentByIdClient"]);
 
 Route::get('/v1.0/client/student-statuses', [StudentStatusController::class, "getStudentStatusesClient"]);
