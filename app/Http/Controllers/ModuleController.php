@@ -561,7 +561,7 @@ class ModuleController extends Controller
      *     )
      */
 
-    public function getPublicModules(Request $request)
+    public function getClientModules(Request $request)
     {
         try {
 

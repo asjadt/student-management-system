@@ -29,7 +29,6 @@ class StudentCreateRequestClient extends BaseFormRequest
     {
         $rules = [
 
-
             'title' => 'required|string',
             'first_name' => 'required|string',
             'middle_name' => 'nullable|string',
@@ -48,14 +47,14 @@ class StudentCreateRequestClient extends BaseFormRequest
             'business_id' => 'required|numeric|exists:businesses,id',
 
 
-  'session_id' => [
+            'session_id' => [
                 "nullable",
                 'numeric',
                 function ($attribute, $value, $fail) {
-            $exists = Session::where("sessions.id",$value)->exists();
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
+                    $exists = Session::where("sessions.id", $value)->exists();
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
                 },
             ],
             'course_title_id' => [
@@ -63,21 +62,20 @@ class StudentCreateRequestClient extends BaseFormRequest
                 'numeric',
                 function ($attribute, $value, $fail) {
 
-                    $exists = CourseTitle::where("course_titles.id",$value)
-                    ->exists();
+                    $exists = CourseTitle::where("course_titles.id", $value)
+                        ->exists();
 
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
-
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
                 },
             ],
             'attachments' => 'present|array',
             'attachments.*' => 'string',
 
 
-            'course_duration'=> 'nullable|string',
-            'course_detail'=> 'nullable|string',
+            'course_duration' => 'nullable|string',
+            'course_detail' => 'nullable|string',
 
             'email' => 'nullable|email|max:255',
             'contact_number' => 'nullable|string|max:20',
@@ -93,6 +91,8 @@ class StudentCreateRequestClient extends BaseFormRequest
             'passport_issue_date' => 'nullable|date',
             'passport_expiry_date' => 'nullable|date|after:passport_issue_date',
             'place_of_issue' => 'nullable|string|max:255',
+            'is_local_student' => 'nullable|boolean',
+            'NI_number' => 'nullable|string|max:255',
 
    "agency_id" => "nullable|numeric|exists:agencies,id",
     "agency_commission" => "nullable|required_with:agency_id|numeric|min:0",
@@ -108,15 +108,10 @@ class StudentCreateRequestClient extends BaseFormRequest
 
 
         return $rules;
-
-
     }
 
     public function messages()
     {
-        return [
-
-
-        ];
+        return [];
     }
 }

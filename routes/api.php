@@ -98,7 +98,7 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
 
 
    Route::get('/v1.0/modules', [ModuleController::class, "getModules"]);
-   Route::get('/v1.0/public-modules', [ModuleController::class, "getPublicModules"]);
+
 
 
    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -727,3 +727,6 @@ Route::get('/v1.0/students/validate/student-id/{student_id}/{business_id}', [Stu
 Route::get('/v1.0/client/businesses/{id}', [BusinessController::class, "getBusinessByIdClient"]);
 
 Route::get('/v1.0/client/service-plans', [ServicePlanController::class, "getServicePlanClient"]);
+
+// MODULES
+Route::get('/v1.0/client-modules', [ModuleController::class, "getClientModules"]);
