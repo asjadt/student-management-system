@@ -252,7 +252,7 @@ class StudentController extends Controller
                     'session_id' => $request_data["session_id"]
                 ]);
 
-                  StudentSessionCourse::create([
+                StudentSessionCourse::create([
                     'student_session_id' => $student_session->id,
                     'course_title_id' => $request_data["course_title_id"] ?? "",
 
@@ -485,6 +485,173 @@ foreach ($student_documents as $doc) {
             return $this->sendError($e, 500, $request);
         }
     }
+    /**
+     *
+     * @OA\Post(
+     *      path="/v2.0/client/students",
+     *      operationId="createStudentClient",
+     *      tags={"students"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to store student",
+     *      description="This method is to store student",
+     *
+     *  @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     * *     @OA\Property(property="title", type="string", format="string", example="title"),
+     *     @OA\Property(property="first_name", type="string", format="string", example="John"),
+     *     @OA\Property(property="middle_name", type="string", format="string", example=""),
+     *     @OA\Property(property="last_name", type="string", format="string", example="Doe"),
+     *     @OA\Property(property="nationality", type="string", format="string", example="Country"),
+     * *     @OA\Property(property="course_fee", type="string", format="string", example="Country"),
+     * *     @OA\Property(property="fee_paid", type="string", format="string", example="Country"),
+     *     @OA\Property(property="passport_number", type="string", format="string", example="ABC123"),
+     *     @OA\Property(property="student_id", type="string", format="string", example="School123"),
+     *     @OA\Property(property="date_of_birth", type="string", format="date", example="2000-01-01"),
+     *     @OA\Property(property="course_start_date", type="string", format="date", example="2024-01-31"),
+     *     @OA\Property(property="letter_issue_date", type="string", format="date", example="2024-02-01"),
+     *     @OA\Property(property="student_status_id", type="number", format="number", example=1),
+     *  *     @OA\Property(property="course_title_id", type="number", format="number", example=1),
+     * *  *     @OA\Property(property="session_id", type="number", format="number", example=1),
+     *     @OA\Property(property="attachments", type="string", format="array", example={"a.png","b.jpeg"}),
+
+     * *     @OA\Property(property="course_", type="string", format="email", example="course_duration", description="course_duration"),
+     *  * *     @OA\Property(property="course_detail", type="string", format="email", example="course_detail", description="course_duration"),
+     *
+     * *     @OA\Property(property="email", type="string", format="email", example="student@example.com", description="Email address of the student"),
+     *     @OA\Property(property="contact_number", type="string", format="string", example="+1234567890", description="Contact number of the student"),
+     *     @OA\Property(property="sex", type="string", format="string", example="Male", description="Sex of the student"),
+     *     @OA\Property(property="address", type="string", format="string", example="123 Main St, Apartment 4B", description="Address of the student"),
+     *     @OA\Property(property="country", type="string", format="string", example="United States", description="Country of the student's address"),
+     *     @OA\Property(property="city", type="string", format="string", example="New York", description="City of the student's address"),
+     *     @OA\Property(property="postcode", type="string", format="string", example="10001", description="Postal code of the student's address"),
+     *     @OA\Property(property="lat", type="string", format="string", example="40.712776", description="Latitude of the student's address"),
+     *     @OA\Property(property="long", type="string", format="string", example="-74.005974", description="Longitude of the student's address"),
+     *     @OA\Property(property="emergency_contact_details", type="object", example={"name": "John Doe", "relation": "Father", "contact": "+1234567890"}, description="Emergency contact details of the student"),
+     *     @OA\Property(property="previous_education_history", type="array", @OA\Items(type="object", example={"institution": "High School", "year": "2019", "grade": "A"}), description="Previous education history of the student"),
+     *     @OA\Property(property="passport_issue_date", type="string", format="date", example="2020-01-01", description="Passport issue date of the student"),
+     *     @OA\Property(property="passport_expiry_date", type="string", format="date", example="2030-01-01", description="Passport expiry date of the student"),
+     *     @OA\Property(property="place_of_issue", type="string", format="string", example="New York, USA", description="Place where the student's passport was issued")
+     *
+     *
+     *
+     *
+     *
+     *
+     *         ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function createStudentClientV2(StudentCreateRequestClient $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            return DB::transaction(function () use ($request) {
+
+
+                $request_data = $request->validated();
+
+
+                $request_data["is_active"] = true;
+                $request_data["course_fee"] = 0;
+                $request_data["fee_paid"] = 0;
+                $request_data["course_start_date"] = "1970-01-01";
+
+
+                $request_data["student_id"] = $this->generateUniqueId(Business::class, $request_data["business_id"], Student::class, 'student_id');
+
+                $business_setting = BusinessSetting::where([
+                    "business_id" => $request_data["business_id"]
+                ])
+                    ->first();
+
+                if (!empty($business_setting) && !empty($business_setting->online_student_status_id)) {
+                    $request_data["student_status_id"] = $business_setting->online_student_status_id;
+                } else {
+                    $request_data["student_status_id"] = NULL;
+                }
+
+                $student =  Student::create($request_data);
+
+
+
+
+                $business = $student->business;
+
+                $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
+
+                if (isset($request_data["previous_education_history"]["student_docs"])) {
+                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles(
+                        $request_data["previous_education_history"]["student_docs"],
+                        "file_name",
+                        "student_docs",
+                        NULL,
+                        $student->id
+                    );
+                } else {
+                    $request_data["previous_education_history"]["student_docs"] = [];
+                }
+
+
+
+                $student->previous_education_history = $request_data["previous_education_history"];
+                $student->save();
+
+
+                $response = [
+                    "id" => $student->id,
+                    "student_id" => $student->student_id,
+                    "business_name" => $business->name,
+                    "student_full_name" => trim(($student->title ?? '') . ' ' . ($student->first_name ?? '') . ' ' . ($student->middle_name ?? '') . ' ' . ($student->last_name ?? '')),
+
+                    "business_email" => $business->email,
+
+                ];
+
+                return response($response, 201);
+            });
+        } catch (Exception $e) {
+
+
+
+
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
 
     /**
@@ -652,25 +819,25 @@ foreach ($student_documents as $doc) {
                 }
 
 
-// First, check or create the student session
-$student_session = StudentSession::firstOrCreate(
-    [
-        'student_id' => $student->id,
-        'session_id' => $request_data["session_id"]
-    ]
-);
+                // First, check or create the student session
+                $student_session = StudentSession::firstOrCreate(
+                    [
+                        'student_id' => $student->id,
+                        'session_id' => $request_data["session_id"]
+                    ]
+                );
 
-// Then, only create the course entry if not already present
-$existing_course = StudentSessionCourse::where('student_session_id', $student_session->id)
-    ->where('course_title_id', $request_data["course_title_id"] ?? "")
-    ->exists();
+                // Then, only create the course entry if not already present
+                $existing_course = StudentSessionCourse::where('student_session_id', $student_session->id)
+                    ->where('course_title_id', $request_data["course_title_id"] ?? "")
+                    ->exists();
 
-if (!$existing_course) {
-    StudentSessionCourse::create([
-        'student_session_id' => $student_session->id,
-        'course_title_id' => $request_data["course_title_id"] ?? "",
-    ]);
-}
+                if (!$existing_course) {
+                    StudentSessionCourse::create([
+                        'student_session_id' => $student_session->id,
+                        'course_title_id' => $request_data["course_title_id"] ?? "",
+                    ]);
+                }
 
 
 
@@ -840,25 +1007,25 @@ if (!$existing_course) {
 
 
                 foreach ($request_data["sessions"] as $request_session) {
-    $student_session = StudentSession::create([
-        'student_id' => $request_data["student_id"],
-        'session_id' => $request_session["session_id"]
-    ]);
+                    $student_session = StudentSession::create([
+                        'student_id' => $request_data["student_id"],
+                        'session_id' => $request_session["session_id"]
+                    ]);
 
-    foreach ($request_session["courses"] as $request_course) {
-        $student_session_course = StudentSessionCourse::create([
-            'student_session_id' => $student_session->id,
-            'course_title_id' => $request_course["course_title_id"],
-        ]);
+                    foreach ($request_session["courses"] as $request_course) {
+                        $student_session_course = StudentSessionCourse::create([
+                            'student_session_id' => $student_session->id,
+                            'course_title_id' => $request_course["course_title_id"],
+                        ]);
 
-        foreach ($request_course["subjects"] as $request_subject) {
-            StudentCourseSubject::create([
-                'student_session_course_id' => $student_session_course->id,
-                'subject_id' => $request_subject["subject_id"]
-            ]);
-        }
-    }
-}
+                        foreach ($request_course["subjects"] as $request_subject) {
+                            StudentCourseSubject::create([
+                                'student_session_course_id' => $student_session_course->id,
+                                'subject_id' => $request_subject["subject_id"]
+                            ]);
+                        }
+                    }
+                }
 
 
 
@@ -2409,8 +2576,8 @@ if (!$existing_course) {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
             $student =  Student::where([
-                    "id" => $id
-                ])
+                "id" => $id
+            ])
                 ->first();
             if (!$student) {
                 $this->storeError(

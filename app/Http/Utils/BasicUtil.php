@@ -238,19 +238,16 @@ trait BasicUtil
     public function storeUploadedFiles($filePaths, $fileKey, $location, $arrayOfString = NULL, $student_id = NULL)
     {
 
-
-
-
         // Step 3: Handle nested arrays of file paths
         if (is_array($arrayOfString)) {
             return collect($filePaths)->map(function ($filePathItem) use ($fileKey, $location, $student_id) {
                 $filePathItem[$fileKey] = $this->storeUploadedFiles(
                     $filePathItem[$fileKey],
-                     "",
+                    "",
                     $location,
                     NULL,
                     $student_id
-                    );
+                );
                 return $filePathItem;
             });
         }
@@ -262,13 +259,13 @@ trait BasicUtil
         // Iterate over each file path in the array and perform necessary operations
         return collect($filePaths)->map(function ($filePathItem) use ($temporaryFilesLocation, $fileKey, $location, $student_id) {
 
- // Step 1: Retrieve the business of the authenticated user
- $business = auth()->user()->business;
- // Add the business name to the location path
- $location = str_replace(' ', '_', $business->name) . "/" . (!empty($student_id) ? ("/" . base64_encode($student_id) . "/") : "") . $location;
+            // Step 1: Retrieve the business of the authenticated user
+            $business = auth()->user()->business;
+            // Add the business name to the location path
+            $location = str_replace(' ', '_', $business->name) . "/" . (!empty($student_id) ? ("/" . base64_encode($student_id) . "/") : "") . $location;
 
 
-    $file = !empty($fileKey) ? $filePathItem[$fileKey] : $filePathItem;
+            $file = !empty($fileKey) ? $filePathItem[$fileKey] : $filePathItem;
 
 
             // Construct the full temporary file path and the new location path
@@ -375,18 +372,18 @@ public function storeUploadedFilesV2(array $files, string $location, ?int $stude
                 throw new Exception("Failed to rename folder: " . $e->getMessage());
             }
         } else {
-           // If the folder doesn't exist, create it
-        $fullNewFolderPath = public_path($newFolderName);
-        if (!File::exists($fullNewFolderPath)) {
-            try {
-                File::makeDirectory($newFolderPath, 0755, true); // Create the new folder
-                Log::info("Folder created successfully at {$newFolderPath}");
-                return $newFolderPath;
-            } catch (\Exception $e) {
-                Log::error("Failed to create folder: " . $e->getMessage());
-                throw new Exception("Failed to create folder: " . $e->getMessage());
+            // If the folder doesn't exist, create it
+            $fullNewFolderPath = public_path($newFolderName);
+            if (!File::exists($fullNewFolderPath)) {
+                try {
+                    File::makeDirectory($newFolderPath, 0755, true); // Create the new folder
+                    Log::info("Folder created successfully at {$newFolderPath}");
+                    return $newFolderPath;
+                } catch (\Exception $e) {
+                    Log::error("Failed to create folder: " . $e->getMessage());
+                    throw new Exception("Failed to create folder: " . $e->getMessage());
+                }
             }
-    }
         }
     }
 
@@ -409,23 +406,22 @@ public function storeUploadedFilesV2(array $files, string $location, ?int $stude
                 });
             });
 
-            if(request()->filled("id") && empty($data)) {
-                throw new Exception("No data found",404);
-            }
+        if (request()->filled("id") && empty($data)) {
+            throw new Exception("No data found", 404);
+        }
         return $data;
-
     }
 
 
-    public function getUrlLink($data,$propertyName,$folderName,$business_name=NULL){
+    public function getUrlLink($data, $propertyName, $folderName, $business_name = NULL)
+    {
 
-        if(empty($business_name)){
+        if (empty($business_name)) {
             $business_name = auth()->user()?->business?->name ?? "no business";
         }
 
-        $data[$propertyName] = "/" . str_replace(' ', '_', $business_name) . "/". $folderName."/".  $data[$propertyName];
+        $data[$propertyName] = "/" . str_replace(' ', '_', $business_name) . "/" . $folderName . "/" .  $data[$propertyName];
 
         return $data;
     }
-
 }
