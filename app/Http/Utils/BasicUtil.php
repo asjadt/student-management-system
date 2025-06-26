@@ -312,45 +312,73 @@ trait BasicUtil
         })->toArray();
     }
 
-private function moveFile(string $file, string $temporary_files_location, string $final_location): string
-{
-    $full_temp_path = public_path($file);
-    $new_location = str_replace($temporary_files_location, $final_location, $file);
-    $new_location_path = public_path($new_location);
+    private function moveFile(string $file, string $temporary_files_location, string $final_location): string
+    {
+        $full_temp_path = public_path($file);
+        $new_location = str_replace($temporary_files_location, $final_location, $file);
+        $new_location_path = public_path($new_location);
 
-    if (File::exists($full_temp_path)) {
-        $new_directory = dirname($new_location_path);
-        if (!File::exists($new_directory)) {
-            File::makeDirectory($new_directory, 0755, true);
+        if (File::exists($full_temp_path)) {
+            $new_directory = dirname($new_location_path);
+            if (!File::exists($new_directory)) {
+                File::makeDirectory($new_directory, 0755, true);
+            }
+
+            File::move($full_temp_path, $new_location_path);
+            Log::info("File moved successfully from {$full_temp_path} to {$new_location_path}");
         }
 
-        File::move($full_temp_path, $new_location_path);
-        Log::info("File moved successfully from {$full_temp_path} to {$new_location_path}");
+        return basename($new_location);
     }
 
-    return basename($new_location);
-}
 
+    public function storeUploadedFilesV2(array $files, string $location, ?int $student_id = null): array
+    {
+        $temporary_files_location = config("setup-config.temporary_files_location");
 
-public function storeUploadedFilesV2(array $files, string $location, ?int $student_id = null): array
-{
-    $temporary_files_location = config("setup-config.temporary_files_location");
+        $business = auth()->user()->business;
+        $business_location = str_replace(' ', '_', $business->name);
+        $student_path = $student_id ? base64_encode($student_id) . "/" : "";
+        $final_location = "{$business_location}/{$student_path}{$location}";
 
-    $business = auth()->user()->business;
-    $business_location = str_replace(' ', '_', $business->name);
-    $student_path = $student_id ? base64_encode($student_id) . "/" : "";
-    $final_location = "{$business_location}/{$student_path}{$location}";
+        $new_file_names = [];
 
-    $new_file_names = [];
+        foreach ($files as $file) {
+            $new_file_names[] = $this->moveFile($file, $temporary_files_location, $final_location);
+        }
 
-    foreach ($files as $file) {
-        $new_file_names[] = $this->moveFile($file, $temporary_files_location, $final_location);
+        return $new_file_names;
     }
 
-    return $new_file_names;
-}
+    public function cleanupOldFiles(array $existing_files, array $new_files, string $base_path): void
+    {
+        foreach ($existing_files as $existingFile) {
+            $found = false;
 
+            foreach ($new_files as $newFile) {
+                if ($existingFile['id'] == $newFile['id']) {
+                    $found = true;
 
+                    // If filename changed, delete old file
+                    if ($existingFile['file_name'] !== $newFile['file_name']) {
+                        $filePath = public_path($base_path . $existingFile['file_name']);
+                        if (File::exists($filePath)) {
+                            File::delete($filePath);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            // If file no longer exists in new files, delete it
+            if (!$found) {
+                $filePath = public_path($base_path . $existingFile['file_name']);
+                if (File::exists($filePath)) {
+                    File::delete($filePath);
+                }
+            }
+        }
+    }
 
     public function renameOrCreateFolder($currentFolderPath, $newFolderName)
     {

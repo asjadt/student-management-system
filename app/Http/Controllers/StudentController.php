@@ -278,20 +278,20 @@ class StudentController extends Controller
                 $student->save();
 
 
-         $student_documents = $request_data['student_documents'] ?? [];
+                $student_documents = $request_data['student_documents'] ?? [];
 
-foreach ($student_documents as $doc) {
-    $filenames = $doc['filenames']; // array of file paths (strings)
+                foreach ($student_documents as $doc) {
+                    $filenames = $doc['filenames']; // array of file paths (strings)
 
-    // Call the util method with array of strings, get back new array of file names (strings)
-    $new_filenames = $this->storeUploadedFilesV2($filenames, 'student_docs', $student->id);
+                    // Call the util method with array of strings, get back new array of file names (strings)
+                    $new_filenames = $this->storeUploadedFilesV2($filenames, 'student_docs', $student->id);
 
-    StudentDocument::create([
-        'student_id' => $student->id,
-        'type' => $doc['type'],
-        'filenames' => $new_filenames,
-    ]);
-}
+                    StudentDocument::create([
+                        'student_id' => $student->id,
+                        'type' => $doc['type'],
+                        'filenames' => $new_filenames,
+                    ]);
+                }
 
 
                 if (!empty($request_data["agency_id"])) {
@@ -459,7 +459,22 @@ foreach ($student_documents as $doc) {
                 $student->previous_education_history = $request_data["previous_education_history"];
                 $student->save();
 
-             if (!empty($request_data["agency_id"])) {
+                $student_documents = $request_data['student_documents'] ?? [];
+
+                foreach ($student_documents as $doc) {
+                    $filenames = $doc['filenames']; // array of file paths (strings)
+
+                    // Call the util method with array of strings, get back new array of file names (strings)
+                    $new_filenames = $this->storeUploadedFilesV2($filenames, 'student_docs', $student->id);
+
+                    StudentDocument::create([
+                        'student_id' => $student->id,
+                        'type' => $doc['type'],
+                        'filenames' => $new_filenames,
+                    ]);
+                }
+
+                if (!empty($request_data["agency_id"])) {
                     $student->referral()->create([
                         'agency_id' => $request_data["agency_id"],
                         'agency_commission' => $request_data["agency_commission"] // Assuming commission_rate is a percentage
@@ -630,6 +645,21 @@ foreach ($student_documents as $doc) {
 
                 $student->previous_education_history = $request_data["previous_education_history"];
                 $student->save();
+
+                $student_documents = $request_data['student_documents'] ?? [];
+
+                foreach ($student_documents as $doc) {
+                    $filenames = $doc['filenames']; // array of file paths (strings)
+
+                    // Call the util method with array of strings, get back new array of file names (strings)
+                    $new_filenames = $this->storeUploadedFilesV2($filenames, 'student_docs', $student->id);
+
+                    StudentDocument::create([
+                        'student_id' => $student->id,
+                        'type' => $doc['type'],
+                        'filenames' => $new_filenames,
+                    ]);
+                }
 
 
                 $response = [
@@ -840,49 +870,24 @@ foreach ($student_documents as $doc) {
                 }
 
 
+                // For previous education history cleanup example:
 
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
                 if (isset($request_data["previous_education_history"]["student_docs"])) {
-                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles(
+                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFilesV2(
                         $request_data["previous_education_history"]["student_docs"],
-                        "file_name",
-                        "student_docs",
-                        NULL,
+                        'student_docs',
                         $student->id
                     );
 
                     $newDocs = $request_data["previous_education_history"]["student_docs"];
-
-                    $existing_previous_education_history = $student->previous_education_history;
-
-                    // Compare and delete old files if necessary
+                    $existing_previous_education_history = $student->previous_education_history ?? [];
                     $existingDocs = $existing_previous_education_history["student_docs"] ?? [];
 
-                    foreach ($existingDocs as $existingDoc) {
-                        $found = false;
-                        foreach ($newDocs as $newDoc) {
-                            if ($existingDoc["id"] == $newDoc["id"]) {
-                                $found = true;
+                    $base_path = str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/";
 
-                                if ($existingDoc["file_name"] !== $newDoc["file_name"]) {
-                                    $filePath = public_path(("/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/" .  $existingDoc["file_name"]));
-
-                                    if (File::exists($filePath)) {
-                                        File::delete($filePath);
-                                    }
-                                }
-                                break; // No need to check further once found
-                            }
-                        }
-
-                        if (!$found) {
-                            $filePath = public_path(("/" . str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/" .  $existingDoc["file_name"]));
-                            if (File::exists($filePath)) {
-                                File::delete($filePath);
-                            }
-                        }
-                    }
+                    $this->cleanupOldFiles($existingDocs, $newDocs, $base_path);
                 } else {
                     $request_data["previous_education_history"]["student_docs"] = [];
                 }
@@ -891,6 +896,20 @@ foreach ($student_documents as $doc) {
                 $student->previous_education_history = $request_data["previous_education_history"];
 
                 $student->save();
+
+                $student_documents = $request_data['student_documents'] ?? [];
+                StudentDocument::where('student_id', $student->id)->delete(); // Clear existing docs first
+
+                foreach ($student_documents as $doc) {
+                    $filenames = $doc['filenames']; // array of file paths (strings)
+                    $new_filenames = $this->storeUploadedFilesV2($filenames, 'student_docs', $student->id);
+
+                    StudentDocument::create([
+                        'student_id' => $student->id,
+                        'type' => $doc['type'],
+                        'filenames' => $new_filenames,
+                    ]);
+                }
 
                 $student->referral()->delete();
                 if (!empty($request_data["agency_id"])) {
