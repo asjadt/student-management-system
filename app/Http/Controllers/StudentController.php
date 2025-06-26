@@ -259,17 +259,32 @@ class StudentController extends Controller
                 ]);
 
 
-                $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
+              $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
-                if (isset($request_data["previous_education_history"]["student_docs"])) {
-                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFilesV2(
-                        $request_data["previous_education_history"]["student_docs"],
-                        "student_docs",
-                        $student->id
-                    );
-                } else {
-                    $request_data["previous_education_history"]["student_docs"] = [];
-                }
+if (isset($request_data["previous_education_history"]["student_docs"])) {
+    $docs = $request_data["previous_education_history"]["student_docs"];
+
+    $updated_docs = [];
+
+    foreach ($docs as $doc) {
+        if (!empty($doc["file_name"])) {
+            $new_file_name = $this->storeUploadedFilesV2(
+                [$doc["file_name"]],
+                "student_docs",
+                $student->id
+            )[0]; // Only one file returned
+
+            $doc["file_name"] = $new_file_name;
+        }
+
+        $updated_docs[] = $doc;
+    }
+
+    $request_data["previous_education_history"]["student_docs"] = $updated_docs;
+} else {
+    $request_data["previous_education_history"]["student_docs"] = [];
+}
+
 
 
                 $student->previous_education_history = $request_data["previous_education_history"];
@@ -438,18 +453,32 @@ class StudentController extends Controller
 
                 $business = $student->business;
 
-                $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
+             $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
-                if (isset($request_data["previous_education_history"]["student_docs"])) {
-                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFilesV2(
-                        $request_data["previous_education_history"]["student_docs"],
-                        "student_docs",
-                        $student->id,
-                        $request_data["business_id"]
-                    );
-                } else {
-                    $request_data["previous_education_history"]["student_docs"] = [];
-                }
+if (isset($request_data["previous_education_history"]["student_docs"])) {
+    $docs = $request_data["previous_education_history"]["student_docs"];
+
+    $updated_docs = [];
+
+    foreach ($docs as $doc) {
+        if (!empty($doc["file_name"])) {
+            $new_file_name = $this->storeUploadedFilesV2(
+                [$doc["file_name"]],
+                "student_docs",
+                $student->id
+            )[0]; // Only one file returned
+
+            $doc["file_name"] = $new_file_name;
+        }
+
+        $updated_docs[] = $doc;
+    }
+
+    $request_data["previous_education_history"]["student_docs"] = $updated_docs;
+} else {
+    $request_data["previous_education_history"]["student_docs"] = [];
+}
+
 
 
 
@@ -624,19 +653,32 @@ class StudentController extends Controller
 
                 $business = $student->business;
 
-                $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
+              $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
-                if (isset($request_data["previous_education_history"]["student_docs"])) {
-                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles(
-                        $request_data["previous_education_history"]["student_docs"],
-                        "file_name",
-                        "student_docs",
-                        NULL,
-                        $student->id
-                    );
-                } else {
-                    $request_data["previous_education_history"]["student_docs"] = [];
-                }
+if (isset($request_data["previous_education_history"]["student_docs"])) {
+    $docs = $request_data["previous_education_history"]["student_docs"];
+
+    $updated_docs = [];
+
+    foreach ($docs as $doc) {
+        if (!empty($doc["file_name"])) {
+            $new_file_name = $this->storeUploadedFilesV2(
+                [$doc["file_name"]],
+                "student_docs",
+                $student->id
+            )[0]; // Only one file returned
+
+            $doc["file_name"] = $new_file_name;
+        }
+
+        $updated_docs[] = $doc;
+    }
+
+    $request_data["previous_education_history"]["student_docs"] = $updated_docs;
+} else {
+    $request_data["previous_education_history"]["student_docs"] = [];
+}
+
 
 
 
@@ -871,23 +913,34 @@ class StudentController extends Controller
 
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
-                if (isset($request_data["previous_education_history"]["student_docs"])) {
-                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFilesV2(
-                        $request_data["previous_education_history"]["student_docs"],
-                        'student_docs',
-                        $student->id
-                    );
+               if (isset($request_data["previous_education_history"]["student_docs"])) {
+    $docs = $request_data["previous_education_history"]["student_docs"];
 
-                    $newDocs = $request_data["previous_education_history"]["student_docs"];
-                    $existing_previous_education_history = $student->previous_education_history ?? [];
-                    $existingDocs = $existing_previous_education_history["student_docs"] ?? [];
+    $newDocs = [];
 
-                    $base_path = str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/";
+    foreach ($docs as $doc) {
+        $old_file_name = $doc["file_name"] ?? null;
 
-                    $this->cleanupOldFiles($existingDocs, $newDocs, $base_path);
-                } else {
-                    $request_data["previous_education_history"]["student_docs"] = [];
-                }
+        if ($old_file_name) {
+            // Move this single file using the simplified util
+            $new_file_names = $this->storeUploadedFilesV2([$old_file_name], "student_docs", $student->id);
+
+            // Update the doc with the new file name
+            $doc["file_name"] = $new_file_names[0]; // Only one file processed
+        }
+
+        $newDocs[] = $doc;
+    }
+
+    $request_data["previous_education_history"]["student_docs"] = $newDocs;
+
+    // Optional cleanup of old files
+    $existingDocs = $student->previous_education_history["student_docs"] ?? [];
+    $base_path = str_replace(' ', '_', $student->business->name) . "/" . base64_encode($student->id) . "/student_docs/";
+    $this->cleanupOldFiles($existingDocs, $newDocs, $base_path);
+} else {
+    $request_data["previous_education_history"]["student_docs"] = [];
+}
 
 
                 $student->previous_education_history = $request_data["previous_education_history"];
