@@ -18,18 +18,29 @@ class Agency extends Model
         'commission_rate',
         "is_active",
         'business_id',
-        "owner_id"
+        "owner_id",
+        "agency_code"
     ];
 
     public function business()
     {
-        return $this->belongsTo(Business::class, 'business_id','id');
+        return $this->belongsTo(Business::class, 'business_id', 'id');
     }
 
     public function owner()
     {
-        return $this->belongsTo(User::class, 'owner_id','id');
+        return $this->belongsTo(User::class, 'owner_id', 'id');
     }
 
+    // AUTO GENERATED AGENCY CODE
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::creating(function ($agency) {
+            $prefix = 'AG'; // or anything you prefer
+            $latestId = Agency::max('id') + 1;
+            $agency->agency_code = $prefix . str_pad($latestId, 5, '0', STR_PAD_LEFT);
+        });
+    }
 }
