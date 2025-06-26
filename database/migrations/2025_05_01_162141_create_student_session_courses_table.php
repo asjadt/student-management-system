@@ -22,11 +22,11 @@ class CreateStudentSessionCoursesTable extends Migration
                 ->on('student_sessions')
                 ->onDelete('CASCADE');
 
-             $table->unsignedBigInteger('course_title_id');
-             $table->foreign('course_title_id')
-                 ->references('id')
-                 ->on('course_titles')
-                 ->onDelete('set null');
+            $table->unsignedBigInteger('course_title_id')->nullable();
+            $table->foreign('course_title_id')
+                ->references('id')
+                ->on('course_titles')
+                ->onDelete('set null');
 
 
 
