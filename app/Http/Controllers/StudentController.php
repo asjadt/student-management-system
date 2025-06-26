@@ -17,6 +17,7 @@ use App\Models\Business;
 use App\Models\BusinessSetting;
 use App\Models\Student;
 use App\Models\StudentCourseSubject;
+use App\Models\StudentDocument;
 use App\Models\StudentSession;
 use App\Models\StudentSessionCourse;
 use Exception;
@@ -277,6 +278,21 @@ class StudentController extends Controller
                 $student->save();
 
 
+         $student_documents = $request_data['student_documents'] ?? [];
+
+foreach ($student_documents as $doc) {
+    $filenames = $doc['filenames']; // array of file paths (strings)
+
+    // Call the util method with array of strings, get back new array of file names (strings)
+    $new_filenames = $this->storeUploadedFilesV2($filenames, 'student_docs', $student->id);
+
+    StudentDocument::create([
+        'student_id' => $student->id,
+        'type' => $doc['type'],
+        'filenames' => $new_filenames,
+    ]);
+}
+
 
                 if (!empty($request_data["agency_id"])) {
                     $student->referral()->create([
@@ -443,7 +459,12 @@ class StudentController extends Controller
                 $student->previous_education_history = $request_data["previous_education_history"];
                 $student->save();
 
-
+             if (!empty($request_data["agency_id"])) {
+                    $student->referral()->create([
+                        'agency_id' => $request_data["agency_id"],
+                        'agency_commission' => $request_data["agency_commission"] // Assuming commission_rate is a percentage
+                    ]);
+                }
                 $response = [
                     "id" => $student->id,
                     "student_id" => $student->student_id,

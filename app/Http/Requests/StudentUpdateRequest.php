@@ -135,7 +135,10 @@ class StudentUpdateRequest extends BaseFormRequest
              "agency_id" => "nullable|numeric|exists:agencies,id",
             "agency_commission" => "nullable|required_with:agency_id|numeric|min:0",
 
-
+'student_documents' => 'present|array',
+'student_documents.*.type' => 'required|string|max:255',
+'student_documents.*.filenames' => 'required|array',
+'student_documents.*.filenames.*' => 'string',
 
 
         ];

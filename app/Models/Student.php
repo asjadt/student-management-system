@@ -73,6 +73,10 @@ class Student extends Model
     return $history;
 }
 
+public function student_documents()
+{
+    return $this->hasMany(StudentDocument::class);
+}
 
     public function referral()
     {

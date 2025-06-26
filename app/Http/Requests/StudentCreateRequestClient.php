@@ -94,7 +94,13 @@ class StudentCreateRequestClient extends BaseFormRequest
             'passport_expiry_date' => 'nullable|date|after:passport_issue_date',
             'place_of_issue' => 'nullable|string|max:255',
 
+   "agency_id" => "nullable|numeric|exists:agencies,id",
+    "agency_commission" => "nullable|required_with:agency_id|numeric|min:0",
 
+'student_documents' => 'present|array',
+'student_documents.*.type' => 'required|string|max:255',
+'student_documents.*.filenames' => 'required|array',
+'student_documents.*.filenames.*' => 'string',
 
         ];
 
