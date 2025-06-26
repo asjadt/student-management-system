@@ -56,6 +56,24 @@ class Student extends Model
         'previous_education_history' => 'json',
     ];
 
+  public function getPreviousEducationHistoryAttribute($value)
+{
+    $history = json_decode($value, true);
+    $business_name = optional($this->business)->name ?? 'unknown';
+
+    if (isset($history['student_docs']) && is_array($history['student_docs'])) {
+        foreach ($history['student_docs'] as &$student_doc_object) {
+            $student_doc_object["original_file_name"] = $student_doc_object["file_name"];
+            $student_doc_object["file_name"] = "/" .
+                str_replace(' ', '_', $business_name) . "/" .
+                base64_encode($this->id) . "/student_docs/" . $student_doc_object["file_name"];
+        }
+    }
+
+    return $history;
+}
+
+
     public function referral()
     {
         return $this->hasOne(StudentReferral::class, 'student_id');
