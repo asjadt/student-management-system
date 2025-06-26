@@ -25,7 +25,7 @@ class AgencyController extends Controller
 {
     use ErrorUtil, BusinessUtil, UserActivityUtil, BasicUtil;
 
-     /**
+    /**
      *
      * @OA\Post(
      *      path="/v1.0/auth/register-with-agency",
@@ -57,18 +57,18 @@ class AgencyController extends Controller
      *
      *
      * * @OA\Property(
- *     property="agency",
- *     type="object",
- *     example={
- *         "agency_name": "Best Agency",
- *         "contact_person": "John Doe",
- *         "email": "johndoe@example.com",
- *         "phone_number": "01771034383",
- *         "address": "123 Main Street, Dhaka, Bangladesh",
- *         "commission_rate": 15.50,
- *         "business_id" : 1,
- *     }
- * ),
+     *     property="agency",
+     *     type="object",
+     *     example={
+     *         "agency_name": "Best Agency",
+     *         "contact_person": "John Doe",
+     *         "email": "johndoe@example.com",
+     *         "phone_number": "01771034383",
+     *         "address": "123 Main Street, Dhaka, Bangladesh",
+     *         "commission_rate": 15.50,
+     *         "business_id" : 1,
+     *     }
+     * ),
 
      *
      *
@@ -180,7 +180,7 @@ class AgencyController extends Controller
 
 
 
-     /**
+    /**
      *
      * @OA\Put(
      *      path="/v1.0/agencies",
@@ -213,17 +213,17 @@ class AgencyController extends Controller
      * }),
      *
      * * @OA\Property(
- *     property="agency",
- *     type="object",
- *     example={
- *         "agency_name": "Best Agency",
- *         "contact_person": "John Doe",
- *         "email": "johndoe@example.com",
- *         "phone_number": "01771034383",
- *         "address": "123 Main Street, Dhaka, Bangladesh",
- *         "commission_rate": 15.50
- *     }
- * ),
+     *     property="agency",
+     *     type="object",
+     *     example={
+     *         "agency_name": "Best Agency",
+     *         "contact_person": "John Doe",
+     *         "email": "johndoe@example.com",
+     *         "phone_number": "01771034383",
+     *         "address": "123 Main Street, Dhaka, Bangladesh",
+     *         "commission_rate": 15.50
+     *     }
+     * ),
 
      *       ),
      *      ),
@@ -340,10 +340,10 @@ class AgencyController extends Controller
 
 
                 $agency = Agency::where(["id" => $request_data['agency']["id"]])
-                ->where(function($query) {
-                    $query->where("owner_id",auth()->user()->id)
-                    ->orWhere("business_id",auth()->user()->business_id);
-                })
+                    ->where(function ($query) {
+                        $query->where("owner_id", auth()->user()->id)
+                            ->orWhere("business_id", auth()->user()->business_id);
+                    })
                     ->first();
 
                 if (!$agency) {
@@ -367,7 +367,7 @@ class AgencyController extends Controller
     }
 
 
- /**
+    /**
      *
      * @OA\Get(
      *      path="/v1.0/agencies",
@@ -415,36 +415,109 @@ class AgencyController extends Controller
      *     )
      */
 
-     public function getAgencies(Request $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+    public function getAgencies(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-             if (!$request->user()->hasPermissionTo('agency_view')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
+            if (!$request->user()->hasPermissionTo('agency_view')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
 
-             $query = Agency::with("owner")
-             ->where(function($query) {
-                 $query->where("owner_id",auth()->user()->id)
-                 ->orWhere("business_id",auth()->user()->business_id);
-             });
+            $query = Agency::with("owner")
+                ->where(function ($query) {
+                    $query->where("owner_id", auth()->user()->id)
+                        ->orWhere("business_id", auth()->user()->business_id);
+                });
             //  $query = $this->query_filters($query);
-             $agencies = $this->retrieveData($query, "id","agencies");
+            $agencies = $this->retrieveData($query, "id", "agencies");
 
 
-             return response()->json($agencies, 200);
+            return response()->json($agencies, 200);
+        } catch (Exception $e) {
 
-         } catch (Exception $e) {
+            return $this->sendError($e, 500, $request);
+        }
+    }
+    /**
+     *
+     * @OA\Get(
+     *      path="/v1.0/client-agencies",
+     *      operationId="getAgencies",
+     *      tags={"agency_management"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *
+     *      summary="This method is to get agencies",
+     *      description="This method is to get agencies",
+     *
 
-             return $this->sendError($e, 500, $request);
-         }
-     }
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
 
-   /**
+    public function getClientAgencies(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+            // Validate required business_id
+            $businessId = $request->query('business_id');
+
+            if (!$businessId) {
+                return response()->json([
+                    "message" => "Business ID is required in the query parameters."
+                ], 422);
+            }
+
+            $query = Agency::where("business_id", $businessId);
+
+            //  $query = $this->query_filters($query);
+            $agencies = $this->retrieveData($query, "id", "agencies");
+
+
+            return response()->json($agencies, 200);
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
+    /**
      *
      * @OA\Delete(
      *      path="/v1.0/agencies/{ids}",
@@ -498,42 +571,39 @@ class AgencyController extends Controller
      *     )
      */
 
-     public function deleteAgenciesByIds(Request $request, $ids)
-     {
+    public function deleteAgenciesByIds(Request $request, $ids)
+    {
 
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             if (!$request->user()->hasPermissionTo('agency_delete')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('agency_delete')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
-             $agency = Agency::where("business_id",auth()->user()->business_id)
-                 ->where([
-                     "id" => $ids
-                 ])
-                 ->first();
+            $agency = Agency::where("business_id", auth()->user()->business_id)
+                ->where([
+                    "id" => $ids
+                ])
+                ->first();
 
-             if (!$agency) {
-                 $this->storeError("Agency not found", 404, "Front-end error", "Front-end error");
-                 return response()->json([
-                     "message" => "The specified agency does not exist."
-                 ], 404);
-             }
-
-
-             $agency->delete();
+            if (!$agency) {
+                $this->storeError("Agency not found", 404, "Front-end error", "Front-end error");
+                return response()->json([
+                    "message" => "The specified agency does not exist."
+                ], 404);
+            }
 
 
-
-             return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $ids], 200);
-         } catch (Exception $e) {
-
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            $agency->delete();
 
 
 
+            return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $ids], 200);
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
+        }
+    }
 }

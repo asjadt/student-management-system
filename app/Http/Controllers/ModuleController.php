@@ -564,6 +564,7 @@ class ModuleController extends Controller
     public function getClientModules(Request $request)
     {
         try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
             // Validate required business_id
             $businessId = $request->query('business_id');

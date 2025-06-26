@@ -730,3 +730,6 @@ Route::get('/v1.0/client/service-plans', [ServicePlanController::class, "getServ
 
 // MODULES
 Route::get('/v1.0/client-modules', [ModuleController::class, "getClientModules"]);
+
+// AGENCY
+Route::get('/v1.0/client-agencies', [AgencyController::class, "getClientAgencies"]);
