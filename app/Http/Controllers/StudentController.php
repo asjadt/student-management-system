@@ -262,11 +262,9 @@ class StudentController extends Controller
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
                 if (isset($request_data["previous_education_history"]["student_docs"])) {
-                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles(
+                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFilesV2(
                         $request_data["previous_education_history"]["student_docs"],
-                        "file_name",
                         "student_docs",
-                        NULL,
                         $student->id
                     );
                 } else {
@@ -443,12 +441,11 @@ class StudentController extends Controller
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
                 if (isset($request_data["previous_education_history"]["student_docs"])) {
-                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFiles(
+                    $request_data["previous_education_history"]["student_docs"] = $this->storeUploadedFilesV2(
                         $request_data["previous_education_history"]["student_docs"],
-                        "file_name",
                         "student_docs",
-                        NULL,
-                        $student->id
+                        $student->id,
+                        $request_data["business_id"]
                     );
                 } else {
                     $request_data["previous_education_history"]["student_docs"] = [];
@@ -465,7 +462,7 @@ class StudentController extends Controller
                     $filenames = $doc['filenames']; // array of file paths (strings)
 
                     // Call the util method with array of strings, get back new array of file names (strings)
-                    $new_filenames = $this->storeUploadedFilesV2($filenames, 'student_docs', $student->id);
+                    $new_filenames = $this->storeUploadedFilesV2($filenames, 'student_docs', $student->id, $request_data["business_id"]);
 
                     StudentDocument::create([
                         'student_id' => $student->id,
@@ -477,7 +474,7 @@ class StudentController extends Controller
                 if (!empty($request_data["agency_id"])) {
                     $student->referral()->create([
                         'agency_id' => $request_data["agency_id"],
-                        'agency_commission' => $request_data["agency_commission"] // Assuming commission_rate is a percentage
+                        'agency_commission' => 0 // Assuming commission_rate is a percentage
                     ]);
                 }
                 $response = [
@@ -2505,7 +2502,8 @@ class StudentController extends Controller
                 "student_sessions.student_session_courses.course",
                 "student_sessions.student_session_courses.student_session_course_subjects",
                 "student_sessions.student_session_courses.student_session_course_subjects.subject",
-                "referral"
+                "referral",
+                "student_documents"
             ])
                 ->where([
                     "id" => $id,

@@ -332,11 +332,20 @@ trait BasicUtil
     }
 
 
-    public function storeUploadedFilesV2(array $files, string $location, ?int $student_id = null): array
+    public function storeUploadedFilesV2(array $files, string $location, ?int $student_id = null, ?int $business_id = null): array
     {
         $temporary_files_location = config("setup-config.temporary_files_location");
 
-        $business = auth()->user()->business;
+        if ($business_id) {
+            $business = Business::find($business_id);
+            if (!$business) {
+                throw new Exception("Business not found", 404);
+            }
+        } else {
+            // Use the authenticated user's business if no business_id is provided
+            $business = auth()->user()->business;
+        }
+
         $business_location = str_replace(' ', '_', $business->name);
         $student_path = $student_id ? base64_encode($student_id) . "/" : "";
         $final_location = "{$business_location}/{$student_path}{$location}";
@@ -344,6 +353,8 @@ trait BasicUtil
         $new_file_names = [];
 
         foreach ($files as $file) {
+            Log::info("Processing file: " . json_encode($file));
+
             $new_file_names[] = $this->moveFile($file, $temporary_files_location, $final_location);
         }
 

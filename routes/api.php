@@ -733,3 +733,7 @@ Route::get('/v1.0/client-modules', [ModuleController::class, "getClientModules"]
 
 // AGENCY
 Route::get('/v1.0/client-agencies', [AgencyController::class, "getClientAgencies"]);
+
+
+// FILE UPLOADER
+Route::post('/v1.0/client-users/single-file-upload', [UserManagementController::class, "createUserFileSingle"]);

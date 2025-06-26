@@ -48,6 +48,7 @@ class Student extends Model
         'is_active',
         'business_id',
         'is_local_student',
+        'NI_number',
         'created_by'
     ];
 
@@ -74,10 +75,10 @@ class Student extends Model
         return $history;
     }
 
-public function student_documents()
-{
-    return $this->hasMany(StudentDocument::class);
-}
+    public function student_documents()
+    {
+        return $this->hasMany(StudentDocument::class);
+    }
 
     public function referral()
     {

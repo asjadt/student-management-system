@@ -94,13 +94,12 @@ class StudentCreateRequestClient extends BaseFormRequest
             'is_local_student' => 'nullable|boolean',
             'NI_number' => 'nullable|string|max:255',
 
-   "agency_id" => "nullable|numeric|exists:agencies,id",
-    "agency_commission" => "nullable|required_with:agency_id|numeric|min:0",
+            "agency_id" => "nullable|numeric|exists:agencies,id",
 
-'student_documents' => 'present|array',
-'student_documents.*.type' => 'required|string|max:255',
-'student_documents.*.filenames' => 'required|array',
-'student_documents.*.filenames.*' => 'string',
+            'student_documents' => 'present|array',
+            'student_documents.*.type' => 'required|string|max:255',
+            'student_documents.*.filenames' => 'required|array',
+            'student_documents.*.filenames.*' => 'string',
 
         ];
 
