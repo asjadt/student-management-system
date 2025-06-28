@@ -9,11 +9,12 @@ use App\Models\Module;
 use App\Models\ServicePlan;
 use App\Models\ServicePlanModule;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 trait ModuleUtil
 {
     // this function do all the task and returns transaction id or -1
-    public function isModuleEnabled($module_name,$throwErr = true)
+    public function isModuleEnabled($module_name, $throwErr = true)
     {
         $user = auth()->user();
         if (empty($user->business_id)) {
@@ -84,58 +85,85 @@ trait ModuleUtil
 
 
 
-    public function getModulesFunc($business) {
+    public function getModulesFunc($business)
+    {
         $service_plan_modules =   ServicePlanModule::where([
             "service_plan_id" => $business->service_plan_id,
-         ])
-         ->get();
+        ])
+            ->get();
 
 
-         $modules = Module::
-           where('modules.is_enabled', 1)
-         ->when(!optional(auth()->user())->hasRole('superadmin') && empty(auth()->user()->business_id), function ($query) {
-            $query->whereHas("reseller_modules", function($query) {
-                   $query->where("reseller_modules.is_enabled", 1);
-            });
-         })
-             ->orderBy("modules.name", "ASC")
+        $modules = Module::where('modules.is_enabled', 1)
+            ->when(!optional(auth()->user())->hasRole('superadmin') && empty(auth()->user()->business_id), function ($query) {
+                $query->whereHas("reseller_modules", function ($query) {
+                    $query->where("reseller_modules.is_enabled", 1);
+                });
+            })
+            ->orderBy("modules.name", "ASC")
 
-             ->select("id","name")
+            ->select("id", "name")
             ->get()
 
-            ->map(function($item) use($business, $service_plan_modules) {
+            ->map(function ($item) use ($business, $service_plan_modules) {
                 $item->is_enabled = 0;
 
                 $service_plan_module = $service_plan_modules->first(function ($plan) use ($item) {
                     return $plan->module_id == $item->id;
                 });
 
-                if(!empty($service_plan_module)) {
-                        $item->is_enabled = $service_plan_module->is_enabled;
+                if (!empty($service_plan_module)) {
+                    $item->is_enabled = $service_plan_module->is_enabled;
                 }
 
 
 
-            $businessModule =    BusinessModule::where([
-                "business_id" => $business->id,
-                "module_id" => $item->id
-            ])
-            ->first();
+                $businessModule =    BusinessModule::where([
+                    "business_id" => $business->id,
+                    "module_id" => $item->id
+                ])
+                    ->first();
 
-            if(!empty($businessModule)) {
-                $item->is_enabled = $businessModule->is_enabled;
+                if (!empty($businessModule)) {
+                    $item->is_enabled = $businessModule->is_enabled;
+                }
 
-            }
+                $item->businessModule = $businessModule;
 
-            $item->businessModule = $businessModule;
-
-            $item->service_plan_module = $service_plan_module;
+                $item->service_plan_module = $service_plan_module;
 
                 return $item;
             });
 
-            return $modules;
-
+        return $modules;
     }
 
+    public function getClientBusinessModules($businessId)
+    {
+        // Check if the business exists and is active
+        $business = Business::where('id', $businessId)
+            ->where('is_active', 1)
+            ->first();
+
+        // Log::info('business: ' . $business->toJson());
+        // check if business is not found or inactive
+        if (!$business) {
+            Log::error('Business not found or inactive for ID: ' . $businessId);
+            return [];
+        };
+
+        $modules =  collect();
+        // get business service plan modules
+        if ($business) {
+            $modules = $business->service_plan->modules->where('is_enabled', 1);
+            Log::info('servicePlanModules: ' . $modules->toJson());
+        }
+
+        return $modules->map(function ($module) {
+            return [
+                'id' => $module->id,
+                'name' => $module->name,
+                'is_enabled' => $module->is_enabled
+            ];
+        });
+    }
 }

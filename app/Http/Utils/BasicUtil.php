@@ -353,8 +353,6 @@ trait BasicUtil
         $new_file_names = [];
 
         foreach ($files as $file) {
-            Log::info("Processing file: " . json_encode($file));
-
             $new_file_names[] = $this->moveFile($file, $temporary_files_location, $final_location);
         }
 

@@ -13,9 +13,9 @@ use App\Models\Business;
 use App\Models\BusinessModule;
 use App\Models\Module;
 use App\Models\ServicePlanModule;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ModuleController extends Controller
 {
@@ -575,50 +575,64 @@ class ModuleController extends Controller
                 ], 422);
             }
 
+
+            // INITIALIZE MODULE QUERY
+            $modules = collect();
+
             // GET MODULE IDS FROM BUSINESS MODULES
             $moduleIds = BusinessModule::where('business_id', $businessId)
                 ->where('is_enabled', 1)
                 ->pluck('module_id')
                 ->toArray();
 
-
-            if (empty($moduleIds)) {
-                return response()->json([
-                    "message" => "No modules found for this business"
-                ], 404);
-            }
+            // if (empty($moduleIds)) {
+            //     return response()->json([
+            //         "message" => "No modules found for this business"
+            //     ], 404);
+            // }
 
             //  GET MODULES
-            $modulesQuery = Module::whereIn("modules.id", $moduleIds)
-                ->where('modules.is_enabled', 1)
+            if (!empty($moduleIds)) {
+                $businessModulesQuery = Module::whereIn("modules.id", $moduleIds)
+                    ->where('modules.is_enabled', 1)
 
-                // SEARCH BY NAME
-                ->when($request->filled('search_key'), function ($query) use ($request) {
-                    return $query->where(function ($query) use ($request) {
-                        $term = $request->query('search_key');
-                        $query->where("modules.name", "like", "%" . $term . "%");
+                    // SEARCH BY NAME
+                    ->when($request->filled('search_key'), function ($query) use ($request) {
+                        return $query->where(function ($query) use ($request) {
+                            $term = $request->query('search_key');
+                            $query->where("modules.name", "like", "%" . $term . "%");
+                        });
+                    })
+
+                    // ORDER BY
+                    ->when(!empty($request->query('order_by')) && in_array(strtoupper($request->query('order_by')), ['ASC', 'DESC']), function ($query) use ($request) {
+                        return $query->orderBy("modules.id", $request->query('order_by'));
+                    }, function ($query) {
+                        return $query->orderBy("modules.id", "DESC");
+                    })
+
+                    // SELECT ONLY ID AND NAME
+                    ->select("id", "name", "is_enabled")
+
+                    // PAGINATION OR RETURN ALL
+                    ->when(!empty($request->query('per_page')), function ($query) use ($request) {
+                        return $query->paginate($request->query('per_page'));
+                    }, function ($query) {
+                        return $query->get();
                     });
-                })
+            }
 
-                // ORDER BY
-                ->when(!empty($request->query('order_by')) && in_array(strtoupper($request->query('order_by')), ['ASC', 'DESC']), function ($query) use ($request) {
-                    return $query->orderBy("modules.id", $request->query('order_by'));
-                }, function ($query) {
-                    return $query->orderBy("modules.id", "DESC");
-                })
-
-                // SELECT ONLY ID AND NAME
-                ->select("id", "name")
-
-                // PAGINATION OR RETURN ALL
-                ->when(!empty($request->query('per_page')), function ($query) use ($request) {
-                    return $query->paginate($request->query('per_page'));
-                }, function ($query) {
-                    return $query->get();
-                });
+            if (empty($businessModulesQuery)) {
+                $modules = $this->getClientBusinessModules($businessId);
+                Log::info('servicePlanModules: ' . $modules->toJson());
+            } else {
+                $modules = $businessModulesQuery;
+                Log::info('businessModules: ' . $modules->toJson());
+            }
 
 
-            return response()->json($modulesQuery, 200);
+            // return response with modules
+            return response()->json($modules, 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
