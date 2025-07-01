@@ -167,6 +167,7 @@ class Student extends Model
             //     });
             // })
 
+
             ->when(!empty(request()->nationality), function ($query) {
                 return $query->where('students.nationality', request()->nationality);
             })
@@ -276,6 +277,10 @@ class Student extends Model
             })
             ->when(!empty(request()->student_id), function ($query) {
                 return $query->whereRaw('BINARY students.student_id = ?', [request()->student_id]);
+            })
+
+            ->when(!empty(request()->is_local_student), function ($query) {
+                return $query->where('students.is_local_student', request()->is_local_student);
             });
 
         return $dataQuery;
