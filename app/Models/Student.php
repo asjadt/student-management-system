@@ -279,8 +279,8 @@ class Student extends Model
                 return $query->whereRaw('BINARY students.student_id = ?', [request()->student_id]);
             })
 
-            ->when((request()->boolean('is_local_student')), function ($query) {
-                return $query->where('students.is_local_student', request()->is_local_student);
+            ->when((request()->filled('is_local_student')), function ($query) {
+                return $query->where('students.is_local_student', request()->boolean("is_local_student"));
             });
 
         return $dataQuery;
