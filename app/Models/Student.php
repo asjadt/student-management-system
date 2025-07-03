@@ -49,7 +49,8 @@ class Student extends Model
         'business_id',
         'is_local_student',
         'NI_number',
-        'created_by'
+        'created_by',
+        "image"
     ];
 
     protected $casts = [
