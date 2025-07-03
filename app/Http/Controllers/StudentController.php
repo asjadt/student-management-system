@@ -2556,7 +2556,8 @@ class StudentController extends Controller
                 "student_sessions.student_session_courses.student_session_course_subjects",
                 "student_sessions.student_session_courses.student_session_course_subjects.subject",
                 "referral",
-                "student_documents"
+                "student_documents",
+                "attendances",
             ])
                 ->where([
                     "id" => $id,
@@ -2589,9 +2590,30 @@ class StudentController extends Controller
                 }
             }
 
+            $attendances = $student->attendances;
+            $totalAttendance = $attendances->count();
+            $attendanceCount = 0;
+            $absentCount = 0;
+
+            if ($attendances->count() > 0) {
+                foreach ($attendances as $attendance) {
+                    if ($attendance->status == "present") {
+                        $attendanceCount++;
+                    } else if ($attendance->status == "absent") {
+                        $absentCount++;
+                    }
+                }
+            }
+
+            $attendancePercentage = $totalAttendance > 0 ? ($attendanceCount / $totalAttendance) * 100 : 0;
+            $absentPercentage = $totalAttendance > 0 ? ($absentCount / $totalAttendance) * 100 : 0;
+
             // INJECT TOTAL COURSE AND SUBJECT
             $student->total_courses = $totalCourses;
             $student->total_subjects = $totalSubjects;
+            $student->total_attendance = $totalAttendance;
+            $student->attendance_percentage = $attendancePercentage;
+            $student->absent_percentage = $absentPercentage;
 
             // Log::info($student);
 
