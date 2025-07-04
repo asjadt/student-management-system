@@ -13,11 +13,7 @@ use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
-use App\Models\CourseSubject;
 use App\Models\Subject;
-use App\Models\DisabledSubject;
-use App\Models\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -119,11 +115,8 @@ class SubjectController extends Controller
 
 
                 if(!empty($request_data["course_id"])){
-                  CourseSubject::create([
-                    "course_id" => $request_data["course_id"],
-                    "subject_id" => $subject->id
-                  ]);
-                }
+                    $subject->courses()->sync([$request_data["course_id"]]);
+                  }
 
                 return response($subject, 201);
             });
@@ -132,6 +125,7 @@ class SubjectController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+
     /**
      *
      * @OA\Put(
@@ -225,6 +219,9 @@ class SubjectController extends Controller
                         "message" => "something went wrong."
                     ], 500);
                 }
+                if(!empty($request_data["course_id"])){
+                    $subject->courses()->sync([$request_data["course_id"]]);
+                  }
                 $subject->teachers()->sync($request_data["teacher_ids"]);
 
 

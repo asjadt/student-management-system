@@ -24,23 +24,23 @@ class Session extends Model
     ];
 
     protected $casts = [
-
-
-
-
-                            'holiday_dates' => 'array',
-
-
-
-
+    'holiday_dates' => 'array',
   ];
 
 
+  public function courses () {
+    return   $this->belongsToMany(CourseTitle::class,"session_courses","session_id","course_id");
+}
 
 
+public function students () {
+    return   $this->belongsToMany(Student::class,"student_sessions","session_id","student_id");
+}
 
 
-
+  public function class_routines() {
+        return $this->hasMany(ClassRoutine::class, "session_id", "id");
+    }
 
 
 

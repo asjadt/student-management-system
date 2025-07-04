@@ -13,9 +13,6 @@ use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Models\Session;
-use App\Models\DisabledSession;
-use App\Models\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +43,8 @@ class SessionController extends Controller
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
      * @OA\Property(property="holiday_dates", type="string", format="array", example={}),
-     *
+     *  @OA\Property(property="course_ids", type="string", format="string", example="course_ids")
+
      *
      *
      *         ),
@@ -91,6 +89,7 @@ class SessionController extends Controller
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             return DB::transaction(function () use ($request) {
+
                 if (!auth()->user()->hasPermissionTo('session_create')) {
                     return response()->json([
                         "message" => "You can not perform this action"
@@ -98,9 +97,7 @@ class SessionController extends Controller
                 }
 
                 $request_data = $request->validated();
-
                 $request_data["is_active"] = 1;
-
                 $request_data["created_by"] = auth()->user()->id;
                 $request_data["business_id"] = auth()->user()->business_id;
 
@@ -113,6 +110,7 @@ class SessionController extends Controller
 
                 $session =  Session::create($request_data);
 
+                $session->courses()->sync($request_data["course_ids"]);
                 return response($session, 201);
             });
         } catch (Exception $e) {
@@ -142,6 +140,7 @@ class SessionController extends Controller
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
  * @OA\Property(property="holiday_dates", type="string", format="array", example={}),
+ *  *  @OA\Property(property="course_ids", type="string", format="string", example="course_ids")
      *
      *         ),
      *      ),
@@ -192,8 +191,6 @@ class SessionController extends Controller
                 }
                 $request_data = $request->validated();
 
-
-
                 $session_query_params = [
                     "id" => $request_data["id"],
                 ];
@@ -219,7 +216,7 @@ class SessionController extends Controller
                 }
 
 
-
+                $session->courses()->sync($request_data["course_ids"]);
 
                 return response($session, 201);
             });
@@ -328,7 +325,12 @@ class SessionController extends Controller
     {
 
         return   $query->where('sessions.business_id', auth()->user()->business_id)
-
+        ->when(!empty(request()->course_ids), function ($query) {
+            return $query->whereHas('courses', function($query) {
+                $course_ids = explode(',', request()->course_ids);
+                  $query->whereIn("courses.id",$course_ids);
+            });
+        })
         ->when(!empty(request()->start_start_date), function ($query)  {
             return $query->where('sessions.start_date', ">=", request()->start_start_date);
         })
@@ -378,9 +380,13 @@ class SessionController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
-
-
+     *        @OA\Parameter(
+     *         name="course_ids",
+     *         in="query",
+     *         description="course_ids",
+     *         required=true,
+     *  example="6"
+     *      ),
      *         @OA\Parameter(
      *         name="start_end_date",
      *         in="query",
@@ -495,6 +501,7 @@ class SessionController extends Controller
      {
          try {
              $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
              if (!$request->user()->hasPermissionTo('session_view')) {
                  return response()->json([
                      "message" => "You can not perform this action"
@@ -502,7 +509,7 @@ class SessionController extends Controller
              }
 
 
-             $query = Session::query();
+             $query = Session::with("courses.subjects");
              $query = $this->query_filters($query);
              $sessions = $this->retrieveData($query, "id","sessions");
 
@@ -648,6 +655,7 @@ class SessionController extends Controller
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
             if (!$request->user()->hasPermissionTo('session_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
@@ -655,7 +663,7 @@ class SessionController extends Controller
             }
 
 
-            $query = Session::query();
+            $query = Session::with("courses");
             $query = $this->query_filters($query)
             ->select(
                 'sessions.id',

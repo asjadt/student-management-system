@@ -137,11 +137,7 @@ return [
                 "course_title_view",
                 "course_title_delete",
 
-                "semester_create",
-                "semester_update",
-                "semester_activate",
-                "semester_view",
-                "semester_delete",
+
 
                 "subject_create",
                 "subject_update",
@@ -163,7 +159,11 @@ return [
                 "class_routine_view",
                 "class_routine_delete",
 
-
+                "attendance_create",
+                "attendance_update",
+                "attendance_activate",
+                "attendance_view",
+                "attendance_delete",
 
 
 
@@ -313,10 +313,7 @@ return [
         ],
         [
             "role" => "agency",
-            "permissions" => [
-
-
-            ],
+            "permissions" => [],
         ],
         [
             "role" => "business_admin",
@@ -340,7 +337,11 @@ return [
                 "session_delete",
 
 
-
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
 
                 "letter_template_create",
                 "letter_template_update",
@@ -538,42 +539,43 @@ return [
                 "course_title_update",
                 "course_title_activate",
                 "course_title_view",
-                 "course_title_delete",
-
-
-                 "semester_create",
-                 "semester_update",
-                 "semester_activate",
-                 "semester_view",
-                 "semester_delete",
-
-                 "subject_create",
-                 "subject_update",
-                 "subject_activate",
-                 "subject_view",
-                 "subject_delete",
-
-
-                 "teacher_create",
-                 "teacher_update",
-                 "teacher_activate",
-                 "teacher_view",
-                 "teacher_delete",
-
-                 "class_routine_create",
-                 "class_routine_update",
-                 "class_routine_activate",
-                 "class_routine_view",
-                 "class_routine_delete",
+                "course_title_delete",
 
 
 
 
-                 "awarding_body_create",
-                 "awarding_body_update",
+                "subject_create",
+                "subject_update",
+                "subject_activate",
+                "subject_view",
+                "subject_delete",
+
+
+                "teacher_create",
+                "teacher_update",
+                "teacher_activate",
+                "teacher_view",
+                "teacher_delete",
+
+                "class_routine_create",
+                "class_routine_update",
+                "class_routine_activate",
+                "class_routine_view",
+                "class_routine_delete",
+
+                "attendance_create",
+                "attendance_update",
+                "attendance_activate",
+                "attendance_view",
+                "attendance_delete",
+
+
+
+                "awarding_body_create",
+                "awarding_body_update",
                 "awarding_body_activate",
-                 "awarding_body_view",
-                 "awarding_body_delete",
+                "awarding_body_view",
+                "awarding_body_delete",
 
 
 
@@ -628,6 +630,12 @@ return [
                 "session_view",
                 "session_delete",
 
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
+
 
                 "letter_template_create",
                 "letter_template_update",
@@ -814,39 +822,41 @@ return [
                 "course_title_update",
                 "course_title_activate",
                 "course_title_view",
-                  "course_title_delete",
+                "course_title_delete",
 
 
-                  "semester_create",
-                  "semester_update",
-                  "semester_activate",
-                  "semester_view",
-                  "semester_delete",
-
-                  "subject_create",
-                  "subject_update",
-                  "subject_activate",
-                  "subject_view",
-                  "subject_delete",
-
-                  "teacher_create",
-                  "teacher_update",
-                  "teacher_activate",
-                  "teacher_view",
-                  "teacher_delete",
-
-                  "class_routine_create",
-                  "class_routine_update",
-                  "class_routine_activate",
-                  "class_routine_view",
-                  "class_routine_delete",
 
 
-                  "awarding_body_create",
-                  "awarding_body_update",
+                "subject_create",
+                "subject_update",
+                "subject_activate",
+                "subject_view",
+                "subject_delete",
+
+                "teacher_create",
+                "teacher_update",
+                "teacher_activate",
+                "teacher_view",
+                "teacher_delete",
+
+                "class_routine_create",
+                "class_routine_update",
+                "class_routine_activate",
+                "class_routine_view",
+                "class_routine_delete",
+
+                "attendance_create",
+                "attendance_update",
+                "attendance_activate",
+                "attendance_view",
+                "attendance_delete",
+
+
+                "awarding_body_create",
+                "awarding_body_update",
                 "awarding_body_activate",
-                  "awarding_body_view",
-                  "awarding_body_delete",
+                "awarding_body_view",
+                "awarding_body_delete",
 
 
 
@@ -878,7 +888,7 @@ return [
             ],
         ],
 
-           [
+        [
             "role" => "business_administrator",
             "permissions" => [
 
@@ -893,6 +903,11 @@ return [
                 "session_view",
                 "session_delete",
 
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
 
                 "letter_template_create",
                 "letter_template_update",
@@ -1079,39 +1094,40 @@ return [
                 "course_title_update",
                 "course_title_activate",
                 "course_title_view",
-                  "course_title_delete",
+                "course_title_delete",
 
 
-                  "semester_create",
-                  "semester_update",
-                  "semester_activate",
-                  "semester_view",
-                  "semester_delete",
 
-                  "subject_create",
-                  "subject_update",
-                  "subject_activate",
-                  "subject_view",
-                  "subject_delete",
+                "subject_create",
+                "subject_update",
+                "subject_activate",
+                "subject_view",
+                "subject_delete",
 
-                  "teacher_create",
-                  "teacher_update",
-                  "teacher_activate",
-                  "teacher_view",
-                  "teacher_delete",
+                "teacher_create",
+                "teacher_update",
+                "teacher_activate",
+                "teacher_view",
+                "teacher_delete",
 
-                  "class_routine_create",
-                  "class_routine_update",
-                  "class_routine_activate",
-                  "class_routine_view",
-                  "class_routine_delete",
+                "class_routine_create",
+                "class_routine_update",
+                "class_routine_activate",
+                "class_routine_view",
+                "class_routine_delete",
+
+                "attendance_create",
+                "attendance_update",
+                "attendance_activate",
+                "attendance_view",
+                "attendance_delete",
 
 
-                  "awarding_body_create",
-                  "awarding_body_update",
+                "awarding_body_create",
+                "awarding_body_update",
                 "awarding_body_activate",
-                  "awarding_body_view",
-                  "awarding_body_delete",
+                "awarding_body_view",
+                "awarding_body_delete",
 
 
 
@@ -1157,6 +1173,11 @@ return [
                 "session_view",
                 "session_delete",
 
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
 
                 "letter_template_create",
                 "letter_template_update",
@@ -1343,39 +1364,42 @@ return [
                 "course_title_update",
                 "course_title_activate",
                 "course_title_view",
-                  "course_title_delete",
+                "course_title_delete",
 
 
-                  "semester_create",
-                  "semester_update",
-                  "semester_activate",
-                  "semester_view",
-                  "semester_delete",
-
-                  "subject_create",
-                  "subject_update",
-                  "subject_activate",
-                  "subject_view",
-                  "subject_delete",
-
-                  "teacher_create",
-                  "teacher_update",
-                  "teacher_activate",
-                  "teacher_view",
-                  "teacher_delete",
-
-                  "class_routine_create",
-                  "class_routine_update",
-                  "class_routine_activate",
-                  "class_routine_view",
-                  "class_routine_delete",
 
 
-                  "awarding_body_create",
-                  "awarding_body_update",
+                "subject_create",
+                "subject_update",
+                "subject_activate",
+                "subject_view",
+                "subject_delete",
+
+                "teacher_create",
+                "teacher_update",
+                "teacher_activate",
+                "teacher_view",
+                "teacher_delete",
+
+                "class_routine_create",
+                "class_routine_update",
+                "class_routine_activate",
+                "class_routine_view",
+                "class_routine_delete",
+
+
+                "attendance_create",
+                "attendance_update",
+                "attendance_activate",
+                "attendance_view",
+                "attendance_delete",
+
+
+                "awarding_body_create",
+                "awarding_body_update",
                 "awarding_body_activate",
-                  "awarding_body_view",
-                  "awarding_body_delete",
+                "awarding_body_view",
+                "awarding_body_delete",
 
 
 
@@ -1433,6 +1457,12 @@ return [
         "session_activate",
         "session_view",
         "session_delete",
+
+        "reminder_create",
+        "reminder_update",
+        "reminder_activate",
+        "reminder_view",
+        "reminder_delete",
 
 
         "letter_template_create",
@@ -1528,10 +1558,10 @@ return [
         "business_view",
         "business_delete",
 
-                "agency_create",
-                "agency_update",
-                "agency_view",
-                "agency_delete",
+        "agency_create",
+        "agency_update",
+        "agency_view",
+        "agency_delete",
 
 
         "template_create",
@@ -1675,40 +1705,41 @@ return [
         "course_title_update",
         "course_title_activate",
         "course_title_view",
-         "course_title_delete",
-
-         "semester_create",
-         "semester_update",
-         "semester_activate",
-         "semester_view",
-         "semester_delete",
-
-         "subject_create",
-         "subject_update",
-         "subject_activate",
-         "subject_view",
-         "subject_delete",
-
-         "teacher_create",
-         "teacher_update",
-         "teacher_activate",
-         "teacher_view",
-         "teacher_delete",
-
-         "class_routine_create",
-         "class_routine_update",
-         "class_routine_activate",
-         "class_routine_view",
-         "class_routine_delete",
+        "course_title_delete",
 
 
 
+        "subject_create",
+        "subject_update",
+        "subject_activate",
+        "subject_view",
+        "subject_delete",
 
-         "awarding_body_create",
-         "awarding_body_update",
-       "awarding_body_activate",
-         "awarding_body_view",
-         "awarding_body_delete",
+        "teacher_create",
+        "teacher_update",
+        "teacher_activate",
+        "teacher_view",
+        "teacher_delete",
+
+        "class_routine_create",
+        "class_routine_update",
+        "class_routine_activate",
+        "class_routine_view",
+        "class_routine_delete",
+
+        "attendance_create",
+        "attendance_update",
+        "attendance_activate",
+        "attendance_view",
+        "attendance_delete",
+
+
+
+        "awarding_body_create",
+        "awarding_body_update",
+        "awarding_body_activate",
+        "awarding_body_view",
+        "awarding_body_delete",
 
         "setting_leave_type_create",
         "setting_leave_type_update",
@@ -1834,10 +1865,10 @@ return [
         "business_view" => "Can view business",
         "business_delete" => "Can delete business",
 
-        "agency_create"=> "Can create agency",
-        "agency_update"=> "Can create agency",
-        "agency_view"=> "Can create agency",
-        "agency_delete"=> "Can create agency",
+        "agency_create" => "Can create agency",
+        "agency_update" => "Can create agency",
+        "agency_view" => "Can create agency",
+        "agency_delete" => "Can create agency",
 
 
         "template_create" => "Can create template",
@@ -1978,45 +2009,47 @@ return [
         "course_title_update" => "",
         "course_title_activate" => "",
         "course_title_view" => "",
-         "course_title_delete" => "",
-
-         "semester_create" => "",
-         "semester_update" => "",
-         "semester_view" => "",
-         "semester_delete" => "",
-         "semester_activate" => "",
+        "course_title_delete" => "",
 
 
-         "subject_create" => "",
-         "subject_update" => "",
-         "subject_activate" => "",
-         "subject_view" => "",
-         "subject_delete" => "",
-
-         "teacher_create"=>"",
-         "teacher_update"=>"",
-         "teacher_activate"=>"",
-         "teacher_view"=>"",
-         "teacher_delete"=>"",
-
-         "class_routine_create" => "",
-         "class_routine_update" => "",
-         "class_routine_activate" => "",
-         "class_routine_view" => "",
-         "class_routine_delete" => "",
 
 
-         "awarding_body_create"=>"",
-         "awarding_body_update"=>"",
-       "awarding_body_activate"=>"",
-         "awarding_body_view"=>"",
-         "awarding_body_delete"=>"",
+        "subject_create" => "",
+        "subject_update" => "",
+        "subject_activate" => "",
+        "subject_view" => "",
+        "subject_delete" => "",
 
-         "letter_template_create"=>"",
-         "letter_template_update"=>"",
-         "letter_template_activate"=>"",
-         "letter_template_view"=>"",
-         "letter_template_delete"=>"",
+        "teacher_create" => "",
+        "teacher_update" => "",
+        "teacher_activate" => "",
+        "teacher_view" => "",
+        "teacher_delete" => "",
+
+        "class_routine_create" => "",
+        "class_routine_update" => "",
+        "class_routine_activate" => "",
+        "class_routine_view" => "",
+        "class_routine_delete" => "",
+
+        "attendance_create" => "",
+        "attendance_update" => "",
+        "attendance_activate" => "",
+        "attendance_view" => "",
+        "attendance_delete" => "",
+
+
+        "awarding_body_create" => "",
+        "awarding_body_update" => "",
+        "awarding_body_activate" => "",
+        "awarding_body_view" => "",
+        "awarding_body_delete" => "",
+
+        "letter_template_create" => "",
+        "letter_template_update" => "",
+        "letter_template_activate" => "",
+        "letter_template_view" => "",
+        "letter_template_delete" => "",
 
         "setting_leave_type_create" => "Can create setting leave type",
         "setting_leave_type_update" => "Can update setting leave type",
@@ -2693,16 +2726,23 @@ return [
             "header" => "session",
             "permissions" => [
                 "session_create",
-        "session_update",
-        "session_activate",
-        "session_view",
-        "session_delete",
-
-
+                "session_update",
+                "session_activate",
+                "session_view",
+                "session_delete",
             ],
         ],
 
-
+        [
+            "header" => "reminder",
+            "permissions" => [
+                "reminder_create",
+                "reminder_update",
+                "reminder_activate",
+                "reminder_view",
+                "reminder_delete",
+            ],
+        ],
 
 
         [
@@ -2873,10 +2913,10 @@ return [
             "permissions" => [
 
                 "letter_template_create",
-        "letter_template_update",
-        "letter_template_activate",
-        "letter_template_view",
-        "letter_template_delete",
+                "letter_template_update",
+                "letter_template_activate",
+                "letter_template_view",
+                "letter_template_delete",
 
 
             ],
@@ -2890,10 +2930,10 @@ return [
             "permissions" => [
 
                 "installment_payment_create",
-        "installment_payment_update",
-        "installment_payment_activate",
-        "installment_payment_view",
-        "installment_payment_delete",
+                "installment_payment_update",
+                "installment_payment_activate",
+                "installment_payment_view",
+                "installment_payment_delete",
 
             ],
         ],
@@ -2917,31 +2957,43 @@ return [
             "header" => "course_title",
             "permissions" => [
 
-        "course_title_create",
-        "course_title_update",
-        "course_title_activate",
-        "course_title_view",
-         "course_title_delete",
+                "course_title_create",
+                "course_title_update",
+                "course_title_activate",
+                "course_title_view",
+                "course_title_delete",
 
             ],
         ],
 
 
 
-                [
-                    "header" => "class_routine",
-                    "permissions" => [
+        [
+            "header" => "class_routine",
+            "permissions" => [
 
-                        "class_routine_create",
-                        "class_routine_update",
-                        "class_routine_activate",
-                        "class_routine_view",
-                        "class_routine_delete",
+                "class_routine_create",
+                "class_routine_update",
+                "class_routine_activate",
+                "class_routine_view",
+                "class_routine_delete",
 
 
 
-                    ],
-                ],
+            ],
+        ],
+        [
+            "header" => "attendance",
+            "permissions" => [
+
+                "attendance_create",
+                "attendance_update",
+                "attendance_activate",
+                "attendance_view",
+                "attendance_delete",
+
+            ],
+        ],
 
 
 
@@ -2972,18 +3024,7 @@ return [
             ],
         ],
 
-        [
-            "header" => "semester",
-            "permissions" => [
 
-                "semester_create",
-        "semester_update",
-        "semester_activate",
-        "semester_view",
-        "semester_delete",
-
-            ],
-        ],
 
         [
             "header" => "awarding_body",
@@ -2991,7 +3032,7 @@ return [
 
                 "awarding_body_create",
                 "awarding_body_update",
-              "awarding_body_activate",
+                "awarding_body_activate",
                 "awarding_body_view",
                 "awarding_body_delete",
 
@@ -3155,188 +3196,194 @@ return [
         ]
 
 
-        ],
+    ],
 
-        "student_data_fields" => [
-            [
-                "section_name" => "personal_information",
-                "title" => "Middle Name",
-                "name" => "middle_name",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 0
-                ]
-            ],
-            [
-                "section_name" => "contact_information",
-                "title" => "Contact Number",
-                "name" => "contact_number",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "passport_information",
-                "title" => "Passport Number",
-                "name" => "passport_number",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "passport_information",
-                "title" => "Passport Issue Date",
-                "name" => "passport_issue_date",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "passport_information",
-                "title" => "Passport Expiry Date",
-                "name" => "passport_expiry_date",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "passport_information",
-                "title" => "Place of Issue",
-                "name" => "place_of_issue",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "education_history",
-                "title" => "Course Title",
-                "name" => "course_title",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "education_history",
-                "title" => "Educational Institute Name",
-                "name" => "institution",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "education_history",
-                "title" => "Passing Year",
-                "name" => "education_history_year",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "education_history",
-                "title" => "Grade",
-                "name" => "education_history_grade",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "emergency_contact_information",
-                "title" => "Emergency Contact Name",
-                "name" => "name",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "emergency_contact_information",
-                "title" => "Relationship of emergency contact person",
-                "name" => "emergency_contact_relation",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "emergency_contact_information",
-                "title" => "Emergency Contact Address",
-                "name" => "address",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "emergency_contact_information",
-                "title" => "Emergency Contact Postcode",
-                "name" => "postcode",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
-            ],
-            [
-                "section_name" => "emergency_contact_information",
-                "title" => "Emergency Contact Number",
-                "name" => "contact",
-                "public_form" => [
-                    "show" => 1,
-                    "is_required" => 1
-                ]
+    "student_data_fields" => [
+        [
+            "section_name" => "personal_information",
+            "title" => "Middle Name",
+            "name" => "middle_name",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 0
             ]
         ],
-        "student_verification_fields" => [
-            [
-                "section_name" => "personal_information",
-                "title" => "First Name",
-                "name" => "first_name",
-                "verification_form" => [
-                    "show" => 1
-                ]
-            ],
-            [
-                "section_name" => "personal_information",
-                "title" => "Last Name",
-                "name" => "last_name",
-                "verification_form" => [
-                    "show" => 1
-                ]
-            ],
-            [
-                "section_name" => "personal_information",
-                "title" => "Date Of Birth",
-                "name" => "date_of_birth",
-                "verification_form" => [
-                    "show" => 1
-                ]
-            ],
-            [
-                "section_name" => "personal_information",
-                "title" => "Student ID",
-                "name" => "student_id",
-                "verification_form" => [
-                    "show" => 1
-                ]
-            ],
-            [
-                "section_name" => "passport_information",
-                "title" => "Passport Number",
-                "name" => "passport_number",
-                "verification_form" => [
-                    "show" => 1
-                ]
+        [
+            "section_name" => "contact_information",
+            "title" => "Contact Number",
+            "name" => "contact_number",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "passport_information",
+            "title" => "Passport Number",
+            "name" => "passport_number",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "passport_information",
+            "title" => "Passport Issue Date",
+            "name" => "passport_issue_date",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "passport_information",
+            "title" => "Passport Expiry Date",
+            "name" => "passport_expiry_date",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "passport_information",
+            "title" => "Place of Issue",
+            "name" => "place_of_issue",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "education_history",
+            "title" => "Course Title",
+            "name" => "course_title",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "education_history",
+            "title" => "Educational Institute Name",
+            "name" => "institution",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "education_history",
+            "title" => "Passing Year",
+            "name" => "education_history_year",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "education_history",
+            "title" => "Grade",
+            "name" => "education_history_grade",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "emergency_contact_information",
+            "title" => "Emergency Contact Name",
+            "name" => "name",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "emergency_contact_information",
+            "title" => "Relationship of emergency contact person",
+            "name" => "emergency_contact_relation",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "emergency_contact_information",
+            "title" => "Emergency Contact Address",
+            "name" => "address",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "emergency_contact_information",
+            "title" => "Emergency Contact Postcode",
+            "name" => "postcode",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
+            ]
+        ],
+        [
+            "section_name" => "emergency_contact_information",
+            "title" => "Emergency Contact Number",
+            "name" => "contact",
+            "public_form" => [
+                "show" => 1,
+                "is_required" => 1
             ]
         ]
+    ],
+    "student_verification_fields" => [
+        [
+            "section_name" => "personal_information",
+            "title" => "First Name",
+            "name" => "first_name",
+            "verification_form" => [
+                "show" => 1
+            ]
+        ],
+        [
+            "section_name" => "personal_information",
+            "title" => "Last Name",
+            "name" => "last_name",
+            "verification_form" => [
+                "show" => 1
+            ]
+        ],
+        [
+            "section_name" => "personal_information",
+            "title" => "Date Of Birth",
+            "name" => "date_of_birth",
+            "verification_form" => [
+                "show" => 1
+            ]
+        ],
+        [
+            "section_name" => "personal_information",
+            "title" => "Student ID",
+            "name" => "student_id",
+            "verification_form" => [
+                "show" => 1
+            ]
+        ],
+        [
+            "section_name" => "passport_information",
+            "title" => "Passport Number",
+            "name" => "passport_number",
+            "verification_form" => [
+                "show" => 1
+            ]
+        ]
+    ],
 
+    "system_modules" => [
+        "agency_management",
+        "schedule",
+        "attendance",
+        "student_module"
+    ]
 
 
 ];

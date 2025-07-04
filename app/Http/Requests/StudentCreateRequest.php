@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\CourseTitle;
+use App\Models\Session;
 use App\Models\StudentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
@@ -49,11 +50,6 @@ class StudentCreateRequest extends BaseFormRequest
                 'numeric',
                 function ($attribute, $value, $fail) {
 
-                    $created_by  = NULL;
-                    if(auth()->user()->business) {
-                        $created_by = auth()->user()->business->created_by;
-                    }
-
                     $exists = StudentStatus::where("student_statuses.id",$value)
 
                     ->exists();
@@ -64,15 +60,22 @@ class StudentCreateRequest extends BaseFormRequest
 
                 },
             ],
+            'session_id' => [
+                "required",
+                'numeric',
+                function ($attribute, $value, $fail) {
+            $exists = Session::where("sessions.id",$value)->exists();
+                if (!$exists) {
+                    $fail("$attribute is invalid.");
+                }
+                },
+            ],
             'course_title_id' => [
                 "required",
                 'numeric',
                 function ($attribute, $value, $fail) {
 
-                    $created_by  = NULL;
-                    if(auth()->user()->business) {
-                        $created_by = auth()->user()->business->created_by;
-                    }
+
 
                     $exists = CourseTitle::where("course_titles.id",$value)
 
@@ -107,7 +110,10 @@ class StudentCreateRequest extends BaseFormRequest
             "agency_id" => "nullable|numeric|exists:agencies,id",
             "agency_commission" => "nullable|required_with:agency_id|numeric|min:0",
 
-
+'student_documents' => 'present|array',
+'student_documents.*.type' => 'required|string|max:255',
+'student_documents.*.filenames' => 'required|array',
+'student_documents.*.filenames.*' => 'string',
 
         ];
 
@@ -121,11 +127,5 @@ class StudentCreateRequest extends BaseFormRequest
 
     }
 
-    public function messages()
-    {
-        return [
 
-
-        ];
-    }
 }

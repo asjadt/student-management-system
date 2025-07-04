@@ -17,28 +17,13 @@ class CreateClassRoutinesTable extends Migration
         Schema::create('class_routines', function (Blueprint $table) {
             $table->id();
 
-
-
             $table->integer('day_of_week');
-
-
-
-
 
             $table->string('start_time');
 
-
-
-
-
             $table->string('end_time');
 
-
-
-
-
             $table->string('room_number');
-
 
 
             $table->foreignId('teacher_id')
@@ -63,10 +48,6 @@ class CreateClassRoutinesTable extends Migration
                   ->constrained('course_titles')
                   ->onDelete('cascade');
             $table->boolean('is_active')->default(false);
-
-
-
-
 
 
             $table->unsignedBigInteger("business_id")->nullable(true);

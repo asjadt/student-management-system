@@ -17,7 +17,7 @@ class AddFieldsToStudentsTable extends Migration
 
 
             // Course Information
-            $table->string('course_dutation')->nullable();
+            $table->string('course_duration')->nullable();
             $table->longText('course_detail')->nullable();
 
 
@@ -54,7 +54,7 @@ class AddFieldsToStudentsTable extends Migration
     {
         Schema::table('students', function (Blueprint $table) {
             $table->dropColumn([
-                'course_dutation',
+                'course_duration',
                 'course_detail',
 
                 'email',

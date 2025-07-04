@@ -15,13 +15,4 @@ class Module extends Model
         "is_enabled",
         'created_by'
     ];
-
-   
-
-
-
-
-
-
-
 }

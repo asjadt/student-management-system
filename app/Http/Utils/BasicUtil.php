@@ -11,96 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 trait BasicUtil
 {
-    function toggleActivation($modelClass, $disabledModelClass, $modelIdName, $modelId, $authUser)
-    {
-        // Fetch the model instance
-        $modelInstance = $modelClass::where('id', $modelId)->first();
-        if (!$modelInstance) {
-            return response()->json([
-                "message" => "No data found"
-            ], 404);
-        }
 
-        $shouldUpdate = 0;
-        $shouldDisable = 0;
-
-        // Handle role-based permission
-        if (empty($authUser->business_id)) {
-            if ($authUser->hasRole('superadmin')) {
-                if ($modelInstance->business_id !== NULL) {
-                    return response()->json([
-                        "message" => "You do not have permission to update this item due to role restrictions."
-                    ], 403);
-                } else {
-                    $shouldUpdate = 1;
-                }
-            } else {
-                if ($modelInstance->business_id !== NULL) {
-                    return response()->json([
-                        "message" => "You do not have permission to update this item due to role restrictions."
-                    ], 403);
-                } else if ($modelInstance->is_default == 0) {
-                    if ($modelInstance->created_by != $authUser->id) {
-                        return response()->json([
-                            "message" => "You do not have permission to update this item due to role restrictions."
-                        ], 403);
-                    } else {
-                        $shouldUpdate = 1;
-                    }
-                } else {
-                    $shouldDisable = 1;
-                }
-            }
-        } else {
-            if ($modelInstance->business_id !== NULL) {
-                if ($modelInstance->business_id != $authUser->business_id) {
-                    return response()->json([
-                        "message" => "You do not have permission to update this item due to role restrictions."
-                    ], 403);
-                } else {
-                    $shouldUpdate = 1;
-                }
-            } else {
-                if ($modelInstance->is_default == 0) {
-                    if ($modelInstance->created_by != $authUser->id) {
-                        return response()->json([
-                            "message" => "You do not have permission to update this item due to role restrictions."
-                        ], 403);
-                    } else {
-                        $shouldDisable = 1;
-                    }
-                } else {
-                    $shouldDisable = 1;
-                }
-            }
-        }
-
-        // Perform the update action
-        if ($shouldUpdate) {
-            $modelInstance->update([
-                'is_active' => !$modelInstance->is_active
-            ]);
-        }
-
-        // Handle disabling the model
-        if ($shouldDisable) {
-            $disabledInstance = $disabledModelClass::where([
-                $modelIdName => $modelInstance->id,
-                'business_id' => $authUser->business_id,
-                'created_by' => $authUser->id,
-            ])->first();
-
-            if (!$disabledInstance) {
-                $disabledModelClass::create([
-                    $modelIdName => $modelInstance->id,
-                    'business_id' => $authUser->business_id,
-                    'created_by' => $authUser->id,
-                ]);
-            } else {
-                $disabledInstance->delete();
-            }
-        }
-    }
     public function getLetterTemplateVariablesFunc()
     {
         $letterTemplateVariables = [
@@ -327,19 +238,16 @@ trait BasicUtil
     public function storeUploadedFiles($filePaths, $fileKey, $location, $arrayOfString = NULL, $student_id = NULL)
     {
 
-
-
-
         // Step 3: Handle nested arrays of file paths
         if (is_array($arrayOfString)) {
             return collect($filePaths)->map(function ($filePathItem) use ($fileKey, $location, $student_id) {
                 $filePathItem[$fileKey] = $this->storeUploadedFiles(
                     $filePathItem[$fileKey],
-                     "",
+                    "",
                     $location,
                     NULL,
                     $student_id
-                    );
+                );
                 return $filePathItem;
             });
         }
@@ -351,13 +259,13 @@ trait BasicUtil
         // Iterate over each file path in the array and perform necessary operations
         return collect($filePaths)->map(function ($filePathItem) use ($temporaryFilesLocation, $fileKey, $location, $student_id) {
 
- // Step 1: Retrieve the business of the authenticated user
- $business = auth()->user()->business;
- // Add the business name to the location path
- $location = str_replace(' ', '_', $business->name) . "/" . (!empty($student_id) ? ("/" . base64_encode($student_id) . "/") : "") . $location;
+            // Step 1: Retrieve the business of the authenticated user
+            $business = auth()->user()->business;
+            // Add the business name to the location path
+            $location = str_replace(' ', '_', $business->name) . "/" . (!empty($student_id) ? ("/" . base64_encode($student_id) . "/") : "") . $location;
 
 
-    $file = !empty($fileKey) ? $filePathItem[$fileKey] : $filePathItem;
+            $file = !empty($fileKey) ? $filePathItem[$fileKey] : $filePathItem;
 
 
             // Construct the full temporary file path and the new location path
@@ -404,6 +312,82 @@ trait BasicUtil
         })->toArray();
     }
 
+    private function moveFile(string $file, string $temporary_files_location, string $final_location): string
+    {
+        $full_temp_path = public_path($file);
+        $new_location = str_replace($temporary_files_location, $final_location, $file);
+        $new_location_path = public_path($new_location);
+
+        if (File::exists($full_temp_path)) {
+            $new_directory = dirname($new_location_path);
+            if (!File::exists($new_directory)) {
+                File::makeDirectory($new_directory, 0755, true);
+            }
+
+            File::move($full_temp_path, $new_location_path);
+            Log::info("File moved successfully from {$full_temp_path} to {$new_location_path}");
+        }
+
+        return basename($new_location);
+    }
+
+
+    public function storeUploadedFilesV2(array $files, string $location, ?int $student_id = null, ?int $business_id = null): array
+    {
+        $temporary_files_location = config("setup-config.temporary_files_location");
+
+        if ($business_id) {
+            $business = Business::find($business_id);
+            if (!$business) {
+                throw new Exception("Business not found", 404);
+            }
+        } else {
+            // Use the authenticated user's business if no business_id is provided
+            $business = auth()->user()->business;
+        }
+
+        $business_location = str_replace(' ', '_', $business->name);
+        $student_path = $student_id ? base64_encode($student_id) . "/" : "";
+        $final_location = "{$business_location}/{$student_path}{$location}";
+
+        $new_file_names = [];
+
+        foreach ($files as $file) {
+            $new_file_names[] = $this->moveFile($file, $temporary_files_location, $final_location);
+        }
+
+        return $new_file_names;
+    }
+
+    public function cleanupOldFiles(array $existing_files, array $new_files, string $base_path): void
+    {
+        foreach ($existing_files as $existingFile) {
+            $found = false;
+
+            foreach ($new_files as $newFile) {
+                if ($existingFile['id'] == $newFile['id']) {
+                    $found = true;
+
+                    // If filename changed, delete old file
+                    if ($existingFile['file_name'] !== $newFile['file_name']) {
+                        $filePath = public_path($base_path . $existingFile['file_name']);
+                        if (File::exists($filePath)) {
+                            File::delete($filePath);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            // If file no longer exists in new files, delete it
+            if (!$found) {
+                $filePath = public_path($base_path . $existingFile['file_name']);
+                if (File::exists($filePath)) {
+                    File::delete($filePath);
+                }
+            }
+        }
+    }
 
     public function renameOrCreateFolder($currentFolderPath, $newFolderName)
     {
@@ -425,18 +409,18 @@ trait BasicUtil
                 throw new Exception("Failed to rename folder: " . $e->getMessage());
             }
         } else {
-           // If the folder doesn't exist, create it
-        $fullNewFolderPath = public_path($newFolderName);
-        if (!File::exists($fullNewFolderPath)) {
-            try {
-                File::makeDirectory($newFolderPath, 0755, true); // Create the new folder
-                Log::info("Folder created successfully at {$newFolderPath}");
-                return $newFolderPath;
-            } catch (\Exception $e) {
-                Log::error("Failed to create folder: " . $e->getMessage());
-                throw new Exception("Failed to create folder: " . $e->getMessage());
+            // If the folder doesn't exist, create it
+            $fullNewFolderPath = public_path($newFolderName);
+            if (!File::exists($fullNewFolderPath)) {
+                try {
+                    File::makeDirectory($newFolderPath, 0755, true); // Create the new folder
+                    Log::info("Folder created successfully at {$newFolderPath}");
+                    return $newFolderPath;
+                } catch (\Exception $e) {
+                    Log::error("Failed to create folder: " . $e->getMessage());
+                    throw new Exception("Failed to create folder: " . $e->getMessage());
+                }
             }
-    }
         }
     }
 
@@ -459,23 +443,22 @@ trait BasicUtil
                 });
             });
 
-            if(request()->filled("id") && empty($data)) {
-                throw new Exception("No data found",404);
-            }
+        if (request()->filled("id") && empty($data)) {
+            throw new Exception("No data found", 404);
+        }
         return $data;
-
     }
 
 
-    public function getUrlLink($data,$propertyName,$folderName,$business_name=NULL){
+    public function getUrlLink($data, $propertyName, $folderName, $business_name = NULL)
+    {
 
-        if(empty($business_name)){
+        if (empty($business_name)) {
             $business_name = auth()->user()?->business?->name ?? "no business";
         }
 
-        $data[$propertyName] = "/" . str_replace(' ', '_', $business_name) . "/". $folderName."/".  $data[$propertyName];
+        $data[$propertyName] = "/" . str_replace(' ', '_', $business_name) . "/" . $folderName . "/" .  $data[$propertyName];
 
         return $data;
     }
-
 }

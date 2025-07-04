@@ -45,10 +45,7 @@ public function courses() {
 
 
 
-   public function disabled()
-      {
-          return $this->hasMany(DisabledAwardingBody::class, 'awarding_body_id', 'id');
-      }
+  
 
 
 

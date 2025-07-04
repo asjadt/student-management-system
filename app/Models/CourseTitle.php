@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class CourseTitle extends Model
 {
     use HasFactory, DefaultQueryScopesTrait;
+
     protected $fillable = [
         'name',
         'level',
@@ -20,9 +21,9 @@ class CourseTitle extends Model
         "created_by"
     ];
 
-    public function disabled()
-    {
-        return $this->hasMany(DisabledCourseTitle::class, 'course_title_id');
+
+    public function sessions () {
+        return   $this->belongsToMany(Session::class,"session_courses","course_id","session_id");
     }
 
 

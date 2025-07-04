@@ -242,7 +242,9 @@ class Business extends Model
 
 
 
-
+    public function reminder(){
+        return $this->hasMany(Reminder::class,'business_id', 'id');
+    }
 
 
 

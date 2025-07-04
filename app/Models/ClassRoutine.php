@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClassRoutine extends Model
 {
     use HasFactory, DefaultQueryScopesTrait;
+
     protected $fillable = [
                     'day_of_week',
                     'start_time',
@@ -19,7 +20,6 @@ class ClassRoutine extends Model
                     'room_number',
                     'subject_id',
                     'teacher_id',
-                    'semester_id',
                     'session_id',
                     'course_id',
                     "is_active",
@@ -49,21 +49,18 @@ class ClassRoutine extends Model
   }
 
 
-  public function semester()
+
+
+
+  public function session()
   {
-      return $this->belongsTo(Semester::class, 'semester_id','id');
+      return $this->belongsTo(Session::class, 'session_id','id');
   }
 
-
-
-
-
-
-
-
-
-
-
+  public function attendances()
+  {
+      return $this->hasMany(Attendance::class, 'class_routine_id','id');
+  }
 
 
 

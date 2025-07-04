@@ -16,9 +16,6 @@ class CreateInstallmentPaymentsTable extends Migration
     {
         Schema::create('installment_payments', function (Blueprint $table) {
             $table->id();
-
-
-
             $table->foreignId('installment_plan_id')
 
             ->constrained('installment_payments')
@@ -50,8 +47,7 @@ class CreateInstallmentPaymentsTable extends Migration
 
 
 
-
-                            $table->boolean('is_active')->default(false);
+           $table->boolean('is_active')->default(false);
 
 
 

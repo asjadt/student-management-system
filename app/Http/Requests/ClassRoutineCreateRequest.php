@@ -3,7 +3,8 @@
 
 namespace App\Http\Requests;
 
-
+use App\Rules\TeacherAvailable;
+use App\Rules\UniqueSchedulePerSession;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateClassRoutineName;
 
@@ -51,7 +52,6 @@ class ClassRoutineCreateRequest extends BaseFormRequest
                 'required',
                 'string',
 
-
             ],
 
             'subject_id' => [
@@ -67,24 +67,19 @@ class ClassRoutineCreateRequest extends BaseFormRequest
             ],
 
 
-            'teacher_id' => [
-                'required',
-                'numeric',
-                "exists:users,id"
+           'teacher_id' => [
+            'required',
+            'numeric',
+            'exists:users,id',
+             new TeacherAvailable($this->day_of_week, $this->start_time, $this->end_time),
+        ],
 
-            ],
-
-            'semester_id' => [
-                'nullable',
-                'numeric',
-                "exists:semesters,id"
-
-            ],
+            
             'session_id' => [
                 'nullable',
                 'numeric',
-                "exists:sessions,id"
-
+                "exists:sessions,id",
+                new UniqueSchedulePerSession($this->day_of_week, $this->start_time, $this->end_time, $this->session_id)
             ],
 
 
@@ -96,4 +91,5 @@ class ClassRoutineCreateRequest extends BaseFormRequest
 
         return $rules;
     }
+
 }

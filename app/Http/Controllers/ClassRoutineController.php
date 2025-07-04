@@ -14,6 +14,7 @@ use App\Http\Requests\GetIdRequest;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Models\Attendance;
 use App\Models\ClassRoutine;
 
 use Exception;
@@ -49,7 +50,7 @@ class ClassRoutineController extends Controller
      * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
      *
      * @OA\Property(property="teacher_id", type="string", format="string", example="teacher_id"),
-     * @OA\Property(property="semester_id", type="string", format="string", example="semester_id"),
+
      * @OA\Property(property="session_id", type="string", format="string", example="session_id"),
      *
      *
@@ -107,9 +108,21 @@ class ClassRoutineController extends Controller
                         "message" => "You can not perform this action"
                     ], 401);
                 }
+                // $incoming_data = $request->input('routines'); // array of routines
 
+                // $duplicates = collect($incoming_data)->duplicates(function ($item) {
+                //     return $item['day_of_week'] . '-' . $item['start_time'] . '-' . $item['end_time'] . '-' . $item['teacher_id'];
+                // });
+
+                // if ($duplicates->isNotEmpty()) {
+                //     return response()->json([
+                //         'message' => 'Duplicate entries found in submitted data.',
+                //         'duplicates' => $duplicates->values()
+                //     ], 422);
+                // }
                 // Validate the request data
                 $request_data = $request->validated();
+
 
                 // Set the default status for the class routine as active
                 $request_data["is_active"] = 1;
@@ -180,7 +193,6 @@ class ClassRoutineController extends Controller
      *             )
      *         )
      *     ),
-     *     @OA\Property(property="semester_id", type="string", example="semester_id"),
      *     @OA\Property(property="session_id", type="string", example="session_id")
      *
      *     ),
@@ -235,13 +247,44 @@ class ClassRoutineController extends Controller
                     "message" => "You cannot perform this action"
                 ], 401);
             }
+            $course_data = $request->input('course_data', []);
+            $seen = [];
+
+            foreach ($course_data as $course_index => $course) {
+                foreach ($course['days'] ?? [] as $day_index => $day) {
+                    $key = implode('-', [
+                        $day['day_of_week'] ?? '',
+                        $day['start_time'] ?? '',
+                        $day['end_time'] ?? '',
+                        $day['teacher_id'] ?? '',
+                        $day['subject_id'] ?? '',
+                        $day['session_id'] ?? '',
+                    ]);
+
+                    if (isset($seen[$key])) {
+                        // Extract the conflicting course/day indices
+                        preg_match('/course_data\[(\d+)\]\[days\]\[(\d+)\]/', $seen[$key], $matches);
+                        $seen_course_index = $matches[1] ?? '?';
+                        $seen_day_index = $matches[2] ?? '?';
+
+                        return response()->json([
+                            'message' => 'The given data was invalid.',
+                            'errors' => [
+                                "course_data.$course_index.days.$day_index" => [
+                                    "Duplicate class schedule found. Conflicts with course_data[$seen_course_index][days][$seen_day_index]."
+                                ]
+                            ]
+                        ], 422);
+                    }
+
+                    $seen[$key] = "course_data[$course_index][days][$day_index]";
+                }
+            }
 
             // Validate the request data
             $request_data = $request->validated();
 
-            // Extract the semester ID and session ID from the validated data
-            $semester_id = $request_data['semester_id'] ?? null;
-            $session_id = $request_data['session_id'];
+
 
             // Extract the course data from the validated data
             $course_data = $request_data['course_data'];
@@ -256,9 +299,8 @@ class ClassRoutineController extends Controller
 
                 // Iterate over each day in the course data
                 foreach ($course['days'] as $day) {
-                    // Add the semester ID, session ID, course ID, active status, created by and business ID to the day's data
-                    $day['semester_id'] = $semester_id;
-                    $day['session_id'] = $session_id;
+
+
                     $day['course_id'] = $course_id;  // Add course_id to each day's data
                     $day['is_active'] = 1;
                     $day['created_by'] = auth()->user()->id;
@@ -273,6 +315,7 @@ class ClassRoutineController extends Controller
                     $class_routine = ClassRoutine::create($day);
                     $created_routines[] = $class_routine;
                 }
+
             }
 
             // Commit the transaction
@@ -322,7 +365,7 @@ class ClassRoutineController extends Controller
      *                 )
      *             )
      *         ),
-     *         @OA\Property(property="semester_id", type="string", example="semester_id"),
+
      *         @OA\Property(property="session_id", type="string", example="session_id")
      *     ),
      * ),
@@ -375,16 +418,23 @@ class ClassRoutineController extends Controller
                     "message" => "You cannot perform this action"
                 ], 401);
             }
-
             // Validate the request data
             $request_data = $request->validated();
+
+            if (Attendance::where([
+                "class_routine_id" => $request_data["id"]
+            ])->exists()) { // Use exists() instead of exist()
+                return response()->json([
+                    "message" => "The class routine cannot be updated because attendance has already been recorded for it."
+                ], 409);
+            }
+
 
             // Get the ID from the request body
             $routine_id = $request_data['id'];
 
-            // Ensure the requested data exists
-            $semester_id = $request_data['semester_id'] ?? NULL;
-            $session_id = $request_data['session_id'];
+
+
             $course_data = $request_data['course_data'];
 
             $updated_routines = [];
@@ -406,8 +456,7 @@ class ClassRoutineController extends Controller
                     }
 
                     // Update the existing routine
-                    $day['semester_id'] = $semester_id;
-                    $day['session_id'] = $session_id;
+
                     $day['course_id'] = $course_id;  // Ensure course_id is set
                     $day['is_active'] = 1;
                     $day['updated_by'] = auth()->user()->id;
@@ -466,7 +515,7 @@ class ClassRoutineController extends Controller
      * @OA\Property(property="course_id", type="string", format="string", example="course_id"),
      *
      * @OA\Property(property="teacher_id", type="string", format="string", example="teacher_id"),
-     * @OA\Property(property="semester_id", type="string", format="string", example="semester_id"),
+
      * @OA\Property(property="session_id", type="string", format="string", example="session_id"),
      *
      *
@@ -528,10 +577,28 @@ class ClassRoutineController extends Controller
                         "message" => "You can not perform this action"
                     ], 401);
                 }
+                // $incoming_data = $request->input('routines'); // array of routines
 
+                // $duplicates = collect($incoming_data)->duplicates(function ($item) {
+                //     return $item['day_of_week'] . '-' . $item['start_time'] . '-' . $item['end_time'] . '-' . $item['teacher_id'];
+                // });
+
+                // if ($duplicates->isNotEmpty()) {
+                //     return response()->json([
+                //         'message' => 'Duplicate entries found in submitted data.',
+                //         'duplicates' => $duplicates->values()
+                //     ], 422);
+                // }
                 // Validate the request data
                 $request_data = $request->validated();
 
+                if (Attendance::where([
+                    "class_routine_id" => $request_data["id"]
+                ])->exists()) { // Use exists() instead of exist()
+                    return response()->json([
+                        "message" => "The class routine cannot be updated because attendance has already been recorded for it."
+                    ], 409);
+                }
                 // Extract the class routine ID from the validated data
                 $class_routine_id = $request_data["id"];
 
@@ -553,7 +620,6 @@ class ClassRoutineController extends Controller
                         "subject_id",
                         "course_id",
                         "teacher_id",
-                        "semester_id",
                         "session_id"
                         // "is_default",
                         // "is_active",
@@ -717,8 +783,6 @@ class ClassRoutineController extends Controller
      *       security={
      *           {"bearerAuth": {}}
      *       },
-
-
      *         @OA\Parameter(
      *         name="start_time",
      *         in="query",
@@ -726,9 +790,6 @@ class ClassRoutineController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
-
-
      *         @OA\Parameter(
      *         name="end_time",
      *         in="query",
@@ -736,9 +797,6 @@ class ClassRoutineController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
-
-
      *         @OA\Parameter(
      *         name="room_number",
      *         in="query",
@@ -746,11 +804,6 @@ class ClassRoutineController extends Controller
      *         required=true,
      *  example="6"
      *      ),
-
-
-
-
-
      *         @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -843,12 +896,7 @@ class ClassRoutineController extends Controller
      *     )
      */
 
-    /**
-     * Gets a list of class routines based on the given filters.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function getClassRoutines(Request $request)
     {
         try {
@@ -866,81 +914,127 @@ class ClassRoutineController extends Controller
             // Get the business ID of the user
             $business_id = auth()->user()->business_id;
 
-            // Initialize the class routines query
-            $class_routines = ClassRoutine::with("teacher", "subject", "semester");
+            $class_routines = ClassRoutine::with(
+                [
+            "teacher",
+            "subject",
+            "session",
+            "session.students" => function($query) {
+                $query->filterStudent();
+            },
+            "course",
+            "attendances" => function($query) {
+                  $query->filterAttendance();
+            }
 
-            // Filter the class routines by business ID
+                ]
+            );
+
+            // Filter by business ID
             $class_routines->where('class_routines.business_id', $business_id);
 
-            // Filter the class routines by ID
+            // Filter by ID
             if ($request->filled("id")) {
                 $class_routines->where('class_routines.id', $request->id);
             }
 
-            // Filter the class routines by start time
+            // Filter by start time
             if ($request->filled("start_time")) {
                 $class_routines->where('class_routines.start_time', $request->start_time);
             }
 
-            // Filter the class routines by end time
+            // Filter by end time
             if ($request->filled("end_time")) {
                 $class_routines->where('class_routines.end_time', $request->end_time);
             }
 
-            // Filter the class routines by room number
+            // Filter by room number
             if ($request->filled("room_number")) {
                 $class_routines->where('class_routines.room_number', $request->room_number);
             }
 
-            // Filter the class routines by search key
+            // Filter by day of week
+            if ($request->filled("day_of_week")) {
+                $class_routines->where('class_routines.day_of_week', $request->day_of_week);
+            }
+
+            // Filter by subject_id
+            if ($request->filled("subject_id")) {
+                $class_routines->where('class_routines.subject_id', $request->subject_id);
+            }
+
+            // Filter by teacher_id
+            if ($request->filled("teacher_id")) {
+                $class_routines->where('class_routines.teacher_id', $request->teacher_id);
+            }
+
+
+
+            // Filter by session_id
+            if ($request->filled("student_session_id")) {
+                $class_routines->where('class_routines.session_id', $request->student_session_id);
+            }
+
+            // Filter by course_id
+            if ($request->filled("course_id")) {
+                $class_routines->where('class_routines.course_id', $request->course_id);
+            }
+
+            // Filter by is_active
+            if ($request->filled("is_active")) {
+                $class_routines->where('class_routines.is_active', $request->is_active);
+            }
+
+            // Filter by created_by
+            if ($request->filled("created_by")) {
+                $class_routines->where('class_routines.created_by', $request->created_by);
+            }
+
+            // Filter by search_key
             if ($request->filled("search_key")) {
                 $search_key = $request->search_key;
                 $class_routines->where(function ($query) use ($search_key) {
-                    // Search the class routines by start time, end time, room number, teacher name, subject name, and semester name
                     $query
                         ->where("class_routines.start_time", "like", "%" . $search_key . "%")
                         ->orWhere("class_routines.end_time", "like", "%" . $search_key . "%")
                         ->orWhere("class_routines.room_number", "like", "%" . $search_key . "%")
                         ->orWhere("teachers.name", "like", "%" . $search_key . "%")
-                        ->orWhere("subjects.name", "like", "%" . $search_key . "%")
-                        ->orWhere("semesters.name", "like", "%" . $search_key . "%")
-                    ;
+                        ->orWhere("subjects.name", "like", "%" . $search_key . "%");
                 });
             }
 
-            // Filter the class routines by start date
+            // Filter by start_date
             if ($request->filled("start_date")) {
                 $class_routines->where('class_routines.created_at', ">=", $request->start_date);
             }
 
-            // Filter the class routines by end date
+            // Filter by end_date
             if ($request->filled("end_date")) {
-                $class_routines->where('class_routines.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                $class_routines->where('class_routines.created_at', "<=", $request->end_date . ' 23:59:59');
             }
 
-            // Order the class routines by ID
+            // Order by ID
             if ($request->filled("order_by") && in_array(strtoupper($request->order_by), ['ASC', 'DESC'])) {
                 $class_routines->orderBy("class_routines.id", $request->order_by);
             } else {
                 $class_routines->orderBy("class_routines.id", "DESC");
             }
 
-            // Get the class routines
+            // Final result
             if ($request->filled("id")) {
-                $class_routines = $class_routines->where("class_routines.id", $request->input("id"))->first();
+                $class_routines = $class_routines->first();
             } else {
-                $class_routines = $class_routines->when(!empty(request()->per_page), function ($query) {
-                    return $query->paginate(request()->per_page);
+                $class_routines = $class_routines->when(!empty($request->per_page), function ($query) use ($request) {
+                    return $query->paginate($request->per_page);
                 }, function ($query) {
                     return $query->get();
                 });
             }
 
-            // If no data is found, throw a 404 Not Found exception
+            // Throw exception if not found
             if ($request->filled("id") && empty($class_routines)) {
                 throw new Exception("No data found", 404);
             }
-
             // Return the class routines
             return response()->json($class_routines, 200);
         } catch (Exception $e) {
@@ -1028,6 +1122,14 @@ class ClassRoutineController extends Controller
 
             // Split the given IDs by comma and convert to an array
             $idsArray = explode(',', $ids);
+
+            if (Attendance::whereIn(
+                "class_routine_id", $idsArray
+            )->exists()) { // Use exists() instead of exist()
+                return response()->json([
+                    "message" => "The class routine cannot be updated because attendance has already been recorded for it."
+                ], 409);
+            }
 
             // Retrieve the existing IDs in the database
             $existingIds = ClassRoutine::whereIn('id', $idsArray)

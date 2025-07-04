@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\Module;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -73,7 +74,24 @@ class UpdateDatabaseController extends Controller
 
         return 'Previous education history updated successfully!';
     }
+    public function updateModule()
+    {
+        $modules = config("setup-config.system_modules");
+        foreach ($modules as $module) {
+            $module_exists = Module::where([
+                "name" => $module
+            ])
+                ->exists();
 
+            if (!$module_exists) {
+                Module::create([
+                    "name" => $module,
+                    "is_enabled" => 1,
+                    'created_by' => 1,
+                ]);
+            }
+        }
+    }
     public function updateBusinessLogo()
     {
         $businesses = Business::withTrashed()->get(); // Get all students
