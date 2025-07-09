@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GetIdRequest;
 use App\Http\Requests\StudentCreateRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\MultipleFileUploadRequest;
@@ -722,8 +723,7 @@ class StudentController extends Controller
         }
     }
 
-
-    /**
+   /**
      *
      * @OA\Put(
      *      path="/v1.0/students",
@@ -972,6 +972,102 @@ class StudentController extends Controller
                 return response($student, 201);
             });
         } catch (Exception $e) {
+            return $this->sendError($e, 500, $request);
+        }
+    }
+    /**
+     *
+     * @OA\Put(
+     *      path="/v1.0/students-is-local-student",
+     *      operationId="updateStudentIsLocalStudent",
+     *      tags={"students"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+     *      summary="This method is to update student ",
+     *      description="This method is to update student",
+     *
+     *  @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *      @OA\Property(property="id", type="number", format="number", example="Updated Christmas")
+
+     *
+     *         ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function updateStudentIsLocalStudent(GetIdRequest $request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+                if (!$request->user()->hasPermissionTo('student_update')) {
+                    return response()->json([
+                        "message" => "You can not perform this action"
+                    ], 401);
+                }
+                $business_id =  $request->user()->business_id;
+                $request_data = $request->validated();
+
+                $student_query_params = [
+                    "id" => $request_data["id"],
+                    "business_id" => $business_id
+                ];
+
+                $student = Student::where($student_query_params)->first();
+
+
+                if (!$student) {
+                    return response()->json([
+                        "message" => "something went wrong."
+                    ], 500);
+                }
+
+                $student->is_local_student = !$student->is_local_student;
+                $student->save();
+
+
+
+DB::commit();
+                return response($student, 201);
+
+        } catch (Exception $e) {
+            DB::rollBack();
             return $this->sendError($e, 500, $request);
         }
     }

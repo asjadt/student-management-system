@@ -634,6 +634,7 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
    Route::post('/v1.0/students/multiple-file-upload', [StudentController::class, "createStudentFileMultiple"]);
    Route::post('/v1.0/students', [StudentController::class, "createStudent"]);
    Route::put('/v1.0/students', [StudentController::class, "updateStudent"]);
+   Route::put('/v1.0/students-is-local-student', [StudentController::class, "updateStudentIsLocalStudent"]);
    Route::put('/v1.0/students-courses', [StudentController::class, "updateStudentCourses"]);
    Route::get('/v1.0/students/validate/school-id/{student_id}', [StudentController::class, "validateStudentId"]);
    Route::get('/v1.0/students', [StudentController::class, "getStudents"]);
