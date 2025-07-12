@@ -84,8 +84,6 @@ class Attendance extends Model
             // 'start_time',
             // 'end_time',
             // 'room_number'
-            'start_date',
-            'end_date',
             'subject_id',
             'teacher_id',
             'session_id',
