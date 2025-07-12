@@ -86,7 +86,7 @@ class Attendance extends Model
             // 'room_number'
             'subject_id',
             'teacher_id',
-            'session_id',
+            // 'session_id',
             'course_id',
             'created_by'
         ];
@@ -99,6 +99,9 @@ class Attendance extends Model
 
         // Chain date range and search filters
         $query = $query
+            ->when(request()->filled('student_session_id'), function ($q) {
+                return $q->where('session_id', request()->input('student_session_id'));
+            })
             ->where('business_id', auth()->user()->business_id)
             ->when(request()->filled("start_date"), fn($q) => $q->where('attendance_date', '>=', request()->input("start_date")))
             ->when(request()->filled("end_date"), fn($q) => $q->where('attendance_date', '<=', request()->input("end_date") . ' 23:59:59'))
