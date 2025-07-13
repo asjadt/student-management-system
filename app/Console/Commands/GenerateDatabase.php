@@ -155,6 +155,7 @@ $user = User::first(); // ###############################
              "business_staff",
              "business_teacher",
              "business_administrator",
+             "agency"
 
              ])?1:0)
 

@@ -151,7 +151,8 @@ return "swagger generated";
              "business_admin",
              "business_staff",
              "business_administrator",
-             "business_teacher"
+             "business_teacher",
+             "agency"
 
              ])?1:0)
 
@@ -232,10 +233,12 @@ return "swagger generated";
                     "business_id" => NULL,
                     "is_default" => 1,
                     "is_default_for_business" => (in_array($role, [
-                        "business_owner",
-                        "business_admin",
-                        "business_manager",
-                        "business_employee"
+
+             "business_admin",
+             "business_staff",
+             "business_administrator",
+             "business_teacher",
+             "agency"
                     ]) ? 1 : 0)
 
 
