@@ -48,3 +48,69 @@ DROP COLUMN `business_tier_id`;
 
 ALTER TABLE `modules`
 DROP COLUMN `is_default`;
+
+
+
+
+INSERT INTO roles (
+    name,
+    guard_name,
+    created_at,
+    updated_at,
+    business_id,
+    is_default,
+    is_system_default,
+    is_default_for_business,
+    description
+)
+SELECT
+    r.expected_role,
+    'api',
+    NOW(),
+    NOW(),
+    r.business_id,
+    1,
+    0,
+    0,
+    NULL
+FROM (
+    -- Generate expected roles for each existing business_id (excluding NULL)
+    SELECT DISTINCT business_id, CONCAT(role_type, '#', business_id) AS expected_role
+    FROM (
+        SELECT business_id, 'business_admin' AS role_type FROM roles WHERE business_id IS NOT NULL
+        UNION ALL
+        SELECT business_id, 'business_staff' FROM roles WHERE business_id IS NOT NULL
+        UNION ALL
+        SELECT business_id, 'business_administrator' FROM roles WHERE business_id IS NOT NULL
+        UNION ALL
+        SELECT business_id, 'business_teacher' FROM roles WHERE business_id IS NOT NULL
+        UNION ALL
+        SELECT business_id, 'agency' FROM roles WHERE business_id IS NOT NULL
+    ) AS expected_roles
+) AS r
+LEFT JOIN roles real_roles
+    ON real_roles.name = r.expected_role AND real_roles.business_id = r.business_id
+WHERE real_roles.id IS NULL;
+
+
+
+SELECT r.business_id, r.expected_role
+FROM (
+    -- Generate expected roles for each existing business_id
+    SELECT DISTINCT business_id, CONCAT(role_type, '#', business_id) AS expected_role
+    FROM (
+        SELECT business_id, 'business_admin' AS role_type FROM roles
+        UNION ALL
+        SELECT business_id, 'business_staff' FROM roles
+        UNION ALL
+        SELECT business_id, 'business_administrator' FROM roles
+        UNION ALL
+        SELECT business_id, 'business_teacher' FROM roles
+        UNION ALL
+        SELECT business_id, 'agency' FROM roles
+    ) AS expected_roles
+) AS r
+LEFT JOIN roles real_roles
+    ON real_roles.name = r.expected_role AND real_roles.business_id = r.business_id
+WHERE real_roles.id IS NULL
+LIMIT 0, 25;
