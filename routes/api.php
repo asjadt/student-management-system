@@ -12,6 +12,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\BusinessSettingController;
 use App\Http\Controllers\BusinessTierController;
 use App\Http\Controllers\BusinessTimesController;
+use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\ClassRoutineController;
 use App\Http\Controllers\ClientTicketingSystemController;
 use App\Http\Controllers\CourseTitleController;
@@ -738,3 +739,12 @@ Route::get('/v1.0/client-agencies', [AgencyController::class, "getClientAgencies
 
 // FILE UPLOADER
 Route::post('/v1.0/client-users/single-file-upload', [UserManagementController::class, "createUserFileSingle"]);
+
+
+
+
+  Route::post('/check-ins', [CheckInController::class, 'store']);          // Create check-in
+    Route::get('/check-ins', [CheckInController::class, 'index']);           // List all check-ins
+    Route::get('/check-ins/{id}', [CheckInController::class, 'show']);       // Show specific check-in
+    Route::put('/check-ins/{id}', [CheckInController::class, 'update']);     // Update check-in
+    Route::delete('/check-ins/{id}', [CheckInController::class, 'destroy']); // Delete check-in
