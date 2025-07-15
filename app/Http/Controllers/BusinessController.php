@@ -967,7 +967,7 @@ class BusinessController extends Controller
                 "business" => $business
             ], 201);
         } catch (Exception $e) {
-              DB::rollBack();
+            DB::rollBack();
             return $this->sendError($e, 500, $request);
         }
     }
@@ -1201,7 +1201,7 @@ class BusinessController extends Controller
                     $this->renameOrCreateFolder(str_replace(' ', '_', $business->name), str_replace(' ', '_', $request_data['business']["name"]));
                 }
 
-                if(auth()->user()->id == $business->owner_id) {
+                if (auth()->user()->id == $business->owner_id) {
                     $request_data['business']["trail_end_date"] = $business->trail_end_date;
                 }
 
@@ -1614,12 +1614,12 @@ class BusinessController extends Controller
                         ->orWhere("postcode", "like", "%" . $term . "%");
                 });
             })
-            ->when(request()->filled("is_trail_ended"), function ($query)  {
+            ->when(request()->filled("is_trail_ended"), function ($query) {
 
-                if(request()->boolean("is_trail_ended")) {
-                    return $query->whereDate('trail_end_date', "<" , today());
+                if (request()->boolean("is_trail_ended")) {
+                    return $query->whereDate('trail_end_date', "<", today());
                 } else {
-                    return $query->whereDate('trail_end_date', ">=" , today());
+                    return $query->whereDate('trail_end_date', ">=", today());
                 }
             })
             // If the user has provided a start date, filter the query to only
@@ -2012,27 +2012,28 @@ class BusinessController extends Controller
             // Select the business fields
             $query = $query->select(
 
-               [ "businesses.trail_end_date",
-                "businesses.id",
-                "businesses.name",
-                "businesses.url",
-                "businesses.web_page",
-                "businesses.color_theme_name",
+                [
+                    "businesses.trail_end_date",
+                    "businesses.id",
+                    "businesses.name",
+                    "businesses.url",
+                    "businesses.web_page",
+                    "businesses.color_theme_name",
 
-                "businesses.phone",
-                "businesses.email",
-                "businesses.address_line_1",
-                "businesses.lat",
-                "businesses.long",
-                "businesses.country",
-                "businesses.city",
-                "businesses.postcode",
-                "businesses.status",
-                "businesses.is_active",
-                "businesses.owner_id",
-                "businesses.created_by",
-                DB::raw("(SELECT COUNT(*) FROM students WHERE students.business_id = businesses.id) as total_students") // Correct way to count students
-               ]
+                    "businesses.phone",
+                    "businesses.email",
+                    "businesses.address_line_1",
+                    "businesses.lat",
+                    "businesses.long",
+                    "businesses.country",
+                    "businesses.city",
+                    "businesses.postcode",
+                    "businesses.status",
+                    "businesses.is_active",
+                    "businesses.owner_id",
+                    "businesses.created_by",
+                    DB::raw("(SELECT COUNT(*) FROM students WHERE students.business_id = businesses.id) as total_students") // Correct way to count students
+                ]
             );
 
             // Retrieve the data from the database, ordering by 'id'
@@ -2504,4 +2505,22 @@ class BusinessController extends Controller
         }
     }
 
+
+    // upload logo
+
+    public function uploadBusinessLogo(Request $request)
+    {
+        // STORE ACTIVITY LOG
+        $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+        // VALIDATE REQUEST DATA
+        $request->validate([
+            'file' => 'required|image|max:2048',
+            'business_id' => 'nullable|exists:businesses,id',
+        ]);
+
+        if (!$request->business_id) {
+            return response()->json(['error' => 'business_id is required'], 422);
+        }
+    }
 }

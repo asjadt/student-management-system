@@ -226,6 +226,7 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
    Route::get('/v1.0/businesses/{id}', [BusinessController::class, "getBusinessById"]);
    Route::delete('/v1.0/businesses/{ids}', [BusinessController::class, "deleteBusinessesByIds"]);
    Route::get('/v1.0/businesses/by-business-owner/all', [BusinessController::class, "getAllBusinessesByBusinessOwner"]);
+   Route::post('v1.0/businesses/upload-logo', [BusinessController::class, "uploadBusinessLogo"]);
    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    // end business management section
    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -743,8 +744,8 @@ Route::post('/v1.0/client-users/single-file-upload', [UserManagementController::
 
 
 
-  Route::post('/check-ins', [CheckInController::class, 'store']);          // Create check-in
-    Route::get('/check-ins', [CheckInController::class, 'index']);           // List all check-ins
-    Route::get('/check-ins/{id}', [CheckInController::class, 'show']);       // Show specific check-in
-    Route::put('/check-ins/{id}', [CheckInController::class, 'update']);     // Update check-in
-    Route::delete('/check-ins/{id}', [CheckInController::class, 'destroy']); // Delete check-in
+Route::post('/check-ins', [CheckInController::class, 'store']);          // Create check-in
+Route::get('/check-ins', [CheckInController::class, 'index']);           // List all check-ins
+Route::get('/check-ins/{id}', [CheckInController::class, 'show']);       // Show specific check-in
+Route::put('/check-ins/{id}', [CheckInController::class, 'update']);     // Update check-in
+Route::delete('/check-ins/{id}', [CheckInController::class, 'destroy']); // Delete check-in
