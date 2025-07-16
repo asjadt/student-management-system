@@ -446,7 +446,7 @@ class AgencyController extends Controller
      *
      * @OA\Get(
      *      path="/v1.0/client-agencies",
-     *      operationId="getAgencies",
+     *      operationId="getClientAgencies",
      *      tags={"agency_management"},
      *       security={
      *           {"bearerAuth": {}}

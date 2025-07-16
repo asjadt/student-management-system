@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCheckInRequest;
 use App\Http\Requests\UpdateCheckInRequest;
 use App\Models\CheckIn;
+use App\Models\Student;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -70,105 +71,136 @@ class CheckInController extends Controller
      */
     public function store(StoreCheckInRequest $request): JsonResponse
     {
+        // VALIDATE DATA
         $data = $request->validated();
+        // CHECK IN AT
         $data['check_in_at'] = now();
+
+        // GET STUDENT ID
+        $student = Student::where('student_id', $data['student_id'])->where('business_id', $data['business_id'])->first();
+        $student_id = $student->id;
+        if (!$student_id) {
+            return response()->json([
+                'message' => 'Student not found.',
+            ], 404);
+        }
+
+        // ASSIGN STUDENT ID
+        $data['student_id'] = $student_id;
+
+        // CREATE CHECK-IN
         $check_in = CheckIn::create($data);
 
+        // CHECK IF CHECK-IN WAS CREATED
+        if (!$check_in) {
+            return response()->json([
+                'message' => 'Check-in could not be created.',
+            ], 400);
+        }
+
+
+
+        // RETURN RESPONSE
+        $check_in['student_id'] = $request->input('student_id');
+        $check_in['student'] = $student;
+        $check_in['business'] = $student->business;
+
+        // 
         return response()->json([
             'message' => 'Check-in recorded successfully.',
             'data' => $check_in,
         ]);
     }
 
- /**
- * @OA\Get(
- *     path="/v1.0/check-ins",
- *     operationId="getAllCheckIns",
- *     tags={"check_in"},
- *     security={{"bearerAuth":{}}},
- *     summary="Get all check-ins",
- *     description="Filters: type, student_id, phone, check_in_from, check_in_to",
- *
- *     @OA\Parameter(
- *         name="type",
- *         in="query",
- *         required=false,
- *         description="student or customer",
- *         @OA\Schema(type="string", example="student")
- *     ),
- *     @OA\Parameter(
- *         name="student_id",
- *         in="query",
- *         required=false,
- *         description="Filter by student ID",
- *         @OA\Schema(type="integer", example=12)
- *     ),
- *     @OA\Parameter(
- *         name="phone",
- *         in="query",
- *         required=false,
- *         description="Filter by customer phone",
- *         @OA\Schema(type="string", example="01712345678")
- *     ),
- *     @OA\Parameter(
- *         name="check_in_from",
- *         in="query",
- *         required=false,
- *         description="Start of check-in date range",
- *         @OA\Schema(type="string", format="date", example="2025-07-01")
- *     ),
- *     @OA\Parameter(
- *         name="check_in_to",
- *         in="query",
- *         required=false,
- *         description="End of check-in date range",
- *         @OA\Schema(type="string", format="date", example="2025-07-14")
- *     ),
- *
- *     @OA\Response(
- *         response=200,
- *         description="List returned",
- *         @OA\JsonContent()
- *     )
- * )
- */
-public function index(): JsonResponse
-{
+    /**
+     * @OA\Get(
+     *     path="/v1.0/check-ins",
+     *     operationId="getAllCheckIns",
+     *     tags={"check_in"},
+     *     security={{"bearerAuth":{}}},
+     *     summary="Get all check-ins",
+     *     description="Filters: type, student_id, phone, check_in_from, check_in_to",
+     *
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         required=false,
+     *         description="student or customer",
+     *         @OA\Schema(type="string", example="student")
+     *     ),
+     *     @OA\Parameter(
+     *         name="student_id",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by student ID",
+     *         @OA\Schema(type="integer", example=12)
+     *     ),
+     *     @OA\Parameter(
+     *         name="phone",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by customer phone",
+     *         @OA\Schema(type="string", example="01712345678")
+     *     ),
+     *     @OA\Parameter(
+     *         name="check_in_from",
+     *         in="query",
+     *         required=false,
+     *         description="Start of check-in date range",
+     *         @OA\Schema(type="string", format="date", example="2025-07-01")
+     *     ),
+     *     @OA\Parameter(
+     *         name="check_in_to",
+     *         in="query",
+     *         required=false,
+     *         description="End of check-in date range",
+     *         @OA\Schema(type="string", format="date", example="2025-07-14")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="List returned",
+     *         @OA\JsonContent()
+     *     )
+     * )
+     */
+    public function index(): JsonResponse
+    {
 
-    if(!request()->filled("busiess_id")) {
-        return response()->json([
-            "message" => "Business ID is required"
-        ], 401);
+        if (!request()->filled("busiess_id")) {
+            return response()->json([
+                "message" => "Business ID is required"
+            ], 401);
+        }
+
+        $check_in_query = CheckIn::where([
+            "business_id" => request()->user()->business_id
+        ]);
+
+        if (request()->has('type')) {
+            $check_in_query->where('type', request('type'));
+        }
+
+        if (request()->has('student_id')) {
+            $check_in_query->where('student_id', request('student_id'));
+        }
+
+        if (request()->has('phone')) {
+            $check_in_query->where('phone', 'like', '%' . request('phone') . '%');
+        }
+
+        if (request()->has('check_in_from')) {
+            $check_in_query->whereDate('check_in_at', '>=', request('check_in_from'));
+        }
+
+        if (request()->has('check_in_to')) {
+            $check_in_query->whereDate('check_in_at', '<=', request('check_in_to'));
+        }
+
+        $check_ins = $this->retrieveData($check_in_query, "id", "check_ins");
+
+        return response()->json($check_ins);
     }
-
-    $check_in_query = CheckIn::where([
-        "business_id" => request()->user()->business_id
-    ]);
-
-    if (request()->has('type')) {
-        $check_in_query->where('type', request('type'));
-    }
-
-    if (request()->has('student_id')) {
-        $check_in_query->where('student_id', request('student_id'));
-    }
-
-    if (request()->has('phone')) {
-        $check_in_query->where('phone', 'like', '%' . request('phone') . '%');
-    }
-
-    if (request()->has('check_in_from')) {
-        $check_in_query->whereDate('check_in_at', '>=', request('check_in_from'));
-    }
-
-    if (request()->has('check_in_to')) {
-        $check_in_query->whereDate('check_in_at', '<=', request('check_in_to'));
-    }
-
-    $check_ins = $this->retrieveData($check_in_query, "id", "check_ins");
-
-    return response()->json($check_ins);
-}
 
 
     /**
@@ -201,7 +233,7 @@ public function index(): JsonResponse
 
 
 
-       $data = $request->validated();
+        $data = $request->validated();
 
         $data["check_out_at"] = now();
         $check_in->fill($data);

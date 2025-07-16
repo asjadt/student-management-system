@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCheckInRequest extends FormRequest
 {
-   public function authorize(): bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -16,7 +16,7 @@ class StoreCheckInRequest extends FormRequest
         return [
             'type' => ['required', 'in:student,customer'],
             // For students
-            'student_id' => ['required_if:type,student', 'exists:students,id'],
+            'student_id' => ['required_if:type,student', 'exists:students,student_id'],
             // For customers
             'first_name' => ['required_if:type,customer', 'string', 'max:255'],
             'last_name' => ['required_if:type,customer', 'string', 'max:255'],
