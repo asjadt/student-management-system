@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use PDF;
 
 class StudentController extends Controller
@@ -124,6 +125,147 @@ class StudentController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
+    /**
+     *
+     * @OA\Post(
+     *      path="/v1.0/students/image-upload",
+     *      operationId="uploadStudentImage",
+     *      tags={"students"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *      summary="This method is to store multiple student files",
+     *      description="This method is to store multiple student files",
+     *
+     *  @OA\RequestBody(
+     *   * @OA\MediaType(
+     *     mediaType="multipart/form-data",
+     *     @OA\Schema(
+     *         required={"files[]"},
+     *         @OA\Property(
+     *             description="array of files to upload",
+     *             property="files[]",
+     *             type="array",
+     *             @OA\Items(
+     *                 type="file"
+     *             ),
+     *             collectionFormat="multi",
+     *         )
+     *     )
+     * )
+
+
+
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function uploadStudentImage(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "Student Profile Picture", "Uploading profile picture");
+
+            // Validate
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|image|mimes:jpeg,png,jpg|max:5100',
+                'data' => 'required|string'
+            ]);
+
+
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => "Validation Failed",
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $business_id = auth()->user()->business_id ?? null;
+            // Log::info('business_id', $business_id);
+
+
+
+            // Parse inputs
+            $file = $request->file("file");
+            $request_data = json_decode($request->input("data"), true);
+
+            if (empty($request_data["student_id"])) {
+                return response()->json([
+                    'message' => "Validation Failed",
+                    'errors' => "student_id is required"
+                ], 422);
+            }
+
+            // GET STUDENT
+            $student = Student::where('id', $request_data["student_id"])
+                ->where('business_id', $business_id)->first();
+            if (!$student) {
+                return response()->json(['message' => 'Student not found'], 404);
+            }
+
+            // File handling
+            $location = config("setup-config.temporary_files_location");
+            $new_file_name = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+            $file->move(public_path($location), $new_file_name);
+
+            $new_logo_path = "/" . $location . "/" . $new_file_name;
+
+            if (!empty($student->image)) {
+                $oldImagePath = public_path($student->image);
+                if (File::exists($oldImagePath)) {
+                    File::delete($oldImagePath);
+                }
+            }
+
+            // Save to DB
+            $student->image = $new_logo_path;
+            $student->save();
+
+
+
+            // Log (fixed)
+            // Log::info('path', ['value' => $new_logo_path]);
+            // Log::info('new_file_name', ['value' => $new_file_name]);
+
+            return response()->json(['message' => 'Image uploaded successfully'], 201);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
 
     /**
      *
@@ -723,7 +865,7 @@ class StudentController extends Controller
         }
     }
 
-   /**
+    /**
      *
      * @OA\Put(
      *      path="/v1.0/students",
@@ -1036,36 +1178,35 @@ class StudentController extends Controller
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-                if (!$request->user()->hasPermissionTo('student_update')) {
-                    return response()->json([
-                        "message" => "You can not perform this action"
-                    ], 401);
-                }
-                $business_id =  $request->user()->business_id;
-                $request_data = $request->validated();
+            if (!$request->user()->hasPermissionTo('student_update')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
+            $business_id =  $request->user()->business_id;
+            $request_data = $request->validated();
 
-                $student_query_params = [
-                    "id" => $request_data["id"],
-                    "business_id" => $business_id
-                ];
+            $student_query_params = [
+                "id" => $request_data["id"],
+                "business_id" => $business_id
+            ];
 
-                $student = Student::where($student_query_params)->first();
-
-
-                if (!$student) {
-                    return response()->json([
-                        "message" => "something went wrong."
-                    ], 500);
-                }
-
-                $student->is_local_student = !$student->is_local_student;
-                $student->save();
+            $student = Student::where($student_query_params)->first();
 
 
+            if (!$student) {
+                return response()->json([
+                    "message" => "something went wrong."
+                ], 500);
+            }
 
-DB::commit();
-                return response($student, 201);
+            $student->is_local_student = !$student->is_local_student;
+            $student->save();
 
+
+
+            DB::commit();
+            return response($student, 201);
         } catch (Exception $e) {
             DB::rollBack();
             return $this->sendError($e, 500, $request);

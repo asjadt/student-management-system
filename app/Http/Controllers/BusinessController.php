@@ -2504,23 +2504,4 @@ class BusinessController extends Controller
             return $this->sendError($e, 500, $request);
         }
     }
-
-
-    // upload logo
-
-    public function uploadBusinessLogo(Request $request)
-    {
-        // STORE ACTIVITY LOG
-        $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-
-        // VALIDATE REQUEST DATA
-        $request->validate([
-            'file' => 'required|image|max:2048',
-            'business_id' => 'nullable|exists:businesses,id',
-        ]);
-
-        if (!$request->business_id) {
-            return response()->json(['error' => 'business_id is required'], 422);
-        }
-    }
 }

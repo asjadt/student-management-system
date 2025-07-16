@@ -226,7 +226,6 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
    Route::get('/v1.0/businesses/{id}', [BusinessController::class, "getBusinessById"]);
    Route::delete('/v1.0/businesses/{ids}', [BusinessController::class, "deleteBusinessesByIds"]);
    Route::get('/v1.0/businesses/by-business-owner/all', [BusinessController::class, "getAllBusinessesByBusinessOwner"]);
-   Route::post('v1.0/businesses/upload-logo', [BusinessController::class, "uploadBusinessLogo"]);
    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    // end business management section
    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -643,6 +642,8 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
    Route::get('/v2.0/students', [StudentController::class, "getStudentsV2"]);
    Route::get('/v1.0/students/{id}', [StudentController::class, "getStudentById"]);
    Route::delete('/v1.0/students/{ids}', [StudentController::class, "deleteStudentsByIds"]);
+   Route::post('/v1.0/students/image-upload', [StudentController::class, "uploadStudentImage"]);
+
 
 
    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
