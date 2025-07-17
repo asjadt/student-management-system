@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCheckInRequest;
 use App\Http\Requests\UpdateCheckInRequest;
+use App\Models\Business;
 use App\Models\CheckIn;
 use App\Models\Student;
 use Exception;
@@ -76,17 +77,24 @@ class CheckInController extends Controller
         // CHECK IN AT
         $data['check_in_at'] = now();
 
+        // DEFINE STUDENT STATE
+        $student = null;
+
         // GET STUDENT ID
-        $student = Student::where('student_id', $data['student_id'])->where('business_id', $data['business_id'])->first();
-        $student_id = $student->id;
-        if (!$student_id) {
-            return response()->json([
-                'message' => 'Student not found.',
-            ], 404);
+        if ($request->filled('student_id')) {
+            // GET STUDENT
+            $student = Student::where('student_id', $data['student_id'])->where('business_id', $data['business_id'])->first();
+
+            // IF NOT FOUND
+            if (!$student) {
+                return response()->json([
+                    'message' => 'Student not found.',
+                ], 404);
+            }
+            // ASSIGN STUDENT ID
+            $data['student_id'] = $student->id;
         }
 
-        // ASSIGN STUDENT ID
-        $data['student_id'] = $student_id;
 
         // CREATE CHECK-IN
         $check_in = CheckIn::create($data);
@@ -98,12 +106,12 @@ class CheckInController extends Controller
             ], 400);
         }
 
-
+        $business = Business::find($request->input('business_id'));
 
         // RETURN RESPONSE
         $check_in['student_id'] = $request->input('student_id');
         $check_in['student'] = $student;
-        $check_in['business'] = $student->business;
+        $check_in['business'] = $business;
 
         // 
         return response()->json([
