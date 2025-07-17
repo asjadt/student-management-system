@@ -266,10 +266,21 @@ class CheckInController extends Controller
         // DEFINE CHECK IN
         $check_in = null;
         $student = null;
+        $business = null;
 
+        // CHECK BUSINESS
+        $business = Business::where('id', $request->input('business_id'))->first();
+        if (!$business) {
+            return response()->json([
+                'message' => 'Business record not found. Please contact the receptionist.',
+            ], 404);
+        }
+        Log::info($business);
         if ($request->has('type') && $request->input('type') == 'student') {
             // DEFINE STUDENT
-            $student = Student::where('student_id', $request->input('student_id'))->first();
+            $student = Student::where('business_id', $request->input('business_id'))
+                ->where('student_id', $request->input('student_id'))
+                ->first();
 
             // IF STUDENT NOT FOUND, RETURN ERROR
             if (!$student) {
@@ -322,6 +333,11 @@ class CheckInController extends Controller
         }
 
         // Log::info($check_in);
+
+        if ($request->has('type') && $request->input('type') == 'student') {
+            $check_in['student'] = $student->only('title', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'student_id', 'course_title_id');
+            $check_in['business'] = $business;
+        }
 
         return response()->json([
             'message' => 'Check-out updated successfully.',
