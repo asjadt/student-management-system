@@ -17,10 +17,12 @@ class UpdateCheckInRequest extends FormRequest
 
         return [
             'type' => ['required', 'in:student,customer'],
-            'student_id' => ['required_if:type,student', 'exists:students,id'],
+            // For students
+            'student_id' => ['required_if:type,student', 'exists:students,student_id'],
+            // For customers
             'first_name' => ['required_if:type,customer', 'string', 'max:255'],
             'last_name' => ['required_if:type,customer', 'string', 'max:255'],
-            'phone' => ['required_if:type,customer', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'max:20'],
             'comment' => ['nullable', 'string'],
             "business_id" => ['required', 'exists:businesses,id'],
         ];

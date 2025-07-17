@@ -474,7 +474,7 @@ class ModuleController extends Controller
      *
      * @OA\Get(
      *      path="/v1.0/modules-client",
-     *      operationId="getModules",
+     *      operationId="getClientModules",
      *      tags={"modules"},
      *       security={
      *           {"bearerAuth": {}}

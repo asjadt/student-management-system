@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCheckInRequest;
 use App\Http\Requests\UpdateCheckInRequest;
+use App\Http\Utils\BasicUtil;
 use App\Models\Business;
 use App\Models\CheckIn;
 use App\Models\Student;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CheckInController extends Controller
+
 {
+    use BasicUtil;
     /**
      *
      * @OA\Post(
@@ -129,19 +134,26 @@ class CheckInController extends Controller
      *     summary="Get all check-ins",
      *     description="Filters: type, student_id, phone, check_in_from, check_in_to",
      *
+     *      @OA\Parameter(
+     *         name="business_id",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by business ID",
+     *         @OA\Schema(type="integer", example="")
+     *     ),
      *     @OA\Parameter(
      *         name="type",
      *         in="query",
      *         required=false,
      *         description="student or customer",
-     *         @OA\Schema(type="string", example="student")
+     *         @OA\Schema(type="string", example="student, customer")
      *     ),
      *     @OA\Parameter(
      *         name="student_id",
      *         in="query",
      *         required=false,
      *         description="Filter by student ID",
-     *         @OA\Schema(type="integer", example=12)
+     *         @OA\Schema(type="integer", example="")
      *     ),
      *     @OA\Parameter(
      *         name="phone",
@@ -175,14 +187,14 @@ class CheckInController extends Controller
     public function index(): JsonResponse
     {
 
-        if (!request()->filled("busiess_id")) {
+        if (!request()->filled("business_id")) {
             return response()->json([
                 "message" => "Business ID is required"
             ], 401);
         }
 
         $check_in_query = CheckIn::where([
-            "business_id" => request()->user()->business_id
+            "business_id" => request()->input('business_id')
         ]);
 
         if (request()->has('type')) {
@@ -207,10 +219,115 @@ class CheckInController extends Controller
 
         $check_ins = $this->retrieveData($check_in_query, "id", "check_ins");
 
-        return response()->json($check_ins);
+        return response()->json([
+            "message" => "Check-ins retrieved successfully",
+            "data" => $check_ins->items(),
+            'meta' => [
+                'total' => $check_ins->total(),
+                'last_page' => $check_ins->lastPage(),
+                'current_page' => $check_ins->currentPage(),
+                'per_page' => $check_ins->perPage(),
+                'has_more_pages' => $check_ins->hasMorePages()
+            ]
+        ], 200);
     }
 
 
+    /**
+     * @OA\Put(
+     *      path="/v1.0/checkout",
+     *      operationId="checkout",
+     *      tags={"check_in"},
+     *      security={{"bearerAuth":{}}},
+     *      summary="Update check-in by ID",
+     *      @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"type", "check_in_at"},
+     *              @OA\Property(property="type", type="string", example="student"),
+     *              @OA\Property(property="student_id", type="integer", example=5),
+     *              @OA\Property(property="first_name", type="string", example="Jane"),
+     *              @OA\Property(property="last_name", type="string", example="Doe"),
+     *              @OA\Property(property="phone", type="string", example="01712345679"),
+     *              @OA\Property(property="comment", type="string", example="Came back again")
+     *          )
+     *      ),
+     *      @OA\Response(response=200, description="Updated", @OA\JsonContent()),
+     *      @OA\Response(response=404, description="Not found", @OA\JsonContent())
+     * )
+     */
+    public function checkout(UpdateCheckInRequest $request): JsonResponse
+    {
+        // DEFINE CHECK OUT TIME
+        $check_out_at = Carbon::now();
+        $request_data = $request->validated();
+
+        // DEFINE CHECK IN
+        $check_in = null;
+        $student = null;
+
+        if ($request->has('type') && $request->input('type') == 'student') {
+            // DEFINE STUDENT
+            $student = Student::where('student_id', $request->input('student_id'))->first();
+
+            // IF STUDENT NOT FOUND, RETURN ERROR
+            if (!$student) {
+                return response()->json([
+                    'message' => 'Student record not found. Please contact the receptionist.',
+                ], 404);
+            }
+
+            // GET CHECKED IN RECORD
+            $check_in = CheckIn::where('student_id', $student->id)
+                ->whereDate('check_in_at', Carbon::today())
+                ->whereNull('check_out_at')
+                ->first();
+
+            // IF CHECK IN NOT FOUND, RETURN ERROR
+            if (!$check_in) {
+                return response()->json([
+                    'message' => 'Check-in record not found. Please contact the receptionist.',
+                ], 404);
+            }
+
+            // UPDATE CHECK IN RECORD
+            $check_in->update([
+                'check_out_at' => $check_out_at,
+                'comment' => $request->input('comment')
+            ]);
+            // Log::info('student', [$student->id, $check_in]);
+        }
+
+        if ($request->has('type') && $request->input('type') == 'customer') {
+            // GET CHECKED IN RECORD
+            $check_in = CheckIn::where('phone', $request->input('phone'))
+                ->whereDate('check_in_at', Carbon::today())
+                ->whereNull('check_out_at')
+                ->first();
+
+            // IF CHECK IN NOT FOUND, RETURN ERROR
+            if (!$check_in) {
+                return response()->json([
+                    'message' => 'Check-in record not found. Please contact the receptionist.',
+                ], 404);
+            }
+
+            // UPDATE CHECK IN RECORD
+            $check_in->update([
+                'check_out_at' => $check_out_at,
+                'comment' => $request->input('comment')
+            ]);
+            // Log::info('student', [$student->id, $check_in]);
+        }
+
+        // Log::info($check_in);
+
+        return response()->json([
+            'message' => 'Check-out updated successfully.',
+            'data' => $check_in,
+        ]);
+    }
     /**
      * @OA\Put(
      *      path="/v1.0/check-ins/{id}",

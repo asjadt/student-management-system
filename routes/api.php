@@ -745,8 +745,9 @@ Route::post('/v1.0/client-users/single-file-upload', [UserManagementController::
 
 
 
-Route::post('/check-ins', [CheckInController::class, 'store']);          // Create check-in
-Route::get('/check-ins', [CheckInController::class, 'index']);           // List all check-ins
-Route::get('/check-ins/{id}', [CheckInController::class, 'show']);       // Show specific check-in
-Route::put('/check-ins/{id}', [CheckInController::class, 'update']);     // Update check-in
-Route::delete('/check-ins/{id}', [CheckInController::class, 'destroy']); // Delete check-in
+Route::post('/v1.0/check-ins', [CheckInController::class, 'store']);          // Create check-in
+Route::post('/v1.0/checkout', [CheckInController::class, 'checkout']);          // Create check-in
+Route::get('/v1.0/check-ins', [CheckInController::class, 'index']);           // List all check-ins
+Route::get('/v1.0/check-ins/{id}', [CheckInController::class, 'show']);       // Show specific check-in
+Route::put('/v1.0/check-ins/{id}', [CheckInController::class, 'update']);     // Update check-in
+Route::delete('/v1.0/check-ins/{id}', [CheckInController::class, 'destroy']); // Delete check-in

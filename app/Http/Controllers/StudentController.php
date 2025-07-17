@@ -673,7 +673,7 @@ class StudentController extends Controller
      *
      * @OA\Post(
      *      path="/v2.0/client/students",
-     *      operationId="createStudentClient",
+     *      operationId="createStudentClientV2",
      *      tags={"students"},
      *       security={
      *           {"bearerAuth": {}}
