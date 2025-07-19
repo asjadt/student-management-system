@@ -76,8 +76,11 @@ class CheckIn extends Model
 
         // VISITOR FILTER
         if (request()->filled('type') && request()->query('type') === 'customer') {
-            $query->where('first_name', 'like', '%' . request()->query('search_key') . '%')
-                ->orWhere('last_name', 'like', '%' . request()->query('search_key') . '%');
+            $query->where(function ($q) {
+                $searchKey = request()->query('search_key');
+                $q->where('first_name', 'like', '%' . $searchKey . '%')
+                    ->orWhere('last_name', 'like', '%' . $searchKey . '%');
+            });
         }
 
 
