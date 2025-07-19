@@ -20,9 +20,9 @@ class UpdateCheckInRequest extends FormRequest
             // For students
             'student_id' => ['required_if:type,student', 'exists:students,student_id'],
             // For customers
-            'first_name' => ['required_if:type,customer', 'string', 'max:255'],
-            'last_name' => ['required_if:type,customer', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'first_name' => ['nullable:type,customer', 'string', 'max:255'],
+            'last_name' => ['nullable:type,customer', 'string', 'max:255'],
+            'phone' => ['required_if:type,customer', 'string', 'max:20'],
             'comment' => ['nullable', 'string'],
             "business_id" => ['required', 'exists:businesses,id'],
         ];
