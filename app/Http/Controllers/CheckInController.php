@@ -193,29 +193,14 @@ class CheckInController extends Controller
             ], 401);
         }
 
-        $check_in_query = CheckIn::where([
-            "business_id" => request()->input('business_id')
-        ]);
-
-        if (request()->has('type')) {
-            $check_in_query->where('type', request('type'));
-        }
-
-        if (request()->has('student_id')) {
-            $check_in_query->where('student_id', request('student_id'));
-        }
-
-        if (request()->has('phone')) {
-            $check_in_query->where('phone', 'like', '%' . request('phone') . '%');
-        }
-
-        if (request()->has('check_in_from')) {
-            $check_in_query->whereDate('check_in_at', '>=', request('check_in_from'));
-        }
-
-        if (request()->has('check_in_to')) {
-            $check_in_query->whereDate('check_in_at', '<=', request('check_in_to'));
-        }
+        $check_in_query = CheckIn::with([
+            'student.course_title',
+            'student.student_sessions.student_session_courses.student_session_course_subjects'
+        ])
+            ->where([
+                "business_id" => request()->input('business_id')
+            ])
+            ->filter();
 
         $check_ins = $this->retrieveData($check_in_query, "id", "check_ins");
 
@@ -275,7 +260,7 @@ class CheckInController extends Controller
                 'message' => 'Business record not found. Please contact the receptionist.',
             ], 404);
         }
-        Log::info($business);
+        // Log::info($business);
         if ($request->has('type') && $request->input('type') == 'student') {
             // DEFINE STUDENT
             $student = Student::where('business_id', $request->input('business_id'))
