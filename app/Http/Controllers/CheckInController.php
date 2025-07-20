@@ -88,7 +88,11 @@ class CheckInController extends Controller
         // GET STUDENT ID
         if ($request->filled('student_id')) {
             // GET STUDENT
-            $student = Student::where('student_id', $data['student_id'])->where('business_id', $data['business_id'])->first();
+            $student = Student::where('business_id', $data['business_id'])
+                ->where('student_id', $data['student_id'])
+                ->where('date_of_birth', $data['date_of_birth'])
+                // ->where('contact_number', $data['phone'])
+                ->first();
 
             // IF NOT FOUND
             if (!$student) {
