@@ -85,7 +85,7 @@ class CheckInController extends Controller
         // DEFINE STUDENT STATE
         $student = null;
 
-        // GET STUDENT ID
+        // STUDENT CHECK IN
         if ($request->filled('student_id')) {
             // GET STUDENT
             $student = Student::where('business_id', $data['business_id'])
@@ -102,6 +102,52 @@ class CheckInController extends Controller
             }
             // ASSIGN STUDENT ID
             $data['student_id'] = $student->id;
+            $already_check_in = CheckIn::where('type', 'student')
+                ->where('student_id', $student->id)
+                ->whereDate('check_in_at', Carbon::today())
+                // ->whereNull('check_out_at')
+                ->first();
+
+            if ($already_check_in) {
+                $fullName = trim(
+                    $student->title . ' ' .
+                        $student->first_name . ' ' .
+                        ($student->middle_name ?? '') . ' ' .
+                        $student->last_name
+                );
+                $checkInTime = $already_check_in->check_in_at->format('H:i A');
+                $checkOutTime = $already_check_in->check_out_at
+                    ? 'checked out at ' . $already_check_in->check_out_at->format('H:i A')
+                    : 'not checked out';
+
+                return response()->json([
+                    'message' => "$fullName already checked in today at $checkInTime and $checkOutTime.",
+                ], 409);;
+            }
+        }
+
+        // VISITOR CHECK IN
+        if ($request->filled('type') && $request->input('type') === 'customer') {
+
+            $already_check_in = CheckIn::where('type', 'customer')
+                ->whereRaw('LOWER(first_name) = ?', [strtolower($request->input('first_name'))])
+                ->whereRaw('LOWER(last_name) = ?', [strtolower($request->input('last_name'))])
+                ->when(!empty($request->input('phone')), function ($query) use ($request) {
+                    $query->where('phone', $request->input('phone'));
+                })
+                ->whereDate('check_in_at', Carbon::today())
+                ->whereNull('check_out_at')
+                ->first();
+
+            if ($already_check_in) {
+                $firstName = $request->input('first_name');
+                $lastName = $request->input('last_name');
+                $checkInTime = $already_check_in->check_in_at->format('h:i A');
+
+                return response()->json([
+                    'message' => "$firstName $lastName already checked in today at $checkInTime and not checked out.",
+                ], 409);
+            }
         }
 
 
