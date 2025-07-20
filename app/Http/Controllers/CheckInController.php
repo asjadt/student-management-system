@@ -290,14 +290,18 @@ class CheckInController extends Controller
             // UPDATE CHECK IN RECORD
             $check_in->update([
                 'check_out_at' => $check_out_at,
-                'comment' => $request->input('comment')
             ]);
             // Log::info('student', [$student->id, $check_in]);
         }
 
         if ($request->has('type') && $request->input('type') == 'customer') {
             // GET CHECKED IN RECORD
-            $check_in = CheckIn::where('phone', $request->input('phone'))
+            $check_in = CheckIn::where('type', 'customer')
+                ->whereRaw('LOWER(first_name) = ?', [strtolower($request->input('first_name'))])
+                ->whereRaw('LOWER(last_name) = ?', [strtolower($request->input('last_name'))])
+                ->when(!empty($request->input('phone')), function ($query) use ($request) {
+                    $query->where('phone', $request->input('phone'));
+                })
                 ->whereDate('check_in_at', Carbon::today())
                 ->whereNull('check_out_at')
                 ->first();
@@ -312,7 +316,6 @@ class CheckInController extends Controller
             // UPDATE CHECK IN RECORD
             $check_in->update([
                 'check_out_at' => $check_out_at,
-                'comment' => $request->input('comment')
             ]);
             // Log::info('student', [$student->id, $check_in]);
         }
@@ -321,9 +324,11 @@ class CheckInController extends Controller
 
         if ($request->has('type') && $request->input('type') == 'student') {
             $check_in['student'] = $student->only('title', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'student_id', 'course_title_id');
-            $check_in['business'] = $business;
         }
+        // ADD BUSINESS DETAILS INTO RESPONSE
+        $check_in['business'] = $business;
 
+        // SEND RESPONSE
         return response()->json([
             'message' => 'Check-out updated successfully.',
             'data' => $check_in,
