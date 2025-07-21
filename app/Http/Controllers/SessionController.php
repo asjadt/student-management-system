@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 class SessionController extends Controller
 {
 
-    use ErrorUtil, UserActivityUtil, BusinessUtil,BasicUtil;
+    use ErrorUtil, UserActivityUtil, BusinessUtil, BasicUtil;
 
 
     /**
@@ -139,8 +139,8 @@ class SessionController extends Controller
      * @OA\Property(property="name", type="string", format="string", example="name"),
      * @OA\Property(property="start_date", type="string", format="string", example="start_date"),
      * @OA\Property(property="end_date", type="string", format="string", example="end_date"),
- * @OA\Property(property="holiday_dates", type="string", format="array", example={}),
- *  *  @OA\Property(property="course_ids", type="string", format="string", example="course_ids")
+     * @OA\Property(property="holiday_dates", type="string", format="array", example={}),
+     *  *  @OA\Property(property="course_ids", type="string", format="string", example="course_ids")
      *
      *         ),
      *      ),
@@ -325,38 +325,38 @@ class SessionController extends Controller
     {
 
         return   $query->where('sessions.business_id', auth()->user()->business_id)
-        ->when(!empty(request()->course_ids), function ($query) {
-            return $query->whereHas('courses', function($query) {
-                $course_ids = explode(',', request()->course_ids);
-                  $query->whereIn("courses.id",$course_ids);
+            ->when(!empty(request()->course_ids), function ($query) {
+                return $query->whereHas('courses', function ($query) {
+                    $course_ids = explode(',', request()->course_ids);
+                    $query->whereIn("courses.id", $course_ids);
+                });
+            })
+            ->when(!empty(request()->start_start_date), function ($query) {
+                return $query->where('sessions.start_date', ">=", request()->start_start_date);
+            })
+            ->when(!empty(request()->end_start_date), function ($query) {
+                return $query->where('sessions.start_date', "<=", (request()->end_start_date . ' 23:59:59'));
+            })
+            ->when(!empty(request()->start_end_date), function ($query) {
+                return $query->where('sessions.end_date', ">=", request()->start_end_date);
+            })
+            ->when(!empty(request()->end_end_date), function ($query) {
+                return $query->where('sessions.end_date', "<=", (request()->end_end_date . ' 23:59:59'));
+            })
+            ->when(!empty(request()->search_key), function ($query) {
+                return $query->where(function ($query) {
+                    $term = request()->search_key;
+                    $query;
+                });
+            })
+            ->when(!empty(request()->start_date), function ($query) {
+                return $query->where('sessions.created_at', ">=", request()->start_date);
+            })
+            ->when(!empty(request()->end_date), function ($query) {
+                return $query->where('sessions.created_at', "<=", (request()->end_date . ' 23:59:59'));
             });
-        })
-        ->when(!empty(request()->start_start_date), function ($query)  {
-            return $query->where('sessions.start_date', ">=", request()->start_start_date);
-        })
-        ->when(!empty(request()->end_start_date), function ($query)  {
-            return $query->where('sessions.start_date', "<=", (request()->end_start_date . ' 23:59:59'));
-        })
-        ->when(!empty(request()->start_end_date), function ($query)  {
-            return $query->where('sessions.end_date', ">=", request()->start_end_date);
-        })
-        ->when(!empty(request()->end_end_date), function ($query)  {
-            return $query->where('sessions.end_date', "<=", (request()->end_end_date . ' 23:59:59'));
-        })
-        ->when(!empty(request()->search_key), function ($query)  {
-            return $query->where(function ($query) {
-                $term = request()->search_key;
-                $query;
-            });
-        })
-        ->when(!empty(request()->start_date), function ($query)  {
-            return $query->where('sessions.created_at', ">=", request()->start_date);
-        })
-        ->when(!empty(request()->end_date), function ($query)  {
-            return $query->where('sessions.created_at', "<=", (request()->end_date . ' 23:59:59'));
-        });
     }
-   /**
+    /**
      *
      * @OA\Get(
      *      path="/v1.0/sessions",
@@ -371,6 +371,13 @@ class SessionController extends Controller
      *         in="query",
      *         description="start_start_date",
      *         required=true,
+     *  example="6"
+     *      ),
+     *         @OA\Parameter(
+     *         name="student_id",
+     *         in="query",
+     *         description="student_id",
+     *         required=false,
      *  example="6"
      *      ),
      *         @OA\Parameter(
@@ -497,30 +504,29 @@ class SessionController extends Controller
      *     )
      */
 
-     public function getSessions(Request $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+    public function getSessions(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-             if (!$request->user()->hasPermissionTo('session_view')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
-
-
-             $query = Session::with("courses.subjects");
-             $query = $this->query_filters($query);
-             $sessions = $this->retrieveData($query, "id","sessions");
+            if (!$request->user()->hasPermissionTo('session_view')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
 
+            $query = Session::with("courses.subjects")->filter();
+            $sessions = $this->retrieveData($query, "id", "sessions");
 
-             return response()->json($sessions, 200);
-         } catch (Exception $e) {
 
-             return $this->sendError($e, 500, $request);
-         }
-     }
+
+            return response()->json($sessions, 200);
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
+        }
+    }
     /**
      *
      * @OA\Get(
@@ -665,15 +671,15 @@ class SessionController extends Controller
 
             $query = Session::with("courses");
             $query = $this->query_filters($query)
-            ->select(
-                'sessions.id',
-                'sessions.name',
-                'sessions.start_date',
-                'sessions.end_date',
-                'sessions.holiday_dates',
-                "sessions.is_active",
-            );
-            $sessions = $this->retrieveData($query, "id","sessions");
+                ->select(
+                    'sessions.id',
+                    'sessions.name',
+                    'sessions.start_date',
+                    'sessions.end_date',
+                    'sessions.holiday_dates',
+                    "sessions.is_active",
+                );
+            $sessions = $this->retrieveData($query, "id", "sessions");
 
 
             return response()->json($sessions, 200);

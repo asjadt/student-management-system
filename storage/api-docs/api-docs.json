@@ -12599,6 +12599,13 @@
                         "example": "6"
                     },
                     {
+                        "name": "student_id",
+                        "in": "query",
+                        "description": "student_id",
+                        "required": false,
+                        "example": "6"
+                    },
+                    {
                         "name": "end_start_date",
                         "in": "query",
                         "description": "end_start_date",
