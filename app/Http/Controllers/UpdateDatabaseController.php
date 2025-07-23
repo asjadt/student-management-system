@@ -6,7 +6,9 @@ use App\Models\Business;
 use App\Models\Module;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateDatabaseController extends Controller
 {
@@ -100,45 +102,44 @@ class UpdateDatabaseController extends Controller
 
 
 
-                    // Ensure each student_doc_object has a file_name property
-                    if (!empty($business->logo)) {
-                        // Generate the new file path
-                        $business_folder = str_replace(' ', '_', $business->name);
-                     ;
+            // Ensure each student_doc_object has a file_name property
+            if (!empty($business->logo)) {
+                // Generate the new file path
+                $business_folder = str_replace(' ', '_', $business->name);;
 
-                        $fileName = basename($business->logo);
+                $fileName = basename($business->logo);
 
-                        $new_file_path = public_path($business_folder . "/" . config("setup-config.business_gallery_location") . "/" . $fileName);
-
+                $new_file_path = public_path($business_folder . "/" . config("setup-config.business_gallery_location") . "/" . $fileName);
 
 
 
-                        $file_name = $business->logo; // e.g., "student_files/1735372025_Image.jpg"
-                        $file_path = public_path(ltrim($file_name, '/')); // Full path to
 
-                        // Check with File::exists
-                        if (File::exists($file_path)) {
-                            echo "File exists (File facade): " . $file_path . "<br>";
+                $file_name = $business->logo; // e.g., "student_files/1735372025_Image.jpg"
+                $file_path = public_path(ltrim($file_name, '/')); // Full path to
 
-                            // Ensure the destination directory exists using mkdir
-                            $destinationDirectory = dirname($new_file_path); // Get the directory path from the file path
-                            if (!is_dir($destinationDirectory)) {
-                                mkdir($destinationDirectory, 0755, true); // Create the directory with permissions and allow recursive creation
-                                echo "Directory created: " . $destinationDirectory . "<br>";
-                            }
+                // Check with File::exists
+                if (File::exists($file_path)) {
+                    echo "File exists (File facade): " . $file_path . "<br>";
 
-                            // Copy the file
-                            File::copy($file_path, $new_file_path);
-                            echo "File copied successfully (File facade) to: " . $new_file_path . "<br>";
-                        } else {
-                            echo "File does not exist (File facade): " . $file_path . "<br>";
-                        }
-
-
-
-                        // Update the file_name in the document object to store only the file name
-                        $business->logo = $fileName;
+                    // Ensure the destination directory exists using mkdir
+                    $destinationDirectory = dirname($new_file_path); // Get the directory path from the file path
+                    if (!is_dir($destinationDirectory)) {
+                        mkdir($destinationDirectory, 0755, true); // Create the directory with permissions and allow recursive creation
+                        echo "Directory created: " . $destinationDirectory . "<br>";
                     }
+
+                    // Copy the file
+                    File::copy($file_path, $new_file_path);
+                    echo "File copied successfully (File facade) to: " . $new_file_path . "<br>";
+                } else {
+                    echo "File does not exist (File facade): " . $file_path . "<br>";
+                }
+
+
+
+                // Update the file_name in the document object to store only the file name
+                $business->logo = $fileName;
+            }
 
 
 
@@ -146,9 +147,22 @@ class UpdateDatabaseController extends Controller
 
 
             echo json_encode($business->logo) . "<br>";
-             $business->save();
+            $business->save();
         }
 
         return 'Business logo updated successfully!';
+    }
+
+    public function dbOperation()
+    {
+        if (!Schema::hasColumn('businesses', 'url')) {
+            DB::statement("ALTER TABLE businesses ADD COLUMN url VARCHAR(255) DEFAULT ''");
+        }
+        if (!Schema::hasColumn('businesses', 'web_page')) {
+            DB::statement("ALTER TABLE businesses ADD COLUMN web_page VARCHAR(255) DEFAULT ''");
+        }
+        if (!Schema::hasColumn('students', 'title')) {
+            DB::statement("ALTER TABLE students ADD COLUMN title VARCHAR(255) DEFAULT ''");
+        }
     }
 }

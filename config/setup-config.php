@@ -3382,7 +3382,9 @@ return [
         "agency_management",
         "schedule",
         "attendance",
-        "student_module"
+        "student_module",
+        "session",
+        "letter_template",
     ]
 
 

@@ -50,24 +50,23 @@ class StudentCreateRequest extends BaseFormRequest
                 'numeric',
                 function ($attribute, $value, $fail) {
 
-                    $exists = StudentStatus::where("student_statuses.id",$value)
+                    $exists = StudentStatus::where("student_statuses.id", $value)
 
-                    ->exists();
+                        ->exists();
 
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
-
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
                 },
             ],
             'session_id' => [
-                "required",
+                "nullable",
                 'numeric',
                 function ($attribute, $value, $fail) {
-            $exists = Session::where("sessions.id",$value)->exists();
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
+                    $exists = Session::where("sessions.id", $value)->exists();
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
                 },
             ],
             'course_title_id' => [
@@ -77,20 +76,19 @@ class StudentCreateRequest extends BaseFormRequest
 
 
 
-                    $exists = CourseTitle::where("course_titles.id",$value)
+                    $exists = CourseTitle::where("course_titles.id", $value)
 
-                    ->exists();
+                        ->exists();
 
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
-
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
                 },
             ],
             'attachments' => 'present|array',
             'attachments.*' => 'string',
-            'course_duration'=> 'nullable|string',
-            'course_detail'=> 'nullable|string',
+            'course_duration' => 'nullable|string',
+            'course_detail' => 'nullable|string',
 
             'email' => 'nullable|email|max:255',
             'contact_number' => 'nullable|string|max:20',
@@ -110,22 +108,18 @@ class StudentCreateRequest extends BaseFormRequest
             "agency_id" => "nullable|numeric|exists:agencies,id",
             "agency_commission" => "nullable|required_with:agency_id|numeric|min:0",
 
-'student_documents' => 'present|array',
-'student_documents.*.type' => 'required|string|max:255',
-'student_documents.*.filenames' => 'required|array',
-'student_documents.*.filenames.*' => 'string',
+            'student_documents' => 'present|array',
+            'student_documents.*.type' => 'required|string|max:255',
+            'student_documents.*.filenames' => 'required|array',
+            'student_documents.*.filenames.*' => 'string',
 
         ];
 
 
-        if(empty(auth()->user())) {
+        if (empty(auth()->user())) {
             $rules['business_id'] = 'required|numeric|exists:businesses,id';
         }
 
         return $rules;
-
-
     }
-
-
 }

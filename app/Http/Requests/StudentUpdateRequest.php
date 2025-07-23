@@ -33,8 +33,7 @@ class StudentUpdateRequest extends BaseFormRequest
                 'required',
                 'numeric',
                 function ($attribute, $value, $fail) {
-                    $exists = Student::
-                          where('id', $value)
+                    $exists = Student::where('id', $value)
                         ->where('students.business_id', '=', auth()->user()->business_id)
                         ->exists();
 
@@ -50,7 +49,7 @@ class StudentUpdateRequest extends BaseFormRequest
             'nationality' => 'required|string',
 
             "course_fee" => "required|numeric",
-            "fee_paid" => "required|numeric",
+            "fee_paid" => "nullable|numeric",
             'passport_number' => 'nullable|string',
             'student_id' => 'nullable|string',
             'date_of_birth' => 'required|date',
@@ -65,28 +64,27 @@ class StudentUpdateRequest extends BaseFormRequest
                 function ($attribute, $value, $fail) {
 
 
-                    $exists = StudentStatus::where("student_statuses.id",$value)
+                    $exists = StudentStatus::where("student_statuses.id", $value)
 
-                    ->exists();
+                        ->exists();
 
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
-
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
                 },
             ],
 
             'session_id' => [
-                "required",
+                "nullable",
                 'numeric',
                 function ($attribute, $value, $fail) {
+                    if ($value === null) return;
 
-            $exists = Session::where("sessions.id",$value)->exists();
+                    $exists = Session::where("sessions.id", $value)->exists();
 
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
-
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
                 },
             ],
             'course_title_id' => [
@@ -95,22 +93,21 @@ class StudentUpdateRequest extends BaseFormRequest
                 function ($attribute, $value, $fail) {
 
                     $created_by  = NULL;
-                    if(auth()->user()->business) {
+                    if (auth()->user()->business) {
                         $created_by = auth()->user()->business->created_by;
                     }
 
-                    $exists = CourseTitle::where("course_titles.id",$value)
+                    $exists = CourseTitle::where("course_titles.id", $value)
 
-                    ->exists();
+                        ->exists();
 
-                if (!$exists) {
-                    $fail("$attribute is invalid.");
-                }
-
+                    if (!$exists) {
+                        $fail("$attribute is invalid.");
+                    }
                 },
             ],
-            'course_duration'=> 'nullable|string',
-            'course_detail'=> 'nullable|string',
+            'course_duration' => 'nullable|string',
+            'course_detail' => 'nullable|string',
 
 
             'attachments' => 'nullable|array',
@@ -132,17 +129,15 @@ class StudentUpdateRequest extends BaseFormRequest
             'passport_expiry_date' => 'nullable|date|after:passport_issue_date',
             'place_of_issue' => 'nullable|string|max:255',
 
-             "agency_id" => "nullable|numeric|exists:agencies,id",
+            "agency_id" => "nullable|numeric|exists:agencies,id",
             "agency_commission" => "nullable|required_with:agency_id|numeric|min:0",
 
-'student_documents' => 'present|array',
-'student_documents.*.type' => 'required|string|max:255',
-'student_documents.*.filenames' => 'required|array',
-'student_documents.*.filenames.*' => 'string',
+            'student_documents' => 'present|array',
+            'student_documents.*.type' => 'required|string|max:255',
+            'student_documents.*.filenames' => 'required|array',
+            'student_documents.*.filenames.*' => 'string',
 
 
         ];
     }
-
-
 }

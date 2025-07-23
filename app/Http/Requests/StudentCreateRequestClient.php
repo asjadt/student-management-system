@@ -51,6 +51,7 @@ class StudentCreateRequestClient extends BaseFormRequest
                 "nullable",
                 'numeric',
                 function ($attribute, $value, $fail) {
+                    if ($value === null) return;
                     $exists = Session::where("sessions.id", $value)->exists();
                     if (!$exists) {
                         $fail("$attribute is invalid.");

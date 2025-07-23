@@ -390,16 +390,19 @@ class StudentController extends Controller
 
                 $student = Student::create($request_data);
 
-                $student_session = StudentSession::create([
-                    'student_id' => $student->id,
-                    'session_id' => $request_data["session_id"]
-                ]);
+                if (!empty($request_data["session_id"])) {
+                    $student_session = StudentSession::create([
+                        'student_id' => $student->id,
+                        'session_id' => $request_data["session_id"]
+                    ]);
 
-                StudentSessionCourse::create([
-                    'student_session_id' => $student_session->id,
-                    'course_title_id' => $request_data["course_title_id"] ?? "",
+                    StudentSessionCourse::create([
+                        'student_session_id' => $student_session->id,
+                        'course_title_id' => $request_data["course_title_id"] ?? "",
 
-                ]);
+                    ]);
+                }
+
 
 
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);

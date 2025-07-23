@@ -27,25 +27,20 @@ class CreateModulesTable extends Migration
 
 
         DB::table('modules')
-        ->insert(array(
-           [
-            "name" => "agency_management",
-            "is_enabled" => 1,
-           ],
-           [
-            "name" => "schedule",
-            "is_enabled" => 1,
-           ],
-           [
-            "name" => "attendance",
-            "is_enabled" => 1,
-           ],
-        ));
-
-
-
-
-
+            ->insert(array(
+                [
+                    "name" => "agency_management",
+                    "is_enabled" => 1,
+                ],
+                [
+                    "name" => "schedule",
+                    "is_enabled" => 1,
+                ],
+                [
+                    "name" => "attendance",
+                    "is_enabled" => 1,
+                ],
+            ));
     }
     /**
      * Reverse the migrations.

@@ -30,26 +30,16 @@ class CourseTitleCreateRequest extends FormRequest
                 "required",
                 'string',
                 function ($attribute, $value, $fail) {
-
-
-
-                        $exists = CourseTitle::where("course_titles.name",$value)
+                    $exists = CourseTitle::where("course_titles.name", $value)
                         ->where(
                             [
                                 "business_id" => auth()->user()->business_id
                             ]
                         )
-
-
-
-
                         ->exists();
-
                     if ($exists) {
                         $fail("$attribute is already exist.");
                     }
-
-
                 },
             ],
 
@@ -58,12 +48,12 @@ class CourseTitleCreateRequest extends FormRequest
 
             "awarding_body_id" =>   [
                 "required",
-            'numeric',
-            new ValidateAwardingBody()
+                'numeric',
+                new ValidateAwardingBody()
             ],
 
-         'sessions_ids' => ['present', 'array'],
-'sessions_ids.*' => ['numeric', 'exists:sessions,id'],
+            'sessions_ids' => ['present', 'array'],
+            'sessions_ids.*' => ['numeric', 'exists:sessions,id'],
 
         ];
 
@@ -74,6 +64,6 @@ class CourseTitleCreateRequest extends FormRequest
         // }
 
 
-return $rules;
+        return $rules;
     }
 }
