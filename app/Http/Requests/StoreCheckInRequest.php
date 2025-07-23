@@ -17,6 +17,7 @@ class StoreCheckInRequest extends FormRequest
             'type' => ['required', 'in:student,customer'],
             // For students
             'student_id' => ['required_if:type,student', 'exists:students,student_id'],
+            'date_of_birth' => ['required_if:type,student', 'exists:students,date_of_birth'],
             // For customers
             'first_name' => ['required_if:type,customer', 'string', 'max:255'],
             'last_name' => ['required_if:type,customer', 'string', 'max:255'],

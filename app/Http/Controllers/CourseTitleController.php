@@ -364,20 +364,20 @@ class CourseTitleController extends Controller
             $request_data = $request->validated();
 
 
-          $course =  CourseTitle::where([
-                'id'=> $request_data["id"],
-                'business_id'=> auth()->user()->business_id,
-                ])
+            $course =  CourseTitle::where([
+                'id' => $request_data["id"],
+                'business_id' => auth()->user()->business_id,
+            ])
                 ->first();
 
-                if (!$course) {
-                    return response()->json([
-                        "message" => "Invalid Id"
-                    ], 500);
-                }
+            if (!$course) {
+                return response()->json([
+                    "message" => "Invalid Id"
+                ], 500);
+            }
 
-                $course->is_active = !$course->is_active;
-                $course->save();
+            $course->is_active = !$course->is_active;
+            $course->save();
 
             // return a success response with a JSON message
             return response()->json(['message' => 'course title status updated successfully'], 200);
@@ -427,9 +427,9 @@ class CourseTitleController extends Controller
             })
 
             ->when(!empty(request()->session_ids), function ($query) {
-                return $query->whereHas('sessions', function($query) {
+                return $query->whereHas('sessions', function ($query) {
                     $session_ids = explode(',', request()->session_ids);
-                      $query->whereIn("sessions.id",$session_ids);
+                    $query->whereIn("sessions.id", $session_ids);
                 });
             })
             // If a start date is provided in the request, filter the query for records created after it
@@ -461,6 +461,13 @@ class CourseTitleController extends Controller
      *  example="6"
      *      ),
 
+     *      * *  @OA\Parameter(
+     * name="student_id",
+     * in="query",
+     * description="student_id",
+     * required=true,
+     * example="6"
+     * ),
      *      * *  @OA\Parameter(
      * name="start_date",
      * in="query",
@@ -562,10 +569,10 @@ class CourseTitleController extends Controller
             }
 
             // Start building the query to retrieve the course titles.
-            $query = CourseTitle::with("awarding_body", "subjects","sessions");
+            $query = CourseTitle::with("awarding_body", "subjects", "sessions")->filter();
 
             // Call the query_filters_v2 method to add the filters to the query.
-            $query = $this->query_filters_v2($query);
+            // $query = $this->query_filters_v2($query);
 
             // Call the retrieveData method to execute the query and retrieve the data.
             $course_titles = $this->retrieveData($query, "id", "course_titles");
@@ -775,9 +782,9 @@ class CourseTitleController extends Controller
                 return $query->where('course_titles.awarding_body_id', request()->awarding_body_id);
             })
             ->when(!empty(request()->session_ids), function ($query) {
-                return $query->whereHas('sessions', function($query) {
+                return $query->whereHas('sessions', function ($query) {
                     $session_ids = explode(',', request()->session_ids);
-                      $query->whereIn("sessions.id",$session_ids);
+                    $query->whereIn("sessions.id", $session_ids);
                 });
             })
             ->when(!empty(request()->start_date), function ($query) {
@@ -1377,14 +1384,12 @@ class CourseTitleController extends Controller
 
             // Check if there are any users associated with the existing course titles.
 
-            $student_exists = Student::
-            whereIn("course_title_id", $existingIds)
-            ->exists();
+            $student_exists = Student::whereIn("course_title_id", $existingIds)
+                ->exists();
 
             if ($student_exists) {
                 // If there are, retrieve the conflicting users' details.
-                $conflictingStudents = Student::
-                whereIn("course_title_id", $existingIds)->get([
+                $conflictingStudents = Student::whereIn("course_title_id", $existingIds)->get([
                     'id',
                     "title",
                     'first_name',
@@ -1403,7 +1408,6 @@ class CourseTitleController extends Controller
                     "message" => "Some students are associated with the specified course titles",
                     "conflicting_users" => $conflictingStudents
                 ], 409);
-
             }
 
             // Delete the existing course titles from the database.
@@ -1411,10 +1415,6 @@ class CourseTitleController extends Controller
 
             // Return a 200 OK response with a success message and the list of deleted IDs.
             return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $existingIds], 200);
-
-
-
-
         } catch (Exception $e) {
             // If an exception occurs, log the error and return a 500 Internal Server Error response.
             return $this->sendError($e, 500, $request);

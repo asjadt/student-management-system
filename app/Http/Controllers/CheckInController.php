@@ -85,10 +85,14 @@ class CheckInController extends Controller
         // DEFINE STUDENT STATE
         $student = null;
 
-        // GET STUDENT ID
+        // STUDENT CHECK IN
         if ($request->filled('student_id')) {
             // GET STUDENT
-            $student = Student::where('student_id', $data['student_id'])->where('business_id', $data['business_id'])->first();
+            $student = Student::where('business_id', $data['business_id'])
+                ->where('student_id', $data['student_id'])
+                ->where('date_of_birth', $data['date_of_birth'])
+                // ->where('contact_number', $data['phone'])
+                ->first();
 
             // IF NOT FOUND
             if (!$student) {
@@ -98,6 +102,52 @@ class CheckInController extends Controller
             }
             // ASSIGN STUDENT ID
             $data['student_id'] = $student->id;
+            $already_check_in = CheckIn::where('type', 'student')
+                ->where('student_id', $student->id)
+                ->whereDate('check_in_at', Carbon::today())
+                // ->whereNull('check_out_at')
+                ->first();
+
+            if ($already_check_in) {
+                $fullName = trim(
+                    $student->title . ' ' .
+                        $student->first_name . ' ' .
+                        ($student->middle_name ?? '') . ' ' .
+                        $student->last_name
+                );
+                $checkInTime = $already_check_in->check_in_at->format('H:i A');
+                $checkOutTime = $already_check_in->check_out_at
+                    ? 'checked out at ' . $already_check_in->check_out_at->format('H:i A')
+                    : 'not checked out';
+
+                return response()->json([
+                    'message' => "$fullName already checked in today at $checkInTime and $checkOutTime.",
+                ], 409);;
+            }
+        }
+
+        // VISITOR CHECK IN
+        if ($request->filled('type') && $request->input('type') === 'customer') {
+
+            $already_check_in = CheckIn::where('type', 'customer')
+                ->whereRaw('LOWER(first_name) = ?', [strtolower($request->input('first_name'))])
+                ->whereRaw('LOWER(last_name) = ?', [strtolower($request->input('last_name'))])
+                ->when(!empty($request->input('phone')), function ($query) use ($request) {
+                    $query->where('phone', $request->input('phone'));
+                })
+                ->whereDate('check_in_at', Carbon::today())
+                ->whereNull('check_out_at')
+                ->first();
+
+            if ($already_check_in) {
+                $firstName = $request->input('first_name');
+                $lastName = $request->input('last_name');
+                $checkInTime = $already_check_in->check_in_at->format('h:i A');
+
+                return response()->json([
+                    'message' => "$firstName $lastName already checked in today at $checkInTime and not checked out.",
+                ], 409);
+            }
         }
 
 
@@ -193,29 +243,14 @@ class CheckInController extends Controller
             ], 401);
         }
 
-        $check_in_query = CheckIn::where([
-            "business_id" => request()->input('business_id')
-        ]);
-
-        if (request()->has('type')) {
-            $check_in_query->where('type', request('type'));
-        }
-
-        if (request()->has('student_id')) {
-            $check_in_query->where('student_id', request('student_id'));
-        }
-
-        if (request()->has('phone')) {
-            $check_in_query->where('phone', 'like', '%' . request('phone') . '%');
-        }
-
-        if (request()->has('check_in_from')) {
-            $check_in_query->whereDate('check_in_at', '>=', request('check_in_from'));
-        }
-
-        if (request()->has('check_in_to')) {
-            $check_in_query->whereDate('check_in_at', '<=', request('check_in_to'));
-        }
+        $check_in_query = CheckIn::with([
+            'student.course_title',
+            'student.student_sessions.student_session_courses.student_session_course_subjects'
+        ])
+            ->where([
+                "business_id" => request()->input('business_id')
+            ])
+            ->filter();
 
         $check_ins = $this->retrieveData($check_in_query, "id", "check_ins");
 
@@ -275,7 +310,7 @@ class CheckInController extends Controller
                 'message' => 'Business record not found. Please contact the receptionist.',
             ], 404);
         }
-        Log::info($business);
+        // Log::info($business);
         if ($request->has('type') && $request->input('type') == 'student') {
             // DEFINE STUDENT
             $student = Student::where('business_id', $request->input('business_id'))
@@ -305,14 +340,18 @@ class CheckInController extends Controller
             // UPDATE CHECK IN RECORD
             $check_in->update([
                 'check_out_at' => $check_out_at,
-                'comment' => $request->input('comment')
             ]);
             // Log::info('student', [$student->id, $check_in]);
         }
 
         if ($request->has('type') && $request->input('type') == 'customer') {
             // GET CHECKED IN RECORD
-            $check_in = CheckIn::where('phone', $request->input('phone'))
+            $check_in = CheckIn::where('type', 'customer')
+                ->whereRaw('LOWER(first_name) = ?', [strtolower($request->input('first_name'))])
+                ->whereRaw('LOWER(last_name) = ?', [strtolower($request->input('last_name'))])
+                ->when(!empty($request->input('phone')), function ($query) use ($request) {
+                    $query->where('phone', $request->input('phone'));
+                })
                 ->whereDate('check_in_at', Carbon::today())
                 ->whereNull('check_out_at')
                 ->first();
@@ -327,7 +366,6 @@ class CheckInController extends Controller
             // UPDATE CHECK IN RECORD
             $check_in->update([
                 'check_out_at' => $check_out_at,
-                'comment' => $request->input('comment')
             ]);
             // Log::info('student', [$student->id, $check_in]);
         }
@@ -336,9 +374,11 @@ class CheckInController extends Controller
 
         if ($request->has('type') && $request->input('type') == 'student') {
             $check_in['student'] = $student->only('title', 'first_name', 'middle_name', 'last_name', 'email', 'phone', 'student_id', 'course_title_id');
-            $check_in['business'] = $business;
         }
+        // ADD BUSINESS DETAILS INTO RESPONSE
+        $check_in['business'] = $business;
 
+        // SEND RESPONSE
         return response()->json([
             'message' => 'Check-out updated successfully.',
             'data' => $check_in,

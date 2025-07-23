@@ -5325,6 +5325,88 @@
                 ]
             }
         },
+        "/v1.0/checkout": {
+            "put": {
+                "tags": [
+                    "check_in"
+                ],
+                "summary": "Update check-in by ID",
+                "operationId": "checkout",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "check_in_at"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "example": "student"
+                                    },
+                                    "student_id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Jane"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "01712345679"
+                                    },
+                                    "comment": {
+                                        "type": "string",
+                                        "example": "Came back again"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/check-ins/{id}": {
             "put": {
                 "tags": [
@@ -12514,6 +12596,13 @@
                         "in": "query",
                         "description": "start_start_date",
                         "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "student_id",
+                        "in": "query",
+                        "description": "student_id",
+                        "required": false,
                         "example": "6"
                     },
                     {
