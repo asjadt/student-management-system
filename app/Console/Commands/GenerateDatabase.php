@@ -91,13 +91,13 @@ class GenerateDatabase extends Command
                 '--path' => 'database/business_migrations',
             ]);
 
-        // Run Passport migrations
-        Artisan::call('migrate', [
-            '--path' => 'vendor/laravel/passport/database/migrations',
-        ]);
+            // Run Passport migrations
+            Artisan::call('migrate', [
+                '--path' => 'vendor/laravel/passport/database/migrations',
+            ]);
 
-        // Install Passport
-        Artisan::call('passport:install');
+            // Install Passport
+            Artisan::call('passport:install');
 
 
             Log::info("Database for business ID $businessId has been created successfully.");
@@ -106,83 +106,84 @@ class GenerateDatabase extends Command
 
 
 
-// Fetch user data
-$userData = DB::connection('default')->table('users')
-    ->where([
-        "users.id" => $business->owner_id
-    ])
-    ->first();
+            // Fetch user data
+            $userData = DB::connection('default')->table('users')
+                ->where([
+                    "users.id" => $business->owner_id
+                ])
+                ->first();
 
-// Convert object to array
-$userDataArray = (array) $userData;
+            // Convert object to array
+            $userDataArray = (array) $userData;
 
-// Set created_by field to null
-$userDataArray['created_by'] = null; // Set created_by to null
+            // Set created_by field to null
+            $userDataArray['created_by'] = null; // Set created_by to null
 
-// Insert using DB query into the business database
-DB::table('users')->insert($userDataArray);
+            // Insert using DB query into the business database
+            DB::table('users')->insert($userDataArray);
 
-$user = User::first(); // ###############################
-        // permissions
-        // ###############################
-        $permissions =  config("setup-config.permissions");
-        // setup permissions
-        foreach ($permissions as $permission) {
-            if(!DB::table('permissions')->where([
-            'name' => $permission,
-            'guard_name' => 'api'
-            ])
-            ->exists()){
-                DB::table('permissions')->insert(['guard_name' => 'api', 'name' => $permission]);
+            $user = User::first(); // ###############################
+            // permissions
+            // ###############################
+            $permissions =  config("setup-config.permissions");
+            // setup permissions
+            foreach ($permissions as $permission) {
+                if (!DB::table('permissions')->where([
+                    'name' => $permission,
+                    'guard_name' => 'api'
+                ])
+                    ->exists()) {
+                    DB::table('permissions')->insert(['guard_name' => 'api', 'name' => $permission]);
+                }
+            }
+            // setup roles
+            $roles = config("setup-config.roles");
+            foreach ($roles as $role) {
+                if (!Role::where([
+                    'name' => $role,
+                    'guard_name' => 'api',
+                    "is_system_default" => 1,
+                    "business_id" => NULL,
+                    "is_default" => 1,
+                ])
+                    ->exists()) {
+                    Role::create([
+                        'guard_name' => 'api',
+                        'name' => $role,
+                        "is_system_default" => 1,
+                        "business_id" => NULL,
+                        "is_default" => 1,
+                        "is_default_for_business" => (in_array($role, [
+                            "business_admin",
+                            "business_admin",
+                            "business_staff",
+                            "business_teacher",
+                            "business_administrator",
+                            "agency"
+
+                        ]) ? 1 : 0)
+
+
+                    ]);
+                }
             }
 
-        }
-        // setup roles
-        $roles = config("setup-config.roles");
-        foreach ($roles as $role) {
-            if(!Role::where([
-            'name' => $role,
-            'guard_name' => 'api',
-            "is_system_default" => 1,
-            "business_id" => NULL,
-            "is_default" => 1,
-            ])
-            ->exists()){
-             Role::create(['guard_name' => 'api', 'name' => $role,"is_system_default"=> 1, "business_id" => NULL,
-             "is_default" => 1,
-             "is_default_for_business" => (in_array($role ,["business_admin",
-             "business_admin",
-             "business_staff",
-             "business_teacher",
-             "business_administrator",
-             "agency"
-
-             ])?1:0)
+            // setup roles and permissions
+            $role_permissions = config("setup-config.roles_permission");
+            foreach ($role_permissions as $role_permission) {
+                $role = Role::where(["name" => $role_permission["role"]])->first();
+                error_log($role_permission["role"]);
+                $permissions = $role_permission["permissions"];
+                $role->syncPermissions($permissions);
+                // foreach ($permissions as $permission) {
+                //     if(!$role->hasPermissionTo($permission)){
+                //         $role->givePermissionTo($permission);
+                //     }
 
 
-            ]);
+                // }
             }
-
-        }
-
-        // setup roles and permissions
-        $role_permissions = config("setup-config.roles_permission");
-        foreach ($role_permissions as $role_permission) {
-            $role = Role::where(["name" => $role_permission["role"]])->first();
-            error_log($role_permission["role"]);
-            $permissions = $role_permission["permissions"];
-            $role->syncPermissions($permissions);
-            // foreach ($permissions as $permission) {
-            //     if(!$role->hasPermissionTo($permission)){
-            //         $role->givePermissionTo($permission);
-            //     }
-
-
-            // }
-        }
-$user->assignRole('business_admin');
-
-
+            $user->assignRole('business_admin');
         } catch (Exception $e) {
             Log::error("An error occurred: " . $e->getMessage());
             $this->error("An error occurred: " . $e->getMessage());
