@@ -13,6 +13,7 @@ use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Mail\StudentApplicationSubmitted;
 use App\Models\Agency;
 use App\Models\Business;
 use App\Models\BusinessSetting;
@@ -26,6 +27,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use PDF;
 
@@ -572,7 +574,6 @@ class StudentController extends Controller
 
                 $request_data = $request->validated();
 
-
                 $request_data["is_active"] = true;
                 $request_data["course_fee"] = 0;
                 $request_data["fee_paid"] = 0;
@@ -598,6 +599,10 @@ class StudentController extends Controller
 
 
                 $business = $student->business;
+
+                  $businessOwner = $business->owner;
+
+                   Mail::to($business->email)->send(new StudentApplicationSubmitted($student, $businessOwner,$business->name));
 
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
@@ -2673,11 +2678,7 @@ class StudentController extends Controller
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            //  if (!$request->user()->hasPermissionTo('student_update')) {
-            //      return response()->json([
-            //          "message" => "You can not perform this action"
-            //      ], 401);
-            //  } test
+
 
             $query = Student::with(
                 [
