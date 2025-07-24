@@ -605,9 +605,13 @@ class StudentController extends Controller
                   $collegeName = $business->name;
                 $collegeEmail = $business->email;
 
-                   Mail::to($business->email)->send(new StudentApplicationSubmitted($student, $businessOwner,$business->name));
+                if(env('SEND_EMAIL') == true) {
+                    Mail::to($business->email)->send(new StudentApplicationSubmitted($student, $businessOwner,$business->name));
 
                    Mail::to($student->email)->send(new StudentApplicationAcknowledgement($student, $collegeName, $collegeEmail));
+                }
+
+
 
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 
