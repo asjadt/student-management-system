@@ -13,6 +13,7 @@ use App\Http\Utils\BasicUtil;
 use App\Http\Utils\BusinessUtil;
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Mail\StudentApplicationAcknowledgement;
 use App\Mail\StudentApplicationSubmitted;
 use App\Models\Agency;
 use App\Models\Business;
@@ -601,8 +602,12 @@ class StudentController extends Controller
                 $business = $student->business;
 
                   $businessOwner = $business->owner;
+                  $collegeName = $business->name;
+                $collegeEmail = $business->email;
 
                    Mail::to($business->email)->send(new StudentApplicationSubmitted($student, $businessOwner,$business->name));
+
+                   Mail::to($student->email)->send(new StudentApplicationAcknowledgement($student, $collegeName, $collegeEmail));
 
                 $request_data["previous_education_history"] = json_decode($request_data["previous_education_history"], true);
 

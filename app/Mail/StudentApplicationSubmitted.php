@@ -28,11 +28,6 @@ class StudentApplicationSubmitted extends Mailable
         $this->collegeName = $collegeName;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
         return $this->subject('New Student Application Reference: ' . $this->student->student_id)
