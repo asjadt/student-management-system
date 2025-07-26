@@ -575,63 +575,18 @@ class ModuleController extends Controller
                 ], 422);
             }
 
+            $business = Business::find($businessId);
+            $modules = collect(); // Default to empty collection
 
-            // INITIALIZE MODULE QUERY
-            $modules = collect();
+            if (!empty($business)) {
+                $modules = $this->getModulesFuncV2($business);
 
-            // GET MODULE IDS FROM BUSINESS MODULES
-            $moduleIds = BusinessModule::where('business_id', $businessId)
-                ->where('is_enabled', 1)
-                ->pluck('module_id')
-                ->toArray();
-
-            // if (empty($moduleIds)) {
-            //     return response()->json([
-            //         "message" => "No modules found for this business"
-            //     ], 404);
-            // }
-
-            //  GET MODULES
-            if (!empty($moduleIds)) {
-                $businessModulesQuery = Module::whereIn("modules.id", $moduleIds)
-                    ->where('modules.is_enabled', 1)
-
-                    // SEARCH BY NAME
-                    ->when($request->filled('search_key'), function ($query) use ($request) {
-                        return $query->where(function ($query) use ($request) {
-                            $term = $request->query('search_key');
-                            $query->where("modules.name", "like", "%" . $term . "%");
-                        });
-                    })
-
-                    // ORDER BY
-                    ->when(!empty($request->query('order_by')) && in_array(strtoupper($request->query('order_by')), ['ASC', 'DESC']), function ($query) use ($request) {
-                        return $query->orderBy("modules.id", $request->query('order_by'));
-                    }, function ($query) {
-                        return $query->orderBy("modules.id", "DESC");
-                    })
-
-                    // SELECT ONLY ID AND NAME
-                    ->select("id", "name", "is_enabled")
-
-                    // PAGINATION OR RETURN ALL
-                    ->when(!empty($request->query('per_page')), function ($query) use ($request) {
-                        return $query->paginate($request->query('per_page'));
-                    }, function ($query) {
-                        return $query->get();
-                    });
+                // Filter only enabled modules using Collection's filter
+                $modules = $modules->filter(function ($module) {
+                    return $module->is_enabled == 1;
+                });
             }
 
-            if (empty($businessModulesQuery)) {
-                $modules = $this->getClientBusinessModules($businessId);
-                Log::info('servicePlanModules: ' . $modules->toJson());
-            } else {
-                $modules = $businessModulesQuery;
-                Log::info('businessModules: ' . $modules->toJson());
-            }
-
-
-            // return response with modules
             return response()->json($modules, 200);
         } catch (Exception $e) {
 

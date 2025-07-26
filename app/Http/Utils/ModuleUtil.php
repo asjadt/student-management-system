@@ -136,6 +136,57 @@ trait ModuleUtil
 
         return $modules;
     }
+    public function getModulesFuncV2($business)
+    {
+        $service_plan_modules =   ServicePlanModule::where([
+            "service_plan_id" => $business->service_plan_id,
+        ])
+            ->get();
+
+
+        $modules = Module::where('modules.is_enabled', 1)
+            ->when(empty($business->id), function ($query) {
+                $query->whereHas("reseller_modules", function ($query) {
+                    $query->where("reseller_modules.is_enabled", 1);
+                });
+            })
+            ->orderBy("modules.name", "ASC")
+
+            ->select("id", "name")
+            ->get()
+
+            ->map(function ($item) use ($business, $service_plan_modules) {
+                $item->is_enabled = 0;
+
+                $service_plan_module = $service_plan_modules->first(function ($plan) use ($item) {
+                    return $plan->module_id == $item->id;
+                });
+
+                if (!empty($service_plan_module)) {
+                    $item->is_enabled = $service_plan_module->is_enabled;
+                }
+
+
+
+                $businessModule =    BusinessModule::where([
+                    "business_id" => $business->id,
+                    "module_id" => $item->id
+                ])
+                    ->first();
+
+                if (!empty($businessModule)) {
+                    $item->is_enabled = $businessModule->is_enabled;
+                }
+
+                $item->businessModule = $businessModule;
+
+                $item->service_plan_module = $service_plan_module;
+
+                return $item;
+            });
+
+        return $modules;
+    }
 
     public function getClientBusinessModules($businessId)
     {
@@ -155,7 +206,7 @@ trait ModuleUtil
         // get business service plan modules
         if ($business) {
             $modules = $business->service_plan->modules->where('is_enabled', 1);
-            Log::info('servicePlanModules: ' . $modules->toJson());
+            Log::info('servicePlanClientModules: ' . $modules->toJson());
         }
 
         return $modules->map(function ($module) {
