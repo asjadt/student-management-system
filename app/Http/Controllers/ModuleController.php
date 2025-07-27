@@ -575,19 +575,22 @@ class ModuleController extends Controller
                 ], 422);
             }
 
+            // GET BUSINESS
             $business = Business::find($businessId);
-            $modules = collect(); // Default to empty collection
+            // GET MODULES
+            $modules = $this->getModulesFuncV2($business);
+            // GET CLIENT MODULES
+            $modules_collection = collect(); // Default to empty collection
 
-            if (!empty($business)) {
-                $modules = $this->getModulesFuncV2($business);
-
-                // Filter only enabled modules using Collection's filter
-                $modules = $modules->filter(function ($module) {
-                    return $module->is_enabled == 1;
-                });
+            // Loop through modules and add to collection if enabled
+            foreach ($modules as $module) {
+                if ($module['is_enabled'] == 1) {
+                    $modules_collection->push($module->name);
+                }
             }
 
-            return response()->json($modules, 200);
+            // Return modules
+            return response()->json($modules_collection, 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
