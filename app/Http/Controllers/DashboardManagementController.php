@@ -2675,61 +2675,61 @@ class DashboardManagementController extends Controller
             }
 
             $students_with_current_sessions = Student::with('session')
-            ->whereHas('session', function($query) {
-                $query->whereDate('sessions.start_date', '<=', today())
-                      ->whereDate('sessions.end_date', '>=', today());
-            })->get();
+                ->whereHas('session', function ($query) {
+                    $query->whereDate('sessions.start_date', '<=', today())
+                        ->whereDate('sessions.end_date', '>=', today());
+                })->get();
 
             $students_with_current_sessions = Student::with('session')
-            ->whereHas('session', function($query) {
-                $query->whereDate('sessions.start_date', '<=', today())
-                      ->whereDate('sessions.end_date', '>=', today());
-            })->get();
+                ->whereHas('session', function ($query) {
+                    $query->whereDate('sessions.start_date', '<=', today())
+                        ->whereDate('sessions.end_date', '>=', today());
+                })->get();
 
-        // Initialize counters
-        $count_0_60 = 0;
-        $count_60_75 = 0;
-        $count_75_85 = 0;
-        $count_85_100 = 0;
+            // Initialize counters
+            $count_0_60 = 0;
+            $count_60_75 = 0;
+            $count_75_85 = 0;
+            $count_85_100 = 0;
 
-        foreach ($students_with_current_sessions as $student) {
-            $session_id = optional($student->session)->id;
-            if (!$session_id) continue;
+            foreach ($students_with_current_sessions as $student) {
+                $session_id = optional($student->session)->id;
+                if (!$session_id) continue;
 
-            $present = Attendance::where('student_id', $student->id)
-                ->where('session_id', $session_id)
-                ->where('status', 'present')
-                ->count();
+                $present = Attendance::where('student_id', $student->id)
+                    ->where('session_id', $session_id)
+                    ->where('status', 'present')
+                    ->count();
 
-            $total = Attendance::where('student_id', $student->id)
-                ->where('session_id', $session_id)
-                ->count();
+                $total = Attendance::where('student_id', $student->id)
+                    ->where('session_id', $session_id)
+                    ->count();
 
-            if ($total == 0) {
-                $percentage = 0;
-            } else {
-                $percentage = ($present / $total) * 100;
+                if ($total == 0) {
+                    $percentage = 0;
+                } else {
+                    $percentage = ($present / $total) * 100;
+                }
+
+                // Increment counter based on percentage
+                if ($percentage < 60) {
+                    $count_0_60++;
+                } elseif ($percentage < 75) {
+                    $count_60_75++;
+                } elseif ($percentage < 85) {
+                    $count_75_85++;
+                } else {
+                    $count_85_100++;
+                }
             }
 
-            // Increment counter based on percentage
-            if ($percentage < 60) {
-                $count_0_60++;
-            } elseif ($percentage < 75) {
-                $count_60_75++;
-            } elseif ($percentage < 85) {
-                $count_75_85++;
-            } else {
-                $count_85_100++;
-            }
-        }
-
-        // Return or use the counts
-        $data["attendance_report"] = [
-            '0-60%' => $count_0_60,
-            '60-75%' => $count_60_75,
-            '75-85%' => $count_75_85,
-            '85-100%' => $count_85_100,
-        ];
+            // Return or use the counts
+            $data["attendance_report"] = [
+                '0-60%' => $count_0_60,
+                '60-75%' => $count_60_75,
+                '75-85%' => $count_75_85,
+                '85-100%' => $count_85_100,
+            ];
 
             return response()->json($data, 200);
         } catch (Exception $e) {
@@ -3458,33 +3458,36 @@ class DashboardManagementController extends Controller
 
             $data = [];
 
+            // TOTAL BUSINESS
             $data["total_businesses"] = Business::count();
+            // ACTIVE BUSINESS
             $data["active_businesses"] = Business::where("businesses.is_active", 1)
                 ->count();
-
-            //    $data["inactive_businesses"] = Business::
-            //    where("businesses.is_active",0)
-            //  ->count();
-
+            // INACTIVE BUSINESS
             $data["inactive_businesses"] = $data["total_businesses"] - $data["active_businesses"];
 
 
-            // For this week (from Sunday to Saturday)
-            $data["this_week_businesses"] = Business::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
-                ->count();
+            // // For this week (from Sunday to Saturday)
+            // $data["this_week_businesses"] = Business::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            //     ->count();
 
-            // For last week
-            $data["last_week_businesses"] = Business::whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
-                ->count();
+            // // For last week
+            // $data["last_week_businesses"] = Business::whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])
+            //     ->count();
 
-            // For this month
-            $data["this_month_businesses"] = Business::whereMonth('created_at', Carbon::now()->month)
-                ->count();
+            // // For this month
+            // $data["this_month_businesses"] = Business::whereMonth('created_at', Carbon::now()->month)
+            //     ->count();
 
-            // For last month
-            $data["last_month_businesses"] = Business::whereMonth('created_at', Carbon::now()->subMonth()->month)
-                ->count();
+            // // For last month
+            // $data["last_month_businesses"] = Business::whereMonth('created_at', Carbon::now()->subMonth()->month)
+            //     ->count();
 
+            // EXPIRE IN 15 DAYS
+            $data["expire_in_15_days"] = Business::where("businesses.is_active", 1)
+                ->whereDate("businesses.trail_end_date", ">", Carbon::now())
+                ->whereDate("businesses.trail_end_date", "<=", Carbon::now()->addDays(15))
+                ->count();
 
 
             return response()->json($data, 200);
