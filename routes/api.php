@@ -66,6 +66,10 @@ Route::post('/auth/check/email', [AuthController::class, "checkEmail"]);
 Route::post('/v1.0/user-image', [UserManagementController::class, "createUserImage"]);
 Route::post('/v1.0/business-image', [BusinessController::class, "createBusinessImage"]);
 Route::post('/v1.0/business-image-multiple', [BusinessController::class, "createBusinessImageMultiple"]);
+// Route::post('/v1.0/business-logo', [BusinessController::class, "uploadBusinessLogo"]);
+
+Route::post('/v1.0/students/multiple-file-upload', [StudentController::class, "createStudentFileMultiple"]);
+
 
 
 // !!!!!!!@@@@@@@@@@@@$$$$$$$$$$$$%%%%%%%%%%%%%%%%^^^^^^^^^^
@@ -632,7 +636,6 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
-   Route::post('/v1.0/students/multiple-file-upload', [StudentController::class, "createStudentFileMultiple"]);
    Route::post('/v1.0/students', [StudentController::class, "createStudent"]);
    Route::put('/v1.0/students', [StudentController::class, "updateStudent"]);
    Route::put('/v1.0/students-is-local-student', [StudentController::class, "updateStudentIsLocalStudent"]);
