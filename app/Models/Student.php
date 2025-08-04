@@ -42,6 +42,7 @@ class Student extends Model
         'long',
         'emergency_contact_details',
         'previous_education_history',
+        'english_proficiency',
         'passport_issue_date',
         'passport_expiry_date',
         'place_of_issue',
@@ -57,6 +58,7 @@ class Student extends Model
         'attachments' => 'json',
         'emergency_contact_details' => 'json',
         'previous_education_history' => 'json',
+        'english_proficiency' => 'json',
     ];
 
     public function getPreviousEducationHistoryAttribute($value)

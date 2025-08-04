@@ -66,7 +66,7 @@ Route::post('/auth/check/email', [AuthController::class, "checkEmail"]);
 Route::post('/v1.0/user-image', [UserManagementController::class, "createUserImage"]);
 Route::post('/v1.0/business-image', [BusinessController::class, "createBusinessImage"]);
 Route::post('/v1.0/business-image-multiple', [BusinessController::class, "createBusinessImageMultiple"]);
-// Route::post('/v1.0/business-logo', [BusinessController::class, "uploadBusinessLogo"]);
+Route::post('/v1.0/upload-business-logo', [BusinessController::class, "uploadBusinessLogo"]);
 
 Route::post('/v1.0/students/multiple-file-upload', [StudentController::class, "createStudentFileMultiple"]);
 
