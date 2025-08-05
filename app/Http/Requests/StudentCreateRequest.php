@@ -101,6 +101,7 @@ class StudentCreateRequest extends BaseFormRequest
             'long' => 'nullable|numeric', // Validates longitude format
             'emergency_contact_details' => 'nullable|json',
             'previous_education_history' => 'nullable|json',
+            'english_proficiency' => 'nullable|json',
             'passport_issue_date' => 'nullable|date',
             'passport_expiry_date' => 'nullable|date|after:passport_issue_date',
             'place_of_issue' => 'nullable|string|max:255',

@@ -30,11 +30,7 @@ class MultipleStudentFileUploadRequest extends FormRequest
         return [
 
             'files' => 'required|array',
-            'files.*' => 'required|file|max:2048',
+            'files.*' => 'required|file|max:5120',
         ];
     }
-
-
-
-
 }

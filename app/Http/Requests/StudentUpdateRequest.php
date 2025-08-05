@@ -123,6 +123,7 @@ class StudentUpdateRequest extends BaseFormRequest
             'postcode' => 'nullable|string|max:10',
             'lat' => 'nullable|numeric', // Validates latitude format
             'long' => 'nullable|numeric', // Validates longitude format
+            'english_proficiency' => 'nullable|json',
             'emergency_contact_details' => 'nullable|json',
             'previous_education_history' => 'nullable|json',
             'passport_issue_date' => 'nullable|date',

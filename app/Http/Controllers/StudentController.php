@@ -601,14 +601,14 @@ class StudentController extends Controller
 
                 $business = $student->business;
 
-                  $businessOwner = $business->owner;
-                  $collegeName = $business->name;
+                $businessOwner = $business->owner;
+                $collegeName = $business->name;
                 $collegeEmail = $business->email;
 
-                if(env('SEND_EMAIL') == true) {
-                    Mail::to($business->email)->send(new StudentApplicationSubmitted($student, $businessOwner,$business->name));
+                if (env('SEND_EMAIL') == true) {
+                    Mail::to($business->email)->send(new StudentApplicationSubmitted($student, $businessOwner, $business->name));
 
-                   Mail::to($student->email)->send(new StudentApplicationAcknowledgement($student, $collegeName, $collegeEmail));
+                    Mail::to($student->email)->send(new StudentApplicationAcknowledgement($student, $collegeName, $collegeEmail));
                 }
 
 
@@ -1025,6 +1025,7 @@ class StudentController extends Controller
                         'postcode',
                         'lat',
                         'long',
+                        'english_proficiency',
                         'emergency_contact_details',
                         // 'previous_education_history',
                         'passport_issue_date',
