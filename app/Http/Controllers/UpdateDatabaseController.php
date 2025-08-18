@@ -78,7 +78,13 @@ class UpdateDatabaseController extends Controller
     }
     public function updateModule()
     {
+        // GET ALL MODULES
         $modules = config("setup-config.system_modules");
+
+        // DELETE ALL MODULES
+        Module::truncate();
+
+        // INSERT MODULE
         foreach ($modules as $module) {
             $module_exists = Module::where([
                 "name" => $module
@@ -93,6 +99,11 @@ class UpdateDatabaseController extends Controller
                 ]);
             }
         }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Modules refreshed successfully',
+        ]);
     }
     public function updateBusinessLogo()
     {

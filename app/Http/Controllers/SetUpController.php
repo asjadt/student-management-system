@@ -311,7 +311,6 @@ class SetUpController extends Controller
 
     public function roleRefresh(Request $request)
     {
-
         $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
         $this->roleRefreshFunc();

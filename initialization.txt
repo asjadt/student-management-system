@@ -1,4 +1,5 @@
-/migrate
 /roleRefresh
 /module-update
-v1.0/db-operation
+
+// command
+ php artisan role:refresh
