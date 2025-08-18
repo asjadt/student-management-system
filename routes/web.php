@@ -133,7 +133,7 @@ Route::get("/student-file-update", [UpdateDatabaseController::class, "updatePrev
 
 Route::get("/business-logo-update", [UpdateDatabaseController::class, "updateBusinessLogo"]);
 Route::get("/module-update", [UpdateDatabaseController::class, "updateModule"]);
-Route::get("v1.0/db-operation", [UpdateDatabaseController::class, "dbOperation"]);
+Route::get("/v1.0/db-operation", [UpdateDatabaseController::class, "dbOperation"]);
 Route::get("/delete-tables", function () {
     // Disable foreign key checks
     DB::statement('SET FOREIGN_KEY_CHECKS = 0');
