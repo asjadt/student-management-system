@@ -105,7 +105,7 @@ class CheckInController extends Controller
             $already_check_in = CheckIn::where('type', 'student')
                 ->where('student_id', $student->id)
                 ->whereDate('check_in_at', Carbon::today())
-                // ->whereNull('check_out_at')
+                ->whereNull('check_out_at')
                 ->first();
 
             if ($already_check_in) {
@@ -116,12 +116,12 @@ class CheckInController extends Controller
                         $student->last_name
                 );
                 $checkInTime = $already_check_in->check_in_at->format('H:i A');
-                $checkOutTime = $already_check_in->check_out_at
-                    ? 'checked out at ' . $already_check_in->check_out_at->format('H:i A')
-                    : 'not checked out';
+                // $checkOutTime = $already_check_in->check_out_at
+                //     ? 'checked out at ' . $already_check_in->check_out_at->format('H:i A')
+                //     : 'not checked out';
 
                 return response()->json([
-                    'message' => "$fullName already checked in today at $checkInTime and $checkOutTime.",
+                    'message' => "$fullName already checked in today at $checkInTime and not checked out.",
                 ], 409);;
             }
         }
@@ -168,7 +168,7 @@ class CheckInController extends Controller
         $check_in['student'] = $student;
         $check_in['business'] = $business;
 
-        // 
+        //
         return response()->json([
             'message' => 'Check-in recorded successfully.',
             'data' => $check_in,
