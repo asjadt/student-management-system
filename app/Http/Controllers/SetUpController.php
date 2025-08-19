@@ -309,17 +309,25 @@ class SetUpController extends Controller
         }
     }
 
-    public function roleRefresh(Request $request)
+    public function roleRefresh()
     {
-        $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-
-        $this->roleRefreshFunc();
-
-
-
-
-        return "You are done with setup";
+        Artisan::call('role:refresh');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Roles refreshed successfully.'
+        ]);
     }
+    // public function roleRefresh(Request $request)
+    // {
+    //     $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+
+    //     $this->roleRefreshFunc();
+
+
+
+
+    //     return "You are done with setup";
+    // }
 
 
 

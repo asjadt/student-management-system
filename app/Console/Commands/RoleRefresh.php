@@ -40,6 +40,6 @@ class RoleRefresh extends Command
     {
         $this->info("Refreshing roles...");
         app(SetUpController::class)->roleRefreshFunc();
-        $this->info("Done.");
+        $this->info("Role refresh Done.");
     }
 }
