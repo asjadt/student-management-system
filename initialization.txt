@@ -1,5 +1,2 @@
 /roleRefresh
 /module-update
-
-// command
- php artisan role:refresh
