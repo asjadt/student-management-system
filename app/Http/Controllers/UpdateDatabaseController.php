@@ -81,8 +81,6 @@ class UpdateDatabaseController extends Controller
         // GET ALL MODULES
         $modules = config("setup-config.system_modules");
 
-        // DELETE ALL MODULES
-        Module::truncate();
 
         // INSERT MODULE
         foreach ($modules as $module) {

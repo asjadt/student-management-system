@@ -1,5 +1,9 @@
 /roleRefresh
 /module-update
 
-// command
- php artisan role:refresh
+
+need to change module name from database
+schedule => class_schedule
+attendance => attendance_management
+student_module => local_student
+session => session_management
