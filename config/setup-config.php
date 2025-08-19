@@ -1060,7 +1060,7 @@ return [
         "class_schedule",
         "attendance_management",
         "local_student",
-        "visit_log",
+        "visitor_log",
         "session_management",
         "letter_template",
     ]
