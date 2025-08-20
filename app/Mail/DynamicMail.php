@@ -21,6 +21,9 @@ class DynamicMail extends Mailable
     private $data;
     private $type;
     public function __construct($data, $type)
+    private $data;
+    private $type;
+    public function __construct($data, $type)
     {
         $this->data = $data;
         $this->type = $type;
@@ -45,6 +48,9 @@ class DynamicMail extends Mailable
 
 
         $html_content = json_decode($email_content->template);
+        $html_content =  str_replace("[customer_FirstName]", $this->data->customer->first_Name, $html_content);
+        $html_content =  str_replace("[customer_LastName]", $this->data->customer->last_Name, $html_content);
+        $html_content =  str_replace("[customer_FullName]", ($this->data->customer->first_Name . " " . $this->data->customer->last_Name), $html_content);
         $html_content =  str_replace("[customer_FirstName]", $this->data->customer->first_Name, $html_content);
         $html_content =  str_replace("[customer_LastName]", $this->data->customer->last_Name, $html_content);
         $html_content =  str_replace("[customer_FullName]", ($this->data->customer->first_Name . " " . $this->data->customer->last_Name), $html_content);

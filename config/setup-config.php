@@ -97,66 +97,14 @@ return [
 
         [
             "role" => "reseller",
-            "permissions" => [
-
-                "letter_template_create",
-                "letter_template_update",
-                "letter_template_activate",
-                "letter_template_view",
-                "letter_template_delete",
-
-                "role_view",
-
-
-
-                "user_create",
-                "user_update",
-                "user_view",
-                "user_delete",
-
-                "business_create",
-                "business_update",
-                "business_view",
-                "business_delete",
-
-                "business_times_update",
-                "business_times_view",
-
-                "student_status_create",
-                "student_status_update",
-                // "student_status_activate",
-                "student_status_view",
-                // "student_status_delete",
-
-                "installment_payment_create",
-                "installment_payment_update",
-                "installment_payment_activate",
-                "installment_payment_view",
-                "installment_payment_delete",
-
-
-
-                "installment_plan_create",
-                "installment_plan_update",
-                "installment_plan_activate",
-                "installment_plan_view",
-                "installment_plan_delete",
-
-
-
-                "course_title_create",
-                "course_title_update",
-                "course_title_view",
-                "course_title_delete",
-
-            ],
+            "permissions" => [],
         ],
         [
             "role" => "agency",
             "permissions" => [],
         ],
         [
-            "role" => "business_owner",
+            "role" => "business_admin",
             "permissions" => [
 
                 "agency_create",
@@ -276,7 +224,7 @@ return [
             "permissions" => [],
         ],
         [
-            "role" => "business_teacher",
+            "role" => "teacher",
             "permissions" => [],
         ],
 

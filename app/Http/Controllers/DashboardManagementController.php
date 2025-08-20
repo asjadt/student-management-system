@@ -34,6 +34,7 @@ class DashboardManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-owner-dashboard/jobs-in-area/{business_id}",
      *      operationId="getBusinessOwnerDashboardDataJobList",
+     *      tags={"dashboard_management.college_owner"},
      *      tags={"dashboard_management.business_owner"},
      *       security={
      *           {"bearerAuth": {}}
