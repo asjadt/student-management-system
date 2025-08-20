@@ -156,7 +156,7 @@ return [
             "permissions" => [],
         ],
         [
-            "role" => "business_admin",
+            "role" => "business_owner",
             "permissions" => [
 
                 "agency_create",
@@ -267,12 +267,12 @@ return [
         ],
 
         [
-            "role" => "business_staff",
+            "role" => "business_admin",
             "permissions" => [],
         ],
 
         [
-            "role" => "business_administrator",
+            "role" => "business_student",
             "permissions" => [],
         ],
         [
@@ -287,9 +287,12 @@ return [
         "superadmin",
         'reseller',
         'agency',
+        // "business_admin",
+        "business_owner",
+        // "business_staff",
         "business_admin",
-        "business_staff",
-        "business_administrator",
+        // "business_administrator",
+        "business_student",
         "business_teacher",
 
     ],

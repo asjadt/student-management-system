@@ -121,10 +121,10 @@ class BusinessSettingController extends Controller
             // Start a database transaction
             return DB::transaction(function () use ($request) {
                 /**
-                 * Check if the user has the business_admin role.
-                 * If the user does not have the business_admin role, return a 401 Unauthorized response.
+                 * Check if the user has the business_owner role.
+                 * If the user does not have the business_owner role, return a 401 Unauthorized response.
                  */
-                if (!$request->user()->hasRole('business_admin')) {
+                if (!$request->user()->hasRole('business_owner')) {
                     return response()->json([
                         "message" => "You can not perform this action"
                     ], 401);
@@ -279,7 +279,7 @@ class BusinessSettingController extends Controller
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
             // Check permission
-            if (!$request->user()->hasRole('business_admin')) {
+            if (!$request->user()->hasRole('business_owner')) {
                 // Return 401 Unauthorized if the user does not have the permission
                 return response()->json([
                     "message" => "You can not perform this action"

@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 
 class NotificationTemplateController extends Controller
 {
-    use ErrorUtil,UserActivityUtil;
+    use ErrorUtil, UserActivityUtil;
 
-     /**
+    /**
      *
      * @OA\Put(
      *      path="/v1.0/notification-templates",
@@ -29,7 +29,7 @@ class NotificationTemplateController extends Controller
      *
      *  @OA\RequestBody(
      *         required=true,
-     *  description="use [customer_name],[business_admin_name],[business_name],
+     *  description="use [customer_name],[business_owner_name],[business_name],
      *  in the template and use [customer_id], [pre_booking_id],[booking_id],[job_id],[business_id],[bid_id] in link",
      *         @OA\JsonContent(
      *            required={"id","template","is_active"},
@@ -38,7 +38,7 @@ class NotificationTemplateController extends Controller
      * *   * *    @OA\Property(property="is_active", type="number", format="number",example="1"),
      *    @OA\Property(property="template", type="string", format="string",example="html template goes here"),
      *  *    @OA\Property(property="link", type="string", format="string",example="html template goes here"),
-*
+     *
      *
      *         ),
      *      ),
@@ -79,7 +79,7 @@ class NotificationTemplateController extends Controller
     public function updateNotificationTemplate(NotificationTemplateUpdateRequest $request)
     {
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             return    DB::transaction(function () use (&$request) {
                 if (!$request->user()->hasPermissionTo('template_update')) {
                     return response()->json([
@@ -101,18 +101,16 @@ class NotificationTemplateController extends Controller
 
 
                     ->first();
-                    if(!$template) {
-                        $this->storeError(
-                            "no data found"
-                            ,
-                            404,
-                            "front end error",
-                            "front end error"
-                           );
-                        return response()->json([
-                            "message" => "no template found"
-                            ],404);
-
+                if (!$template) {
+                    $this->storeError(
+                        "no data found",
+                        404,
+                        "front end error",
+                        "front end error"
+                    );
+                    return response()->json([
+                        "message" => "no template found"
+                    ], 404);
                 }
 
                 //    if the template is active then other templates of this type will deactive
@@ -129,12 +127,12 @@ class NotificationTemplateController extends Controller
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
-            return $this->sendError($e, 500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
 
 
-   /**
+    /**
      *
      * @OA\Get(
      *      path="/v1.0/notification-templates/{perPage}",
@@ -152,26 +150,26 @@ class NotificationTemplateController extends Controller
      *  example="6"
      *      ),
      *      * *  @OA\Parameter(
-* name="start_date",
-* in="query",
-* description="start_date",
-* required=true,
-* example="2019-06-29"
-* ),
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
      * *  @OA\Parameter(
-* name="end_date",
-* in="query",
-* description="end_date",
-* required=true,
-* example="2019-06-29"
-* ),
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=true,
+     * example="2019-06-29"
+     * ),
      * *  @OA\Parameter(
-* name="search_key",
-* in="query",
-* description="search_key",
-* required=true,
-* example="search_key"
-* ),
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=true,
+     * example="search_key"
+     * ),
      *      summary="This method is to get notification templates ",
      *      description="This method is to get notification templates",
      *
@@ -213,7 +211,7 @@ class NotificationTemplateController extends Controller
     public function getNotificationTemplates($perPage, Request $request)
     {
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             if (!$request->user()->hasPermissionTo('template_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
@@ -242,12 +240,12 @@ class NotificationTemplateController extends Controller
             return response()->json($templates, 200);
         } catch (Exception $e) {
 
-            return $this->sendError($e, 500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
 
 
- /**
+    /**
      *
      * @OA\Get(
      *      path="/v1.0/notification-templates/single/{id}",
@@ -305,7 +303,7 @@ class NotificationTemplateController extends Controller
     public function getNotificationTemplateById($id, Request $request)
     {
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             if (!$request->user()->hasPermissionTo('template_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
@@ -316,28 +314,27 @@ class NotificationTemplateController extends Controller
             $template = NotificationTemplate::where([
                 "id" => $id
             ])
-            ->first();
-            if(!$template){
+                ->first();
+            if (!$template) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
-                     "message" => "no data found"
+                    "message" => "no data found"
                 ], 404);
             }
             return response()->json($template, 200);
         } catch (Exception $e) {
 
-            return $this->sendError($e, 500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
 
 
-  /**
+    /**
      *
      * @OA\Get(
      *      path="/v1.0/notification-template-types",
@@ -388,52 +385,43 @@ class NotificationTemplateController extends Controller
     public function getNotificationTemplateTypes(Request $request)
     {
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
-             if (!$request->user()->hasPermissionTo('template_view')) {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('template_view')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
-$types = [
+            $types = [
 
-    "bid_created_by_business_admin",
-    "bid_updated_by_business_admin",
-    "bid_accepted_by_client",
-    "bid_rejected_by_client",
+                "bid_created_by_business_owner",
+                "bid_updated_by_business_owner",
+                "bid_accepted_by_client",
+                "bid_rejected_by_client",
 
-    "booking_created_by_business_admin",
-    "booking_updated_by_business_admin",
-    "booking_status_changed_by_business_admin",
-    "booking_confirmed_by_business_admin",
-    "booking_deleted_by_business_admin",
-     "booking_rejected_by_business_admin",
+                "booking_created_by_business_owner",
+                "booking_updated_by_business_owner",
+                "booking_status_changed_by_business_owner",
+                "booking_confirmed_by_business_owner",
+                "booking_deleted_by_business_owner",
+                "booking_rejected_by_business_owner",
 
-    "booking_created_by_client",
-    "booking_updated_by_client",
-    "booking_deleted_by_client",
-    "booking_accepted_by_client",
-    "booking_rejected_by_client",
+                "booking_created_by_client",
+                "booking_updated_by_client",
+                "booking_deleted_by_client",
+                "booking_accepted_by_client",
+                "booking_rejected_by_client",
 
 
-    "job_created_by_business_admin",
-    "job_updated_by_business_admin",
-    "job_status_changed_by_business_admin",
-    "job_deleted_by_business_admin",
-];
+                "job_created_by_business_owner",
+                "job_updated_by_business_owner",
+                "job_status_changed_by_business_owner",
+                "job_deleted_by_business_owner",
+            ];
 
-return response()->json($types, 200);
+            return response()->json($types, 200);
         } catch (Exception $e) {
 
-            return $this->sendError($e, 500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
-
-
-
-
-
-
-
-
-
 }
