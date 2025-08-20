@@ -104,7 +104,7 @@ return [
             "permissions" => [],
         ],
         [
-            "role" => "business_admin",
+            "role" => "business_owner",
             "permissions" => [
 
                 "agency_create",
@@ -224,7 +224,7 @@ return [
             "permissions" => [],
         ],
         [
-            "role" => "teacher",
+            "role" => "business_teacher",
             "permissions" => [],
         ],
 
