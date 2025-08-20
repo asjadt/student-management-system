@@ -6584,7 +6584,7 @@
         "/v1.0/business-admin-dashboard": {
             "get": {
                 "tags": [
-                    "dashboard_management.business_admin"
+                    "dashboard_management.college_owner"
                 ],
                 "summary": "get all dashboard data combined",
                 "description": "get all dashboard data combined",
@@ -6947,7 +6947,7 @@
                 "description": "This method is to update email template",
                 "operationId": "updateEmailTemplate",
                 "requestBody": {
-                    "description": "use [FirstName],[LastName],[FullName],[AccountVerificationLink],[ForgotPasswordLink]\r\n     * [customer_FirstName],[customer_LastName],[customer_FullName],[business_admin_FirstName],[business_admin_LastName],[business_admin_FullName],[automobile_make],[automobile_model],[car_registration_no],[car_registration_year],[status],[payment_status],[additional_information],[discount_type],[discount_amount],[price],[job_start_date],[job_start_time],[job_end_time],[coupon_code],[fuel],[transmission]\r\n     *  in the template",
+                    "description": "use [FirstName],[LastName],[FullName],[AccountVerificationLink],[ForgotPasswordLink]\r\n     * [customer_FirstName],[customer_LastName],[customer_FullName],[college_owner_FirstName],[college_owner_LastName],[college_owner_FullName],[automobile_make],[automobile_model],[car_registration_no],[car_registration_year],[status],[payment_status],[additional_information],[discount_type],[discount_amount],[price],[job_start_date],[job_start_time],[job_end_time],[coupon_code],[fuel],[transmission]\r\n     *  in the template",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -10274,7 +10274,7 @@
                 "description": "This method is to update notification template",
                 "operationId": "updateNotificationTemplate",
                 "requestBody": {
-                    "description": "use [customer_name],[business_admin_name],[business_name],\r\n     *  in the template and use [customer_id], [pre_booking_id],[booking_id],[job_id],[business_id],[bid_id] in link",
+                    "description": "use [customer_name],[college_owner_name],[business_name],\r\n     *  in the template and use [customer_id], [pre_booking_id],[booking_id],[job_id],[business_id],[bid_id] in link",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -20266,8 +20266,8 @@
                                         "type": "string",
                                         "format": "array",
                                         "example": [
-                                            "business_admin#1",
-                                            "business_admin#1"
+                                            "college_owner#1",
+                                            "college_owner#1"
                                         ]
                                     }
                                 },
@@ -21777,8 +21777,8 @@
             "description": "dashboard_management.business_user"
         },
         {
-            "name": "dashboard_management.business_admin",
-            "description": "dashboard_management.business_admin"
+            "name": "dashboard_management.college_owner",
+            "description": "dashboard_management.college_owner"
         },
         {
             "name": "dashboard_management.superadmin",

@@ -154,11 +154,10 @@ class GenerateDatabase extends Command
                         "business_id" => NULL,
                         "is_default" => 1,
                         "is_default_for_business" => (in_array($role, [
-                            "business_admin",
-                            "business_admin",
-                            "business_staff",
-                            "business_teacher",
-                            "business_administrator",
+                            "college_owner",
+                            "college_staff",
+                            "teacher",
+                            "college_administrator",
                             "agency"
 
                         ]) ? 1 : 0)
@@ -183,7 +182,7 @@ class GenerateDatabase extends Command
 
                 // }
             }
-            $user->assignRole('business_admin');
+            $user->assignRole('college_owner');
         } catch (Exception $e) {
             Log::error("An error occurred: " . $e->getMessage());
             $this->error("An error occurred: " . $e->getMessage());

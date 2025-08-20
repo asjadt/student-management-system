@@ -17,3 +17,30 @@ SET name = CASE name
     WHEN 'session' THEN 'session_management'
 END
 WHERE name IN ('schedule', 'attendance', 'student_module', 'session');
+
+
+
+SQL QUERY FOR RENAMED BUSINESS ROLE
+
+---------------step 1
+UPDATE roles
+SET name = REPLACE(name, 'business_admin', 'college_owner')
+WHERE name LIKE 'business_admin%';
+
+UPDATE roles
+SET name = REPLACE(name, 'business_staff', 'college_staff')
+WHERE name LIKE 'business_staff%';
+
+UPDATE roles
+SET name = REPLACE(name, 'business_administrator', 'college_administrator')
+WHERE name LIKE 'business_administrator%';
+
+UPDATE roles
+SET name = REPLACE(name, 'business_teacher', 'teacher')
+WHERE name LIKE 'business_teacher%';
+
+
+-------------- Step 2
+UPDATE roles
+SET name = REPLACE(name, 'college_owneristrator', 'college_administrator')
+WHERE name LIKE 'college_owneristrator%';

@@ -155,11 +155,10 @@ class SetUpController extends Controller
                     "business_id" => NULL,
                     "is_default" => 1,
                     "is_default_for_business" => (in_array($role, [
-                        "business_admin",
-                        "business_admin",
-                        "business_staff",
-                        "business_administrator",
-                        "business_teacher",
+                        "college_owner",
+                        "college_staff",
+                        "college_administrator",
+                        "teacher",
                         "agency"
 
                     ]) ? 1 : 0)
@@ -240,11 +239,10 @@ class SetUpController extends Controller
                     "business_id" => NULL,
                     "is_default" => 1,
                     "is_default_for_business" => (in_array($role, [
-
-                        "business_admin",
-                        "business_staff",
-                        "business_administrator",
-                        "business_teacher",
+                        "college_owner",
+                        "college_staff",
+                        "college_administrator",
+                        "teacher",
                         "agency"
                     ]) ? 1 : 0)
 

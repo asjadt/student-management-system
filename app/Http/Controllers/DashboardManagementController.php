@@ -34,7 +34,7 @@ class DashboardManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-owner-dashboard/jobs-in-area/{business_id}",
      *      operationId="getBusinessOwnerDashboardDataJobList",
-     *      tags={"dashboard_management.business_admin"},
+     *      tags={"dashboard_management.college_owner"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -177,7 +177,7 @@ class DashboardManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-owner-dashboard/jobs-application/{business_id}",
      *      operationId="getBusinessOwnerDashboardDataJobApplications",
-     *      tags={"dashboard_management.business_admin"},
+     *      tags={"dashboard_management.college_owner"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -338,7 +338,7 @@ class DashboardManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-owner-dashboard/winned-jobs-application/{business_id}",
      *      operationId="getBusinessOwnerDashboardDataWinnedJobApplications",
-     *      tags={"dashboard_management.business_admin"},
+     *      tags={"dashboard_management.college_owner"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -463,7 +463,7 @@ class DashboardManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-owner-dashboard/completed-bookings/{business_id}",
      *      operationId="getBusinessOwnerDashboardDataCompletedBookings",
-     *      tags={"dashboard_management.business_admin"},
+     *      tags={"dashboard_management.college_owner"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -583,7 +583,7 @@ class DashboardManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-owner-dashboard/upcoming-jobs/{business_id}/{duration}",
      *      operationId="getBusinessOwnerDashboardDataUpcomingJobs",
-     *      tags={"dashboard_management.business_admin"},
+     *      tags={"dashboard_management.college_owner"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -706,7 +706,7 @@ class DashboardManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-owner-dashboard/expiring-affiliations/{business_id}/{duration}",
      *      operationId="getBusinessOwnerDashboardDataExpiringAffiliations",
-     *      tags={"dashboard_management.business_admin"},
+     *      tags={"dashboard_management.college_owner"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
@@ -2536,7 +2536,7 @@ class DashboardManagementController extends Controller
      * @OA\Get(
      *      path="/v1.0/business-admin-dashboard",
      *      operationId="getBusinessAdminDashboardData",
-     *      tags={"dashboard_management.business_admin"},
+     *      tags={"dashboard_management.college_owner"},
      *       security={
      *           {"bearerAuth": {}}
      *       },
