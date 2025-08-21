@@ -1,22 +1,6 @@
-/roleRefresh
+/migrate
 /module-update
 
-
-need to change module name from database
-schedule => class_schedule
-attendance => attendance_management
-student_module => local_student
-session => session_management
-
-SQL QUERY
-UPDATE modules
-SET name = CASE name
-    WHEN 'schedule' THEN 'class_schedule'
-    WHEN 'attendance' THEN 'attendance_management'
-    WHEN 'student_module' THEN 'local_student'
-    WHEN 'session' THEN 'session_management'
-END
-WHERE name IN ('schedule', 'attendance', 'student_module', 'session');
 
 
 --------------- Step 1: business_administrator → business_student
@@ -37,3 +21,6 @@ WHERE name LIKE 'business_admin%';
 UPDATE roles
 SET name = REPLACE(name, 'business_staff', 'business_admin')
 WHERE name LIKE 'business_staff%';
+
+
+/roleRefresh

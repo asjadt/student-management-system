@@ -78,25 +78,44 @@ class UpdateDatabaseController extends Controller
     }
     public function updateModule()
     {
+        // UPDATE EXISTING MODULES
+        DB::update("
+        UPDATE modules
+        SET name = CASE name
+            WHEN 'schedule' THEN 'class_schedule'
+            WHEN 'attendance' THEN 'attendance_management'
+            WHEN 'student_module' THEN 'local_student'
+            WHEN 'session' THEN 'session_management'
+        END
+        WHERE name IN ('schedule', 'attendance', 'student_module', 'session')
+    ");
+
+        // INSERT MISSING MODULES
         // GET ALL MODULES
         $modules = config("setup-config.system_modules");
 
 
         // INSERT MODULE
         foreach ($modules as $module) {
-            $module_exists = Module::where([
-                "name" => $module
-            ])
-                ->exists();
-
-            if (!$module_exists) {
-                Module::create([
-                    "name" => $module,
-                    "is_enabled" => 1,
-                    'created_by' => 1,
-                ]);
-            }
+            Module::firstOrCreate(
+                ['name' => $module],
+                ['is_enabled' => 1, 'created_by' => 1]
+            );
         }
+        // foreach ($modules as $module) {
+        //     $module_exists = Module::where([
+        //         "name" => $module
+        //     ])
+        //         ->exists();
+
+        //     if (!$module_exists) {
+        //         Module::create([
+        //             "name" => $module,
+        //             "is_enabled" => 1,
+        //             'created_by' => 1,
+        //         ]);
+        //     }
+        // }
 
         return response()->json([
             'status' => 'success',

@@ -79,7 +79,7 @@ return [
 
                 "attendance_create",
                 "attendance_update",
-                "attendance_activate",
+                // "attendance_activate",
                 "attendance_view",
                 "attendance_delete",
 
@@ -191,7 +191,7 @@ return [
 
                 "attendance_create",
                 "attendance_update",
-                "attendance_activate",
+                // "attendance_activate",
                 "attendance_view",
                 "attendance_delete",
 
@@ -332,7 +332,7 @@ return [
 
         "attendance_create",
         "attendance_update",
-        "attendance_activate",
+        // "attendance_activate",
         "attendance_view",
         "attendance_delete",
 
@@ -429,7 +429,7 @@ return [
 
         "attendance_create" => "",
         "attendance_update" => "",
-        "attendance_activate" => "",
+        // "attendance_activate" => "",
         "attendance_view" => "",
         "attendance_delete" => "",
 
@@ -688,7 +688,7 @@ return [
 
                 "attendance_create",
                 "attendance_update",
-                "attendance_activate",
+                // "attendance_activate",
                 "attendance_view",
                 "attendance_delete",
 

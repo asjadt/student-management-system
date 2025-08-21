@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Jobs\RefreshRolesJob;
 use App\Models\ActivityLog;
 use App\Models\Business;
 use App\Models\Designation;
@@ -27,6 +28,7 @@ use App\Models\SocialSite;
 use App\Models\StudentStatus;
 use App\Models\WorkLocation;
 use App\Models\WorkShift;
+use Illuminate\Support\Facades\Log;
 
 class SetUpController extends Controller
 {
@@ -308,14 +310,26 @@ class SetUpController extends Controller
         }
     }
 
+
     public function roleRefresh()
     {
-        Artisan::call('role:refresh');
+        RefreshRolesJob::dispatch(); // Dispatches job to queue
+
+        // Log::info('Roles refresh completed successfully.');
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Roles refreshed successfully.'
+            'message' => 'Roles refresh job started. It will run in the background.'
         ]);
     }
+    // public function roleRefresh()
+    // {
+    //     Artisan::call('role:refresh');
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Roles refreshed successfully.'
+    //     ]);
+    // }
     // public function roleRefresh(Request $request)
     // {
     //     $this->storeActivity($request, "DUMMY activity", "DUMMY description");

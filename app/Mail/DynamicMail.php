@@ -20,9 +20,7 @@ class DynamicMail extends Mailable
      */
     private $data;
     private $type;
-    public function __construct($data, $type)
-    private $data;
-    private $type;
+
     public function __construct($data, $type)
     {
         $this->data = $data;
