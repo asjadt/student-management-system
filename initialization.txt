@@ -1,26 +1,7 @@
 /migrate
+
+/one-time/db-operation
+
 /module-update
-
-
-
---------------- Step 1: business_administrator → business_student
-UPDATE roles
-SET name = REPLACE(name, 'business_administrator', 'business_student')
-WHERE name LIKE 'business_administrator%';
-
-
-
--------------------------- Step 2 : business_admin → business_owner
-UPDATE roles
-SET name = REPLACE(name, 'business_admin', 'business_owner')
-WHERE name LIKE 'business_admin%';
-
-
-
-------------------------- Step 3: business_staff → business_admin
-UPDATE roles
-SET name = REPLACE(name, 'business_staff', 'business_admin')
-WHERE name LIKE 'business_staff%';
-
 
 /roleRefresh

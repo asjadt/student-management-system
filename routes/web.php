@@ -23,30 +23,41 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// HOME PAGE
 Route::get('/', function () {
     return view('welcome');
 });
 
+// FRONT-END ERROR LOG
 Route::get('/frontend-error-log', [SetUpController::class, "getFrontEndErrorLogs"])->name("frontend-error-log");
 
+// ERROR AND ACTIVITY LOGS
 Route::get('/error-log', [SetUpController::class, "getErrorLogs"])->name("error-log");
-
 Route::get('/activity-log', [SetUpController::class, "getActivityLogs"])->name("activity-log");
+
 
 Route::get('/setup', [SetUpController::class, "setUp"])->name("setup");
 Route::get('/backup', [SetUpController::class, "backup"])->name("backup");
 
-Route::get('/roleRefresh', [SetUpController::class, "roleRefresh"])->name("roleRefresh");
-Route::get('/swagger-refresh', [SetUpController::class, "swaggerRefresh"]);
 Route::get('/migrate', [SetUpController::class, "migrate"]);
 
+// SWAGGER REFRESH
+Route::get('/swagger-refresh', [SetUpController::class, "swaggerRefresh"]);
 Route::get("/swagger-login", [SwaggerLoginController::class, "login"])->name("login.view");
 Route::post("/swagger-login", [SwaggerLoginController::class, "passUser"]);
 
+// ROLE REFRESH
+Route::get('/roleRefresh', [SetUpController::class, "roleRefresh"])->name("roleRefresh");
 
+// MODULE UPDATE
+Route::get("/module-update", [UpdateDatabaseController::class, "updateModule"]);
 
+// DATABASE OPERATION
+Route::controller(UpdateDatabaseController::class)->group(function () {
+    Route::get("/one-time/db-operation", "oneTimeDBOperation");
 
-
+    Route::get("/v1.0/db-operation", "dbOperation");
+});
 
 Route::get("/activate/{token}", function (Request $request, $token) {
     $user = User::where([
@@ -72,8 +83,6 @@ Route::get("/activate/{token}", function (Request $request, $token) {
     ]);
 });
 
-
-
 Route::get("/test", function () {
     $html_content = EmailTemplate::where([
         "type" => "email_verification_mail",
@@ -82,7 +91,6 @@ Route::get("/test", function () {
     ])->first()->template;
     return view('email.dynamic_mail', ["contactEmail" => "rest@gmail.com", "user" => [], "html_content" => $html_content]);
 });
-
 
 Route::get("/default-business-setting", function () {
 
@@ -130,10 +138,10 @@ Route::get("/default-business-setting", function () {
 });
 
 Route::get("/student-file-update", [UpdateDatabaseController::class, "updatePreviousEducationHistory"]);
-
 Route::get("/business-logo-update", [UpdateDatabaseController::class, "updateBusinessLogo"]);
-Route::get("/module-update", [UpdateDatabaseController::class, "updateModule"]);
-Route::get("/v1.0/db-operation", [UpdateDatabaseController::class, "dbOperation"]);
+
+
+// DELETE TABLE
 Route::get("/delete-tables", function () {
     // Disable foreign key checks
     DB::statement('SET FOREIGN_KEY_CHECKS = 0');

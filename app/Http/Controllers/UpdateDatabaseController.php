@@ -76,47 +76,32 @@ class UpdateDatabaseController extends Controller
 
         return 'Previous education history updated successfully!';
     }
+
+    // MODULE UPDATE
     public function updateModule()
     {
-        // UPDATE EXISTING MODULES
-        DB::update("
-        UPDATE modules
-        SET name = CASE name
-            WHEN 'schedule' THEN 'class_schedule'
-            WHEN 'attendance' THEN 'attendance_management'
-            WHEN 'student_module' THEN 'local_student'
-            WHEN 'session' THEN 'session_management'
-        END
-        WHERE name IN ('schedule', 'attendance', 'student_module', 'session')
-    ");
 
-        // INSERT MISSING MODULES
         // GET ALL MODULES
         $modules = config("setup-config.system_modules");
 
 
-        // INSERT MODULE
+        // CHECK EXISTING MODULE AND INSERT NEW MODULE
         foreach ($modules as $module) {
-            Module::firstOrCreate(
-                ['name' => $module],
-                ['is_enabled' => 1, 'created_by' => 1]
-            );
+            $module_exists = Module::where([
+                "name" => $module
+            ])
+                ->exists();
+
+            if (!$module_exists) {
+                Module::create([
+                    "name" => $module,
+                    "is_enabled" => 1,
+                    'created_by' => 1,
+                ]);
+            }
         }
-        // foreach ($modules as $module) {
-        //     $module_exists = Module::where([
-        //         "name" => $module
-        //     ])
-        //         ->exists();
 
-        //     if (!$module_exists) {
-        //         Module::create([
-        //             "name" => $module,
-        //             "is_enabled" => 1,
-        //             'created_by' => 1,
-        //         ]);
-        //     }
-        // }
-
+        // RETURN RESPONSE
         return response()->json([
             'status' => 'success',
             'message' => 'Modules refreshed successfully',
@@ -181,6 +166,8 @@ class UpdateDatabaseController extends Controller
         return 'Business logo updated successfully!';
     }
 
+
+    // DATABASE OPERATION
     public function dbOperation()
     {
         if (!Schema::hasColumn('businesses', 'url')) {
@@ -192,5 +179,44 @@ class UpdateDatabaseController extends Controller
         if (!Schema::hasColumn('students', 'title')) {
             DB::statement("ALTER TABLE students ADD COLUMN title VARCHAR(255) DEFAULT ''");
         }
+    }
+    // ONE TIME DATABASE OPERATION
+    public function oneTimeDBOperation()
+    {
+        // UPDATE EXISTING MODULES
+        DB::update("
+        UPDATE modules
+        SET name = CASE name
+            WHEN 'schedule' THEN 'class_schedule'
+            WHEN 'attendance' THEN 'attendance_management'
+            WHEN 'student_module' THEN 'local_student'
+            WHEN 'session' THEN 'session_management'
+        END
+        WHERE name IN ('schedule', 'attendance', 'student_module', 'session');
+    ");
+
+        // Step 1: business_administrator → business_student
+        DB::statement("
+        UPDATE roles
+        SET name = REPLACE(name, 'business_administrator', 'business_student')
+        WHERE name LIKE 'business_administrator%';
+    ");
+
+        // Step 2: business_admin → business_owner
+        DB::statement("
+        UPDATE roles
+        SET name = REPLACE(name, 'business_admin', 'business_owner')
+        WHERE name LIKE 'business_admin%';
+    ");
+
+        // Step 3: business_staff → business_admin
+        DB::statement("
+        UPDATE roles
+        SET name = REPLACE(name, 'business_staff', 'business_admin')
+        WHERE name LIKE 'business_staff%';
+    ");
+
+        // RETURN RESPONSE
+        return response()->json(['message' => 'Database updated successfully']);
     }
 }
