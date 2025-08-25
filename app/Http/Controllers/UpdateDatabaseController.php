@@ -216,6 +216,10 @@ class UpdateDatabaseController extends Controller
         WHERE name LIKE 'business_staff%';
     ");
 
+        // HARD DELETE USERS
+        DB::table('users')->whereNotNull('deleted_at')->delete();
+
+
         // RETURN RESPONSE
         return response()->json(['message' => 'Database updated successfully']);
     }

@@ -101,7 +101,12 @@ return [
         ],
         [
             "role" => "agency",
-            "permissions" => [],
+            "permissions" => [
+
+                "student_create",
+                "student_update",
+                "student_view",
+            ],
         ],
         [
             "role" => "business_owner",
@@ -189,14 +194,6 @@ return [
                 "class_routine_view",
                 "class_routine_delete",
 
-                "attendance_create",
-                "attendance_update",
-                // "attendance_activate",
-                "attendance_view",
-                "attendance_delete",
-
-
-
                 "awarding_body_create",
                 "awarding_body_update",
                 "awarding_body_activate",
@@ -211,12 +208,111 @@ return [
 
                 "business_times_update",
                 "business_times_view",
+
+                "visitor_log_view"
             ],
         ],
 
         [
             "role" => "business_admin",
-            "permissions" => [],
+            "permissions" => [
+                "agency_create",
+                "agency_update",
+                "agency_view",
+                "agency_delete",
+
+                "student_letter_create",
+                "student_letter_update",
+                "student_letter_view",
+                "student_letter_delete",
+
+
+                "session_create",
+                "session_update",
+                "session_activate",
+                "session_view",
+                "session_delete",
+
+                "letter_template_create",
+                "letter_template_update",
+                "letter_template_activate",
+                "letter_template_view",
+                "letter_template_delete",
+
+
+                "student_create",
+                "student_update",
+                "student_view",
+
+                'business_admin',
+
+                "user_create",
+                "user_update",
+                "user_view",
+                "user_delete",
+
+                "business_update",
+                "business_view",
+
+                "student_status_create",
+                "student_status_update",
+                "student_status_activate",
+                "student_status_view",
+                "student_status_delete",
+
+                "installment_payment_create",
+                "installment_payment_update",
+                "installment_payment_activate",
+                "installment_payment_view",
+                "installment_payment_delete",
+
+                "installment_plan_create",
+                "installment_plan_update",
+                "installment_plan_activate",
+                "installment_plan_view",
+                "installment_plan_delete",
+
+                "course_title_create",
+                "course_title_update",
+                "course_title_activate",
+                "course_title_view",
+                "course_title_delete",
+
+                "subject_create",
+                "subject_update",
+                "subject_activate",
+                "subject_view",
+                "subject_delete",
+
+
+                "teacher_create",
+                "teacher_update",
+                "teacher_activate",
+                "teacher_view",
+                "teacher_delete",
+
+                "class_routine_create",
+                "class_routine_update",
+                "class_routine_activate",
+                "class_routine_view",
+                "class_routine_delete",
+
+
+                "awarding_body_create",
+                "awarding_body_update",
+                "awarding_body_activate",
+                "awarding_body_view",
+                "awarding_body_delete",
+
+                "attendance_create",
+                "attendance_approve",
+                "attendance_update",
+                "attendance_view",
+                "attendance_delete",
+
+                "visitor_log_view"
+
+            ],
         ],
 
         [
@@ -225,7 +321,20 @@ return [
         ],
         [
             "role" => "business_teacher",
-            "permissions" => [],
+            "permissions" => [
+                "course_title_view",
+
+                "class_routine_create",
+                "class_routine_update",
+                "class_routine_activate",
+                "class_routine_view",
+                "class_routine_delete",
+
+                "attendance_create",
+                "attendance_update",
+                "attendance_view",
+                "attendance_delete",
+            ],
         ],
 
 
@@ -235,11 +344,8 @@ return [
         "superadmin",
         'reseller',
         'agency',
-        // "business_admin",
         "business_owner",
-        // "business_staff",
         "business_admin",
-        // "business_administrator",
         "business_student",
         "business_teacher",
 

@@ -38,6 +38,21 @@ class CourseTitle extends Model
         return $this->belongsToMany(Subject::class, "course_subjects", "course_id", "subject_id");
     }
 
+    public function class_routines()
+    {
+        return $this->hasMany(ClassRoutine::class, 'course_id', 'id');
+    }
+
+    public function teachers()
+    {
+        return $this->belongsToMany(
+            User::class,           // Related model
+            'class_routines',      // Pivot table
+            'course_id',           // Foreign key on pivot referencing course_titles
+            'teacher_id'           // Foreign key on pivot referencing users
+        );
+    }
+
 
     // FILTER
     public function scopeFilter($query)

@@ -2,19 +2,15 @@
 
 namespace App\Jobs;
 
-use App\Mail\RolesRefreshStatusMail;
 use App\Models\Business;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class RefreshRolesJob implements ShouldQueue
 {
@@ -114,8 +110,6 @@ class RefreshRolesJob implements ShouldQueue
             $business_ids = Business::get()->pluck("id");
 
             foreach ($role_permissions as $role_permission) {
-
-
 
                 foreach ($business_ids as $business_id) {
 
