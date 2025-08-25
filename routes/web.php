@@ -52,6 +52,7 @@ Route::controller(UpdateDatabaseController::class)->group(function () {
     Route::get("/one-time/db-operation", "oneTimeDBOperation");
 
     Route::get("/v1.0/db-operation", "dbOperation");
+    Route::get("/delete-table", "deleteTable");
 });
 
 Route::get("/activate/{token}", function (Request $request, $token) {
