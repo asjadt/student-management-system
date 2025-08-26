@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateModulesTable extends Migration
@@ -23,24 +22,6 @@ class CreateModulesTable extends Migration
             $table->unsignedBigInteger("created_by")->nullable();
             $table->timestamps();
         });
-
-
-
-        DB::table('modules')
-            ->insert(array(
-                [
-                    "name" => "agency_management",
-                    "is_enabled" => 1,
-                ],
-                [
-                    "name" => "schedule",
-                    "is_enabled" => 1,
-                ],
-                [
-                    "name" => "attendance",
-                    "is_enabled" => 1,
-                ],
-            ));
     }
     /**
      * Reverse the migrations.

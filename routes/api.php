@@ -210,6 +210,7 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
     Route::put('/v1.0/agencies', [AgencyController::class, "updateAgency"]);
     Route::get('/v1.0/agencies', [AgencyController::class, "getAgencies"]);
     Route::delete('/v1.0/agencies/{ids}', [AgencyController::class, "deleteAgenciesByIds"]);
+    Route::get('/v1.0/agency-students', [AgencyController::class, "getAgencyStudents"]);
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // business management section
