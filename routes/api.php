@@ -576,6 +576,7 @@ Route::middleware(['custom.auth', "business.subscription.check"])->group(functio
 
     Route::get('/v1.0/subjects', [SubjectController::class, "getSubjects"]);
     Route::get('/v2.0/subjects', [SubjectController::class, "getSubjectsV2"]);
+    Route::get('/v3.0/subjects', [SubjectController::class, "getSubjectsV3"]);
     Route::delete('/v1.0/subjects/{ids}', [SubjectController::class, "deleteSubjectsByIds"]);
 
 

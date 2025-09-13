@@ -43,6 +43,7 @@ Route::post("/swagger-login", [SwaggerLoginController::class, "passUser"]);
 
 // ROLE REFRESH
 Route::get('/roleRefresh', [SetUpController::class, "roleRefresh"])->name("roleRefresh");
+Route::get('/role-refresh', [SetUpController::class, "roleRefreshLaravelJobs"])->name("roleRefreshLaravelJobs");
 
 // MODULE UPDATE
 Route::get("/module-update", [UpdateDatabaseController::class, "updateModule"]);

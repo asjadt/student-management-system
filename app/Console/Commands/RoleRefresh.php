@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\SetUpController;
+use App\Http\Utils\SetupUtil;
 use Illuminate\Console\Command;
 
 class RoleRefresh extends Command
 {
+    use SetupUtil;
     /**
      * The name and signature of the console command.
      *
@@ -38,8 +39,10 @@ class RoleRefresh extends Command
      */
     public function handle()
     {
-        $this->info("Refreshing roles...");
-        app(SetUpController::class)->roleRefreshFunc();
-        $this->info("Role refresh Done.");
+        log_message('Role refresh started.', 'role_refresh.log');
+
+        $this->roleRefreshFunc();
+
+        log_message('Role refresh started.', 'role_refresh.log');
     }
 }

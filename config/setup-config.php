@@ -462,7 +462,10 @@ return [
         "business_times_update",
         "business_times_view",
 
+        "visitor_log_view"
     ],
+
+
     "permissions_titles" => [
 
         "module_update" => "Can enable module",

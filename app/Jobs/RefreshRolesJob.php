@@ -34,6 +34,8 @@ class RefreshRolesJob implements ShouldQueue
     public function handle()
     {
         try {
+            // Success: log + email
+            Log::info('Roles refresh job started.');
             // ###############################
             // permissions
             // ###############################

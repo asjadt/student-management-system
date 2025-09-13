@@ -680,6 +680,170 @@ class SubjectController extends Controller
         }
     }
 
+    /**
+     *
+     * @OA\Get(
+     *      path="/v3.0/subjects",
+     *      operationId="getSubjectsV3",
+     *      tags={"subjects"},
+     *       security={
+     *           {"bearerAuth": {}}
+     *       },
+
+     *         @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="name",
+     *         required=false,
+     *  example="6"
+     *      ),
+     *         @OA\Parameter(
+     *         name="description",
+     *         in="query",
+     *         description="description",
+     *         required=true,
+     *  example="6"
+     *      ),
+
+
+
+     *         @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="per_page",
+     *         required=false,
+     *  example="6"
+     *      ),
+
+     *     @OA\Parameter(
+     * name="is_active",
+     * in="query",
+     * description="is_active",
+     * required=false,
+     * example="1"
+     * ),
+     *     @OA\Parameter(
+     * name="start_date",
+     * in="query",
+     * description="start_date",
+     * required=false,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="end_date",
+     * in="query",
+     * description="end_date",
+     * required=false,
+     * example="2019-06-29"
+     * ),
+     * *  @OA\Parameter(
+     * name="search_key",
+     * in="query",
+     * description="search_key",
+     * required=false,
+     * example="search_key"
+     * ),
+     * *  @OA\Parameter(
+     * name="order_by",
+     * in="query",
+     * description="order_by",
+     * required=false,
+     * example="ASC"
+     * ),
+     * *  @OA\Parameter(
+     * name="id",
+     * in="query",
+     * description="id",
+     * required=false,
+     * example="ASC"
+     * ),
+     * * *  @OA\Parameter(
+     * name="course_id",
+     * in="query",
+     * description="course_id",
+     * required=false,
+     * example="ASC"
+     * ),
+     *
+     *
+     *      summary="This method is to get subjects  ",
+     *      description="This method is to get subjects ",
+     *
+
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       @OA\JsonContent(),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     * @OA\JsonContent(),
+     *      ),
+     *        @OA\Response(
+     *          response=422,
+     *          description="Unprocesseble Content",
+     *    @OA\JsonContent(),
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden",
+     *   @OA\JsonContent()
+     * ),
+     *  * @OA\Response(
+     *      response=400,
+     *      description="Bad Request",
+     *   *@OA\JsonContent()
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found",
+     *   *@OA\JsonContent()
+     *   )
+     *      )
+     *     )
+     */
+
+    public function getSubjectsV3(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('subject_view')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
+
+            $query = Subject::with(
+                [
+                    "courses"=> function($query) {
+                    $query->select(
+                       "course_titles.id",
+                       "course_titles.name",
+                    );
+                }
+                ]
+            );
+            $query = $this->query_filters($query)
+            ->select(
+                "subjects.id",
+                'subjects.name',
+                'subjects.description',
+                'subjects.is_active'
+            );
+            $subjects = $this->retrieveData2($query, "id","subjects");
+
+            $subjects->each(function ($subject) {
+                $subject->courses->each->makeHidden('pivot');
+            });
+
+            return response()->json($subjects, 200);
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
 
 
 

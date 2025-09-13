@@ -7,12 +7,7 @@ use App\Http\Utils\UserActivityUtil;
 use App\Jobs\RefreshRolesJob;
 use App\Models\ActivityLog;
 use App\Models\Business;
-use App\Models\Designation;
-
 use App\Models\ErrorLog;
-use App\Models\JobPlatform;
-use App\Models\JobType;
-use App\Models\RecruitmentProcess;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -20,15 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use App\Models\Role;
-use App\Models\SettingAttendance;
-use App\Models\SettingLeave;
-use App\Models\SettingLeaveType;
-use App\Models\SettingPayrun;
-use App\Models\SocialSite;
-use App\Models\StudentStatus;
-use App\Models\WorkLocation;
-use App\Models\WorkShift;
-use Illuminate\Support\Facades\Log;
 
 class SetUpController extends Controller
 {
@@ -311,7 +297,8 @@ class SetUpController extends Controller
     }
 
 
-    public function roleRefresh()
+    // ROLE REFRESH THROUGH LARAVEL JOB
+    public function roleRefreshLaravelJobs()
     {
         RefreshRolesJob::dispatch(); // Dispatches job to queue
 
@@ -322,25 +309,17 @@ class SetUpController extends Controller
             'message' => 'Roles refresh job started. It will run in the background.'
         ]);
     }
-    // public function roleRefresh()
-    // {
-    //     Artisan::call('role:refresh');
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'Roles refreshed successfully.'
-    //     ]);
-    // }
-    // public function roleRefresh(Request $request)
-    // {
-    //     $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-    //     $this->roleRefreshFunc();
+    // ROLE REFRESH THROUGH API CALL
+    public function roleRefresh(Request $request)
+    {
+        Artisan::call('role:refresh');
 
-
-
-
-    //     return "You are done with setup";
-    // }
+        return response()->json([
+            'status' => 'pending',
+            'message' => 'Roles and Permissions refreshed in progress.'
+        ]);
+    }
 
 
 

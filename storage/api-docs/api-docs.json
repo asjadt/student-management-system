@@ -19371,7 +19371,7 @@
         "/v1.0/teacher-courses": {
             "get": {
                 "tags": [
-                    "z.unused"
+                    "Teacher.Course"
                 ],
                 "summary": "This method is to get teacher courses  ",
                 "description": "This method is to get teacher courses ",
@@ -21971,6 +21971,10 @@
         {
             "name": "subjects",
             "description": "subjects"
+        },
+        {
+            "name": "Teacher.Course",
+            "description": "Teacher.Course"
         },
         {
             "name": "user_management",
