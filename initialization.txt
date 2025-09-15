@@ -1,10 +1,16 @@
-/migrate
+1. /migrate
 
-/one-time/db-operation
+2. /one-time/db-operation
 
-/module-update
+3. /module-update
 
-/roleRefresh
+4. /roleRefresh
 
+5. /delete-table
 
-/delete-table
+6. routes folder(api and web)
+
+7. resource => views(all)
+
+8. app
+
