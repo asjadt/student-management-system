@@ -29,102 +29,97 @@ class ClassRoutineWeeklyCreateRequest extends BaseFormRequest
     public function rules()
     {
         return [
-          'course_data' => [
-    'required',
-    'array',
-],
-'course_data.*.course_id' => [
-    'required',
-    'numeric',
-    'exists:course_titles,id',
-],
-'course_data.*.days' => [
-    'required',
-    'array',
-],
-'course_data.*.days.*.day_of_week' => [
-    'required',
-    'string', // Use string if day_of_week is a name like "Monday"
-],
-'course_data.*.days.*.start_time' => [
-    'required',
-    'string', // Ensure valid time format if needed
-],
-'course_data.*.days.*.end_time' => [
-    'required',
-    'string', // Ensure valid time format if needed
-],
-'course_data.*.days.*.room_number' => [
-    'required',
-    'string',
-],
-'course_data.*.days.*.subject_id' => [
-    'required',
-    'numeric',
-    'exists:subjects,id',
-],
-'course_data.*.days.*.session_id' => [
-    'required',
-    'numeric',
-    'exists:sessions,id',
-    function ($attribute, $value, $fail) {
-        $segments = explode('.', $attribute);
-        $course_index = $segments[1] ?? null;
-        $day_index = $segments[3] ?? null;
+            'course_data' => [
+                'required',
+                'array',
+            ],
+            'course_data.*.course_id' => [
+                'required',
+                'numeric',
+                'exists:course_titles,id',
+            ],
+            'course_data.*.days' => [
+                'required',
+                'array',
+            ],
+            'course_data.*.days.*.day_of_week' => [
+                'required',
+                'numeric',
+            ],
+            'course_data.*.days.*.start_time' => [
+                'required',
+                'string', // Ensure valid time format if needed
+            ],
+            'course_data.*.days.*.end_time' => [
+                'required',
+                'string', // Ensure valid time format if needed
+            ],
+            'course_data.*.days.*.room_number' => [
+                'required',
+                'string',
+            ],
+            'course_data.*.days.*.subject_id' => [
+                'required',
+                'numeric',
+                'exists:subjects,id',
+            ],
+            'course_data.*.days.*.session_id' => [
+                'required',
+                'numeric',
+                'exists:sessions,id',
+                function ($attribute, $value, $fail) {
+                    $segments = explode('.', $attribute);
+                    $course_index = $segments[1] ?? null;
+                    $day_index = $segments[3] ?? null;
 
-        $day_data = request()->input("course_data.$course_index.days.$day_index");
+                    $day_data = request()->input("course_data.$course_index.days.$day_index");
 
-        if (!$day_data) return;
+                    if (!$day_data) return;
 
-        $rule = new UniqueSchedulePerSession(
-            $day_data['day_of_week'] ?? null,
-            $day_data['start_time'] ?? null,
-            $day_data['end_time'] ?? null,
-            $value
+                    $rule = new UniqueSchedulePerSession(
+                        $day_data['day_of_week'] ?? null,
+                        $day_data['start_time'] ?? null,
+                        $day_data['end_time'] ?? null,
+                        $value
 
-        );
+                    );
 
-        if (!$rule->passes($attribute, $value)) {
-            $fail($rule->message());
-        }
-    },
-],
- 'course_data.*.days.*.teacher_id' => [
-    'required',
-    'numeric',
-    'exists:users,id',
-    function ($attribute, $value, $fail) {
-        // Get the parent day item
-        $segments = explode('.', $attribute);
-        $course_index = $segments[1] ?? null;
-        $day_index = $segments[3] ?? null;
+                    if (!$rule->passes($attribute, $value)) {
+                        $fail($rule->message());
+                    }
+                },
+            ],
+            'course_data.*.days.*.teacher_id' => [
+                'required',
+                'numeric',
+                'exists:users,id',
+                function ($attribute, $value, $fail) {
+                    // Get the parent day item
+                    $segments = explode('.', $attribute);
+                    $course_index = $segments[1] ?? null;
+                    $day_index = $segments[3] ?? null;
 
-        $day_data = request()->input("course_data.$course_index.days.$day_index");
+                    $day_data = request()->input("course_data.$course_index.days.$day_index");
 
-        if (!$day_data) return;
-
-
+                    if (!$day_data) return;
 
 
-        $rule = new TeacherAvailable(
-            $day_data['day_of_week'] ?? null,
-            $day_data['start_time'] ?? null,
-            $day_data['end_time'] ?? null
-        );
 
-        if (!$rule->passes($attribute, $value)) {
-            $fail($rule->message());
-        }
-    },
-],
+
+                    $rule = new TeacherAvailable(
+                        $day_data['day_of_week'] ?? null,
+                        $day_data['start_time'] ?? null,
+                        $day_data['end_time'] ?? null
+                    );
+
+                    if (!$rule->passes($attribute, $value)) {
+                        $fail($rule->message());
+                    }
+                },
+            ],
 
 
 
         ];
     }
-
-
-
-
-
 }
