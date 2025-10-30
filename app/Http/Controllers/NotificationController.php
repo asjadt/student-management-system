@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
 {
-    use ErrorUtil, BusinessUtil,UserActivityUtil;
+    use ErrorUtil, BusinessUtil, UserActivityUtil;
 
     /**
      *
@@ -112,31 +112,29 @@ class NotificationController extends Controller
     {
         try {
 
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            $data["notifications"] = Notification::with("sender","business")->where([
-                "receiver_id" => $request->user()->id
-            ]
-        )
-        ->when(!empty($request->start_date), function ($query) use ($request) {
-            return $query->where('notifications.created_at', ">=", $request->start_date);
-        })
-        ->when(!empty($request->end_date), function ($query) use ($request) {
-            return $query->where('notifications.created_at', "<=", ($request->end_date . ' 23:59:59'));
-        })
-        ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-            return $query->orderBy("notifications.id", $request->order_by);
-        }, function ($query) {
-            return $query->orderBy("notifications.id", "DESC");
-        })
-        ->when(!empty($request->per_page), function ($query) use ($request) {
-            return $query->paginate($request->per_page);
-        }, function ($query) {
-            return $query->get();
-        });
-
-
-        ;
+            $data["notifications"] = Notification::with("sender", "business")->where(
+                [
+                    "receiver_id" => $request->user()->id
+                ]
+            )
+                ->when(!empty($request->start_date), function ($query) use ($request) {
+                    return $query->where('notifications.created_at', ">=", $request->start_date);
+                })
+                ->when(!empty($request->end_date), function ($query) use ($request) {
+                    return $query->where('notifications.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                })
+                ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
+                    return $query->orderBy("notifications.id", $request->order_by);
+                }, function ($query) {
+                    return $query->orderBy("notifications.id", "DESC");
+                })
+                ->when(!empty($request->per_page), function ($query) use ($request) {
+                    return $query->paginate($request->per_page);
+                }, function ($query) {
+                    return $query->get();
+                });;
 
 
 
@@ -157,7 +155,7 @@ class NotificationController extends Controller
 
 
             //         $notifications->items()[$i]["title"] =  str_replace(
-            //             "[business_admin_name]",
+            //             "[business_owner_name]",
 
             //             ($notifications->items()[$i]->business->owner->first_Name . " " . $notifications->items()[$i]->business->owner->last_Name),
 
@@ -168,7 +166,7 @@ class NotificationController extends Controller
             //         );
 
             //         $notifications->items()[$i]["description"] =  str_replace(
-            //             "[business_admin_name]",
+            //             "[business_owner_name]",
 
             //             ($notifications->items()[$i]->business->owner->first_Name . " " . $notifications->items()[$i]->business->owner->last_Name),
 
@@ -198,15 +196,15 @@ class NotificationController extends Controller
             $data["total_unread_messages"] = Notification::where('receiver_id', $request->user()->id)->where([
                 "status" => "unread"
             ])->count();
-            return response()->json( $data , 200);
+            return response()->json($data, 200);
         } catch (Exception $e) {
 
-            return $this->sendError($e, 500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
 
 
-     /**
+    /**
      *
      * @OA\Get(
      *      path="/v1.0/notifications/{business_id}/{perPage}",
@@ -268,10 +266,10 @@ class NotificationController extends Controller
      *     )
      */
 
-    public function getNotificationsByBusinessId($business_id,$perPage, Request $request)
+    public function getNotificationsByBusinessId($business_id, $perPage, Request $request)
     {
         try {
-     $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             if (!$this->businessOwnerCheck($business_id)) {
                 return response()->json([
                     "message" => "you are not the owner of the business or the requested business does not exist."
@@ -291,9 +289,9 @@ class NotificationController extends Controller
             $total_data = count($notifications->items());
             for ($i = 0; $i < $total_data; $i++) {
 
-                 $notifications->items()[$i]["template_string"] = json_decode($notifications->items()[$i]->template->template);
+                $notifications->items()[$i]["template_string"] = json_decode($notifications->items()[$i]->template->template);
 
-                 error_log($notifications->items()[$i]["template_string"]);
+                error_log($notifications->items()[$i]["template_string"]);
 
 
                 if (!empty($notifications->items()[$i]->customer_id)) {
@@ -308,7 +306,7 @@ class NotificationController extends Controller
 
                 if (!empty($notifications->items()[$i]->business_id)) {
                     $notifications->items()[$i]["template_string"] =  str_replace(
-                        "[business_admin_name]",
+                        "[business_owner_name]",
 
                         ($notifications->items()[$i]->business->owner->first_Name . " " . $notifications->items()[$i]->business->owner->last_Name),
 
@@ -324,7 +322,7 @@ class NotificationController extends Controller
                     );
                 }
 
-                if(in_array($notifications->items()[$i]->template->type,["booking_created_by_client","booking_accepted_by_client"]) ) {
+                if (in_array($notifications->items()[$i]->template->type, ["booking_created_by_client", "booking_accepted_by_client"])) {
 
                     $notifications->items()[$i]["template_string"] =  str_replace(
                         "[Date]",
@@ -338,8 +336,6 @@ class NotificationController extends Controller
 
                         $notifications->items()[$i]["template_string"]
                     );
-
-
                 }
 
 
@@ -370,7 +366,7 @@ class NotificationController extends Controller
                 );
             }
 
-            $data = json_decode(json_encode($notifications),true);
+            $data = json_decode(json_encode($notifications), true);
 
             $data["total_unread_messages"] = Notification::where('receiver_id', $request->user()->id)->where([
                 "status" => "unread"
@@ -378,7 +374,7 @@ class NotificationController extends Controller
             return response()->json($data, 200);
         } catch (Exception $e) {
 
-            return $this->sendError($e, 500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
 
@@ -387,7 +383,7 @@ class NotificationController extends Controller
 
 
 
-     /**
+    /**
      *
      * @OA\Put(
      *      path="/v1.0/notifications/change-status",
@@ -405,7 +401,7 @@ class NotificationController extends Controller
      *            required={"notification_ids"},
      *    @OA\Property(property="notification_ids", type="string", format="array", example={1,2,3,4,5,6}),
 
-*
+     *
      *
      *         ),
      *      ),
@@ -446,17 +442,17 @@ class NotificationController extends Controller
     public function updateNotificationStatus(NotificationStatusUpdateRequest $request)
     {
         try {
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             return    DB::transaction(function () use (&$request) {
 
                 $updatableData = $request->validated();
 
 
-     Notification::whereIn('id', $updatableData["notification_ids"])
-    ->where('receiver_id', $request->user()->id)
-    ->update([
-        "status" => "read"
-    ]);
+                Notification::whereIn('id', $updatableData["notification_ids"])
+                    ->where('receiver_id', $request->user()->id)
+                    ->update([
+                        "status" => "read"
+                    ]);
 
 
 
@@ -464,18 +460,18 @@ class NotificationController extends Controller
             });
         } catch (Exception $e) {
             error_log($e->getMessage());
-            return $this->sendError($e, 500,$request);
+            return $this->sendError($e, 500, $request);
         }
     }
 
 
-/**
-        *
+    /**
+     *
      * @OA\Delete(
      *      path="/v1.0/notifications/{id}",
      *      operationId="deleteNotificationById",
      *      tags={"notification_management"},
-    *       security={
+     *       security={
      *           {"bearerAuth": {}}
      *       },
      *              @OA\Parameter(
@@ -523,38 +519,32 @@ class NotificationController extends Controller
      *     )
      */
 
-    public function deleteNotificationById($id,Request $request) {
+    public function deleteNotificationById($id, Request $request)
+    {
 
-        try{
-            $this->storeActivity($request, "DUMMY activity","DUMMY description");
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
             $notification = Notification::where([
                 "id" => $id,
                 'receiver_id' => $request->user()->id
             ])->first();
 
-            if(!$notification) {
+            if (!$notification) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response(["message" => "Notification not found"], 404);
             }
 
             $notification->delete();
             return response(["message" => "Notification deleted"], 200);
+        } catch (Exception $e) {
 
-
-
-        } catch(Exception $e){
-
-        return $this->sendError($e,500,$request);
-
-
+            return $this->sendError($e, 500, $request);
         }
-
     }
 }

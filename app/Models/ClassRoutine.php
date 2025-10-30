@@ -14,57 +14,49 @@ class ClassRoutine extends Model
     use HasFactory, DefaultQueryScopesTrait;
 
     protected $fillable = [
-                    'day_of_week',
-                    'start_time',
-                    'end_time',
-                    'room_number',
-                    'subject_id',
-                    'teacher_id',
-                    'session_id',
-                    'course_id',
-                    "is_active",
-                    "business_id",
-                    "created_by"
+        'day_of_week',
+        'start_time',
+        'end_time',
+        'room_number',
+        'subject_id',
+        'teacher_id',
+        'session_id',
+        'course_id',
+        "is_active",
+        "business_id",
+        "created_by"
     ];
 
-    protected $casts = [
+    protected $casts = [];
 
-  ];
-
-  public function teacher()
-  {
-      return $this->belongsTo(User::class, 'teacher_id','id');
-  }
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id', 'id');
+    }
 
 
 
-  public function subject()
-  {
-      return $this->belongsTo(Subject::class, 'subject_id','id');
-  }
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id', 'id');
+    }
 
-  public function course()
-  {
-      return $this->belongsTo(CourseTitle::class, 'course_id','id');
-  }
+    public function course()
+    {
+        return $this->belongsTo(CourseTitle::class, 'course_id', 'id');
+    }
 
 
 
 
 
-  public function session()
-  {
-      return $this->belongsTo(Session::class, 'session_id','id');
-  }
+    public function session()
+    {
+        return $this->belongsTo(Session::class, 'session_id', 'id');
+    }
 
-  public function attendances()
-  {
-      return $this->hasMany(Attendance::class, 'class_routine_id','id');
-  }
-
-
-
-
-
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'class_routine_id', 'id');
+    }
 }
-

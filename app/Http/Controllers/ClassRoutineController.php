@@ -182,7 +182,7 @@ class ClassRoutineController extends Controller
      *                 property="days",
      *                 type="array",
      *                 @OA\Items(
-     *                     @OA\Property(property="day_of_week", type="string", example="Monday"),
+     *                     @OA\Property(property="day_of_week", type="integer", example="0"),
      *                     @OA\Property(property="start_time", type="string", format="time", example="09:00"),
      *                     @OA\Property(property="end_time", type="string", format="time", example="10:00"),
      *                     @OA\Property(property="room_number", type="string", example="101"),
@@ -315,7 +315,6 @@ class ClassRoutineController extends Controller
                     $class_routine = ClassRoutine::create($day);
                     $created_routines[] = $class_routine;
                 }
-
             }
 
             // Commit the transaction
@@ -355,7 +354,7 @@ class ClassRoutineController extends Controller
      *                 @OA\Property(property="course_id", type="integer", example=1),
      *                 @OA\Property(property="days", type="array",
      *                     @OA\Items(
-     *                         @OA\Property(property="day_of_week", type="string", example="Monday"),
+     *                         @OA\Property(property="day_of_week", type="integer", example="0"),
      *                         @OA\Property(property="start_time", type="string", format="time", example="09:00"),
      *                         @OA\Property(property="end_time", type="string", format="time", example="10:00"),
      *                         @OA\Property(property="room_number", type="string", example="101"),
@@ -916,16 +915,16 @@ class ClassRoutineController extends Controller
 
             $class_routines = ClassRoutine::with(
                 [
-            "teacher",
-            "subject",
-            "session",
-            "session.students" => function($query) {
-                $query->filterStudent();
-            },
-            "course",
-            "attendances" => function($query) {
-                  $query->filterAttendance();
-            }
+                    "teacher",
+                    "subject",
+                    "session",
+                    "session.students" => function ($query) {
+                        $query->filterStudent();
+                    },
+                    "course",
+                    "attendances" => function ($query) {
+                        $query->filterAttendance();
+                    }
 
                 ]
             );
@@ -1124,7 +1123,8 @@ class ClassRoutineController extends Controller
             $idsArray = explode(',', $ids);
 
             if (Attendance::whereIn(
-                "class_routine_id", $idsArray
+                "class_routine_id",
+                $idsArray
             )->exists()) { // Use exists() instead of exist()
                 return response()->json([
                     "message" => "The class routine cannot be updated because attendance has already been recorded for it."

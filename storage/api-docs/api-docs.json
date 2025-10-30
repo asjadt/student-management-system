@@ -6584,7 +6584,7 @@
         "/v1.0/business-admin-dashboard": {
             "get": {
                 "tags": [
-                    "dashboard_management.business_admin"
+                    "dashboard_management.business_owner"
                 ],
                 "summary": "get all dashboard data combined",
                 "description": "get all dashboard data combined",
@@ -6947,7 +6947,7 @@
                 "description": "This method is to update email template",
                 "operationId": "updateEmailTemplate",
                 "requestBody": {
-                    "description": "use [FirstName],[LastName],[FullName],[AccountVerificationLink],[ForgotPasswordLink]\r\n     * [customer_FirstName],[customer_LastName],[customer_FullName],[business_admin_FirstName],[business_admin_LastName],[business_admin_FullName],[automobile_make],[automobile_model],[car_registration_no],[car_registration_year],[status],[payment_status],[additional_information],[discount_type],[discount_amount],[price],[job_start_date],[job_start_time],[job_end_time],[coupon_code],[fuel],[transmission]\r\n     *  in the template",
+                    "description": "use [FirstName],[LastName],[FullName],[AccountVerificationLink],[ForgotPasswordLink]\n     * [customer_FirstName],[customer_LastName],[customer_FullName],[business_owner_FirstName],[business_owner_LastName],[business_owner_FullName],[automobile_make],[automobile_model],[car_registration_no],[car_registration_year],[status],[payment_status],[additional_information],[discount_type],[discount_amount],[price],[job_start_date],[job_start_time],[job_end_time],[coupon_code],[fuel],[transmission]\n     *  in the template",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -10274,7 +10274,7 @@
                 "description": "This method is to update notification template",
                 "operationId": "updateNotificationTemplate",
                 "requestBody": {
-                    "description": "use [customer_name],[business_admin_name],[business_name],\r\n     *  in the template and use [customer_id], [pre_booking_id],[booking_id],[job_id],[business_id],[bid_id] in link",
+                    "description": "use [customer_name],[business_owner_name],[business_name],\n     *  in the template and use [customer_id], [pre_booking_id],[booking_id],[job_id],[business_id],[bid_id] in link",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -19368,6 +19368,122 @@
                 ]
             }
         },
+        "/v1.0/teacher-courses": {
+            "get": {
+                "tags": [
+                    "Teacher.Course"
+                ],
+                "summary": "This method is to get teacher courses  ",
+                "description": "This method is to get teacher courses ",
+                "operationId": "getTeacherCourses",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "per_page",
+                        "required": true,
+                        "example": "6"
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "is_active",
+                        "required": true,
+                        "example": "1"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "start_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "end_date",
+                        "required": true,
+                        "example": "2019-06-29"
+                    },
+                    {
+                        "name": "search_key",
+                        "in": "query",
+                        "description": "search_key",
+                        "required": true,
+                        "example": "search_key"
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "order_by",
+                        "required": true,
+                        "example": "ASC"
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "id",
+                        "required": true,
+                        "example": "ASC"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/v1.0/users/update-password": {
             "put": {
                 "tags": [
@@ -20266,8 +20382,8 @@
                                         "type": "string",
                                         "format": "array",
                                         "example": [
-                                            "business_admin#1",
-                                            "business_admin#1"
+                                            "business_owner#1",
+                                            "business_owner#1"
                                         ]
                                     }
                                 },
@@ -21777,8 +21893,8 @@
             "description": "dashboard_management.business_user"
         },
         {
-            "name": "dashboard_management.business_admin",
-            "description": "dashboard_management.business_admin"
+            "name": "dashboard_management.business_owner",
+            "description": "dashboard_management.business_owner"
         },
         {
             "name": "dashboard_management.superadmin",
@@ -21855,6 +21971,10 @@
         {
             "name": "subjects",
             "description": "subjects"
+        },
+        {
+            "name": "Teacher.Course",
+            "description": "Teacher.Course"
         },
         {
             "name": "user_management",

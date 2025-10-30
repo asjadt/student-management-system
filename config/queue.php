@@ -36,7 +36,7 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'table' => 'jobs',
+            'table' => 'laravel_jobs', // previous name of jobs
             'queue' => 'default',
             'retry_after' => 90,
         ],

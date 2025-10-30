@@ -136,10 +136,11 @@ return [
 
     'providers' => [
 
-        
+
         /*
          * Laravel Framework Service Providers...
          */
+        App\Providers\HelperServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Propaganistas\LaravelDisposableEmail\DisposableEmailServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,

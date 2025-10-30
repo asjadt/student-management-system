@@ -121,54 +121,54 @@ class UserManagementController extends Controller
      *     )
      */
 
-     public function updatePassword(UserPasswordUpdateRequest $request)
-     {
+    public function updatePassword(UserPasswordUpdateRequest $request)
+    {
 
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             if (!$request->user()->hasPermissionTo('user_update')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
-             $request_data = $request->validated();
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            if (!$request->user()->hasPermissionTo('user_update')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
+            $request_data = $request->validated();
 
 
-             $updatableUser = User::where([
-                 "id" => $request["id"]
-             ])->first();
+            $updatableUser = User::where([
+                "id" => $request["id"]
+            ])->first();
 
-             if (!$updatableUser) {
-                 return response()->json([
-                     "message" => "no user found"
-                 ], 404);
-             }
+            if (!$updatableUser) {
+                return response()->json([
+                    "message" => "no user found"
+                ], 404);
+            }
 
-             if (!auth()->user()->hasRole("superadmin")) {
+            if (!auth()->user()->hasRole("superadmin")) {
                 throw new Exception("you can not update this user's password", 401);
             }
 
-             if (!empty($request_data['password'])) {
-                 $request_data['password'] = Hash::make($request_data['password']);
-             } else {
-                 unset($request_data['password']);
-             }
+            if (!empty($request_data['password'])) {
+                $request_data['password'] = Hash::make($request_data['password']);
+            } else {
+                unset($request_data['password']);
+            }
 
-             if ($updatableUser) {
-                 $updatableUser->fill(collect($request_data)->only([
-                     'password',
-                 ])->toArray());
-                 $updatableUser->save();
-             }
+            if ($updatableUser) {
+                $updatableUser->fill(collect($request_data)->only([
+                    'password',
+                ])->toArray());
+                $updatableUser->save();
+            }
 
-             $updatableUser->roles = $updatableUser->roles->pluck('name');
+            $updatableUser->roles = $updatableUser->roles->pluck('name');
 
-             return response($updatableUser, 201);
-         } catch (Exception $e) {
-             error_log($e->getMessage());
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            return response($updatableUser, 201);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
 
     /**
@@ -523,60 +523,67 @@ class UserManagementController extends Controller
      *     )
      */
 
-     public function createUser(UserCreateRequest $request)
-     {
+    public function createUser(UserCreateRequest $request)
+    {
 
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             if (!$request->user()->hasPermissionTo('user_create')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
-             $business_id = $request->user()->business_id;
+        try {
+            // ACTIVITY LOG
+            $this->storeActivity($request, "User Create", "Store User create activity");
 
+            // CHECK PERMISSION
+            if (!$request->user()->hasPermissionTo('user_create')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
-             $request_data = $request->validated();
+            // GET BUSINESS ID
+            $business_id = $request->user()->business_id;
 
-             if (!$request->user()->hasRole('superadmin') && $request_data["role"] == "superadmin") {
-                 $this->storeError(
-                     "You can not create superadmin.",
-                     403,
-                     "front end error",
-                     "front end error"
-                    );
-                 $error =  [
-                     "message" => "You can not create superadmin.",
-                 ];
-                 throw new Exception(json_encode($error), 403);
-             }
+            // VALIDATION FORM DATA
+            $request_data = $request->validated();
 
+            // CHECK SUPER ADMIN
+            if (!$request->user()->hasRole('superadmin') && $request_data["role"] == "superadmin") {
+                $this->storeError(
+                    "You can not create superadmin.",
+                    403,
+                    "front end error",
+                    "front end error"
+                );
+                $error =  [
+                    "message" => "You can not create superadmin.",
+                ];
+                throw new Exception(json_encode($error), 403);
+            }
 
-             $password = Str::random(11);
-             $request_data['password'] = Hash::make($password);
+            // PASSWORD ENCRYPTION
+            $password = $request->password;
+            $request_data['password'] = Hash::make($password);
 
-             $request_data['is_active'] = true;
-             $request_data['remember_token'] = Str::random(10);
+            // STATUS ACTIVE
+            $request_data['is_active'] = true;
+            // REMEMBER TOKEN GENERATE
+            $request_data['remember_token'] = Str::random(10);
 
+            // BUSINESS ID
+            if (!empty($business_id)) {
+                $request_data['business_id'] = $business_id;
+            }
 
+            // CREATE USER
+            $user =  User::create($request_data);
+            // EMAIL VERIFICATION
+            $user->email_verified_at = today();
+            $user->save();
 
-             if (!empty($business_id)) {
-                 $request_data['business_id'] = $business_id;
-             }
+            // ROLE ASSIGN
+            $user->assignRole($request_data['role']);
+            // ROLE ASSIGN
+            $user->roles = $user->roles->pluck('name');
 
-
-
-             $user =  User::create($request_data);
-             $user->email_verified_at = today();
-             $user->save();
-
-
-             $user->assignRole($request_data['role']);
-
-             $user->roles = $user->roles->pluck('name');
-
-
-             if (env("SEND_EMAIL") == true) {
+            // SEND EMAIL
+            if (env("SEND_EMAIL") == true) {
 
                 try {
                     Mail::to($user->email)->send(new SendPasswordMail($user, $password));
@@ -585,16 +592,15 @@ class UserManagementController extends Controller
                     Log::error("Failed to send email: " . $e->getMessage());
                     // Continue processing without interrupting the flow
                 }
-
-
             }
 
-             return response($user, 201);
-         } catch (Exception $e) {
-             error_log($e->getMessage());
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            // SEND RESPONSE
+            return response($user, 201);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
 
 
@@ -717,10 +723,10 @@ class UserManagementController extends Controller
 
 
 
-          $user = User::where([
+            $user = User::where([
                 "id" => $request_data["id"],
             ])
-            ->first();
+                ->first();
 
             if (!$user) {
                 return response()->json([
@@ -728,8 +734,8 @@ class UserManagementController extends Controller
                 ], 404);
             }
 
-              $user->fill(
-                     $request_data
+            $user->fill(
+                $request_data
             );
 
             $user->save();
@@ -766,7 +772,7 @@ class UserManagementController extends Controller
      *            required={"id","first_Name","last_Name","email","password","password_confirmation","phone","address_line_1","address_line_2","country","city","postcode","role"},
      *           @OA\Property(property="id", type="string", format="number",example="1"),
      *
-     *  *  * *  @OA\Property(property="roles", type="string", format="array",example={"business_admin#1","business_admin#1"})
+     *  *  * *  @OA\Property(property="roles", type="string", format="array",example={"business_owner#1","business_owner#1"})
 
      *
      *         ),
@@ -826,12 +832,11 @@ class UserManagementController extends Controller
 
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
@@ -949,12 +954,11 @@ class UserManagementController extends Controller
             $user =  $userQuery->first();
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
@@ -1094,12 +1098,11 @@ class UserManagementController extends Controller
 
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
@@ -1443,7 +1446,7 @@ class UserManagementController extends Controller
                                     return $query
                                         ->whereNotNull("business_id")
                                         ->whereHas("roles", function ($query) {
-                                            return $query->where("roles.name", "business_admin");
+                                            return $query->where("roles.name", "business_owner");
                                         });
                                 });
                         });
@@ -1739,66 +1742,65 @@ class UserManagementController extends Controller
     public function query_filters($query)
     {
 
-      $query =  $query->whereNotIn('id', [request()->user()->id])
+        $query =  $query->whereNotIn('id', [request()->user()->id])
 
 
-                 ->when(empty(auth()->user()->business_id), function ($query)  {
-                     if (auth()->user()->hasRole("superadmin")) {
-                         return  $query->where(function ($query) {
-                             return   $query->where('business_id', NULL)
-                                 ->orWhere(function ($query) {
-                                     return $query
-                                         ->whereNotNull("business_id")
-                                         ->whereHas("roles", function ($query) {
-                                             return $query->where("roles.name", "business_admin");
-                                         });
-                                 });
-                         });
-                     } else {
-                         return  $query->where(function ($query) {
-                             return   $query->where('created_by', auth()->user()->id);
-                         });
-                     }
-                 })
-                 ->when(!empty(auth()->user()->business_id), function ($query)  {
-                     return $query->where(function ($query)  {
-                         return  $query->where('business_id', auth()->user()->business_id)
-                           ;
-                     });
-                 })
-                 ->when(request()->filled("role"), function ($query)  {
-                     $rolesArray = explode(',', request()->role);
-                     return   $query->whereHas("roles", function ($q) use ($rolesArray) {
-                         return $q->whereIn("name", $rolesArray);
-                     });
-                 })
-                 ->when(!empty(request()->search_key), function ($query)  {
-                     $term = request()->search_key;
-                     return $query->where(function ($subquery) use ($term) {
-                         $subquery->where("first_Name", "like", "%" . $term . "%")
-                             ->orWhere("last_Name", "like", "%" . $term . "%")
-                             ->orWhere("email", "like", "%" . $term . "%")
-                             ->orWhere("phone", "like", "%" . $term . "%");
-                     });
-                 })
+            ->when(empty(auth()->user()->business_id), function ($query) {
+                if (auth()->user()->hasRole("superadmin")) {
+                    return  $query->where(function ($query) {
+                        return   $query->where('business_id', NULL)
+                            ->orWhere(function ($query) {
+                                return $query
+                                    ->whereNotNull("business_id")
+                                    ->whereHas("roles", function ($query) {
+                                        return $query->where("roles.name", "business_owner");
+                                    });
+                            });
+                    });
+                } else {
+                    return  $query->where(function ($query) {
+                        return   $query->where('created_by', auth()->user()->id);
+                    });
+                }
+            })
+            ->when(!empty(auth()->user()->business_id), function ($query) {
+                return $query->where(function ($query) {
+                    return  $query->where('business_id', auth()->user()->business_id);
+                });
+            })
+            ->when(request()->filled("role"), function ($query) {
+                $rolesArray = explode(',', request()->role);
+                return   $query->whereHas("roles", function ($q) use ($rolesArray) {
+                    return $q->whereIn("name", $rolesArray);
+                });
+            })
+            ->when(!empty(request()->search_key), function ($query) {
+                $term = request()->search_key;
+                return $query->where(function ($subquery) use ($term) {
+                    $subquery->where("first_Name", "like", "%" . $term . "%")
+                        ->orWhere("last_Name", "like", "%" . $term . "%")
+                        ->orWhere("email", "like", "%" . $term . "%")
+                        ->orWhere("phone", "like", "%" . $term . "%");
+                });
+            })
 
-                 ->when(isset(request()->is_in_employee), function ($query)  {
-                     return $query->where('is_in_employee', intval(request()->is_in_employee));
-                 })
+            ->when(isset(request()->is_in_employee), function ($query) {
+                return $query->where('is_in_employee', intval(request()->is_in_employee));
+            })
 
-                 ->when(isset(request()->is_active), function ($query)  {
-                     return $query->where('is_active', intval(request()->is_active));
-                 })
+            ->when(isset(request()->is_active), function ($query) {
+                return $query->where('is_active', intval(request()->is_active));
+            })
 
-                 ->when(!empty(request()->start_date), function ($query)  {
-                     return $query->where('created_at', ">=", request()->start_date);
-                 })
-                 ->when(!empty(request()->end_date), function ($query)  {
-                     return $query->where('created_at', "<=", (request()->end_date . ' 23:59:59'));
-                 });
+            ->when(!empty(request()->start_date), function ($query) {
+                return $query->where('created_at', ">=", request()->start_date);
+            })
+            ->when(!empty(request()->end_date), function ($query) {
+                return $query->where('created_at', "<=", (request()->end_date . ' 23:59:59'));
+            });
 
 
-return $query;
+        return $query;
     }
 
     /**
@@ -1935,18 +1937,18 @@ return $query;
      *     )
      */
 
-     public function getUsersV4(Request $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+    public function getUsersV4(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-             if (!$request->user()->hasPermissionTo('user_view')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
+            if (!$request->user()->hasPermissionTo('user_view')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
-             $query = User::with(
+            $query = User::with(
                 [
                     "roles"
                 ]
@@ -1955,17 +1957,17 @@ return $query;
             // add the filters to the query
             $query = $this->query_filters($query)
 
-            ->select(
-            'id',
-            'first_Name',
-            'last_Name',
-            'email',
-            'phone',
-            'address_line_1',
-            'country',
-            'city',
-            'postcode',
-        );
+                ->select(
+                    'id',
+                    'first_Name',
+                    'last_Name',
+                    'email',
+                    'phone',
+                    'address_line_1',
+                    'country',
+                    'city',
+                    'postcode',
+                );
 
 
             // execute the query and retrieve the data
@@ -1974,22 +1976,22 @@ return $query;
 
 
 
-             if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', 'CSV'])) {
-                 if (strtoupper($request->response_type) == 'PDF') {
-                     $pdf = PDF::loadView('pdf.users', ["users" => $users]);
-                     return $pdf->download(((!empty($request->file_name) ? $request->file_name : 'employee') . '.pdf'));
-                 } elseif (strtoupper($request->response_type) === 'CSV') {
+            if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', 'CSV'])) {
+                if (strtoupper($request->response_type) == 'PDF') {
+                    $pdf = PDF::loadView('pdf.users', ["users" => $users]);
+                    return $pdf->download(((!empty($request->file_name) ? $request->file_name : 'employee') . '.pdf'));
+                } elseif (strtoupper($request->response_type) === 'CSV') {
 
-                     return Excel::download(new UsersExport($users), ((!empty($request->file_name) ? $request->file_name : 'employee') . '.csv'));
-                 }
-             } else {
-                 return response()->json($users, 200);
-             }
-         } catch (Exception $e) {
+                    return Excel::download(new UsersExport($users), ((!empty($request->file_name) ? $request->file_name : 'employee') . '.csv'));
+                }
+            } else {
+                return response()->json($users, 200);
+            }
+        } catch (Exception $e) {
 
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
 
     /**
@@ -2096,12 +2098,11 @@ return $query;
                 ->first();
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
@@ -2111,7 +2112,7 @@ return $query;
             // });
 
 
-            if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF', ])) {
+            if (!empty($request->response_type) && in_array(strtoupper($request->response_type), ['PDF',])) {
                 if (strtoupper($request->response_type) == 'PDF') {
                     $pdf = PDF::loadView('pdf.user', ["user" => $user]);
                     return $pdf->download(((!empty($request->file_name) ? $request->file_name : 'employee') . '.pdf'));
@@ -2226,12 +2227,11 @@ return $query;
                 ->first();
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
@@ -2249,8 +2249,6 @@ return $query;
 
 
             return response()->json($user, 200);
-
-
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -2343,12 +2341,11 @@ return $query;
                 ->first();
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
@@ -2512,12 +2509,11 @@ return $query;
 
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
@@ -2594,16 +2590,15 @@ return $query;
                 $query->where('users.id', $user->id);
             })
                 ->first();
-                if (!$work_shift) {
-                    $this->storeError(
-                        "Please define workshift first"
-                        ,
-                        400,
-                        "front end error",
-                        "front end error"
-                       );
-                    return response()->json(["message" => "Please define workshift first"], 400);
-                }
+            if (!$work_shift) {
+                $this->storeError(
+                    "Please define workshift first",
+                    400,
+                    "front end error",
+                    "front end error"
+                );
+                return response()->json(["message" => "Please define workshift first"], 400);
+            }
             $weekends = $work_shift->details()->where([
                 "is_weekend" => 1
             ])
@@ -2778,12 +2773,11 @@ return $query;
 
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "no user found"
                 ], 404);
@@ -2815,22 +2809,20 @@ return $query;
 
             if (!$work_shift) {
                 $this->storeError(
-                    "Please define workshift first"
-                    ,
+                    "Please define workshift first",
                     400,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json(["message" => "Please define workshift first"], 400);
             }
             if (!$work_shift->is_active) {
                 $this->storeError(
-                    ("Please activate the work shift named '" . $work_shift->name . "'")
-                    ,
+                    ("Please activate the work shift named '" . $work_shift->name . "'"),
                     400,
                     "front end error",
                     "front end error"
-                   );
+                );
 
                 return response()->json(["message" => ("Please activate the work shift named '" . $work_shift->name . "'")], 400);
             }
@@ -2964,7 +2956,7 @@ return $query;
 
 
 
-            $all_scheduled_dates = $all_dates->reject(fn ($date) => in_array($date, $all_leaves_array));
+            $all_scheduled_dates = $all_dates->reject(fn($date) => in_array($date, $all_leaves_array));
 
 
 
@@ -3065,17 +3057,19 @@ return $query;
     {
 
         try {
-            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            $this->storeActivity($request, "delete user", "user delete by id");
+
+            // check permission
             if (!$request->user()->hasPermissionTo('user_delete')) {
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);
             }
 
-
+            // GET ids
             $idsArray = explode(',', $ids);
             $existingIds = User::whereIn('id', $idsArray)
-                ->when(!$request->user()->hasRole('superadmin'), function ($query)  {
+                ->when(!$request->user()->hasRole('superadmin'), function ($query) {
                     return $query->where(function ($query) {
                         return  $query->where('created_by', auth()->user()->id)
                             ->orWhere('business_id', auth()->user()->business_id);
@@ -3089,12 +3083,11 @@ return $query;
 
             if (!empty($nonExistingIds)) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "Some or all of the specified data do not exist."
                 ], 404);
@@ -3109,15 +3102,24 @@ return $query;
                     "message" => "Superadmin user(s) cannot be deleted."
                 ], 401);
             }
-            $userCheck = User::whereIn('id', $existingIds)->where("id", auth()->user()->id)->exists();
 
+            // Check if any of the existing users are your self
+            $userCheck = User::whereIn('id', $existingIds)->where("id", auth()->user()->id)->exists();
             if ($userCheck) {
                 return response()->json([
                     "message" => "You can not delete your self."
                 ], 401);
             }
+
+            // Delete users
             User::destroy($existingIds);
-            return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $existingIds], 200);
+
+            // Send success response
+            return response()->json([
+                'status' => 200,
+                "message" => "data deleted successfully",
+                "deleted_ids" => $existingIds
+            ], 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
@@ -3384,16 +3386,15 @@ return $query;
     {
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-             if(!$this->isModuleEnabled("user_activity")) {
+            if (!$this->isModuleEnabled("user_activity")) {
                 $this->storeError(
-                    'Module is not enabled'
-                    ,
+                    'Module is not enabled',
                     403,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json(['messege' => 'Module is not enabled'], 403);
-             }
+            }
 
             $all_manager_department_ids = [];
             $manager_departments = Department::where("manager_id", $request->user()->id)->get();
@@ -3422,12 +3423,11 @@ return $query;
                 ->first();
             if (!$user) {
                 $this->storeError(
-                    "no data found"
-                    ,
+                    "no data found",
                     404,
                     "front end error",
                     "front end error"
-                   );
+                );
                 return response()->json([
                     "message" => "User not found"
                 ], 404);

@@ -665,7 +665,7 @@ class BusinessController extends Controller
                 }
 
                 // Check if the user is a business admin
-                if (!$user->hasRole('business_admin')) {
+                if (!$user->hasRole('business_owner')) {
                     // If not, return a 422 error
                     $error =  [
                         "message" => "The given data was invalid.",
@@ -988,7 +988,7 @@ class BusinessController extends Controller
             $user =  User::create($request_data['user']);
 
             // Assign the role of business admin to the user
-            $user->assignRole('business_admin');
+            $user->assignRole('business_owner');
             // end user info ##############
 
 
@@ -2628,9 +2628,9 @@ class BusinessController extends Controller
             // Log the user activity with a dummy activity and description
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            // Check if the user has the 'business_admin' role
-            if (!$request->user()->hasRole('business_admin')) {
-                // If the user does not have the 'business_admin' role, return a 401 Unauthorized response
+            // Check if the user has the 'business_owner' role
+            if (!$request->user()->hasRole('business_owner')) {
+                // If the user does not have the 'business_owner' role, return a 401 Unauthorized response
                 return response()->json([
                     "message" => "You can not perform this action"
                 ], 401);

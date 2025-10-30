@@ -76,13 +76,16 @@ class UpdateDatabaseController extends Controller
 
         return 'Previous education history updated successfully!';
     }
+
+    // MODULE UPDATE
     public function updateModule()
     {
+
         // GET ALL MODULES
         $modules = config("setup-config.system_modules");
 
 
-        // INSERT MODULE
+        // CHECK EXISTING MODULE AND INSERT NEW MODULE
         foreach ($modules as $module) {
             $module_exists = Module::where([
                 "name" => $module
@@ -98,6 +101,7 @@ class UpdateDatabaseController extends Controller
             }
         }
 
+        // RETURN RESPONSE
         return response()->json([
             'status' => 'success',
             'message' => 'Modules refreshed successfully',
@@ -162,6 +166,8 @@ class UpdateDatabaseController extends Controller
         return 'Business logo updated successfully!';
     }
 
+
+    // DATABASE OPERATION
     public function dbOperation()
     {
         if (!Schema::hasColumn('businesses', 'url')) {
@@ -173,5 +179,122 @@ class UpdateDatabaseController extends Controller
         if (!Schema::hasColumn('students', 'title')) {
             DB::statement("ALTER TABLE students ADD COLUMN title VARCHAR(255) DEFAULT ''");
         }
+    }
+    // ONE TIME DATABASE OPERATION
+    public function oneTimeDBOperation()
+    {
+        // UPDATE EXISTING MODULES
+        DB::update("
+        UPDATE modules
+        SET name = CASE name
+            WHEN 'schedule' THEN 'class_schedule'
+            WHEN 'attendance' THEN 'attendance_management'
+            WHEN 'student_module' THEN 'local_student'
+            WHEN 'session' THEN 'session_management'
+        END
+        WHERE name IN ('schedule', 'attendance', 'student_module', 'session');
+    ");
+
+        // Step 1: business_administrator → business_student
+        DB::statement("
+        UPDATE roles
+        SET name = REPLACE(name, 'business_administrator', 'business_student')
+        WHERE name LIKE 'business_administrator%';
+    ");
+
+        // Step 2: business_admin → business_owner
+        DB::statement("
+        UPDATE roles
+        SET name = REPLACE(name, 'business_admin', 'business_owner')
+        WHERE name LIKE 'business_admin%';
+    ");
+
+        // Step 3: business_staff → business_admin
+        DB::statement("
+        UPDATE roles
+        SET name = REPLACE(name, 'business_staff', 'business_admin')
+        WHERE name LIKE 'business_staff%';
+    ");
+
+        // HARD DELETE USERS
+        DB::table('users')->whereNotNull('deleted_at')->delete();
+
+
+        // RETURN RESPONSE
+        return response()->json(['message' => 'Database updated successfully']);
+    }
+
+
+    // delete table
+    public function deleteTable()
+    {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $tables = [
+            'affiliations',
+            'automobile_categories',
+            'automobile_fuel_types',
+            'automobile_makes',
+            'automobile_model_variants',
+            'automobile_models',
+            'booking_packages',
+            'booking_sub_services',
+            'bookings',
+            'business_subscriptions',
+            'coupons',
+            'dashboard_widgets',
+            'fuel_station_galleries',
+            'fuel_station_options',
+            'fuel_station_services',
+            'fuel_station_times',
+            'fuel_stations',
+            'garage_affiliations',
+            'garage_automobile_makes',
+            'garage_automobile_models',
+            'garage_galleries',
+            'garage_package_sub_services',
+            'garage_packages',
+            'garage_rules',
+            'garage_services',
+            'garage_sub_service_prices',
+            'garage_sub_services',
+            'garage_times',
+            'garages',
+            'job_bids',
+            'job_packages',
+            'job_payments',
+            'job_sub_services',
+            'jobs',
+            'pre_booking_sub_services',
+            'pre_bookings',
+            'product_categories',
+            'product_galleries',
+            'product_variations',
+            'products',
+            'questions',
+            'qusetion_stars',
+            'review_news',
+            'review_value_news',
+            'semester_courses',
+            'semester_subjects',
+            'semesters',
+            'services',
+            'shop_galleries',
+            'shops',
+            'star_tags',
+            'stars',
+            'statuses',
+            'sub_services',
+            'tags',
+        ];
+
+        $tablesString = implode(',', $tables);
+
+        // Raw SQL to drop multiple tables if they exist
+        $sql = "DROP TABLE IF EXISTS $tablesString";
+
+        DB::statement($sql);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        return response()->json(['message' => 'Tables deleted using raw SQL']);
     }
 }

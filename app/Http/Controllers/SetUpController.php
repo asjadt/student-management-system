@@ -4,14 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
+use App\Jobs\RefreshRolesJob;
 use App\Models\ActivityLog;
 use App\Models\Business;
-use App\Models\Designation;
-
 use App\Models\ErrorLog;
-use App\Models\JobPlatform;
-use App\Models\JobType;
-use App\Models\RecruitmentProcess;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -19,14 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use App\Models\Role;
-use App\Models\SettingAttendance;
-use App\Models\SettingLeave;
-use App\Models\SettingLeaveType;
-use App\Models\SettingPayrun;
-use App\Models\SocialSite;
-use App\Models\StudentStatus;
-use App\Models\WorkLocation;
-use App\Models\WorkShift;
 
 class SetUpController extends Controller
 {
@@ -155,10 +143,9 @@ class SetUpController extends Controller
                     "business_id" => NULL,
                     "is_default" => 1,
                     "is_default_for_business" => (in_array($role, [
+                        "business_owner",
                         "business_admin",
-                        "business_admin",
-                        "business_staff",
-                        "business_administrator",
+                        "business_student",
                         "business_teacher",
                         "agency"
 
@@ -241,9 +228,9 @@ class SetUpController extends Controller
                     "is_default" => 1,
                     "is_default_for_business" => (in_array($role, [
 
+                        "business_owner",
                         "business_admin",
-                        "business_staff",
-                        "business_administrator",
+                        "business_student",
                         "business_teacher",
                         "agency"
                     ]) ? 1 : 0)
@@ -309,25 +296,30 @@ class SetUpController extends Controller
         }
     }
 
-    public function roleRefresh()
+
+    // ROLE REFRESH THROUGH LARAVEL JOB
+    public function roleRefreshLaravelJobs()
     {
-        Artisan::call('role:refresh');
+        RefreshRolesJob::dispatch(); // Dispatches job to queue
+
+        // Log::info('Roles refresh completed successfully.');
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Roles refreshed successfully.'
+            'message' => 'Roles refresh job started. It will run in the background.'
         ]);
     }
-    // public function roleRefresh(Request $request)
-    // {
-    //     $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-    //     $this->roleRefreshFunc();
+    // ROLE REFRESH THROUGH API CALL
+    public function roleRefresh(Request $request)
+    {
+        Artisan::call('role:refresh');
 
-
-
-
-    //     return "You are done with setup";
-    // }
+        return response()->json([
+            'status' => 'pending',
+            'message' => 'Roles and Permissions refreshed in progress.'
+        ]);
+    }
 
 
 

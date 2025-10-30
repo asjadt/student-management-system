@@ -11,6 +11,7 @@ use App\Http\Utils\ErrorUtil;
 use App\Http\Utils\UserActivityUtil;
 use App\Mail\SendPassword;
 use App\Models\Agency;
+use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -601,6 +602,31 @@ class AgencyController extends Controller
 
 
             return response()->json(["message" => "data deleted sussfully", "deleted_ids" => $ids], 200);
+        } catch (Exception $e) {
+
+            return $this->sendError($e, 500, $request);
+        }
+    }
+
+
+    public function getAgencyStudents(Request $request,)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+            $students = Student::with('student_referral')
+                ->whereHas('student_referral', function ($query) {
+                    $query->where("agency_id", request()->query('agency_id'));
+                })
+                ->get();
+
+
+            // SEND RESPONSE
+            return response()->json([
+                "status" => 200,
+                "success" => true,
+                "message" => "Successfully retrieved agency students.",
+                "data" => $students
+            ], 200);
         } catch (Exception $e) {
 
             return $this->sendError($e, 500, $request);
