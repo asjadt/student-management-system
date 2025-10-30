@@ -2488,28 +2488,39 @@ class StudentController extends Controller
      *     )
      */
 
-    public function getStudentsClientV3(Request $request)
-    {
-        try {
-            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            //  if (!$request->user()->hasPermissionTo('student_update')) {
-            //      return response()->json([
-            //          "message" => "You can not perform this action"
-            //      ], 401);
-            //  } test
+   public function getStudentsClientV3(Request $request)
+{
+    try {
+        $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            $query = Student::with("student_status", "course_title", "session");
-            $query = $this->query_filters($query);
+        // ✅ Validate that at least 2 identifying params are present
+        $student_identifiers = collect([
+            $request->input('first_name'),
+            $request->input('middle_name'),
+            $request->input('last_name'),
+            $request->input('student_id'),
+            $request->input('date_of_birth'),
+            $request->input('nationality'),
+            $request->input('name'),
+        ])->filter(); // remove null or empty ones
 
-            $students = $query->first();
-
-
-            return response()->json($students, 200);
-        } catch (Exception $e) {
-
-            return $this->sendError($e, 500, $request);
+        if ($student_identifiers->count() < 2) {
+            return response()->json([
+                'success' => false,
+                'message' => 'At least two identifying student parameters must be provided (e.g., first_name, last_name, student_id, etc.).'
+            ], 422);
         }
+
+        $query = Student::with("student_status", "course_title", "session");
+        $query = $this->query_filters($query);
+        $students = $query->first();
+
+        return response()->json($students, 200);
+    } catch (Exception $e) {
+        return $this->sendError($e, 500, $request);
     }
+}
+
 
     /**
      *
