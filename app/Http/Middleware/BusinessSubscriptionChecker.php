@@ -27,14 +27,18 @@ class BusinessSubscriptionChecker
 
             // Check if there's no subscription
             if (!$business->is_active) {
-                return response()->json(["message" => "Business is not active."], 401);
+                return response()->json(["message" => "Business is not active."], 403);
             }
 
             if (!$business->is_subscribed) {
-                return response()->json(["message" => "Your subscription has ended."], 401);
+                return response()->json([
+                    "success" => false,
+                    "message" => "Your subscription has ended.",
+                    'data' => [
+                        "is_subscribed" => false
+                    ]
+                ], 403);
             }
-
-
         }
 
         return $next($request);
