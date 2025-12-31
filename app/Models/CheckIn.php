@@ -21,9 +21,9 @@ class CheckIn extends Model
         "business_id"
     ];
 
-    protected $dates = [
-        'check_in_at',
-        'check_out_at',
+    protected $casts = [
+        'check_in_at' => 'datetime',
+        'check_out_at' => 'datetime',
     ];
 
     // Relationship (if needed)
