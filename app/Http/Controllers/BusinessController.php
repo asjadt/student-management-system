@@ -121,7 +121,7 @@ class BusinessController extends Controller
             $request_data = $request->validated();
 
             // Get the storage location and file name
-            $location =  config("setup-config.business_gallery_location");
+            $location = config("setup-config.business_gallery_location");
 
             // Generate a new file name
             $new_file_name = time() . '_' . str_replace(' ', '_', $request_data["image"]->getClientOriginalName());
@@ -509,7 +509,7 @@ class BusinessController extends Controller
             $request_data = $request->validated();
 
             // Get the storage location and file name
-            $location =  config("setup-config.business_gallery_location");
+            $location = config("setup-config.business_gallery_location");
 
             // Initialize an array to store the full paths of uploaded images
             $images = [];
@@ -635,7 +635,7 @@ class BusinessController extends Controller
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
             // Create a transaction to ensure all or nothing
-            return  DB::transaction(function () use (&$request) {
+            return DB::transaction(function () use (&$request) {
 
                 // Check if the user has permission to create a business
                 if (!$request->user()->hasPermissionTo('business_create')) {
@@ -651,13 +651,13 @@ class BusinessController extends Controller
 
                 // Find the user with the given id
                 $user = User::where([
-                    "id" =>  $request_data['business']['owner_id']
+                    "id" => $request_data['business']['owner_id']
                 ])
                     ->first();
 
                 // If the user does not exist, return a 422 error
                 if (!$user) {
-                    $error =  [
+                    $error = [
                         "message" => "The given data was invalid.",
                         "errors" => ["owner_id" => ["No User Found"]]
                     ];
@@ -667,7 +667,7 @@ class BusinessController extends Controller
                 // Check if the user is a business admin
                 if (!$user->hasRole('business_owner')) {
                     // If not, return a 422 error
-                    $error =  [
+                    $error = [
                         "message" => "The given data was invalid.",
                         "errors" => ["owner_id" => ["The user is not a businesses Owner"]]
                     ];
@@ -686,7 +686,7 @@ class BusinessController extends Controller
                 $request_data['business']['service_plan_discount_amount'] = $this->getDiscountAmount($request_data['business']);
 
                 // Create the business
-                $business =  Business::create($request_data['business']);
+                $business = Business::create($request_data['business']);
 
 
                 // Create the business settings
@@ -985,7 +985,7 @@ class BusinessController extends Controller
             $request_data['user']['long'] = $request_data['business']['long'];
 
             // Create a new user
-            $user =  User::create($request_data['user']);
+            $user = User::create($request_data['user']);
 
             // Assign the role of business admin to the user
             $user->assignRole('business_owner');
@@ -1009,7 +1009,7 @@ class BusinessController extends Controller
             $request_data['business']['service_plan_discount_amount'] = $this->getDiscountAmount($request_data['business']);
 
             // Create a new business
-            $business =  Business::create($request_data['business']);
+            $business = Business::create($request_data['business']);
 
 
             // Set the email verified at to now
@@ -1055,13 +1055,13 @@ class BusinessController extends Controller
             // Loop through the default roles and create a new role for each one
             foreach ($defaultRoles as $defaultRole) {
                 $insertableData = [
-                    'name'  => ($defaultRole->name . "#" . $business->id),
+                    'name' => ($defaultRole->name . "#" . $business->id),
                     "is_default" => 1,
                     "business_id" => $business->id,
                     "is_default_for_business" => 0,
                     "guard_name" => "api",
                 ];
-                $role  = Role::create($insertableData);
+                $role = Role::create($insertableData);
 
                 // Get all the permissions that are assigned to the default role
                 $permissions = $defaultRole->permissions;
@@ -1241,7 +1241,7 @@ class BusinessController extends Controller
 
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            return  DB::transaction(function () use (&$request) {
+            return DB::transaction(function () use (&$request) {
                 // Check if the user has the permission to update the business
                 if (!$request->user()->hasPermissionTo('business_update')) {
                     return response()->json([
@@ -1260,8 +1260,8 @@ class BusinessController extends Controller
                     "id" => $request_data["user"]["id"]
                 ]);
                 if (!$request->user()->hasRole('superadmin')) {
-                    $userPrev  = $userPrev->where(function ($query) {
-                        return  $query->where('created_by', auth()->user()->id)
+                    $userPrev = $userPrev->where(function ($query) {
+                        return $query->where('created_by', auth()->user()->id)
                             ->orWhere('id', auth()->user()->id);
                     });
                 }
@@ -1296,27 +1296,27 @@ class BusinessController extends Controller
                 $request_data['user']['lat'] = $request_data['business']['lat'] ?? null;
                 $request_data['user']['long'] = $request_data['business']['long'] ?? null;
 
-                $user  =  tap(User::where([
+                $user = tap(User::where([
                     "id" => $request_data['user']["id"]
                 ]))->update(
-                    collect($request_data['user'])->only([
-                        'first_Name',
-                        'middle_Name',
-                        'last_Name',
-                        'phone',
-                        'image',
-                        'address_line_1',
-                        'address_line_2',
-                        'country',
-                        'city',
-                        'postcode',
-                        'email',
-                        'password',
-                        "lat",
-                        "long",
-                        "gender"
-                    ])->toArray()
-                )
+                        collect($request_data['user'])->only([
+                            'first_Name',
+                            'middle_Name',
+                            'last_Name',
+                            'phone',
+                            'image',
+                            'address_line_1',
+                            'address_line_2',
+                            'country',
+                            'city',
+                            'postcode',
+                            'email',
+                            'password',
+                            "lat",
+                            "long",
+                            "gender"
+                        ])->toArray()
+                    )
                     // ->with("somthing")
 
                     ->first();
@@ -1495,7 +1495,7 @@ class BusinessController extends Controller
             $request_data = $request->validated();
 
             // Build the query to retrieve the business
-            $businessQuery  = Business::where(["id" => $request_data["id"]]);
+            $businessQuery = Business::where(["id" => $request_data["id"]]);
 
             // Limit the query to the current user's business if the user is not a superadmin
             if (!auth()->user()->hasRole('superadmin')) {
@@ -1503,14 +1503,14 @@ class BusinessController extends Controller
                     // Include businesses that are owned by the current user
                     // or created by the current user
                     // or have the current user as the owner
-                    return   $query->where('id', auth()->user()->business_id)
+                    return $query->where('id', auth()->user()->business_id)
                         ->orWhere('created_by', auth()->user()->id)
                         ->orWhere('owner_id', auth()->user()->id);
                 });
             }
 
             // Retrieve the business
-            $business =  $businessQuery->first();
+            $business = $businessQuery->first();
 
             // If no business is found, return a 404 error
             if (!$business) {
@@ -1638,7 +1638,7 @@ class BusinessController extends Controller
             // Log the activity of the request
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             // Start a database transaction
-            return  DB::transaction(function () use (&$request) {
+            return DB::transaction(function () use (&$request) {
                 // Check if the user has permission to update the business
                 if (!$request->user()->hasPermissionTo('business_update')) {
                     // If the user does not have permission, return a 401 error
@@ -1663,37 +1663,37 @@ class BusinessController extends Controller
                 }
 
                 // Update the business information
-                $business  =  tap(Business::where([
+                $business = tap(Business::where([
                     "id" => $request_data['business']["id"]
                 ]))->update(
-                    // Only update the fields that are present in the request data
-                    collect($request_data['business'])->only([
-                        "name",
-                        "about",
-                        "web_page",
-                        "color_theme_name",
-                        "phone",
-                        "email",
-                        "additional_information",
-                        "address_line_1",
-                        "address_line_2",
-                        "lat",
-                        "long",
-                        "country",
-                        "city",
-                        "postcode",
-                        "logo",
-                        "image",
-                        "background_image",
-                        "status",
-                        // "is_active",
+                        // Only update the fields that are present in the request data
+                        collect($request_data['business'])->only([
+                            "name",
+                            "about",
+                            "web_page",
+                            "color_theme_name",
+                            "phone",
+                            "email",
+                            "additional_information",
+                            "address_line_1",
+                            "address_line_2",
+                            "lat",
+                            "long",
+                            "country",
+                            "city",
+                            "postcode",
+                            "logo",
+                            "image",
+                            "background_image",
+                            "status",
+                            // "is_active",
 
 
 
-                        "currency",
+                            "currency",
 
-                    ])->toArray()
-                )
+                        ])->toArray()
+                    )
                     // ->with("somthing")
 
                     ->first();
