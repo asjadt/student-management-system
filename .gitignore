@@ -4,7 +4,6 @@
 /storage/*.key
 /storage/firebase
 /vendor
-.env
 .env.backup
 .phpunit.result.cache
 docker-compose.override.yml
@@ -15,3 +14,4 @@ yarn-error.log
 /.idea
 /.vscode
 *.zip
+config.bat
