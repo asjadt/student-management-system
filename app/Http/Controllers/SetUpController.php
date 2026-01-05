@@ -59,7 +59,7 @@ class SetUpController extends Controller
     {
         $this->storeActivity($request, "DUMMY activity", "DUMMY description");
         Artisan::call('l5-swagger:generate');
-        return "swagger generated";
+        return redirect('/api/documentation#');
     }
 
     public function setUp(Request $request)
@@ -95,7 +95,7 @@ class SetUpController extends Controller
         // ##########################################
         // user
         // #########################################
-        $admin =  User::create([
+        $admin = User::create([
             'first_Name' => "super",
             'last_Name' => "admin",
             'phone' => "01771034383",
@@ -114,28 +114,32 @@ class SetUpController extends Controller
         // ###############################
         // permissions
         // ###############################
-        $permissions =  config("setup-config.permissions");
+        $permissions = config("setup-config.permissions");
         // setup permissions
         foreach ($permissions as $permission) {
-            if (!Permission::where([
-                'name' => $permission,
-                'guard_name' => 'api'
-            ])
-                ->exists()) {
+            if (
+                !Permission::where([
+                    'name' => $permission,
+                    'guard_name' => 'api'
+                ])
+                    ->exists()
+            ) {
                 Permission::create(['guard_name' => 'api', 'name' => $permission]);
             }
         }
         // setup roles
         $roles = config("setup-config.roles");
         foreach ($roles as $role) {
-            if (!Role::where([
-                'name' => $role,
-                'guard_name' => 'api',
-                "is_system_default" => 1,
-                "business_id" => NULL,
-                "is_default" => 1,
-            ])
-                ->exists()) {
+            if (
+                !Role::where([
+                    'name' => $role,
+                    'guard_name' => 'api',
+                    "is_system_default" => 1,
+                    "business_id" => NULL,
+                    "is_default" => 1,
+                ])
+                    ->exists()
+            ) {
                 Role::create([
                     'guard_name' => 'api',
                     'name' => $role,
@@ -197,29 +201,33 @@ class SetUpController extends Controller
         // ###############################
         // permissions
         // ###############################
-        $permissions =  config("setup-config.permissions");
+        $permissions = config("setup-config.permissions");
 
         // setup permissions
         foreach ($permissions as $permission) {
-            if (!Permission::where([
-                'name' => $permission,
-                'guard_name' => 'api'
-            ])
-                ->exists()) {
+            if (
+                !Permission::where([
+                    'name' => $permission,
+                    'guard_name' => 'api'
+                ])
+                    ->exists()
+            ) {
                 Permission::create(['guard_name' => 'api', 'name' => $permission]);
             }
         }
         // setup roles
         $roles = config("setup-config.roles");
         foreach ($roles as $role) {
-            if (!Role::where([
-                'name' => $role,
-                'guard_name' => 'api',
-                "is_system_default" => 1,
-                "business_id" => NULL,
-                "is_default" => 1,
-            ])
-                ->exists()) {
+            if (
+                !Role::where([
+                    'name' => $role,
+                    'guard_name' => 'api',
+                    "is_system_default" => 1,
+                    "business_id" => NULL,
+                    "is_default" => 1,
+                ])
+                    ->exists()
+            ) {
                 Role::create([
                     'guard_name' => 'api',
                     'name' => $role,
