@@ -183,10 +183,10 @@
                 </div>
 
                 <!-- TITLE -->
-                <h1 class="hero-title text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 leading-tight">
+                <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
                     Student Management
                     <br>
-                    <span class="text-5xl md:text-6xl lg:text-7xl">System</span>
+                    <span class="text-3xl md:text-4xl lg:text-5xl">System</span>
                 </h1>
 
                 <!-- SUBTITLE -->
@@ -275,59 +275,6 @@
                     </div>
                 </a>
 
-            </div>
-
-            <!-- FEATURES SECTION -->
-            <div class="glass-card rounded-3xl p-8 md:p-12 mt-16" style="animation: fadeInUp 1.5s ease-out 0.6s backwards;">
-                <h2 class="text-white text-3xl md:text-4xl font-bold text-center mb-8">
-                    Key Features
-                </h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- FEATURE 1 -->
-                    <div class="text-center">
-                        <div class="floating-icon inline-block mb-4">
-                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto">
-                                <i class="fas fa-users text-2xl text-white"></i>
-                            </div>
-                        </div>
-                        <h4 class="text-white font-semibold text-lg mb-2">User Management</h4>
-                        <p class="text-white/70 text-sm">Complete control over students, teachers, and staff</p>
-                    </div>
-
-                    <!-- FEATURE 2 -->
-                    <div class="text-center">
-                        <div class="floating-icon inline-block mb-4" style="animation-delay: 0.5s;">
-                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto">
-                                <i class="fas fa-shield-alt text-2xl text-white"></i>
-                            </div>
-                        </div>
-                        <h4 class="text-white font-semibold text-lg mb-2">Secure & Reliable</h4>
-                        <p class="text-white/70 text-sm">Enterprise-grade security with role-based access</p>
-                    </div>
-
-                    <!-- FEATURE 3 -->
-                    <div class="text-center">
-                        <div class="floating-icon inline-block mb-4" style="animation-delay: 1s;">
-                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto">
-                                <i class="fas fa-code text-2xl text-white"></i>
-                            </div>
-                        </div>
-                        <h4 class="text-white font-semibold text-lg mb-2">RESTful API</h4>
-                        <p class="text-white/70 text-sm">Well-documented APIs for seamless integration</p>
-                    </div>
-
-                    <!-- FEATURE 4 -->
-                    <div class="text-center">
-                        <div class="floating-icon inline-block mb-4" style="animation-delay: 1.5s;">
-                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto">
-                                <i class="fas fa-rocket text-2xl text-white"></i>
-                            </div>
-                        </div>
-                        <h4 class="text-white font-semibold text-lg mb-2">Fast & Scalable</h4>
-                        <p class="text-white/70 text-sm">Built with Laravel for optimal performance</p>
-                    </div>
-                </div>
             </div>
 
             <!-- DEVELOPER & ADMIN TOOLS SECTION -->
