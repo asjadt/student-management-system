@@ -9,6 +9,11 @@ class Attendance extends Model
 {
     use HasFactory;
 
+    /**
+     * Specify the database connection for multi-tenancy
+     */
+    protected $connection = 'tenant';
+
     protected $fillable = [
         'class_routine_id',
         'student_id',
