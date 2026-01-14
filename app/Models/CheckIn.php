@@ -9,11 +9,6 @@ class CheckIn extends Model
 {
     use HasFactory;
 
-    /**
-     * Specify the database connection for multi-tenancy
-     */
-    protected $connection = 'tenant';
-
     protected $fillable = [
         'type',
         'student_id',

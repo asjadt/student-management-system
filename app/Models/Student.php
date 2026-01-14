@@ -10,12 +10,6 @@ class Student extends Model
 {
     use HasFactory;
 
-    /**
-     * Specify the database connection for multi-tenancy
-     * This ensures all Student queries use the tenant database
-     */
-    protected $connection = 'tenant';
-
     protected $fillable = [
         "title",
         'first_name',
