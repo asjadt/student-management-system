@@ -751,8 +751,12 @@ class AttendanceController extends Controller
                     'class_routine' => ClassRoutine::with("teacher", "subject", "course", "session")->where([
                         "id" => $group->first()->class_routine_id
                     ])->first(),
-                    'present_students' => Student::whereIn("id", $present_student_ids)->get(),
-                    'absent_students' => Student::whereIn("id", $absent_student_ids)->get(),
+                    'present_students' => Student::whereIn("id", $present_student_ids)
+                        ->with(['student_status', 'course_title', 'session'])
+                        ->get(),
+                    'absent_students' => Student::whereIn("id", $absent_student_ids)
+                        ->with(['student_status', 'course_title', 'session'])
+                        ->get(),
                 ];
             })->values();
 

@@ -110,7 +110,7 @@ class StudentController extends Controller
 
             $request_data = $request->validated();
 
-            $location =  config("setup-config.temporary_files_location");
+            $location = config("setup-config.temporary_files_location");
 
             $files = [];
             if (!empty($request_data["files"])) {
@@ -594,7 +594,7 @@ class StudentController extends Controller
                     $request_data["student_status_id"] = NULL;
                 }
 
-                $student =  Student::create($request_data);
+                $student = Student::create($request_data);
 
 
 
@@ -806,7 +806,7 @@ class StudentController extends Controller
                     $request_data["student_status_id"] = NULL;
                 }
 
-                $student =  Student::create($request_data);
+                $student = Student::create($request_data);
 
 
 
@@ -984,7 +984,7 @@ class StudentController extends Controller
                         "message" => "You can not perform this action"
                     ], 401);
                 }
-                $business_id =  $request->user()->business_id;
+                $business_id = $request->user()->business_id;
                 $request_data = $request->validated();
 
                 $student_query_params = [
@@ -992,7 +992,7 @@ class StudentController extends Controller
                     "business_id" => $business_id
                 ];
 
-                $student  =  tap(Student::where($student_query_params))->update(
+                $student = tap(Student::where($student_query_params))->update(
                     collect($request_data)->only([
                         'first_name',
                         "title",
@@ -1201,7 +1201,7 @@ class StudentController extends Controller
                     "message" => "You can not perform this action"
                 ], 401);
             }
-            $business_id =  $request->user()->business_id;
+            $business_id = $request->user()->business_id;
             $request_data = $request->validated();
 
             $student_query_params = [
@@ -1424,7 +1424,7 @@ class StudentController extends Controller
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            $student_id_exists =  Student::where(
+            $student_id_exists = Student::where(
                 [
                     'student_id' => $student_id,
                     "business_id" => $request->user()->business_id
@@ -1441,13 +1441,13 @@ class StudentController extends Controller
 
     public function query_filters_v2($query)
     {
-        $business_id =  auth()->user()->business_id;
+        $business_id = auth()->user()->business_id;
 
         $business_setting = BusinessSetting::where([
             "business_id" => auth()->user()->business_id
         ])
             ->first();
-        return   $query->where(
+        return $query->where(
             [
                 "students.business_id" => $business_id
             ]
@@ -1726,7 +1726,14 @@ class StudentController extends Controller
                 ], 401);
             }
 
-            $query = Student::with("student_status", "course_title", "student_referral.agency", "session");
+            $query = Student::with([
+                "student_status",
+                "course_title",
+                "student_referral.agency",
+                "session",
+                "business",
+                "creator"
+            ]);
             $query = $this->query_filters_v2($query);
 
             $students = $this->retrieveData($query, "id", "students");
@@ -2099,7 +2106,7 @@ class StudentController extends Controller
 
     public function query_filters($query)
     {
-        $business_id =  request()->business_id;
+        $business_id = request()->business_id;
         if (!$business_id) {
             $error = [
                 "message" => "The given data was invalid.",
@@ -2111,7 +2118,7 @@ class StudentController extends Controller
             "business_id" => $business_id
         ])
             ->first();
-        return   $query->when(request()->filled("business_id"), function ($query) {
+        return $query->when(request()->filled("business_id"), function ($query) {
             $query->where(
                 [
                     "students.business_id" => request()->input("business_id")
@@ -2488,38 +2495,38 @@ class StudentController extends Controller
      *     )
      */
 
-   public function getStudentsClientV3(Request $request)
-{
-    try {
-        $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+    public function getStudentsClientV3(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-        // ✅ Validate that at least 2 identifying params are present
-        $student_identifiers = collect([
-            $request->input('first_name'),
-            $request->input('middle_name'),
-            $request->input('last_name'),
-            $request->input('student_id'),
-            $request->input('date_of_birth'),
-            $request->input('nationality'),
-            $request->input('name'),
-        ])->filter(); // remove null or empty ones
+            // ✅ Validate that at least 2 identifying params are present
+            $student_identifiers = collect([
+                $request->input('first_name'),
+                $request->input('middle_name'),
+                $request->input('last_name'),
+                $request->input('student_id'),
+                $request->input('date_of_birth'),
+                $request->input('nationality'),
+                $request->input('name'),
+            ])->filter(); // remove null or empty ones
 
-        if ($student_identifiers->count() < 2) {
-            return response()->json([
-                'success' => false,
-                'message' => 'At least two identifying student parameters must be provided (e.g., first_name, last_name, student_id, etc.).'
-            ], 422);
+            if ($student_identifiers->count() < 2) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'At least two identifying student parameters must be provided (e.g., first_name, last_name, student_id, etc.).'
+                ], 422);
+            }
+
+            $query = Student::with("student_status", "course_title", "session");
+            $query = $this->query_filters($query);
+            $students = $query->first();
+
+            return response()->json($students, 200);
+        } catch (Exception $e) {
+            return $this->sendError($e, 500, $request);
         }
-
-        $query = Student::with("student_status", "course_title", "session");
-        $query = $this->query_filters($query);
-        $students = $query->first();
-
-        return response()->json($students, 200);
-    } catch (Exception $e) {
-        return $this->sendError($e, 500, $request);
     }
-}
 
 
     /**
@@ -2706,11 +2713,11 @@ class StudentController extends Controller
                     "student_status" => function ($query) {
                         $query->select("student_statuses.id", "student_statuses.name");
                     },
-                    "course_title"  => function ($query) {
+                    "course_title" => function ($query) {
                         $query->select("course_titles.id", "course_titles.name");
                     },
 
-                    "session"  => function ($query) {
+                    "session" => function ($query) {
                         $query->select("sessions.id", "sessions.name");
                     }
 
@@ -2807,9 +2814,9 @@ class StudentController extends Controller
                     "message" => "You can not perform this action"
                 ], 401);
             }
-            $business_id =  $request->user()->business_id;
+            $business_id = $request->user()->business_id;
 
-            $student =  Student::with([
+            $student = Student::with([
                 "student_status",
                 "student_sessions",
                 "student_sessions.session.class_routines",
@@ -2822,9 +2829,9 @@ class StudentController extends Controller
                 "attendances",
             ])
                 ->where([
-                    "id" => $id,
-                    "business_id" => $business_id
-                ])
+                        "id" => $id,
+                        "business_id" => $business_id
+                    ])
                 ->first();
 
 
@@ -2947,7 +2954,7 @@ class StudentController extends Controller
         try {
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
 
-            $student =  Student::where([
+            $student = Student::where([
                 "id" => $id
             ])
                 ->first();
