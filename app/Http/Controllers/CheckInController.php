@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class CheckInController extends Controller
-
 {
     use BasicUtil;
     /**
@@ -88,7 +87,8 @@ class CheckInController extends Controller
         // STUDENT CHECK IN
         if ($request->filled('student_id')) {
             // GET STUDENT
-            $student = Student::where('business_id', $data['business_id'])
+            $student = Student::with(['course_title', 'student_status', 'business'])
+                ->where('business_id', $data['business_id'])
                 ->where('student_id', $data['student_id'])
                 ->where('date_of_birth', $data['date_of_birth'])
                 // ->where('contact_number', $data['phone'])
@@ -111,9 +111,9 @@ class CheckInController extends Controller
             if ($already_check_in) {
                 $fullName = trim(
                     $student->title . ' ' .
-                        $student->first_name . ' ' .
-                        ($student->middle_name ?? '') . ' ' .
-                        $student->last_name
+                    $student->first_name . ' ' .
+                    ($student->middle_name ?? '') . ' ' .
+                    $student->last_name
                 );
                 $checkInTime = $already_check_in->check_in_at->format('H:i A');
                 // $checkOutTime = $already_check_in->check_out_at
@@ -122,7 +122,8 @@ class CheckInController extends Controller
 
                 return response()->json([
                     'message' => "$fullName already checked in today at $checkInTime and not checked out.",
-                ], 409);;
+                ], 409);
+                ;
             }
         }
 
@@ -248,8 +249,8 @@ class CheckInController extends Controller
             'student.student_sessions.student_session_courses.student_session_course_subjects'
         ])
             ->where([
-                "business_id" => request()->input('business_id')
-            ])
+                    "business_id" => request()->input('business_id')
+                ])
             ->filter();
 
         $check_ins = $this->retrieveData($check_in_query, "id", "check_ins");
@@ -313,7 +314,8 @@ class CheckInController extends Controller
         // Log::info($business);
         if ($request->has('type') && $request->input('type') == 'student') {
             // DEFINE STUDENT
-            $student = Student::where('business_id', $request->input('business_id'))
+            $student = Student::with(['course_title', 'student_status'])
+                ->where('business_id', $request->input('business_id'))
                 ->where('student_id', $request->input('student_id'))
                 ->first();
 
