@@ -124,7 +124,7 @@ class AuthController extends Controller
 
 
             // create user
-            $user =  User::create($request_data);
+            $user = User::create($request_data);
 
             // assign user a role
             $user->assignRole("customer");
@@ -434,7 +434,7 @@ class AuthController extends Controller
             $user = $user->load(['roles.permissions', 'permissions', 'business.service_plan.modules']);
 
             // Return the user's info
-            return response()->json(['data' => $user,   "ok" => true], 200);
+            return response()->json(['data' => $user, "ok" => true], 200);
         } catch (Exception $e) {
             error_log($e->getMessage());
             // Return a 500 response
@@ -650,7 +650,7 @@ class AuthController extends Controller
             $user->a = ($timediff);
 
             // send user data
-            return response()->json(['data' => $user,   "ok" => true], 200);
+            return response()->json(['data' => $user, "ok" => true], 200);
         } catch (Exception $e) {
 
             // send error response
@@ -1216,15 +1216,15 @@ class AuthController extends Controller
             $user->roles = $user->roles->pluck('name');
 
             // Retrieve the user's business from the database using the "business" relation on the "user" model
-           // Set the user's business
-        //    $business = $user->business;
+            // Set the user's business
+            //    $business = $user->business;
 
-        //    if (!empty($business)) {
-        //        $business = $this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"), $business->name);
-        //        $business->ddd = "ddddd";
-        //    }
+            //    if (!empty($business)) {
+            //        $business = $this->getUrlLink($business, "logo", config("setup-config.business_gallery_location"), $business->name);
+            //        $business->ddd = "ddddd";
+            //    }
 
-        //    $user->business = $business;
+            //    $user->business = $business;
 
 
             $user = $user->load(['roles.permissions', 'permissions', 'business.service_plan.modules']);
@@ -1453,145 +1453,161 @@ class AuthController extends Controller
 
 
 
-
     /**
-     *
      * @OA\Put(
-     *      path="/v1.0/update-user-info",
-     *      operationId="updateUserInfo",
-     *      tags={"auth"},
-     *       security={
-     *           {"bearerAuth": {}}
-     *       },
-     *      summary="This method is to update user by user",
-     *      description="This method is to update user by user",
+     *     path="/v1.0/update-user-info",
+     *     operationId="updateUserInfo",
+     *     tags={"auth"},
+     *     security={
+     *         {"bearerAuth": {}}
+     *     },
+     *     summary="Update user information",
+     *     description="This endpoint allows an authenticated user to update their profile information.",
      *
-     *  @OA\RequestBody(
+     *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *            required={"first_Name","last_Name","email","password","password_confirmation","phone","address_line_1","address_line_2","country","city","postcode"},
-     *             @OA\Property(property="first_Name", type="string", format="string",example="tsa"),
-     *            @OA\Property(property="last_Name", type="string", format="string",example="ts"),
-     *            @OA\Property(property="email", type="string", format="string",example="asjadtariq@gmail.com"),
-
-     * *  @OA\Property(property="password", type="boolean", format="boolean",example="12345678@We"),
-     *  * *  @OA\Property(property="password_confirmation", type="string", format="string",example="12345678"),
-     *  * *  @OA\Property(property="phone", type="string", format="string",example="1"),
-     *  * *  @OA\Property(property="address_line_1", type="string", format="string",example="1"),
-     *  * *  @OA\Property(property="address_line_2", type="string", format="string",example="1"),
-     *  * *  @OA\Property(property="country", type="string", format="string",example="1"),
-     *  * *  @OA\Property(property="city", type="string", format="string",example="1"),
-     *  * *  @OA\Property(property="postcode", type="string", format="string",example="1"),
-     *  *  * *  @OA\Property(property="lat", type="string", format="string",example="1"),
-     *  *  * *  @OA\Property(property="long", type="string", format="string",example="1"),
-
+     *             required={
+     *                 "first_Name",
+     *                 "last_Name",
+     *                 "email",
+     *                 "password",
+     *                 "password_confirmation",
+     *                 "phone",
+     *                 "address_line_1",
+     *                 "address_line_2",
+     *                 "country",
+     *                 "city",
+     *                 "postcode"
+     *             },
+     *             @OA\Property(
+     *                 property="first_Name",
+     *                 type="string",
+     *                 example="tsa"
+     *             ),
+     *             @OA\Property(
+     *                 property="last_Name",
+     *                 type="string",
+     *                 example="ts"
+     *             ),
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *                 format="email",
+     *                 example="asjadtariq@gmail.com"
+     *             ),
+     *             @OA\Property(
+     *                 property="password",
+     *                 type="string",
+     *                 format="password",
+     *                 example="12345678@We"
+     *             ),
+     *             @OA\Property(
+     *                 property="password_confirmation",
+     *                 type="string",
+     *                 example="12345678@We"
+     *             ),
+     *             @OA\Property(
+     *                 property="phone",
+     *                 type="string",
+     *                 example="017XXXXXXXX"
+     *             ),
+     *             @OA\Property(
+     *                 property="address_line_1",
+     *                 type="string",
+     *                 example="House 1, Road 2"
+     *             ),
+     *             @OA\Property(
+     *                 property="address_line_2",
+     *                 type="string",
+     *                 example="Area Name"
+     *             ),
+     *             @OA\Property(
+     *                 property="country",
+     *                 type="string",
+     *                 example="Bangladesh"
+     *             ),
+     *             @OA\Property(
+     *                 property="city",
+     *                 type="string",
+     *                 example="Dhaka"
+     *             ),
+     *             @OA\Property(
+     *                 property="postcode",
+     *                 type="string",
+     *                 example="1207"
+     *             ),
+     *             @OA\Property(
+     *                 property="lat",
+     *                 type="string",
+     *                 example="23.8103"
+     *             ),
+     *             @OA\Property(
+     *                 property="long",
+     *                 type="string",
+     *                 example="90.4125"
+     *             )
+     *         )
+     *     ),
      *
-     *         ),
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *       @OA\JsonContent(),
-     *       ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     * @OA\JsonContent(),
-     *      ),
-     *        @OA\Response(
-     *          response=422,
-     *          description="Unprocesseble Content",
-     *    @OA\JsonContent(),
-     *      ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden",
-     *   @OA\JsonContent()
-     * ),
-     *  * @OA\Response(
-     *      response=400,
-     *      description="Bad Request",
-     *   *@OA\JsonContent()
-     *   ),
-     * @OA\Response(
-     *      response=404,
-     *      description="not found",
-     *   *@OA\JsonContent()
-     *   )
-     *      )
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent()
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent()
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent()
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden",
+     *         @OA\JsonContent()
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent()
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity",
+     *         @OA\JsonContent()
      *     )
+     * )
      */
+
 
     public function updateUserInfo(UserInfoUpdateRequest $request)
     {
-        // This method is for updating a user's information.
-        // The method takes a UserInfoUpdateRequest object as a parameter.
-        // The request object contains the data to be updated.
         try {
-            // this is a database transaction
-            // it will be rolled back if any exception is thrown
-            // store the user's activity
             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
-            // get the validated request data
+
             $request_data = $request->validated();
-            // if the user is trying to change their password
+
+            // Hash password if provided, otherwise remove from update
             if (!empty($request_data['password'])) {
-                // hash the password
                 $request_data['password'] = Hash::make($request_data['password']);
-            }
-            // if the user is not trying to change their password
-            else {
-                // remove the password field from the request data
+            } else {
                 unset($request_data['password']);
             }
 
-            // the user is active
-            // $request_data['is_active'] = true;
-            // generate a random remember token
             $request_data['remember_token'] = Str::random(10);
 
-            // update the user in the database
-            $user = tap(User::where(["id" => $request->user()->id]))->update(
-                // only update the fields that have been changed
-                collect($request_data)->only([
-                    'first_Name',
-                    'middle_Name',
-                    'last_Name',
-                    'email',
-                    'password',
-                    'phone',
-                    'address_line_1',
-                    'address_line_2',
-                    'country',
-                    'city',
-                    'postcode',
-                    "lat",
-                    "long",
-                    'gender',
-                    "image"
-                ])->toArray()
-            )
-                // get the user from the database
-                // ->with("somthing")
+            $user = User::with('roles')->findOrFail($request->user()->id);
+            $user->update($request_data);
 
-                ->first();
-            // if the user is not found
-            if (!$user) {
-                // return an error response
-                return response()->json([
-                    "message" => "no user found"
-                ]);
-            }
-
-            // get the user's roles
             $user->roles = $user->roles->pluck('name');
 
-            // return the updated user
             return response($user, 200);
         } catch (Exception $e) {
-            // log the error
             error_log($e->getMessage());
-            // return an error response
             return $this->sendError($e, 500, $request);
         }
     }

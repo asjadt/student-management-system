@@ -27,8 +27,10 @@ use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpWord\PhpWord;
 
 use PDF;
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpWord\Shared\Html;
 
@@ -131,7 +133,7 @@ class StudentLetterController extends Controller
 
 
 
-                $student_letter =  StudentLetter::create($request_data);
+                $student_letter = StudentLetter::create($request_data);
 
 
 
@@ -252,68 +254,59 @@ class StudentLetterController extends Controller
                                 ($student["last_name"] ?? '')
                             );
                             $template = str_replace($item, !empty($fullName) ? $fullName : '--', $template);
-                        }
-                        else if ($item == "[COURSE_TITLE]") {
+                        } else if ($item == "[COURSE_TITLE]") {
                             $courseTitle = optional($student->course_title)->name ?? '--';
                             $template = str_replace($item, $courseTitle, $template);
-                        }
-                        else if ($item == "[COURSE_LEVEL]") {
+                        } else if ($item == "[COURSE_LEVEL]") {
                             $courseLevel = optional($student->course_title)->level ?? '--';
                             $template = str_replace($item, $courseLevel, $template);
-                        }
-                        else if ($item == "[AWARDING_BODY]") {
+                        } else if ($item == "[AWARDING_BODY]") {
                             $awardingBodyName = optional(optional($student->course_title)->awarding_body)->name ?? '--';
                             $template = str_replace($item, $awardingBodyName, $template);
-                        }
-                        else if ($item == "[STUDENT_STATUS]") {
+                        } else if ($item == "[STUDENT_STATUS]") {
                             $studentStatus = optional($student->student_status)->name ?? '--';
                             $template = str_replace($item, $studentStatus, $template);
-                        }
-                        else if ($item == "[COMPANY_NAME]") {
+                        } else if ($item == "[COMPANY_NAME]") {
                             $companyName = $business["name"] ?? '[COMPANY_NAME]';
                             $template = str_replace($item, $companyName, $template);
-                        }
-                        else if ($item == "[COMPANY_ADDRESS_LINE_1]") {
+                        } else if ($item == "[COMPANY_ADDRESS_LINE_1]") {
                             $addressLine1 = $business["address_line_1"] ?? '[COMPANY_ADDRESS_LINE_1]';
                             $template = str_replace($item, $addressLine1, $template);
-                        }
-                        else if ($item == "[COMPANY_CITY]") {
+                        } else if ($item == "[COMPANY_CITY]") {
                             $companyCity = $business["city"] ?? '[COMPANY_CITY]';
                             $template = str_replace($item, $companyCity, $template);
-                        }
-                        else if ($item == "[COMPANY_POSTCODE]") {
+                        } else if ($item == "[COMPANY_POSTCODE]") {
                             $companyPostcode = $business["postcode"] ?? '[COMPANY_POSTCODE]';
                             $template = str_replace($item, $companyPostcode, $template);
-                        }
-                        else if ($item == "[COMPANY_COUNTRY]") {
+                        } else if ($item == "[COMPANY_COUNTRY]") {
                             $companyCountry = $business["country"] ?? '[COMPANY_COUNTRY]';
                             $template = str_replace($item, $companyCountry, $template);
-                        }
-                        else if ($item == "[She/He]") {
-                            $sex = $student->sex=="Male"?"He":"She";
+                        } else if ($item == "[She/He]") {
+                            $sex = $student->sex == "Male" ? "He" : "She";
                             $template = str_replace($item, $sex, $template);
-                        }  else if ($item == "[Her/His]") {
-                            $sex = $student->sex=="Male"?"His":"Her";
+                        } else if ($item == "[Her/His]") {
+                            $sex = $student->sex == "Male" ? "His" : "Her";
                             $template = str_replace($item, $sex, $template);
-                        }
-                        else if ($item == "[Mr/Mrs]") {
-                            $sex = $student->sex=="Male"?"Mr":"Mrs";
+                        } else if ($item == "[Mr/Mrs]") {
+                            $sex = $student->sex == "Male" ? "Mr" : "Mrs";
                             $template = str_replace($item, $sex, $template);
-                        }
-
-
-
-                        else if ($item == "[QR_CODE]") {
+                        } else if ($item == "[QR_CODE]") {
                             // Get the URL from the environment variable
-                            $url = (!empty($business->url)?$business->url:"https://app.smartcollegeportal.com")."/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
+                            $url = (!empty($business->url) ? $business->url : "https://app.smartcollegeportal.com") . "/public/student/view/" . base64_encode($student->id) . "/" . base64_encode($student->business_id);
 
-                            // Generate the QR code image
-                            $qrCode = new QrCode($url);
-                            $qrCode->setSize(150);
-                            $writer = new PngWriter();
+                            // Generate the QR code image using Builder (v6 API with named parameters)
+                            $builder = new Builder(
+                                writer: new PngWriter(),
+                                data: $url,
+                                encoding: new Encoding('UTF-8'),
+                                size: 150,
+                                margin: 10,
+                                roundBlockSizeMode: RoundBlockSizeMode::Margin
+                            );
+                            $result = $builder->build();
 
                             // Generate the image as a string (binary data)
-                            $image = $writer->write($qrCode)->getString();  // Correct method to get the binary data
+                            $image = $result->getString();
 
                             // Convert the binary data to a base64 string to embed in the HTML
                             $base64Image = base64_encode($image);
@@ -321,9 +314,7 @@ class StudentLetterController extends Controller
 
                             // Replace [QR_CODE] with the image in the template
                             $template = str_replace($item, '<img src="' . $qrCodeImage . '" alt="QR Code" />', $template);
-                        }
-
-                        else if (
+                        } else if (
                             $item == "[DATE_OF_BIRTH]"
                             || $item == "[COURSE_START_DATE]"
                             || $item == "[COURSE_END_DATE]"
@@ -338,14 +329,12 @@ class StudentLetterController extends Controller
                             } else {
                                 $template = str_replace($item, '', $template);
                             }
-                        }
-                        else if ($item == "[LETTER_ISSUE_DATE]") {
-                            $dateValue = $request_data["letter_issue_date"] ;
+                        } else if ($item == "[LETTER_ISSUE_DATE]") {
+                            $dateValue = $request_data["letter_issue_date"];
                             $formattedDate = Carbon::parse($dateValue)->format('d M Y');
                             $template = str_replace($item, $formattedDate, $template);
 
-                        }
-                         else {
+                        } else {
                             $template = str_replace($item, $student[$variableName], $template);
                         }
                     }
@@ -361,65 +350,65 @@ class StudentLetterController extends Controller
     }
 
     public function fixHtmlTags($html)
-{
-    // Ensure <img> tags are self-closed properly (e.g., <img /> instead of <img>)
-    $html = preg_replace('/<img([^>]*)(?<!\/)>/i', '<img$1 />', $html);
+    {
+        // Ensure <img> tags are self-closed properly (e.g., <img /> instead of <img>)
+        $html = preg_replace('/<img([^>]*)(?<!\/)>/i', '<img$1 />', $html);
 
-    // Ensure there is no <br> or <hr> tag directly inside <p> without proper closing
-
-
-     // Replace all <br> tags globally with a custom class
-     $html = preg_replace('/<br\s*\/?>/i', '<br class="fix_br_tag" />', $html);
-
-     // Replace all <hr> tags globally with a custom class
-     $html = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $html);
-
-    // Ensure <hr> tags outside <p> tags are also handled
-    $html = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $html);
-
-    Log::info('Content: ' . $html);
-
-    // Ensure all unclosed tags are closed
-    $this->closeUnclosedTags($html);
-
-    return $html;
-}
+        // Ensure there is no <br> or <hr> tag directly inside <p> without proper closing
 
 
-public function closeUnclosedTags(&$html)
-{
-    // Define a list of self-closing and non-self-closing tags
-    $selfClosingTags = ['img', 'br', 'hr', 'input', 'meta', 'link', 'area', 'base', 'col', 'source', 'track'];
-    $nonSelfClosingTags = ['p', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'];
+        // Replace all <br> tags globally with a custom class
+        $html = preg_replace('/<br\s*\/?>/i', '<br class="fix_br_tag" />', $html);
 
-    // Use a stack to track open tags
-    $openTags = [];
+        // Replace all <hr> tags globally with a custom class
+        $html = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $html);
 
-    // Regular expression to match all opening and closing tags
-    preg_match_all('/<\/?([a-zA-Z0-9]+)([^>]*)(?=>|$)/', $html, $matches, PREG_OFFSET_CAPTURE);
+        // Ensure <hr> tags outside <p> tags are also handled
+        $html = preg_replace('/<hr\s*\/?>/i', '<hr class="fix_hr_tag" />', $html);
 
-    foreach ($matches[1] as $index => $tagName) {
-        $tag = strtolower($tagName[0]);
+        Log::info('Content: ' . $html);
 
-        // If it's a closing tag, check if it matches the most recent opening tag
-        if (substr($matches[0][$index][0], 0, 2) === '</') {
-            if (!empty($openTags) && end($openTags) === $tag) {
-                array_pop($openTags);
-            } else {
-                // Mismatch found, add closing tag to fix
-                $html = substr_replace($html, "</$tag>", $matches[0][$index][1], 0);
+        // Ensure all unclosed tags are closed
+        $this->closeUnclosedTags($html);
+
+        return $html;
+    }
+
+
+    public function closeUnclosedTags(&$html)
+    {
+        // Define a list of self-closing and non-self-closing tags
+        $selfClosingTags = ['img', 'br', 'hr', 'input', 'meta', 'link', 'area', 'base', 'col', 'source', 'track'];
+        $nonSelfClosingTags = ['p', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'];
+
+        // Use a stack to track open tags
+        $openTags = [];
+
+        // Regular expression to match all opening and closing tags
+        preg_match_all('/<\/?([a-zA-Z0-9]+)([^>]*)(?=>|$)/', $html, $matches, PREG_OFFSET_CAPTURE);
+
+        foreach ($matches[1] as $index => $tagName) {
+            $tag = strtolower($tagName[0]);
+
+            // If it's a closing tag, check if it matches the most recent opening tag
+            if (substr($matches[0][$index][0], 0, 2) === '</') {
+                if (!empty($openTags) && end($openTags) === $tag) {
+                    array_pop($openTags);
+                } else {
+                    // Mismatch found, add closing tag to fix
+                    $html = substr_replace($html, "</$tag>", $matches[0][$index][1], 0);
+                }
+            } elseif (!in_array($tag, $selfClosingTags)) {
+                // For opening tags, add them to the stack
+                $openTags[] = $tag;
             }
-        } elseif (!in_array($tag, $selfClosingTags)) {
-            // For opening tags, add them to the stack
-            $openTags[] = $tag;
+        }
+
+        // Append missing closing tags for all open tags
+        foreach (array_reverse($openTags) as $tag) {
+            $html .= "</$tag>";
         }
     }
-
-    // Append missing closing tags for all open tags
-    foreach (array_reverse($openTags) as $tag) {
-        $html .= "</$tag>";
-    }
-}
 
 
 
@@ -490,73 +479,77 @@ public function closeUnclosedTags(&$html)
             // $this->isModuleEnabled("letter_template");
             $request_data = $request->validated();
 
-            $student_letter =  StudentLetter::where([
+            $student_letter = StudentLetter::where([
                 "id" => $request_data["student_letter_id"]
             ])
                 ->first();
             $business = auth()->user()->business;
 
 
-            if(empty($request_data["type"])) {
-                $pdf = PDF::loadView('email.dynamic_mail', [
-                    "html_content" => $student_letter->letter_content,
-                    "letter_template_header" => $business->letter_template_header,
-                    "letter_template_footer" => $business->letter_template_footer,
-                ],
+            if (empty($request_data["type"])) {
+                $pdf = PDF::loadView(
+                    'email.dynamic_mail',
+                    [
+                        "html_content" => $student_letter->letter_content,
+                        "letter_template_header" => $business->letter_template_header,
+                        "letter_template_footer" => $business->letter_template_footer,
+                    ],
                 );
                 return $pdf->download(("letter" . '.pdf'));
             }
-            if($request_data["type"] == "pdf") {
-                $pdf = PDF::loadView('email.dynamic_mail', [
-                    "html_content" => $student_letter->letter_content,
-                    "letter_template_header" => $business->letter_template_header,
-                    "letter_template_footer" => $business->letter_template_footer,
-                ],
+            if ($request_data["type"] == "pdf") {
+                $pdf = PDF::loadView(
+                    'email.dynamic_mail',
+                    [
+                        "html_content" => $student_letter->letter_content,
+                        "letter_template_header" => $business->letter_template_header,
+                        "letter_template_footer" => $business->letter_template_footer,
+                    ],
                 );
                 return $pdf->download(("letter" . '.pdf'));
-            } else if($request_data["type"] == "word"){
+            } else if ($request_data["type"] == "word") {
 
-    // Create a new PhpWord object
-    $phpWord = new PhpWord();
+                // Create a new PhpWord object
+                $phpWord = new PhpWord();
 
-    // Set header and footer content
-    $header = $this->fixHtmlTags($business->letter_template_header);
-    $footer = $this->fixHtmlTags($business->letter_template_footer);
+                // Set header and footer content
+                $header = $this->fixHtmlTags($business->letter_template_header);
+                $footer = $this->fixHtmlTags($business->letter_template_footer);
 
-    // Define HTML content to be added to the document
-    $htmlContent = $this->fixHtmlTags($student_letter->letter_content);
+                // Define HTML content to be added to the document
+                $htmlContent = $this->fixHtmlTags($student_letter->letter_content);
 
-    Log::info('Header Content: ' . $header);
-
-
-    // Add a new section with a header and footer
-    $section = $phpWord->addSection();
-    $headerObj = $section->addHeader();
-    Html::addHtml($headerObj, $header);  // Add the header HTML
-    $footerObj = $section->addFooter();
-    Html::addHtml($footerObj, $footer);  // Add the footer HTML
-
-    // Add dynamic HTML content to the section
-    Html::addHtml($section, $htmlContent);
-
-    // Save the file to a storage path
-    $filename = 'DynamicHtmlDocument.docx';
-    $path = storage_path($filename);
-    $phpWord->save($path, 'Word2007');
-
-    // Return the file as a download response and delete after send
-    return response()->download($path)->deleteFileAfterSend(true);
+                Log::info('Header Content: ' . $header);
 
 
-//                 $htd = new HTML_TO_DOC();
+                // Add a new section with a header and footer
+                $section = $phpWord->addSection();
+                $headerObj = $section->addHeader();
+                Html::addHtml($headerObj, $header);  // Add the header HTML
+                $footerObj = $section->addFooter();
+                Html::addHtml($footerObj, $footer);  // Add the footer HTML
+
+                // Add dynamic HTML content to the section
+                Html::addHtml($section, $htmlContent);
+
+                // Save the file to a storage path
+                $filename = 'DynamicHtmlDocument.docx';
+                $path = storage_path($filename);
+                $phpWord->save($path, 'Word2007');
+
+                // Return the file as a download response and delete after send
+                return response()->download($path)->deleteFileAfterSend(true);
+
+
+                //                 $htd = new HTML_TO_DOC();
 // $htd->headerContent = $business->letter_template_header;
 // $htd->footerContent = $business->letter_template_footer;
 
-// $htmlContent = "
+                // $htmlContent = "
 //     <div class='content'>{$student_letter->letter_content}</div>
 // ";
 
-// $htd->createDoc($htmlContent, "my-document", 1);
+                // $htd->createDoc($htmlContent, "my-document", 1);
 
                 // $phpWord = new PhpWord();
                 // $section = $phpWord->addSection();
@@ -678,44 +671,44 @@ public function closeUnclosedTags(&$html)
             ])
                 ->first();
 
-                $emailSent = true;
-                $errorMessage = null;
+            $emailSent = true;
+            $errorMessage = null;
 
-                if (env('SEND_EMAIL') == true) {
-                    // Log email sender actions
-                    // $this->checkEmailSender(auth()->user()->id, 0);
+            if (env('SEND_EMAIL') == true) {
+                // Log email sender actions
+                // $this->checkEmailSender(auth()->user()->id, 0);
 
-                    $pdf = PDF::loadView('email.dynamic_mail', ['html_content' => $student_letter->letter_content]);
+                $pdf = PDF::loadView('email.dynamic_mail', ['html_content' => $student_letter->letter_content]);
 
-                    try {
-                        // Send the email
-                        Mail::to($student->email)->send(new StudentLetterMail($pdf));
+                try {
+                    // Send the email
+                    Mail::to($student->email)->send(new StudentLetterMail($pdf));
 
-                    } catch (Exception $e) {
-                        // Set error message
-                        $errorMessage = $e->getMessage();
-                        $emailSent = false;
-                    } finally {
-                        // Ensure that email sender actions are always logged
-                        // $this->storeEmailSender(auth()->user()->id, 0);
-                    }
+                } catch (Exception $e) {
+                    // Set error message
+                    $errorMessage = $e->getMessage();
+                    $emailSent = false;
+                } finally {
+                    // Ensure that email sender actions are always logged
+                    // $this->storeEmailSender(auth()->user()->id, 0);
                 }
+            }
 
-                // Update the student_letter record if email was sent
-                if ($emailSent) {
-                    $student_letter->email_sent = true;
-                    $student_letter->save();
-                }
+            // Update the student_letter record if email was sent
+            if ($emailSent) {
+                $student_letter->email_sent = true;
+                $student_letter->save();
+            }
 
-                // Create a history record
-                StudentLetterEmailHistory::create([
-                    'student_letter_id' => $student_letter->id,
-                    'sent_at' => $emailSent ? now() : null,
-                    'recipient_email' => $student->email,
-                    'email_content' => $student_letter->letter_content,
-                    'status' => $emailSent ? 'sent' : 'failed',
-                    'error_message' => $emailSent ? null : $errorMessage
-                ]);
+            // Create a history record
+            StudentLetterEmailHistory::create([
+                'student_letter_id' => $student_letter->id,
+                'sent_at' => $emailSent ? now() : null,
+                'recipient_email' => $student->email,
+                'email_content' => $student_letter->letter_content,
+                'status' => $emailSent ? 'sent' : 'failed',
+                'error_message' => $emailSent ? null : $errorMessage
+            ]);
 
 
             return response()->json(['message' => 'Email sent successfully.'], 200);
@@ -840,7 +833,7 @@ public function closeUnclosedTags(&$html)
             return $this->sendError($e, 500, $request);
         }
     }
-       /**
+    /**
      *
      * @OA\Put(
      *      path="/v1.0/student-letters/view",
@@ -894,273 +887,273 @@ public function closeUnclosedTags(&$html)
      *     )
      */
 
-     public function updateStudentLetterView(StudentLetterUpdateViewRequest $request)
-     {
+    public function updateStudentLetterView(StudentLetterUpdateViewRequest $request)
+    {
 
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             //  $this->isModuleEnabled("letter_template");
-             return DB::transaction(function () use ($request) {
+            return DB::transaction(function () use ($request) {
 
                 //  if (!$request->user()->hasPermissionTo('student_letter_update')) {
                 //      return response()->json([
                 //          "message" => "You can not perform this action"
                 //      ], 401);
                 //  }
-                 $request_data = $request->validated();
+                $request_data = $request->validated();
 
 
 
-                 $student_letter_query_params = [
-                     "id" => $request_data["id"],
-                     "student_id" => auth()->user()->id,
-                 ];
+                $student_letter_query_params = [
+                    "id" => $request_data["id"],
+                    "student_id" => auth()->user()->id,
+                ];
 
-                 $student_letter = StudentLetter::where($student_letter_query_params)->first();
+                $student_letter = StudentLetter::where($student_letter_query_params)->first();
 
-                 if ($student_letter) {
-                     $student_letter->fill(collect($request_data)->only([
-                         "letter_viewed",
-                         // "is_default",
-                         // "is_active",
-                         // "business_id",
-                         // "created_by"
-                     ])->toArray());
-                     $student_letter->save();
-                 } else {
-                     return response()->json([
-                         "message" => "something went wrong."
-                     ], 500);
-                 }
-
-
+                if ($student_letter) {
+                    $student_letter->fill(collect($request_data)->only([
+                        "letter_viewed",
+                        // "is_default",
+                        // "is_active",
+                        // "business_id",
+                        // "created_by"
+                    ])->toArray());
+                    $student_letter->save();
+                } else {
+                    return response()->json([
+                        "message" => "something went wrong."
+                    ], 500);
+                }
 
 
-                 return response($student_letter, 201);
-             });
-         } catch (Exception $e) {
-             error_log($e->getMessage());
-             return $this->sendError($e, 500, $request);
-         }
-     }
 
 
-     public function query_filters($query)
-     {
+                return response($student_letter, 201);
+            });
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
-         return   $query->where('student_letters.business_id', auth()->user()->business_id)
 
-         ->when(!empty(request()->id), function ($query) {
-             return $query->where('student_letters.id', request()->id);
-         })
+    public function query_filters($query)
+    {
 
-         ->when(!empty(request()->start_issue_date), function ($query) {
-             return $query->where('student_letters.issue_date', ">=", request()->start_issue_date);
-         })
+        return $query->where('student_letters.business_id', auth()->user()->business_id)
 
-         ->when(!empty(request()->end_issue_date), function ($query) {
-             return $query->where('student_letters.issue_date', "<=", (request()->end_issue_date . ' 23:59:59'));
-         })
+            ->when(!empty(request()->id), function ($query) {
+                return $query->where('student_letters.id', request()->id);
+            })
 
-         ->when(!empty(request()->status), function ($query) {
-             return $query->where('student_letters.status', request()->status);
-         })
+            ->when(!empty(request()->start_issue_date), function ($query) {
+                return $query->where('student_letters.issue_date', ">=", request()->start_issue_date);
+            })
 
-         ->when(
-             empty(request()->student_id),
-             function ($query) {
-                 return $query;
-             },
-             function ($query) {
-                 return $query->where('student_letters.student_id', request()->student_id);
-             }
-         )
+            ->when(!empty(request()->end_issue_date), function ($query) {
+                return $query->where('student_letters.issue_date', "<=", (request()->end_issue_date . ' 23:59:59'));
+            })
 
-         ->when(!empty(request()->search_key), function ($query) {
-             return $query->where(function ($query) {
-                 $term = request()->search_key;
-                 $query
-                     ->where("student_letters.letter_content", "like", "%" . $term . "%")
-                     ->orWhere("student_letters.status", "like", "%" . $term . "%");
-             });
-         })
+            ->when(!empty(request()->status), function ($query) {
+                return $query->where('student_letters.status', request()->status);
+            })
 
-         ->when(!empty(request()->start_date), function ($query) {
-             return $query->where('student_letters.created_at', ">=", request()->start_date);
-         })
+            ->when(
+                empty(request()->student_id),
+                function ($query) {
+                    return $query;
+                },
+                function ($query) {
+                    return $query->where('student_letters.student_id', request()->student_id);
+                }
+            )
 
-         ->when(!empty(request()->end_date), function ($query) {
-             return $query->where('student_letters.created_at', "<=", (request()->end_date . ' 23:59:59'));
-         })
-         ;
-     }
- /**
-     *
-     * @OA\Get(
-     *      path="/v1.0/student-letters-get",
-     *      operationId="getStudentLetters",
-     *      tags={"student_letters"},
-     *       security={
-     *           {"bearerAuth": {}}
-     *       },
+            ->when(!empty(request()->search_key), function ($query) {
+                return $query->where(function ($query) {
+                    $term = request()->search_key;
+                    $query
+                        ->where("student_letters.letter_content", "like", "%" . $term . "%")
+                        ->orWhere("student_letters.status", "like", "%" . $term . "%");
+                });
+            })
 
-     *         @OA\Parameter(
-     *         name="start_issue_date",
-     *         in="query",
-     *         description="start_issue_date",
-     *         required=true,
-     *  example="6"
-     *      ),
-     *         @OA\Parameter(
-     *         name="end_issue_date",
-     *         in="query",
-     *         description="end_issue_date",
-     *         required=true,
-     *  example="6"
-     *      ),
-     *         @OA\Parameter(
-     *         name="letter_content",
-     *         in="query",
-     *         description="letter_content",
-     *         required=true,
-     *  example="6"
-     *      ),
-     *         @OA\Parameter(
-     *         name="status",
-     *         in="query",
-     *         description="status",
-     *         required=true,
-     *  example="6"
-     *      ),
-     *         @OA\Parameter(
-     *         name="per_page",
-     *         in="query",
-     *         description="per_page",
-     *         required=true,
-     *  example="6"
-     *      ),
+            ->when(!empty(request()->start_date), function ($query) {
+                return $query->where('student_letters.created_at', ">=", request()->start_date);
+            })
 
-     *     @OA\Parameter(
-     * name="is_active",
-     * in="query",
-     * description="is_active",
-     * required=true,
-     * example="1"
-     * ),
-     *     @OA\Parameter(
-     * name="start_date",
-     * in="query",
-     * description="start_date",
-     * required=true,
-     * example="2019-06-29"
-     * ),
-     * *  @OA\Parameter(
-     * name="end_date",
-     * in="query",
-     * description="end_date",
-     * required=true,
-     * example="2019-06-29"
-     * ),
-     * *  @OA\Parameter(
-     * name="search_key",
-     * in="query",
-     * description="search_key",
-     * required=true,
-     * example="search_key"
-     * ),
-     * *  @OA\Parameter(
-     * name="order_by",
-     * in="query",
-     * description="order_by",
-     * required=true,
-     * example="ASC"
-     * ),
-     * *  @OA\Parameter(
-     * name="id",
-     * in="query",
-     * description="id",
-     * required=true,
-     * example="ASC"
-     * ),
-     * *  @OA\Parameter(
-     * name="is_single_search",
-     * in="query",
-     * description="is_single_search",
-     * required=true,
-     * example="ASC"
-     * ),
-     *    * *  @OA\Parameter(
-     * name="student_id",
-     * in="query",
-     * description="student_id",
-     * required=true,
-     * example="ASC"
-     * ),
-     *
-     *      summary="This method is to get student letters  ",
-     *      description="This method is to get student letters ",
-     *
+            ->when(!empty(request()->end_date), function ($query) {
+                return $query->where('student_letters.created_at', "<=", (request()->end_date . ' 23:59:59'));
+            })
+        ;
+    }
+    /**
+        *
+        * @OA\Get(
+        *      path="/v1.0/student-letters-get",
+        *      operationId="getStudentLetters",
+        *      tags={"student_letters"},
+        *       security={
+        *           {"bearerAuth": {}}
+        *       },
 
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *       @OA\JsonContent(),
-     *       ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     * @OA\JsonContent(),
-     *      ),
-     *        @OA\Response(
-     *          response=422,
-     *          description="Unprocesseble Content",
-     *    @OA\JsonContent(),
-     *      ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden",
-     *   @OA\JsonContent()
-     * ),
-     *  * @OA\Response(
-     *      response=400,
-     *      description="Bad Request",
-     *   *@OA\JsonContent()
-     *   ),
-     * @OA\Response(
-     *      response=404,
-     *      description="not found",
-     *   *@OA\JsonContent()
-     *   )
-     *      )
-     *     )
-     */
+        *         @OA\Parameter(
+        *         name="start_issue_date",
+        *         in="query",
+        *         description="start_issue_date",
+        *         required=true,
+        *  example="6"
+        *      ),
+        *         @OA\Parameter(
+        *         name="end_issue_date",
+        *         in="query",
+        *         description="end_issue_date",
+        *         required=true,
+        *  example="6"
+        *      ),
+        *         @OA\Parameter(
+        *         name="letter_content",
+        *         in="query",
+        *         description="letter_content",
+        *         required=true,
+        *  example="6"
+        *      ),
+        *         @OA\Parameter(
+        *         name="status",
+        *         in="query",
+        *         description="status",
+        *         required=true,
+        *  example="6"
+        *      ),
+        *         @OA\Parameter(
+        *         name="per_page",
+        *         in="query",
+        *         description="per_page",
+        *         required=true,
+        *  example="6"
+        *      ),
 
-     public function getStudentLetters(Request $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+        *     @OA\Parameter(
+        * name="is_active",
+        * in="query",
+        * description="is_active",
+        * required=true,
+        * example="1"
+        * ),
+        *     @OA\Parameter(
+        * name="start_date",
+        * in="query",
+        * description="start_date",
+        * required=true,
+        * example="2019-06-29"
+        * ),
+        * *  @OA\Parameter(
+        * name="end_date",
+        * in="query",
+        * description="end_date",
+        * required=true,
+        * example="2019-06-29"
+        * ),
+        * *  @OA\Parameter(
+        * name="search_key",
+        * in="query",
+        * description="search_key",
+        * required=true,
+        * example="search_key"
+        * ),
+        * *  @OA\Parameter(
+        * name="order_by",
+        * in="query",
+        * description="order_by",
+        * required=true,
+        * example="ASC"
+        * ),
+        * *  @OA\Parameter(
+        * name="id",
+        * in="query",
+        * description="id",
+        * required=true,
+        * example="ASC"
+        * ),
+        * *  @OA\Parameter(
+        * name="is_single_search",
+        * in="query",
+        * description="is_single_search",
+        * required=true,
+        * example="ASC"
+        * ),
+        *    * *  @OA\Parameter(
+        * name="student_id",
+        * in="query",
+        * description="student_id",
+        * required=true,
+        * example="ASC"
+        * ),
+        *
+        *      summary="This method is to get student letters  ",
+        *      description="This method is to get student letters ",
+        *
+
+        *      @OA\Response(
+        *          response=200,
+        *          description="Successful operation",
+        *       @OA\JsonContent(),
+        *       ),
+        *      @OA\Response(
+        *          response=401,
+        *          description="Unauthenticated",
+        * @OA\JsonContent(),
+        *      ),
+        *        @OA\Response(
+        *          response=422,
+        *          description="Unprocesseble Content",
+        *    @OA\JsonContent(),
+        *      ),
+        *      @OA\Response(
+        *          response=403,
+        *          description="Forbidden",
+        *   @OA\JsonContent()
+        * ),
+        *  * @OA\Response(
+        *      response=400,
+        *      description="Bad Request",
+        *   *@OA\JsonContent()
+        *   ),
+        * @OA\Response(
+        *      response=404,
+        *      description="not found",
+        *   *@OA\JsonContent()
+        *   )
+        *      )
+        *     )
+        */
+
+    public function getStudentLetters(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             //  $this->isModuleEnabled("letter_template");
-             if (!$request->user()->hasPermissionTo('student_letter_view')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
+            if (!$request->user()->hasPermissionTo('student_letter_view')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
-             $query = StudentLetter::with([
-                 "student" => function ($query) {
-                     $query->select("students.id", "students.first_Name", "students.middle_Name", "students.last_Name");
-                 }
-             ]);
-             $query = $this->query_filters($query);
-             $student_letters = $this->retrieveData($query, "id","student_letters");
+            $query = StudentLetter::with([
+                "student" => function ($query) {
+                    $query->select("students.id", "students.first_Name", "students.middle_Name", "students.last_Name");
+                }
+            ]);
+            $query = $this->query_filters($query);
+            $student_letters = $this->retrieveData($query, "id", "student_letters");
 
 
-             return response()->json($student_letters, 200);
-         } catch (Exception $e) {
+            return response()->json($student_letters, 200);
+        } catch (Exception $e) {
 
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            return $this->sendError($e, 500, $request);
+        }
+    }
     /**
      *
      * @OA\Get(
@@ -1319,15 +1312,15 @@ public function closeUnclosedTags(&$html)
                 }
             ]);
             $query = $this->query_filters($query)
-            ->select(
-                "student_letters.id",
-                'student_letters.issue_date',
-                'student_letters.status',
-                'student_letters.letter_content',
-                'student_letters.sign_required',
-                'student_letters.student_id',
-            );
-            $student_letters = $this->retrieveData($query, "id","student_letters");
+                ->select(
+                    "student_letters.id",
+                    'student_letters.issue_date',
+                    'student_letters.status',
+                    'student_letters.letter_content',
+                    'student_letters.sign_required',
+                    'student_letters.student_id',
+                );
+            $student_letters = $this->retrieveData($query, "id", "student_letters");
 
 
             return response()->json($student_letters, 200);
@@ -1340,175 +1333,175 @@ public function closeUnclosedTags(&$html)
 
 
 
-        /**
-     *
-     * @OA\Get(
-     *      path="/v1.0/student-letters-histories",
-     *      operationId="getStudentLetterHistories",
-     *      tags={"student_letters"},
-     *       security={
-     *           {"bearerAuth": {}}
-     *       },
+    /**
+ *
+ * @OA\Get(
+ *      path="/v1.0/student-letters-histories",
+ *      operationId="getStudentLetterHistories",
+ *      tags={"student_letters"},
+ *       security={
+ *           {"bearerAuth": {}}
+ *       },
 
 *     @OA\Parameter(
- *         name="student_letter_id",
+*         name="student_letter_id",
+*         in="query",
+*         description="Filter by student letter ID.",
+*         required=false,
+*         @OA\Schema(type="integer")
+*     ),
+*  *     @OA\Parameter(
+*         name="status",
+*         in="query",
+*         description="Filter by status.",
+*         required=false,
+*         @OA\Schema(type="string")
+*     ),
+* *     @OA\Parameter(
+*         name="start_sent_at",
+*         in="query",
+*         description="Filter by start sent date. Format: YYYY-MM-DD",
+*         required=false,
+*         @OA\Schema(type="string", format="date")
+*     ),
+*     @OA\Parameter(
+*         name="end_sent_at",
+*         in="query",
+*         description="Filter by end sent date. Format: YYYY-MM-DD",
+*         required=false,
+*         @OA\Schema(type="string", format="date")
+*     ),
+ *
+ *         @OA\Parameter(
+ *         name="per_page",
  *         in="query",
- *         description="Filter by student letter ID.",
- *         required=false,
- *         @OA\Schema(type="integer")
- *     ),
- *  *     @OA\Parameter(
- *         name="status",
- *         in="query",
- *         description="Filter by status.",
- *         required=false,
- *         @OA\Schema(type="string")
- *     ),
- * *     @OA\Parameter(
- *         name="start_sent_at",
- *         in="query",
- *         description="Filter by start sent date. Format: YYYY-MM-DD",
- *         required=false,
- *         @OA\Schema(type="string", format="date")
- *     ),
+ *         description="per_page",
+ *         required=true,
+ *  example="6"
+ *      ),
+
  *     @OA\Parameter(
- *         name="end_sent_at",
- *         in="query",
- *         description="Filter by end sent date. Format: YYYY-MM-DD",
- *         required=false,
- *         @OA\Schema(type="string", format="date")
- *     ),
-     *
-     *         @OA\Parameter(
-     *         name="per_page",
-     *         in="query",
-     *         description="per_page",
-     *         required=true,
-     *  example="6"
-     *      ),
+ * name="is_active",
+ * in="query",
+ * description="is_active",
+ * required=true,
+ * example="1"
+ * ),
+ *     @OA\Parameter(
+ * name="start_date",
+ * in="query",
+ * description="start_date",
+ * required=true,
+ * example="2019-06-29"
+ * ),
+ * *  @OA\Parameter(
+ * name="end_date",
+ * in="query",
+ * description="end_date",
+ * required=true,
+ * example="2019-06-29"
+ * ),
+ * *  @OA\Parameter(
+ * name="search_key",
+ * in="query",
+ * description="search_key",
+ * required=true,
+ * example="search_key"
+ * ),
+ * *  @OA\Parameter(
+ * name="order_by",
+ * in="query",
+ * description="order_by",
+ * required=true,
+ * example="ASC"
+ * ),
+ * *  @OA\Parameter(
+ * name="id",
+ * in="query",
+ * description="id",
+ * required=true,
+ * example="ASC"
+ * ),
+ * *  @OA\Parameter(
+ * name="is_single_search",
+ * in="query",
+ * description="is_single_search",
+ * required=true,
+ * example="ASC"
+ * ),
+ *    * *  @OA\Parameter(
+ * name="student_id",
+ * in="query",
+ * description="student_id",
+ * required=true,
+ * example="ASC"
+ * ),
+ *
+ *      summary="This method is to get student letters  ",
+ *      description="This method is to get student letters ",
+ *
 
-     *     @OA\Parameter(
-     * name="is_active",
-     * in="query",
-     * description="is_active",
-     * required=true,
-     * example="1"
-     * ),
-     *     @OA\Parameter(
-     * name="start_date",
-     * in="query",
-     * description="start_date",
-     * required=true,
-     * example="2019-06-29"
-     * ),
-     * *  @OA\Parameter(
-     * name="end_date",
-     * in="query",
-     * description="end_date",
-     * required=true,
-     * example="2019-06-29"
-     * ),
-     * *  @OA\Parameter(
-     * name="search_key",
-     * in="query",
-     * description="search_key",
-     * required=true,
-     * example="search_key"
-     * ),
-     * *  @OA\Parameter(
-     * name="order_by",
-     * in="query",
-     * description="order_by",
-     * required=true,
-     * example="ASC"
-     * ),
-     * *  @OA\Parameter(
-     * name="id",
-     * in="query",
-     * description="id",
-     * required=true,
-     * example="ASC"
-     * ),
-     * *  @OA\Parameter(
-     * name="is_single_search",
-     * in="query",
-     * description="is_single_search",
-     * required=true,
-     * example="ASC"
-     * ),
-     *    * *  @OA\Parameter(
-     * name="student_id",
-     * in="query",
-     * description="student_id",
-     * required=true,
-     * example="ASC"
-     * ),
-     *
-     *      summary="This method is to get student letters  ",
-     *      description="This method is to get student letters ",
-     *
+ *      @OA\Response(
+ *          response=200,
+ *          description="Successful operation",
+ *       @OA\JsonContent(),
+ *       ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthenticated",
+ * @OA\JsonContent(),
+ *      ),
+ *        @OA\Response(
+ *          response=422,
+ *          description="Unprocesseble Content",
+ *    @OA\JsonContent(),
+ *      ),
+ *      @OA\Response(
+ *          response=403,
+ *          description="Forbidden",
+ *   @OA\JsonContent()
+ * ),
+ *  * @OA\Response(
+ *      response=400,
+ *      description="Bad Request",
+ *   *@OA\JsonContent()
+ *   ),
+ * @OA\Response(
+ *      response=404,
+ *      description="not found",
+ *   *@OA\JsonContent()
+ *   )
+ *      )
+ *     )
+ */
 
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *       @OA\JsonContent(),
-     *       ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     * @OA\JsonContent(),
-     *      ),
-     *        @OA\Response(
-     *          response=422,
-     *          description="Unprocesseble Content",
-     *    @OA\JsonContent(),
-     *      ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden",
-     *   @OA\JsonContent()
-     * ),
-     *  * @OA\Response(
-     *      response=400,
-     *      description="Bad Request",
-     *   *@OA\JsonContent()
-     *   ),
-     * @OA\Response(
-     *      response=404,
-     *      description="not found",
-     *   *@OA\JsonContent()
-     *   )
-     *      )
-     *     )
-     */
-
-     public function getStudentLetterHistories(Request $request)
-     {
-         try {
-             $this->storeActivity($request, "DUMMY activity", "DUMMY description");
+    public function getStudentLetterHistories(Request $request)
+    {
+        try {
+            $this->storeActivity($request, "DUMMY activity", "DUMMY description");
             //  $this->isModuleEnabled("letter_template");
-             if (!$request->user()->hasPermissionTo('student_letter_view')) {
-                 return response()->json([
-                     "message" => "You can not perform this action"
-                 ], 401);
-             }
+            if (!$request->user()->hasPermissionTo('student_letter_view')) {
+                return response()->json([
+                    "message" => "You can not perform this action"
+                ], 401);
+            }
 
-             $all_manager_department_ids = $this->get_all_departments_of_manager();
+            $all_manager_department_ids = $this->get_all_departments_of_manager();
 
-             $student_letter_histories = StudentLetterEmailHistory::
+            $student_letter_histories = StudentLetterEmailHistory::
 
 
-                 when(
+                when(
                     empty($request->student_id),
                     function ($query) use ($request) {
                         return $query
-                        // ->whereHas("student_letters", function ($query)  {
-                        //     $query->whereNotIn("students.id", [auth()->user()->id]);
-                        // })
+                            // ->whereHas("student_letters", function ($query)  {
+                            //     $query->whereNotIn("students.id", [auth()->user()->id]);
+                            // })
                         ;
                     },
                     function ($query) use ($request) {
-                        return $query->whereHas("student_letters", function ($query) use($request) {
+                        return $query->whereHas("student_letters", function ($query) use ($request) {
                             $query->whereIn("students.id", [$request->student_id]);
                         });
 
@@ -1517,60 +1510,60 @@ public function closeUnclosedTags(&$html)
                 ->when(!empty($request->student_letter_id), function ($query) use ($request) {
                     return $query->where('student_letter_email_histories.student_letter_id', $request->student_letter_id);
                 })
-                 ->when(!empty($request->id), function ($query) use ($request) {
-                     return $query->where('student_letter_email_histories.id', $request->id);
-                 })
-                 ->when(!empty($request->start_sent_at), function ($query) use ($request) {
-                     return $query->where('student_letter_email_histories.sent_at', ">=", $request->start_sent_at);
-                 })
-                 ->when(!empty($request->end_sent_at), function ($query) use ($request) {
-                     return $query->where('student_letter_email_histories.sent_at', "<=", ($request->end_sent_at . ' 23:59:59'));
-                 })
-                 ->when(!empty($request->status), function ($query) use ($request) {
-                     return $query->where('student_letter_email_histories.status', $request->status);
-                 })
-                 ->when(!empty($request->search_key), function ($query) use ($request) {
-                     return $query->where(function ($query) use ($request) {
-                         $term = $request->search_key;
-                         $query
+                ->when(!empty($request->id), function ($query) use ($request) {
+                    return $query->where('student_letter_email_histories.id', $request->id);
+                })
+                ->when(!empty($request->start_sent_at), function ($query) use ($request) {
+                    return $query->where('student_letter_email_histories.sent_at', ">=", $request->start_sent_at);
+                })
+                ->when(!empty($request->end_sent_at), function ($query) use ($request) {
+                    return $query->where('student_letter_email_histories.sent_at', "<=", ($request->end_sent_at . ' 23:59:59'));
+                })
+                ->when(!empty($request->status), function ($query) use ($request) {
+                    return $query->where('student_letter_email_histories.status', $request->status);
+                })
+                ->when(!empty($request->search_key), function ($query) use ($request) {
+                    return $query->where(function ($query) use ($request) {
+                        $term = $request->search_key;
+                        $query
 
-                             ->where("student_letter_email_histories.letter_content", "like", "%" . $term . "%")
-                             ->orWhere("student_letter_email_histories.recipient_email", "like", "%" . $term . "%");
-                     });
-                 })
+                            ->where("student_letter_email_histories.letter_content", "like", "%" . $term . "%")
+                            ->orWhere("student_letter_email_histories.recipient_email", "like", "%" . $term . "%");
+                    });
+                })
 
-                 ->when(!empty($request->start_date), function ($query) use ($request) {
-                     return $query->where('student_letter_email_histories.created_at', ">=", $request->start_date);
-                 })
-                 ->when(!empty($request->end_date), function ($query) use ($request) {
-                     return $query->where('student_letter_email_histories.created_at', "<=", ($request->end_date . ' 23:59:59'));
-                 })
-                 ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
-                     return $query->orderBy("student_letter_email_histories.id", $request->order_by);
-                 }, function ($query) {
-                     return $query->orderBy("student_letter_email_histories.id", "DESC");
-                 })
-                 ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
-                     return $query->first();
-                 }, function ($query) {
-                     return $query->when(!empty(request()->per_page), function ($query) {
-                         return $query->paginate(request()->per_page);
-                     }, function ($query) {
-                         return $query->get();
-                     });
-                 });
+                ->when(!empty($request->start_date), function ($query) use ($request) {
+                    return $query->where('student_letter_email_histories.created_at', ">=", $request->start_date);
+                })
+                ->when(!empty($request->end_date), function ($query) use ($request) {
+                    return $query->where('student_letter_email_histories.created_at', "<=", ($request->end_date . ' 23:59:59'));
+                })
+                ->when(!empty($request->order_by) && in_array(strtoupper($request->order_by), ['ASC', 'DESC']), function ($query) use ($request) {
+                    return $query->orderBy("student_letter_email_histories.id", $request->order_by);
+                }, function ($query) {
+                    return $query->orderBy("student_letter_email_histories.id", "DESC");
+                })
+                ->when($request->filled("is_single_search") && $request->boolean("is_single_search"), function ($query) use ($request) {
+                    return $query->first();
+                }, function ($query) {
+                    return $query->when(!empty(request()->per_page), function ($query) {
+                        return $query->paginate(request()->per_page);
+                    }, function ($query) {
+                        return $query->get();
+                    });
+                });
 
-             if ($request->filled("is_single_search") && empty($student_letters)) {
-                 throw new Exception("No data found", 404);
-             }
+            if ($request->filled("is_single_search") && empty($student_letters)) {
+                throw new Exception("No data found", 404);
+            }
 
 
-             return response()->json($student_letter_histories, 200);
-         } catch (Exception $e) {
+            return response()->json($student_letter_histories, 200);
+        } catch (Exception $e) {
 
-             return $this->sendError($e, 500, $request);
-         }
-     }
+            return $this->sendError($e, 500, $request);
+        }
+    }
 
     /**
      *
