@@ -2504,7 +2504,7 @@ class StudentController extends Controller
             $request->input('name'),
         ])->filter(); // remove null or empty ones
 
-        if ($student_identifiers->count() < 2) {
+        if ($student_identifiers->count() < 2 && !request()->filled('id')) {
             return response()->json([
                 'success' => false,
                 'message' => 'At least two identifying student parameters must be provided (e.g., first_name, last_name, student_id, etc.).'
